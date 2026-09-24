@@ -1,0 +1,12 @@
+name: dcard_core
+description: Shared D-Card domain rules for the Flutter apps (pure Dart).
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.26.0

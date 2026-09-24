@@ -1,0 +1,29 @@
+# Dart pub workspace for the Flutter apps and shared Dart packages.
+# Melos runs scripts across members: `dart run melos run <script>`.
+name: dcard_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.12.0
+
+workspace:
+  - apps/mobile
+  - apps/door
+  - dart_packages/dcard_core
+  - dart_packages/dcard_ui
+  - dart_packages/dcard_api
+
+dev_dependencies:
+  melos: ^8.9.0
+
+melos:
+  scripts:
+    analyze:
+      description: Analyze all packages (generated dcard_api excluded).
+      run: dart run melos exec --ignore="dcard_api" -- "dart analyze --fatal-infos ."
+    test:
+      description: Run tests in all packages that have a test folder.
+      run: dart run melos exec --dir-exists="test" --ignore="dcard_api" -- "flutter test"
+    test:dart:
+      description: Pure Dart package tests.
+      run: dart run melos exec --scope="dcard_core" -- "dart test"

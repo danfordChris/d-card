@@ -1,0 +1,22 @@
+{
+  "name": "@dcard/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "tsx src/main.ts",
+    "start:prod": "node dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src test",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dcard/core": "workspace:*",
+    "bullmq": "^6.3.8",
+    "ioredis": "^6.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

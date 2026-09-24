@@ -1,0 +1,39 @@
+{
+  "name": "d-card",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "infra:up": "docker compose -f infra/docker-compose.yml up -d --wait",
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "workflow:validate": "python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py",
+    "api:dart": "./scripts/generate-dart-client.sh",
+    "mobile:analyze": "dart run melos run analyze",
+    "mobile:test": "dart run melos run test",
+    "env:check": "pnpm --filter @dcard/env check",
+    "spike:webhooks": "tsx spikes/webhook-listener.ts",
+    "spike:whatsapp": "tsx spikes/whatsapp-button.ts",
+    "spike:nextsms": "tsx spikes/nextsms-send.ts",
+    "spike:drive": "tsx spikes/drive-upload.ts",
+    "spike:snippe": "tsx spikes/snippe-ussd.ts",
+    "spikes:typecheck": "tsc -p spikes/tsconfig.json"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "turbo": "^2.11.3",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.1",
+    "tsx": "^4.23.15"
+  }
+}

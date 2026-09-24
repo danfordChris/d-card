@@ -1,0 +1,127 @@
+name: Deploy (Vercel + Neon)
+
+# apps/web (dashboard + API) → Vercel, database → Neon.
+#   pull_request        → Neon branch preview/pr-<n> + Vercel preview, URL commented on the PR
+#   pull_request closed → Neon branch deleted
+#   push to main        → CI → migrate Neon production → Vercel production
+# Mobile apps are released manually; the worker is not deployed here.
+# One-time setup and secrets: docs/deployment.md
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches: [main]
+
+env:
+  VERCEL_CLI_VERSION: "60.0.0"
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  preview:
+    name: Preview (Neon branch + Vercel preview)
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    concurrency:
+      group: preview-pr-${{ github.event.number }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Create Neon branch
+        id: neon
+        uses: neondatabase/create-branch-action@v6
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          branch_name: preview/pr-${{ github.event.number }}
+          database: ${{ vars.NEON_DATABASE || 'neondb' }}
+          role: ${{ vars.NEON_ROLE || 'neondb_owner' }}
+
+      - name: Migrate preview database
+        run: pnpm --filter @dcard/db db:migrate && pnpm --filter @dcard/db db:seed
+        env:
+          DATABASE_URL: ${{ steps.neon.outputs.db_url }}
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@${{ env.VERCEL_CLI_VERSION }}
+      - run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy preview
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} \
+            --env DATABASE_URL="${{ steps.neon.outputs.db_url_pooled }}")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- dcard-preview -->';
+            const body = `${marker}\n**Preview:** ${{ steps.deploy.outputs.url }}\n**Neon branch:** \`preview/pr-${context.issue.number}\``;
+            const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: context.issue.number });
+            const existing = comments.find((c) => c.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+            }
+
+  cleanup:
+    name: Delete Neon preview branch
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: preview/pr-${{ github.event.number }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+  checks:
+    name: CI
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+
+  production:
+    name: Production (migrate Neon + Vercel prod)
+    needs: checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Migrate production database
+        run: pnpm --filter @dcard/db db:migrate && pnpm --filter @dcard/db db:seed
+        env:
+          # Direct (non-pooled) Neon connection string.
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@${{ env.VERCEL_CLI_VERSION }}
+      - run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy production
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

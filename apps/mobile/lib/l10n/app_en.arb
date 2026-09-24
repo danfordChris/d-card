@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "appTitle": "D-Card",
+  "@appTitle": { "description": "Application name shown in the app bar and task switcher." },
+  "homeTitle": "Welcome to D-Card",
+  "@homeTitle": { "description": "Heading on the placeholder home screen." },
+  "homeSubtitle": "Your digital invitation cards",
+  "@homeSubtitle": { "description": "Short description under the home heading." }
+}

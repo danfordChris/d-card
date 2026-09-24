@@ -1,0 +1,19 @@
+# Audit, Privacy and Data Retention — privacy-notice
+
+## Description
+
+- Privacy notice for guests and consent wording.
+
+## Capability Leverage
+
+- Transparent data use.
+
+## Status
+
+- Pending
+
+## Evidence
+
+- Design doc: `docs/design/features/privacy-and-audit.md`
+- Backlog entry: `docs/implementation/tasks/backlog.md#p06`
+- Delivered by: `P06` (`docs/implementation/phases/phase-06-completion.md`)

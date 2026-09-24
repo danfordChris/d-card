@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typescript:
+    name: TypeScript (typecheck, lint, test, build)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: dcard
+          POSTGRES_PASSWORD: dcard
+          POSTGRES_DB: dcard
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U dcard -d dcard"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgres://dcard:dcard@localhost:5432/dcard
+      REDIS_URL: redis://localhost:6379
+      AUTH_VERIFIER: fake
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # Needed only if the workflow-contract submodule repo is private.
+          token: ${{ secrets.SUBMODULE_TOKEN || github.token }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo run typecheck lint test build
+      - run: pnpm spikes:typecheck
+      - name: Workflow contract
+        run: python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py
+
+  flutter:
+    name: Flutter (analyze, test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.44.6"
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart run melos run analyze
+      - run: dart run melos run test

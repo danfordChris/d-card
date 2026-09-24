@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "appTitle": "D-Card Door",
+  "@appTitle": { "description": "Application name shown in the app bar and task switcher." },
+  "homeTitle": "Door check-in",
+  "@homeTitle": { "description": "Heading on the placeholder home screen." },
+  "homeSubtitle": "Scan cards to admit guests",
+  "@homeSubtitle": { "description": "Short description under the home heading." }
+}

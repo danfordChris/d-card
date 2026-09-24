@@ -1,0 +1,3 @@
+[submodule ".agents/workflows/workflow-contract"]
+	path = .agents/workflows/workflow-contract
+	url = git@github.com:danfordChris/workflow-doc.git
