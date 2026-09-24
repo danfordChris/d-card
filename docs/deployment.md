@@ -21,6 +21,7 @@
 | Push to `main` | `deploy.yml › checks` (reuses `ci.yml`) → `production`: migrate + seed Neon production → `vercel build --prod` → `vercel deploy --prebuilt --prod` |
 
 - Preview jobs skip pull requests from forks (no secrets there).
+- Until the secrets and `NEON_PROJECT_ID` variable below are set, the `config` job reports "Deployment skipped" and all deploy jobs are skipped (checks stay green).
 - Seed is idempotent (upserts event types and plans).
 - The `production` job uses the GitHub environment `production` — add required reviewers there to gate releases.
 
