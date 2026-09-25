@@ -15,3 +15,5 @@ build/
 apps/*/lib/l10n/app_localizations*.dart
 # Vercel
 .vercel/
+# IDE
+.idea/

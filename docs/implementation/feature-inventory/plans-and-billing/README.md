@@ -20,7 +20,7 @@
 
 | Subfeature | Description | Status | Evidence |
 |---|---|---|---|
-| [`plans-and-entitlements`](./plans-and-entitlements.md) | Plan catalogue with entitlements and limits. | Pending | `P01` (`docs/implementation/phases/phase-01-events-guests.md`) |
+| [`plans-and-entitlements`](./plans-and-entitlements.md) | Plan catalogue with entitlements and limits. | In Review | `P01` (`docs/implementation/phases/phase-01-events-guests.md`) |
 | [`snippe-checkout`](./snippe-checkout.md) | USSD push and hosted checkout via Snippe; webhook confirms payment. | Pending | `P05` (`docs/implementation/phases/phase-05-payments-media.md`) |
 | [`pricing-rules`](./pricing-rules.md) | Minimum charge, guest blocks of 10, upgrades, pay before sending. | Pending | `P05` (`docs/implementation/phases/phase-05-payments-media.md`) |
 | [`launch-offer`](./launch-offer.md) | 20% off the host's first event (admin-configurable). | Pending | `P05` (`docs/implementation/phases/phase-05-payments-media.md`) |

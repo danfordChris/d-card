@@ -8,6 +8,7 @@ export const ErrorResponse = z
     error: z.object({
       code: z.string().openapi({ example: "unauthorized" }),
       message: z.string(),
+      issues: z.array(z.object({ path: z.string(), message: z.string() })).optional(),
     }),
   })
   .openapi("ErrorResponse");

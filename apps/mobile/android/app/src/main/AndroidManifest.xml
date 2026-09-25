@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- GST-6: pick guests from phone contacts (requested only when the picker opens). -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <application
         android:label="dcard_mobile"
         android:name="${applicationName}"

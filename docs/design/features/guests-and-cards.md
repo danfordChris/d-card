@@ -47,6 +47,12 @@ The host issues a card directly (single or double). The invitation goes straight
 | GST-15 | Dietary export, seating chart, table by SMS. | P2 |
 | GST-16 | Event history for **registered guests** only. | P2 |
 
+## Access
+
+- Host and committee members add, edit, remove and import guests.
+- Treasurers see the guest list read-only (they need it to record payments).
+- Door staff and walk-in approvers do not see the guest list in the dashboard.
+
 ## Invitation States
 ```mermaid
 stateDiagram-v2

@@ -44,6 +44,24 @@
               },
               "message": {
                 "type": "string"
+              },
+              "issues": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "message"
+                  ]
+                }
               }
             },
             "required": [
@@ -112,6 +130,1188 @@
           "google",
           "apple"
         ]
+      },
+      "PlanList": {
+        "type": "object",
+        "properties": {
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Plan"
+            }
+          }
+        },
+        "required": [
+          "plans"
+        ]
+      },
+      "Plan": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "pricePerGuest": {
+            "type": "integer"
+          },
+          "entitlements": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "pricePerGuest",
+          "entitlements"
+        ]
+      },
+      "EventTypeList": {
+        "type": "object",
+        "properties": {
+          "eventTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventType"
+            }
+          }
+        },
+        "required": [
+          "eventTypes"
+        ]
+      },
+      "EventType": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "nameSw": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "nameSw",
+          "nameEn"
+        ]
+      },
+      "EventList": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            }
+          }
+        },
+        "required": [
+          "events"
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "eventType": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "pricePerGuest": {
+                "type": "integer"
+              },
+              "guestLimit": {
+                "type": "integer"
+              },
+              "paid": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "key",
+              "name",
+              "pricePerGuest",
+              "guestLimit",
+              "paid"
+            ]
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "venueName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "venueAddress": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "venueMapUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "contactName": {
+            "type": "string"
+          },
+          "contactPhone": {
+            "type": "string"
+          },
+          "contact2Name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "contact2Phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confirmationEnabled": {
+            "type": "boolean"
+          },
+          "confirmationOffsetDays": {
+            "type": "integer"
+          },
+          "headcountPct": {
+            "type": "integer"
+          },
+          "autoUpgradeEnabled": {
+            "type": "boolean"
+          },
+          "singleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "doubleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reminderFrequencyDays": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "photoAlbumUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "access": {
+            "type": "string",
+            "enum": [
+              "host",
+              "treasurer",
+              "committee",
+              "door_staff",
+              "walkin_approver"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "eventType",
+          "plan",
+          "startsAt",
+          "endsAt",
+          "timeZone",
+          "venueName",
+          "venueAddress",
+          "venueMapUrl",
+          "contactName",
+          "contactPhone",
+          "contact2Name",
+          "contact2Phone",
+          "confirmationEnabled",
+          "confirmationOffsetDays",
+          "headcountPct",
+          "autoUpgradeEnabled",
+          "singleAmount",
+          "doubleAmount",
+          "reminderFrequencyDays",
+          "photoAlbumUrl",
+          "access",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "EventCreateInput": {
+        "type": "object",
+        "properties": {
+          "planKey": {
+            "type": "string"
+          },
+          "eventTypeKey": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "venueName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "venueAddress": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "venueMapUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "format": "uri"
+          },
+          "contactName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "contactPhone": {
+            "type": "string",
+            "minLength": 9,
+            "maxLength": 20,
+            "example": "0754 123 456"
+          },
+          "contact2Name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "contact2Phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 9,
+            "maxLength": 20
+          },
+          "confirmationEnabled": {
+            "type": "boolean"
+          },
+          "confirmationOffsetDays": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30
+          },
+          "headcountPct": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "autoUpgradeEnabled": {
+            "type": "boolean"
+          },
+          "singleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "doubleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "reminderFrequencyDays": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 60
+          },
+          "photoAlbumUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "format": "uri"
+          }
+        },
+        "required": [
+          "planKey",
+          "eventTypeKey",
+          "title",
+          "startsAt",
+          "contactName",
+          "contactPhone"
+        ]
+      },
+      "EventUpdateInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "venueName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "venueAddress": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "venueMapUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "format": "uri"
+          },
+          "contactName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "contactPhone": {
+            "type": "string",
+            "minLength": 9,
+            "maxLength": 20,
+            "example": "0754 123 456"
+          },
+          "contact2Name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "contact2Phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 9,
+            "maxLength": 20
+          },
+          "confirmationEnabled": {
+            "type": "boolean"
+          },
+          "confirmationOffsetDays": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30
+          },
+          "headcountPct": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "autoUpgradeEnabled": {
+            "type": "boolean"
+          },
+          "singleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "doubleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "reminderFrequencyDays": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 60
+          },
+          "photoAlbumUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "format": "uri"
+          }
+        }
+      },
+      "GuestPage": {
+        "type": "object",
+        "properties": {
+          "guests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Guest"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "guests",
+          "nextCursor"
+        ]
+      },
+      "Guest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "personId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "example": "255754123456"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "totalEntries": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "issued",
+              "cancelled"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "personId",
+          "name",
+          "phone",
+          "partnerName",
+          "cardType",
+          "totalEntries",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CardType": {
+        "type": "string",
+        "enum": [
+          "single",
+          "double"
+        ]
+      },
+      "GuestCreateResponse": {
+        "type": "object",
+        "properties": {
+          "guest": {
+            "$ref": "#/components/schemas/Guest"
+          },
+          "existing": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "guest",
+          "existing"
+        ]
+      },
+      "GuestCreateInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20,
+            "example": "0754 123 456"
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "consent": {
+            "type": "boolean",
+            "description": "Host confirms the guest agreed to receive event messages"
+          }
+        },
+        "required": [
+          "name",
+          "phone",
+          "consent"
+        ]
+      },
+      "GuestBulkResponse": {
+        "type": "object",
+        "properties": {
+          "added": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Guest"
+            }
+          },
+          "existing": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Guest"
+            }
+          },
+          "invalid": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "index",
+                "phone",
+                "reason"
+              ]
+            }
+          }
+        },
+        "required": [
+          "added",
+          "existing",
+          "invalid"
+        ]
+      },
+      "GuestBulkInput": {
+        "type": "object",
+        "properties": {
+          "guests": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "phone": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 20
+                },
+                "cardType": {
+                  "$ref": "#/components/schemas/CardType"
+                },
+                "partnerName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                }
+              },
+              "required": [
+                "name",
+                "phone"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 500
+          },
+          "consent": {
+            "type": "boolean",
+            "description": "Host confirms these guests agreed to receive event messages"
+          }
+        },
+        "required": [
+          "guests",
+          "consent"
+        ]
+      },
+      "GuestUpdateInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          }
+        }
+      },
+      "ImportPreview": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report": {
+            "$ref": "#/components/schemas/ImportReport"
+          }
+        },
+        "required": [
+          "jobId",
+          "report"
+        ]
+      },
+      "ImportReport": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "valid": {
+            "type": "integer"
+          },
+          "invalid": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "row": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "invalid_phone",
+                    "name_required",
+                    "invalid_card_type"
+                  ]
+                }
+              },
+              "required": [
+                "row",
+                "phone",
+                "reason"
+              ]
+            }
+          },
+          "duplicatesInFile": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "row": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "firstRow": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "row",
+                "phone",
+                "firstRow"
+              ]
+            }
+          },
+          "existing": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "row": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "row",
+                "phone",
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "total",
+          "valid",
+          "invalid",
+          "duplicatesInFile",
+          "existing"
+        ]
+      },
+      "ImportCopyInput": {
+        "type": "object",
+        "properties": {
+          "fromEventId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "fromEventId"
+        ]
+      },
+      "ImportResult": {
+        "type": "object",
+        "properties": {
+          "imported": {
+            "type": "integer"
+          },
+          "existing": {
+            "type": "integer"
+          },
+          "invalid": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "imported",
+          "existing",
+          "invalid"
+        ]
+      },
+      "ImportConfirmInput": {
+        "type": "object",
+        "properties": {
+          "consent": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "consent"
+        ]
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "email": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "role": {
+                  "$ref": "#/components/schemas/TeamRole"
+                },
+                "since": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "userId",
+                "email",
+                "role",
+                "since"
+              ]
+            }
+          },
+          "invites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Invite"
+            }
+          }
+        },
+        "required": [
+          "members",
+          "invites"
+        ]
+      },
+      "TeamRole": {
+        "type": "string",
+        "enum": [
+          "treasurer",
+          "committee",
+          "door_staff",
+          "walkin_approver"
+        ]
+      },
+      "Invite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/TeamRole"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "role",
+          "email",
+          "expiresAt",
+          "createdAt"
+        ]
+      },
+      "InviteCreateResponse": {
+        "type": "object",
+        "properties": {
+          "invite": {
+            "$ref": "#/components/schemas/Invite"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri"
+          },
+          "emailQueued": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "invite",
+          "link",
+          "emailQueued"
+        ]
+      },
+      "InviteCreateInput": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/TeamRole"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "format": "email"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "InviteInfo": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventTitle": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/TeamRole"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "eventId",
+          "eventTitle",
+          "role",
+          "expiresAt"
+        ]
+      },
+      "InviteAccepted": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/TeamRole"
+          }
+        },
+        "required": [
+          "eventId",
+          "role"
+        ]
+      },
+      "AdminEventTypeList": {
+        "type": "object",
+        "properties": {
+          "eventTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminEventType"
+            }
+          }
+        },
+        "required": [
+          "eventTypes"
+        ]
+      },
+      "AdminEventType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string"
+          },
+          "nameSw": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "nameSw",
+          "nameEn",
+          "active"
+        ]
+      },
+      "AdminEventTypeCreateInput": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^\\s*[A-Za-z][A-Za-z0-9_]{1,39}\\s*$",
+            "example": "kitchen_party"
+          },
+          "nameSw": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "nameEn": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "key",
+          "nameSw",
+          "nameEn"
+        ]
+      },
+      "AdminEventTypeUpdateInput": {
+        "type": "object",
+        "properties": {
+          "nameSw": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "nameEn": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
       }
     },
     "parameters": {}
@@ -218,6 +1418,1328 @@
           },
           "401": {
             "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans": {
+      "get": {
+        "operationId": "listPlans",
+        "summary": "Active plans with price per guest and entitlements",
+        "responses": {
+          "200": {
+            "description": "Plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/event-types": {
+      "get": {
+        "operationId": "listEventTypes",
+        "summary": "Active event types",
+        "responses": {
+          "200": {
+            "description": "Event types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTypeList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events": {
+      "get": {
+        "operationId": "listEvents",
+        "summary": "Events where the caller is host or team member",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createEvent",
+        "summary": "Create a draft event (caller becomes host)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Plan limit (e.g. auto-upgrade on Msingi)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error or invalid phone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}": {
+      "get": {
+        "operationId": "getEvent",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a team member",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateEvent",
+        "summary": "Edit details, contact and settings (host only)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Event cancelled/completed or plan limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/cancel": {
+      "post": {
+        "operationId": "cancelEvent",
+        "summary": "Cancel a draft or published event (host only)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancelled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Already cancelled/completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/guests": {
+      "get": {
+        "operationId": "listGuests",
+        "summary": "Guests of an event, newest first (host, committee, treasurer)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of guests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestPage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addGuest",
+        "summary": "Add a guest (host, committee). Existing phone returns the existing invitation with 200.",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuestCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Already invited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestCreateResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestCreateResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Event cancelled/completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error, invalid phone or consent_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/guests/bulk": {
+      "post": {
+        "operationId": "addGuestsBulk",
+        "summary": "Add up to 500 guests picked from phone contacts (host, committee). Invalid rows are reported, not fatal.",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuestBulkInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Nothing new added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestBulkResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Some guests added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestBulkResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Event cancelled/completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error or consent_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/guests/{guestId}": {
+      "patch": {
+        "operationId": "updateGuest",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuestUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Guest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Card already issued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "removeGuest",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed"
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Card already issued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/imports": {
+      "post": {
+        "operationId": "previewGuestImport",
+        "summary": "Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportPreview"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unreadable file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/imports/copy": {
+      "post": {
+        "operationId": "previewCopyGuests",
+        "summary": "Preview copying people from the caller's past event",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportCopyInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportPreview"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not your event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/imports/{jobId}/confirm": {
+      "post": {
+        "operationId": "confirmGuestImport",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "jobId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportConfirmInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Imported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResult"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Already completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "consent_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/team": {
+      "get": {
+        "operationId": "getTeam",
+        "summary": "Members and pending invites (host only)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Team",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Team"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/team/invites": {
+      "post": {
+        "operationId": "createInvite",
+        "summary": "Create a 7-day, single-use invite link; emails it when an email is given (host only)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteCreateResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "plan_limit (door staff)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/team/invites/{inviteId}": {
+      "delete": {
+        "operationId": "revokeInvite",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "inviteId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Revoked"
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/team/members/{userId}": {
+      "delete": {
+        "operationId": "removeMember",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "userId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/TeamRole"
+            },
+            "required": true,
+            "name": "role",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed"
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/invites/{token}": {
+      "get": {
+        "operationId": "getInvite",
+        "summary": "Public invite info for the accept page",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invite",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Used, revoked or expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/invites/{token}/accept": {
+      "post": {
+        "operationId": "acceptInvite",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteAccepted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Used, revoked or expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/event-types": {
+      "get": {
+        "operationId": "adminListEventTypes",
+        "summary": "All event types, including inactive (admin)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminEventTypeList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "adminCreateEventType",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminEventTypeCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminEventType"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Duplicate key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/event-types/{key}": {
+      "patch": {
+        "operationId": "adminUpdateEventType",
+        "summary": "Rename or activate/deactivate (existing events keep their type)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "key",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminEventTypeUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminEventType"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown key",
             "content": {
               "application/json": {
                 "schema": {

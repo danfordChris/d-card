@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  index,
   integer,
   jsonb,
   pgEnum,
@@ -9,6 +10,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -188,4 +190,132 @@ export const auditLog = pgTable("audit_log", {
   newValue: jsonb("new_value"),
   ip: text("ip"),
   device: text("device"),
+});
+
+/** The plan chosen for an event and what has been paid (docs/design/features/plans-and-billing.md). */
+export const eventPlan = pgTable(
+  "event_plan",
+  {
+    eventId: uuid("event_id")
+      .primaryKey()
+      .references(() => event.id, { onDelete: "cascade" }),
+    planId: uuid("plan_id")
+      .notNull()
+      .references(() => plan.id),
+    /** Price per guest card at the time the plan was chosen (TZS). */
+    pricePerGuest: integer("price_per_guest").notNull(),
+    /** Guest cards paid for; 0 until the host pays (phase 05). */
+    guestLimit: integer("guest_limit").notNull().default(0),
+    amountPaid: integer("amount_paid").notNull().default(0),
+    purchasedAt: timestamp("purchased_at", { withTimezone: true }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    check("event_plan_amounts_non_negative", sql`${t.guestLimit} >= 0 AND ${t.amountPaid} >= 0`),
+  ],
+);
+
+export const cardTypeEnum = pgEnum("card_type", ["single", "double"]);
+export const invitationStatusEnum = pgEnum("invitation_status", ["pending", "issued", "cancelled"]);
+export const consentSourceEnum = pgEnum("consent_source", ["form", "import", "contacts", "copy"]);
+
+/**
+ * A Person invited to one event (docs/design/features/guests-and-cards.md).
+ * guest_name / guest_phone are the host-owned snapshot; card fields arrive in phase 02.
+ */
+export const invitation = pgTable(
+  "invitation",
+  {
+    id: id(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    personId: uuid("person_id").references(() => person.id, { onDelete: "set null" }),
+    guestName: text("guest_name").notNull(),
+    guestPhone: text("guest_phone").notNull(),
+    partnerName: text("partner_name"),
+    cardType: cardTypeEnum("card_type").notNull().default("single"),
+    totalEntries: integer("total_entries").notNull().default(1),
+    status: invitationStatusEnum("status").notNull().default("pending"),
+    createdBy: uuid("created_by").references(() => userAccount.id),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    unique("invitation_event_person_unique").on(t.eventId, t.personId),
+    index("invitation_event_created_idx").on(t.eventId, t.createdAt),
+    check("invitation_guest_phone_format", sql`${t.guestPhone} ~ '^255[0-9]{9}$'`),
+    check(
+      "invitation_entries_match_type",
+      sql`(${t.cardType} = 'single' AND ${t.totalEntries} = 1) OR (${t.cardType} = 'double' AND ${t.totalEntries} = 2)`,
+    ),
+  ],
+);
+
+/** Host/committee confirmation that guests agreed to receive event messages (MSG-14). */
+export const guestConsent = pgTable("guest_consent", {
+  id: id(),
+  eventId: uuid("event_id")
+    .notNull()
+    .references(() => event.id, { onDelete: "cascade" }),
+  confirmedBy: uuid("confirmed_by")
+    .notNull()
+    .references(() => userAccount.id),
+  source: consentSourceEnum("source").notNull(),
+  guestCount: integer("guest_count").notNull(),
+  confirmedAt: timestamp("confirmed_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const importSourceEnum = pgEnum("import_source", ["file", "past_event"]);
+export const importStatusEnum = pgEnum("import_status", ["previewed", "completed"]);
+
+export type ImportRow = { row: number; name: string; phone: string; cardType: "single" | "double"; partnerName: string | null };
+export type ImportReport = {
+  total: number;
+  valid: number;
+  invalid: { row: number; phone: string; reason: string }[];
+  duplicatesInFile: { row: number; phone: string; firstRow: number }[];
+  existing: { row: number; phone: string; name: string }[];
+};
+
+/** A guest import preview; nothing is written to invitations until it is confirmed (GST-5, GST-7). */
+export const importJob = pgTable("import_job", {
+  id: id(),
+  eventId: uuid("event_id")
+    .notNull()
+    .references(() => event.id, { onDelete: "cascade" }),
+  source: importSourceEnum("source").notNull(),
+  status: importStatusEnum("status").notNull().default("previewed"),
+  fileName: text("file_name"),
+  sourceEventId: uuid("source_event_id").references(() => event.id, { onDelete: "set null" }),
+  /** Rows that will be created on confirm (valid, not duplicates, not already invited). */
+  rows: jsonb("rows").$type<ImportRow[]>().notNull(),
+  report: jsonb("report").$type<ImportReport>().notNull(),
+  total: integer("total").notNull(),
+  imported: integer("imported").notNull().default(0),
+  createdBy: uuid("created_by")
+    .notNull()
+    .references(() => userAccount.id),
+  createdAt: createdAt(),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+});
+
+/** Invitation for a team member (docs/design/features/auth.md › Team Invitation). Token stored hashed. */
+export const teamInvite = pgTable("team_invite", {
+  id: id(),
+  eventId: uuid("event_id")
+    .notNull()
+    .references(() => event.id, { onDelete: "cascade" }),
+  role: eventRoleEnum("role").notNull(),
+  email: text("email"),
+  tokenHash: text("token_hash").notNull().unique(),
+  createdBy: uuid("created_by")
+    .notNull()
+    .references(() => userAccount.id),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  acceptedBy: uuid("accepted_by").references(() => userAccount.id),
+  acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+  revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  createdAt: createdAt(),
 });

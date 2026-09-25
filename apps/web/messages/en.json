@@ -1,0 +1,292 @@
+{
+  "app": {
+    "name": "D-Card",
+    "tagline": "Digital invitation cards",
+    "language": "Language",
+    "signOut": "Sign out",
+    "admin": "Admin"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "loginTitle": "Sign in to D-Card",
+    "loginSubmit": "Sign in",
+    "signupTitle": "Create your D-Card account",
+    "signupSubmit": "Create account",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot password?",
+    "resetTitle": "Reset your password",
+    "resetSubmit": "Send reset link",
+    "resetSent": "If an account exists for this email, a reset link has been sent.",
+    "verifySent": "We sent a verification link to your email. Please verify before continuing.",
+    "backToLogin": "Back to sign in",
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "passwordLength": "Use at least 8 characters.",
+      "invalidCredentials": "Email or password is incorrect.",
+      "emailInUse": "An account with this email already exists.",
+      "network": "Network problem. Check your connection and try again.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {email}"
+  },
+  "events": {
+    "title": "Events",
+    "new": "New event",
+    "empty": "No events yet. Create your first event.",
+    "open": "Open",
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "access": {
+      "host": "Host",
+      "treasurer": "Treasurer",
+      "committee": "Committee",
+      "door_staff": "Door staff",
+      "walkin_approver": "Walk-in approver"
+    },
+    "wizard": {
+      "title": "Create an event",
+      "step": "Step {current} of {total}",
+      "back": "Back",
+      "next": "Next",
+      "create": "Create event",
+      "steps": {
+        "plan": "Plan",
+        "details": "Details",
+        "contact": "Contact",
+        "options": "Options"
+      },
+      "perGuest": "Tsh {price} per guest card",
+      "eventType": "Event type",
+      "eventTitle": "Event title",
+      "startsAt": "Date and time",
+      "endsAt": "Ends (optional)",
+      "venueName": "Venue",
+      "venueAddress": "Venue address",
+      "venueMapUrl": "Map link (optional)",
+      "contactName": "Contact name",
+      "contactPhone": "Contact phone",
+      "contactHint": "Shown in every SMS so guests can call. Example: 0754 123 456",
+      "contact2Name": "Second contact name (optional)",
+      "contact2Phone": "Second contact phone (optional)",
+      "confirmationEnabled": "Ask guests to confirm attendance",
+      "confirmationOffsetDays": "Days before the event to ask",
+      "headcountPct": "Count guests who don't answer as (%)",
+      "autoUpgradeEnabled": "Auto-upgrade Single to Double when the Double amount is paid",
+      "autoUpgradeLocked": "Not included in the Msingi plan",
+      "singleAmount": "Single card contribution (Tsh)",
+      "doubleAmount": "Double card contribution (Tsh)",
+      "photoAlbumUrl": "Google Photos album link (optional)"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "phone": "Enter a Tanzanian phone number, e.g. 0754 123 456.",
+      "url": "Enter a full link starting with https://",
+      "endsBeforeStart": "The end must be after the start.",
+      "number": "Enter a whole number.",
+      "range": "Out of range.",
+      "generic": "Could not save. Please try again.",
+      "invalid": "This value is not valid."
+    },
+    "summary": {
+      "plan": "Plan",
+      "type": "Type",
+      "when": "When",
+      "venue": "Venue",
+      "contact": "Contact",
+      "settings": "Settings",
+      "edit": "Edit",
+      "cancel": "Cancel event",
+      "cancelConfirm": "Cancel this event? This cannot be undone.",
+      "unpaid": "Not paid yet",
+      "confirmationOn": "Confirmation {days} days before",
+      "confirmationOff": "No attendance confirmation",
+      "headcount": "Non-responders counted at {pct}%",
+      "autoUpgradeOn": "Auto-upgrade on",
+      "autoUpgradeOff": "Auto-upgrade off",
+      "amounts": "Single Tsh {single} · Double Tsh {double}",
+      "notSet": "Not set",
+      "save": "Save changes",
+      "editTitle": "Edit event",
+      "guests": "Guests",
+      "team": "Team"
+    }
+  },
+  "guests": {
+    "title": "Guests",
+    "back": "Back to event",
+    "add": "Add guest",
+    "search": "Search by name or phone",
+    "empty": "No guests yet.",
+    "noResults": "No guests match your search.",
+    "loadMore": "Load more",
+    "readOnly": "You can view guests but not change them.",
+    "columns": {
+      "name": "Name",
+      "phone": "Phone",
+      "card": "Card",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "card": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "status": {
+      "pending": "Pending",
+      "issued": "Issued",
+      "cancelled": "Cancelled"
+    },
+    "form": {
+      "addTitle": "Add guest",
+      "editTitle": "Edit guest",
+      "name": "Full name",
+      "phone": "Phone",
+      "phoneHint": "Example: 0754 123 456",
+      "cardType": "Card type",
+      "partnerName": "Partner name (optional)",
+      "consent": "The guest agreed to receive messages about this event (WhatsApp and SMS).",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "edit": "Edit",
+    "remove": "Remove",
+    "removeConfirm": "Remove {name} from the guest list?",
+    "alreadyInvited": "{name} is already on the guest list.",
+    "added": "{name} added.",
+    "errors": {
+      "required": "This field is required.",
+      "phone": "Enter a Tanzanian phone number, e.g. 0754 123 456.",
+      "consent": "Please confirm the guest agreed to receive messages.",
+      "generic": "Could not save. Please try again."
+    },
+    "import": "Import"
+  },
+  "imports": {
+    "title": "Import guests",
+    "back": "Back to guests",
+    "file": {
+      "heading": "From Excel or CSV",
+      "intro": "Download the template, fill one guest per row, then upload it. Columns: name, phone, card_type (single or double), partner_name.",
+      "example": "Example row: Juma Hamisi · 0754 123 456 · double · Neema Juma",
+      "templateXlsx": "Download Excel template",
+      "templateCsv": "Download CSV template",
+      "choose": "Choose file (.xlsx or .csv)",
+      "preview": "Check file"
+    },
+    "copy": {
+      "heading": "Copy from a past event",
+      "intro": "Copy the people from one of your earlier events. Pledges and answers are not copied.",
+      "choose": "Past event",
+      "none": "You have no other events to copy from.",
+      "preview": "Check guests"
+    },
+    "report": {
+      "heading": "Check before importing",
+      "total": "Rows in file: {count}",
+      "valid": "Ready to add: {count}",
+      "invalid": "Rows with problems",
+      "duplicates": "Repeated in the file",
+      "existing": "Already on the guest list",
+      "row": "Row {row}",
+      "sameAs": "same number as row {row}",
+      "reasons": {
+        "invalid_phone": "invalid phone number",
+        "name_required": "name missing",
+        "invalid_card_type": "card type must be single or double"
+      },
+      "consent": "These guests agreed to receive messages about this event (WhatsApp and SMS).",
+      "import": "Add {count} guests",
+      "nothing": "There is nothing new to add."
+    },
+    "done": "{count} guests added.",
+    "viewGuests": "View guest list",
+    "errors": {
+      "file": "Choose a file first.",
+      "consent": "Please confirm the guests agreed to receive messages.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "team": {
+    "title": "Team",
+    "back": "Back to event",
+    "roles": {
+      "treasurer": "Treasurer",
+      "committee": "Committee member",
+      "door_staff": "Door staff",
+      "walkin_approver": "Walk-in approver"
+    },
+    "invite": {
+      "heading": "Invite a team member",
+      "role": "Role",
+      "email": "Email (optional)",
+      "emailHint": "We email the link if you add an address. You can also share the link yourself.",
+      "create": "Create invite link",
+      "link": "Invite link (valid 7 days, one person)",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "emailQueued": "We are emailing the link to {email}.",
+      "planLimit": "Your plan does not allow more door staff."
+    },
+    "members": {
+      "heading": "Members",
+      "empty": "No team members yet.",
+      "remove": "Remove",
+      "removeConfirm": "Remove {email} ({role}) from this event?"
+    },
+    "pending": {
+      "heading": "Pending invites",
+      "empty": "No pending invites.",
+      "expires": "Expires {date}",
+      "revoke": "Revoke",
+      "anyone": "Anyone with the link"
+    },
+    "errors": {
+      "email": "Enter a valid email address.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "invitePage": {
+    "title": "You're invited",
+    "body": "You have been invited to join the team for {event} as {role}.",
+    "signIn": "Sign in to accept",
+    "signUp": "Create an account",
+    "accept": "Accept invitation",
+    "accepted": "You joined the team.",
+    "invalid": "This invitation link is no longer valid. Ask the host for a new one.",
+    "notFound": "This invitation link was not found."
+  },
+  "adminEventTypes": {
+    "title": "Event types",
+    "intro": "Hosts choose from active types when creating an event. Deactivating a type hides it from new events; existing events keep it.",
+    "key": "Key",
+    "keyHint": "Lowercase letters, digits and _ — cannot be changed later.",
+    "nameSw": "Name (Swahili)",
+    "nameEn": "Name (English)",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "create": "Add event type",
+    "createHeading": "New event type",
+    "save": "Save",
+    "saved": "Saved",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "errors": {
+      "required": "Required.",
+      "key": "Use 2–40 lowercase letters, digits or _ (start with a letter).",
+      "duplicate": "This key already exists.",
+      "generic": "Something went wrong. Please try again."
+    }
+  }
+}

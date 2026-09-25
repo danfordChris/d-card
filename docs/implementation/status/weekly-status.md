@@ -11,3 +11,6 @@
 - T00-08 done: `packages/env` + documented `.env.example`, local `.env` (dummy provider keys), `pnpm env:check`, four provider spikes + webhook listener, handover README.
 - T00-09 done: CI (TypeScript + Flutter) and Deploy workflow (Neon branch per PR + Vercel preview; migrate + Vercel production on `main`); `docs/deployment.md`.
 - Remaining in phase 00: T00-10 live spikes (blocked on real keys).
+- Phase 01 planned and started: T01-01…T01-10 (events API, web foundation/login, event wizard, guests API/UI, import, team invitations, mobile login/events, contacts import, admin event types). Decisions: invite link + email (Resend), web UI Tailwind only (ADR 0001 O18, ADR 0003).
+- Exception: phase 00 stays open only for T00-10 (live spikes, blocked on keys); does not block phase 01.
+- Phase 01 done and reviewed (`docs/implementation/reviews/2026-09-24-phase-01-review.md`): events API + web wizard, guests (form, Excel/CSV import, copy from past event, phone contacts in the D-Card app), team invitations (link + email), D-Card app host login and events, admin event types. Live Firebase/Resend checks wait for real keys.

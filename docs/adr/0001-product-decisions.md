@@ -57,6 +57,7 @@
 | O15 | Drive folder sharing | **Host chooses per event** when creating it: **private** (default; D-Card serves media only to valid card links, pays a little bandwidth) or **anyone with the link** (served directly by Drive). |
 | O16 | Payment gateway (host plan payments) | **Snippe** (snippe.sh): USSD push on M-Pesa, Airtel Money, Mixx by Yas, Halotel; hosted checkout incl. cards; 2.5% per mobile-money payment, no monthly fee; webhooks + idempotency. Payouts available for Phase 3 contributions. |
 | O17 | Authentication | **Firebase Auth** for all logins; **Postgres + Drizzle** for all data, including roles and per-event permissions (keyed by Firebase UID). |
+| O18 | Team invitations | **Shareable invite link + email** (7-day, single-use token; role per event). Replaces "by email" only. |
 | O13 | Photo studio and catering packages | **Backlog:** future all-in-one packages with partner photo studios and caterers. |
 | O12 | WhatsApp consent | **Host confirms guests agreed to receive messages; every WhatsApp message offers STOP; stopped guests get SMS only.** |
 | O9 | Message control | **Full message customisation per event:** on/off, channel, wording (SMS full text; WhatsApp through approved template variants + editable parts), timing and frequency, quiet hours, cost estimate, test send, manual send. **Which controls and how many messages are available depends on the subscription plan.** The invitation card cannot be turned off. |

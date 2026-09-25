@@ -15,15 +15,14 @@ const PROVIDERS: Record<string, VerifiedToken["provider"]> = {
   "apple.com": "apple",
 };
 
-/** Verifies Firebase ID tokens with firebase-admin (docs/design/integrations/firebase.md). */
-export const firebaseVerifier: TokenVerifier = async (idToken) => {
-  const { getFirebaseAuth } = await import("./firebase-admin");
-  let decoded;
-  try {
-    decoded = await getFirebaseAuth().verifyIdToken(idToken, true);
-  } catch {
-    throw new UnauthorizedError("Invalid or expired token.");
-  }
+type DecodedFirebaseToken = {
+  uid: string;
+  email?: string;
+  email_verified?: boolean;
+  firebase: { sign_in_provider: string };
+};
+
+function fromDecoded(decoded: DecodedFirebaseToken): VerifiedToken {
   const provider = PROVIDERS[decoded.firebase.sign_in_provider];
   if (!provider) {
     throw new UnauthorizedError("Unsupported sign-in provider.");
@@ -34,6 +33,17 @@ export const firebaseVerifier: TokenVerifier = async (idToken) => {
     emailVerified: decoded.email_verified === true,
     provider,
   };
+}
+
+/** Verifies Firebase ID tokens with firebase-admin (docs/design/integrations/firebase.md). */
+export const firebaseVerifier: TokenVerifier = async (idToken) => {
+  const { getFirebaseAuth } = await import("./firebase-admin");
+  try {
+    return fromDecoded(await getFirebaseAuth().verifyIdToken(idToken, true));
+  } catch (err) {
+    if (err instanceof UnauthorizedError) throw err;
+    throw new UnauthorizedError("Invalid or expired token.");
+  }
 };
 
 /**
@@ -66,12 +76,54 @@ export function getVerifier(): TokenVerifier {
   return firebaseVerifier;
 }
 
-/** Reads `Authorization: Bearer <token>` and verifies it. */
+// ── Web sessions (httpOnly cookie) ─────────────────────────────────────────
+export const SESSION_COOKIE = "dcard_session";
+export const SESSION_MAX_AGE_SECONDS = 5 * 24 * 60 * 60; // 5 days
+
+function isFakeMode(): boolean {
+  getVerifier(); // throws if fake mode is misconfigured in production
+  return (process.env.AUTH_VERIFIER ?? "firebase") === "fake";
+}
+
+/** Turns a fresh ID token into a session cookie value (Firebase session cookie, or the fake token in tests). */
+export async function createSessionCookie(idToken: string): Promise<{ value: string; token: VerifiedToken }> {
+  const token = await getVerifier()(idToken);
+  if (isFakeMode()) return { value: idToken, token };
+  const { getFirebaseAuth } = await import("./firebase-admin");
+  const value = await getFirebaseAuth().createSessionCookie(idToken, { expiresIn: SESSION_MAX_AGE_SECONDS * 1000 });
+  return { value, token };
+}
+
+export async function verifySessionCookie(value: string): Promise<VerifiedToken> {
+  if (isFakeMode()) return fakeVerifier(value);
+  const { getFirebaseAuth } = await import("./firebase-admin");
+  try {
+    return fromDecoded(await getFirebaseAuth().verifySessionCookie(value, true));
+  } catch (err) {
+    if (err instanceof UnauthorizedError) throw err;
+    throw new UnauthorizedError("Session expired. Please sign in again.");
+  }
+}
+
+export function readCookie(header: string | null, name: string): string | undefined {
+  if (!header) return undefined;
+  for (const part of header.split(";")) {
+    const [k, ...v] = part.trim().split("=");
+    if (k === name) return decodeURIComponent(v.join("="));
+  }
+  return undefined;
+}
+
+/** Authenticates `Authorization: Bearer <ID token>` (apps) or the session cookie (web). */
 export async function authenticate(request: Request): Promise<VerifiedToken> {
   const header = request.headers.get("authorization") ?? "";
   const match = /^Bearer\s+(.+)$/i.exec(header);
-  if (!match?.[1]) {
-    throw new UnauthorizedError();
+  if (match?.[1]) {
+    return getVerifier()(match[1].trim());
   }
-  return getVerifier()(match[1].trim());
+  const cookie = readCookie(request.headers.get("cookie"), SESSION_COOKIE);
+  if (cookie) {
+    return verifySessionCookie(cookie);
+  }
+  throw new UnauthorizedError();
 }

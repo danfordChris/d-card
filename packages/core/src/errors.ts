@@ -32,3 +32,26 @@ export class NotFoundError extends DomainError {
     super("not_found", message);
   }
 }
+
+export type ValidationIssue = { path: string; message: string };
+
+export class ValidationError extends DomainError {
+  constructor(
+    message = "Some fields are invalid.",
+    readonly issues: ValidationIssue[] = [],
+  ) {
+    super("validation_error", message);
+  }
+}
+
+export class ConflictError extends DomainError {
+  constructor(message = "This action conflicts with the current state.") {
+    super("conflict", message);
+  }
+}
+
+export class PlanLimitError extends DomainError {
+  constructor(message = "Your plan does not include this.") {
+    super("plan_limit", message);
+  }
+}

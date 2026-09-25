@@ -40,14 +40,21 @@ Please follow the [installation procedure](#installation--usage) and then run th
 ```dart
 import 'package:dcard_api/api.dart';
 
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = DefaultApi();
+final token = token_example; // String | 
 
 try {
-    final result = api_instance.getHealth();
+    final result = api_instance.acceptInvite(token);
     print(result);
 } catch (e) {
-    print('Exception when calling DefaultApi->getHealth: $e\n');
+    print('Exception when calling DefaultApi->acceptInvite: $e\n');
 }
 
 ```
@@ -58,18 +65,82 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DefaultApi* | [**acceptInvite**](doc//DefaultApi.md#acceptinvite) | **POST** /api/v1/invites/{token}/accept | 
+*DefaultApi* | [**addGuest**](doc//DefaultApi.md#addguest) | **POST** /api/v1/events/{id}/guests | Add a guest (host, committee). Existing phone returns the existing invitation with 200.
+*DefaultApi* | [**addGuestsBulk**](doc//DefaultApi.md#addguestsbulk) | **POST** /api/v1/events/{id}/guests/bulk | Add up to 500 guests picked from phone contacts (host, committee). Invalid rows are reported, not fatal.
+*DefaultApi* | [**adminCreateEventType**](doc//DefaultApi.md#admincreateeventtype) | **POST** /api/v1/admin/event-types | 
+*DefaultApi* | [**adminListEventTypes**](doc//DefaultApi.md#adminlisteventtypes) | **GET** /api/v1/admin/event-types | All event types, including inactive (admin)
+*DefaultApi* | [**adminUpdateEventType**](doc//DefaultApi.md#adminupdateeventtype) | **PATCH** /api/v1/admin/event-types/{key} | Rename or activate/deactivate (existing events keep their type)
+*DefaultApi* | [**cancelEvent**](doc//DefaultApi.md#cancelevent) | **POST** /api/v1/events/{id}/cancel | Cancel a draft or published event (host only)
+*DefaultApi* | [**confirmGuestImport**](doc//DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
+*DefaultApi* | [**createEvent**](doc//DefaultApi.md#createevent) | **POST** /api/v1/events | Create a draft event (caller becomes host)
+*DefaultApi* | [**createInvite**](doc//DefaultApi.md#createinvite) | **POST** /api/v1/events/{id}/team/invites | Create a 7-day, single-use invite link; emails it when an email is given (host only)
+*DefaultApi* | [**getEvent**](doc//DefaultApi.md#getevent) | **GET** /api/v1/events/{id} | 
 *DefaultApi* | [**getHealth**](doc//DefaultApi.md#gethealth) | **GET** /api/v1/health | Service health
+*DefaultApi* | [**getInvite**](doc//DefaultApi.md#getinvite) | **GET** /api/v1/invites/{token} | Public invite info for the accept page
 *DefaultApi* | [**getMe**](doc//DefaultApi.md#getme) | **GET** /api/v1/me | Current account
+*DefaultApi* | [**getTeam**](doc//DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
+*DefaultApi* | [**listEventTypes**](doc//DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
+*DefaultApi* | [**listEvents**](doc//DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
+*DefaultApi* | [**listGuests**](doc//DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
+*DefaultApi* | [**listPlans**](doc//DefaultApi.md#listplans) | **GET** /api/v1/plans | Active plans with price per guest and entitlements
+*DefaultApi* | [**previewCopyGuests**](doc//DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
+*DefaultApi* | [**previewGuestImport**](doc//DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 *DefaultApi* | [**provisionMe**](doc//DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
+*DefaultApi* | [**removeGuest**](doc//DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
+*DefaultApi* | [**removeMember**](doc//DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
+*DefaultApi* | [**revokeInvite**](doc//DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
+*DefaultApi* | [**updateEvent**](doc//DefaultApi.md#updateevent) | **PATCH** /api/v1/events/{id} | Edit details, contact and settings (host only)
+*DefaultApi* | [**updateGuest**](doc//DefaultApi.md#updateguest) | **PATCH** /api/v1/events/{id}/guests/{guestId} | 
 
 
 ## Documentation For Models
 
  - [Account](doc//Account.md)
+ - [AdminEventType](doc//AdminEventType.md)
+ - [AdminEventTypeCreateInput](doc//AdminEventTypeCreateInput.md)
+ - [AdminEventTypeList](doc//AdminEventTypeList.md)
+ - [AdminEventTypeUpdateInput](doc//AdminEventTypeUpdateInput.md)
  - [AuthProvider](doc//AuthProvider.md)
+ - [CardType](doc//CardType.md)
  - [ErrorResponse](doc//ErrorResponse.md)
  - [ErrorResponseError](doc//ErrorResponseError.md)
+ - [ErrorResponseErrorIssuesInner](doc//ErrorResponseErrorIssuesInner.md)
+ - [Event](doc//Event.md)
+ - [EventCreateInput](doc//EventCreateInput.md)
+ - [EventList](doc//EventList.md)
+ - [EventPlan](doc//EventPlan.md)
+ - [EventType](doc//EventType.md)
+ - [EventTypeList](doc//EventTypeList.md)
+ - [EventUpdateInput](doc//EventUpdateInput.md)
+ - [Guest](doc//Guest.md)
+ - [GuestBulkInput](doc//GuestBulkInput.md)
+ - [GuestBulkInputGuestsInner](doc//GuestBulkInputGuestsInner.md)
+ - [GuestBulkResponse](doc//GuestBulkResponse.md)
+ - [GuestBulkResponseInvalidInner](doc//GuestBulkResponseInvalidInner.md)
+ - [GuestCreateInput](doc//GuestCreateInput.md)
+ - [GuestCreateResponse](doc//GuestCreateResponse.md)
+ - [GuestPage](doc//GuestPage.md)
+ - [GuestUpdateInput](doc//GuestUpdateInput.md)
  - [HealthResponse](doc//HealthResponse.md)
+ - [ImportConfirmInput](doc//ImportConfirmInput.md)
+ - [ImportCopyInput](doc//ImportCopyInput.md)
+ - [ImportPreview](doc//ImportPreview.md)
+ - [ImportReport](doc//ImportReport.md)
+ - [ImportReportDuplicatesInFileInner](doc//ImportReportDuplicatesInFileInner.md)
+ - [ImportReportExistingInner](doc//ImportReportExistingInner.md)
+ - [ImportReportInvalidInner](doc//ImportReportInvalidInner.md)
+ - [ImportResult](doc//ImportResult.md)
+ - [Invite](doc//Invite.md)
+ - [InviteAccepted](doc//InviteAccepted.md)
+ - [InviteCreateInput](doc//InviteCreateInput.md)
+ - [InviteCreateResponse](doc//InviteCreateResponse.md)
+ - [InviteInfo](doc//InviteInfo.md)
+ - [Plan](doc//Plan.md)
+ - [PlanList](doc//PlanList.md)
+ - [Team](doc//Team.md)
+ - [TeamMembersInner](doc//TeamMembersInner.md)
+ - [TeamRole](doc//TeamRole.md)
 
 
 ## Documentation For Authorization

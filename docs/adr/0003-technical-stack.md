@@ -22,12 +22,16 @@
 | Repo tooling | One monorepo: pnpm + Turborepo (TypeScript), Melos (Dart) |
 | Worker + Redis hosting | Railway, near the Neon/Vercel region |
 | API contract | Zod → OpenAPI → generated Dart client |
+| Web UI | **Tailwind CSS only** (own components, no component library); `next-intl` for Swahili/English |
+| Email | **Resend** (team invitation emails), behind `EmailSender` |
 
 ## Reason
 
 - Stack agreed by the product owner. Firestore rejected: check-in needs atomic conditional SQL updates and contributions need relational reporting.
 - Firebase Auth minimises auth work for two Flutter apps and shares the FCM project.
 - Snippe chosen by the product owner: 2.5% mobile money, no monthly fee, USSD push on all major networks, Node SDK.
+- Web UI: product owner chose Tailwind only (2026-09-24).
+- Email: product owner chose invite link + email; Resend picked for its free tier and Next.js fit (research: `docs/research/`).
 - Hive rejected: original package unmaintained; no query language or transactions.
 
 ## Impacted Docs

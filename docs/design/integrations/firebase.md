@@ -19,6 +19,8 @@
 - Account provisioning: after Firebase sign-up, the client calls `POST /api/v1/me` once to create the D-Card `user_account`.
 - `GET /api/v1/me` returns the caller's account, or 404 if it is not provisioned yet.
 
+- **Web sessions:** the web app signs in with the Firebase JS SDK, then exchanges the ID token at `POST /api/v1/session` for an httpOnly session cookie (`firebase-admin` `createSessionCookie`, 5 days). `DELETE /api/v1/session` signs out. API routes accept either the bearer ID token (apps) or the session cookie (web).
+
 ## Acceptance Criteria
 
 - A request with a missing or invalid ID token to `/api/v1/me` returns 401.

@@ -15,30 +15,36 @@ class ErrorResponseError {
   ErrorResponseError({
     required this.code,
     required this.message,
+    this.issues = const [],
   });
 
   String code;
 
   String message;
 
+  List<ErrorResponseErrorIssuesInner> issues;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ErrorResponseError &&
     other.code == code &&
-    other.message == message;
+    other.message == message &&
+    _deepEquality.equals(other.issues, issues);
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (code.hashCode) +
-    (message.hashCode);
+    (message.hashCode) +
+    (issues.hashCode);
 
   @override
-  String toString() => 'ErrorResponseError[code=$code, message=$message]';
+  String toString() => 'ErrorResponseError[code=$code, message=$message, issues=$issues]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'code'] = this.code;
       json[r'message'] = this.message;
+      json[r'issues'] = this.issues;
     return json;
   }
 
@@ -63,6 +69,7 @@ class ErrorResponseError {
       return ErrorResponseError(
         code: mapValueOfType<String>(json, r'code')!,
         message: mapValueOfType<String>(json, r'message')!,
+        issues: ErrorResponseErrorIssuesInner.listFromJson(json[r'issues']),
       );
     }
     return null;

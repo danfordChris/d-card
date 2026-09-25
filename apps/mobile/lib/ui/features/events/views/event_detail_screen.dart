@@ -1,0 +1,85 @@
+import 'package:dcard_core/dcard_core.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../domain/models/event_summary.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../core/app_scope.dart';
+import '../../contacts/view_models/contacts_picker_view_model.dart';
+import '../../contacts/views/contacts_picker_screen.dart';
+import 'event_format.dart';
+
+/// Read-only event summary: type, date, venue, contact.
+class EventDetailScreen extends StatelessWidget {
+  const EventDetailScreen({super.key, required this.event});
+
+  final EventSummary event;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final lang = Localizations.localeOf(context).languageCode;
+    final venue = [event.venueName, event.venueAddress].whereType<String>().where((v) => v.isNotEmpty).join(', ');
+    String contact(String name, String phone) => '$name · ${formatLocalPhone(phone)}';
+    return Scaffold(
+      appBar: AppBar(title: Text(event.title)),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: EventStatusChip(status: event.status),
+            ),
+          ),
+          _Row(icon: Icons.celebration_outlined, label: l10n.eventType, value: event.typeName(lang)),
+          _Row(icon: Icons.event_outlined, label: l10n.eventDate, value: formatEventDate(context, event.startsAt)),
+          _Row(icon: Icons.place_outlined, label: l10n.eventVenue, value: venue.isEmpty ? l10n.notSet : venue),
+          _Row(
+            icon: Icons.phone_outlined,
+            label: l10n.eventContact,
+            value: [
+              contact(event.contactName, event.contactPhone),
+              if (event.contact2Name != null && event.contact2Phone != null)
+                contact(event.contact2Name!, event.contact2Phone!),
+            ].join('\n'),
+          ),
+          _Row(icon: Icons.workspace_premium_outlined, label: l10n.eventPlan, value: event.planName),
+          if (event.canManageGuests)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: FilledButton.icon(
+                icon: const Icon(Icons.contacts_outlined),
+                label: Text(l10n.contactsTitle),
+                onPressed: () {
+                  final scope = AppScope.of(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => ContactsPickerScreen(
+                        viewModel: ContactsPickerViewModel(
+                          eventId: event.id,
+                          contacts: scope.contacts,
+                          guests: scope.guests,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Row extends StatelessWidget {
+  const _Row({required this.icon, required this.label, required this.value});
+
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => ListTile(leading: Icon(icon), title: Text(label), subtitle: Text(value));
+}

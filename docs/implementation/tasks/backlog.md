@@ -25,7 +25,16 @@ in-progress
 
 ### P01
 
-- [ ] Events, plans, guests — split into tasks from `docs/implementation/phases/phase-01-events-guests.md`
+- [ ] T01-01 Events API
+- [ ] T01-02 Web foundation and management login
+- [ ] T01-03 Web event wizard, list, summary
+- [ ] T01-04 Guests API
+- [ ] T01-05 Web guest list
+- [ ] T01-06 Guest import and copy from past event
+- [ ] T01-07 Team invitations and members
+- [ ] T01-08 Mobile host login and events
+- [ ] T01-09 Mobile contacts import
+- [ ] T01-10 Admin event types
 
 ### P02
 

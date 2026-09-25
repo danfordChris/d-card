@@ -58,6 +58,12 @@ String parameterToString(dynamic value) {
   if (value is AuthProvider) {
     return AuthProviderTypeTransformer().encode(value).toString();
   }
+  if (value is CardType) {
+    return CardTypeTypeTransformer().encode(value).toString();
+  }
+  if (value is TeamRole) {
+    return TeamRoleTypeTransformer().encode(value).toString();
+  }
   return value.toString();
 }
 

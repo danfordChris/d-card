@@ -19,7 +19,7 @@ const example = parseEnvFile(readFileSync(examplePath, "utf8"));
 describe(".env.example", () => {
   it("declares exactly the keys in the schema", () => {
     const schemaKeys = ALL_KEYS.map((k) => k.key).sort();
-    const exampleKeys = Object.keys(example).filter((k) => k !== "NODE_ENV").sort();
+    const exampleKeys = Object.keys(example).sort();
     expect(exampleKeys).toEqual(schemaKeys);
   });
 

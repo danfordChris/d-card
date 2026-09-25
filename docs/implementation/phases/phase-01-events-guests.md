@@ -2,7 +2,7 @@
 
 ## Status
 
-- `pending`
+- `done`
 - Last updated: 2026-09-24
 
 ## Objective
@@ -36,18 +36,41 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [x] T01-01 — Events API (`docs/implementation/tasks/t01-01-events-api.md`)
+- [x] T01-02 — Web foundation and management login (`docs/implementation/tasks/t01-02-web-foundation-login.md`)
+- [x] T01-03 — Web event wizard, list, summary (`docs/implementation/tasks/t01-03-web-events.md`)
+- [x] T01-04 — Guests API (`docs/implementation/tasks/t01-04-guests-api.md`)
+- [x] T01-05 — Web guest list (`docs/implementation/tasks/t01-05-web-guests.md`)
+- [x] T01-06 — Guest import and copy from past event (`docs/implementation/tasks/t01-06-guest-import.md`)
+- [x] T01-07 — Team invitations and members (`docs/implementation/tasks/t01-07-team-invitations.md`)
+- [x] T01-08 — Mobile host login and events (`docs/implementation/tasks/t01-08-mobile-host-events.md`)
+- [x] T01-09 — Mobile contacts import (`docs/implementation/tasks/t01-09-mobile-contacts-import.md`)
+- [x] T01-10 — Admin event types (`docs/implementation/tasks/t01-10-admin-event-types.md`)
 
 ## Acceptance Criteria
 
-- [ ] a host can create an event and build a guest list in all 4 ways.
-- [ ] Every linked task is `done` with verification evidence.
-- [ ] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
+- [x] a host can create an event and build a guest list in all 4 ways.
+- [x] Every linked task is `done` with verification evidence.
+- [x] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
+
+## Review
+
+- `docs/implementation/reviews/2026-09-24-phase-01-review.md`
 
 ## Blockers
 
-- Previous phase not done.
+- None.
+- Exception (recorded 2026-09-24): phase 00 remains open only for T00-10 (live provider spikes, blocked on owner keys). Reason: no phase 01 task depends on live providers. Scope: phase 01 only. Follow-up: run T00-10 when keys arrive; phase 00 closes then.
 
 ## Linked Tasks
 
-- None yet.
+- docs/implementation/tasks/t01-01-events-api.md
+- docs/implementation/tasks/t01-02-web-foundation-login.md
+- docs/implementation/tasks/t01-03-web-events.md
+- docs/implementation/tasks/t01-04-guests-api.md
+- docs/implementation/tasks/t01-05-web-guests.md
+- docs/implementation/tasks/t01-06-guest-import.md
+- docs/implementation/tasks/t01-07-team-invitations.md
+- docs/implementation/tasks/t01-08-mobile-host-events.md
+- docs/implementation/tasks/t01-09-mobile-contacts-import.md
+- docs/implementation/tasks/t01-10-admin-event-types.md

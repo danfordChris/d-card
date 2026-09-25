@@ -23,16 +23,17 @@ A host can run a real event end-to-end on D-Card:
 
 ## Current Priorities
 
-- Phase 00 foundations: tasks T00-01 → T00-06 (T00-07 and T00-08 blocked).
+- Phase 01: events, guests, team (T01-01 → T01-10), branch `feat/phase-01-events-guests` stacked on PR #1.
+- Phase 00: T00-10 live spikes once real keys are in `.env`.
 - Start external approvals in week 1 (table below).
 
 ## Active Phases
 
-- [ ] `docs/implementation/phases/phase-00-foundations.md` (in-progress)
+- [ ] `docs/implementation/phases/phase-00-foundations.md` (in-progress: only T00-10 open, blocked on keys)
+- [x] `docs/implementation/phases/phase-01-events-guests.md` (done)
 
 ## Deferred Phases
 
-- [ ] `docs/implementation/phases/phase-01-events-guests.md`
 - [ ] `docs/implementation/phases/phase-02-contributions-cards.md`
 - [ ] `docs/implementation/phases/phase-03-messaging.md`
 - [ ] `docs/implementation/phases/phase-04-confirmation-check-in.md`

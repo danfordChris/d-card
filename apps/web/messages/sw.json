@@ -1,0 +1,292 @@
+{
+  "app": {
+    "name": "D-Card",
+    "tagline": "Kadi za mwaliko za kidigitali",
+    "language": "Lugha",
+    "signOut": "Toka",
+    "admin": "Utawala"
+  },
+  "auth": {
+    "email": "Barua pepe",
+    "password": "Nenosiri",
+    "fullName": "Jina kamili",
+    "loginTitle": "Ingia D-Card",
+    "loginSubmit": "Ingia",
+    "signupTitle": "Fungua akaunti ya D-Card",
+    "signupSubmit": "Fungua akaunti",
+    "noAccount": "Huna akaunti bado?",
+    "haveAccount": "Tayari una akaunti?",
+    "forgotPassword": "Umesahau nenosiri?",
+    "resetTitle": "Badilisha nenosiri",
+    "resetSubmit": "Tuma kiungo",
+    "resetSent": "Kama akaunti ipo kwa barua pepe hii, kiungo cha kubadilisha nenosiri kimetumwa.",
+    "verifySent": "Tumekutumia kiungo cha uthibitisho kwenye barua pepe. Tafadhali thibitisha kabla ya kuendelea.",
+    "backToLogin": "Rudi kuingia",
+    "errors": {
+      "required": "Sehemu hii inahitajika.",
+      "email": "Weka barua pepe sahihi.",
+      "passwordLength": "Tumia angalau herufi 8.",
+      "invalidCredentials": "Barua pepe au nenosiri si sahihi.",
+      "emailInUse": "Akaunti yenye barua pepe hii tayari ipo.",
+      "network": "Tatizo la mtandao. Angalia muunganisho kisha jaribu tena.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "dashboard": {
+    "title": "Dashibodi",
+    "welcome": "Karibu, {email}"
+  },
+  "events": {
+    "title": "Matukio",
+    "new": "Tukio jipya",
+    "empty": "Hakuna matukio bado. Tengeneza tukio lako la kwanza.",
+    "open": "Fungua",
+    "status": {
+      "draft": "Rasimu",
+      "published": "Limechapishwa",
+      "completed": "Limekamilika",
+      "cancelled": "Limesitishwa"
+    },
+    "access": {
+      "host": "Mwenyeji",
+      "treasurer": "Mweka hazina",
+      "committee": "Kamati",
+      "door_staff": "Mlinzi wa mlango",
+      "walkin_approver": "Mwidhinishaji"
+    },
+    "wizard": {
+      "title": "Tengeneza tukio",
+      "step": "Hatua {current} kati ya {total}",
+      "back": "Rudi",
+      "next": "Endelea",
+      "create": "Tengeneza tukio",
+      "steps": {
+        "plan": "Kifurushi",
+        "details": "Maelezo",
+        "contact": "Mawasiliano",
+        "options": "Mipangilio"
+      },
+      "perGuest": "Tsh {price} kwa kadi ya mgeni",
+      "eventType": "Aina ya tukio",
+      "eventTitle": "Jina la tukio",
+      "startsAt": "Tarehe na saa",
+      "endsAt": "Mwisho (hiari)",
+      "venueName": "Ukumbi",
+      "venueAddress": "Anwani ya ukumbi",
+      "venueMapUrl": "Kiungo cha ramani (hiari)",
+      "contactName": "Jina la mhusika",
+      "contactPhone": "Simu ya mhusika",
+      "contactHint": "Inaonekana kwenye kila SMS ili wageni wapige simu. Mfano: 0754 123 456",
+      "contact2Name": "Jina la mhusika wa pili (hiari)",
+      "contact2Phone": "Simu ya mhusika wa pili (hiari)",
+      "confirmationEnabled": "Waombe wageni wathibitishe kuhudhuria",
+      "confirmationOffsetDays": "Siku kabla ya tukio kuuliza",
+      "headcountPct": "Hesabu wasiojibu kama (%)",
+      "autoUpgradeEnabled": "Pandisha kadi kutoka Single kwenda Double kiasi cha Double kikilipwa",
+      "autoUpgradeLocked": "Haipo kwenye kifurushi cha Msingi",
+      "singleAmount": "Mchango wa kadi Single (Tsh)",
+      "doubleAmount": "Mchango wa kadi Double (Tsh)",
+      "photoAlbumUrl": "Kiungo cha albamu ya Google Photos (hiari)"
+    },
+    "errors": {
+      "required": "Sehemu hii inahitajika.",
+      "phone": "Weka namba ya simu ya Tanzania, mfano 0754 123 456.",
+      "url": "Weka kiungo kamili kinachoanza na https://",
+      "endsBeforeStart": "Mwisho uwe baada ya kuanza.",
+      "number": "Weka namba kamili.",
+      "range": "Nje ya kiwango.",
+      "generic": "Imeshindikana kuhifadhi. Tafadhali jaribu tena.",
+      "invalid": "Thamani hii si sahihi."
+    },
+    "summary": {
+      "plan": "Kifurushi",
+      "type": "Aina",
+      "when": "Lini",
+      "venue": "Ukumbi",
+      "contact": "Mhusika",
+      "settings": "Mipangilio",
+      "edit": "Hariri",
+      "cancel": "Sitisha tukio",
+      "cancelConfirm": "Sitisha tukio hili? Haiwezi kurudishwa.",
+      "unpaid": "Bado halijalipiwa",
+      "confirmationOn": "Uthibitisho siku {days} kabla",
+      "confirmationOff": "Hakuna uthibitisho wa kuhudhuria",
+      "headcount": "Wasiojibu wanahesabiwa {pct}%",
+      "autoUpgradeOn": "Kupandisha kadi kumewashwa",
+      "autoUpgradeOff": "Kupandisha kadi kumezimwa",
+      "amounts": "Single Tsh {single} · Double Tsh {double}",
+      "notSet": "Haijawekwa",
+      "save": "Hifadhi mabadiliko",
+      "editTitle": "Hariri tukio",
+      "guests": "Wageni",
+      "team": "Timu"
+    }
+  },
+  "guests": {
+    "title": "Wageni",
+    "back": "Rudi kwenye tukio",
+    "add": "Ongeza mgeni",
+    "search": "Tafuta kwa jina au simu",
+    "empty": "Hakuna wageni bado.",
+    "noResults": "Hakuna mgeni anayelingana na utafutaji.",
+    "loadMore": "Onyesha zaidi",
+    "readOnly": "Unaweza kuona wageni lakini huwezi kuwabadilisha.",
+    "columns": {
+      "name": "Jina",
+      "phone": "Simu",
+      "card": "Kadi",
+      "status": "Hali",
+      "actions": "Vitendo"
+    },
+    "card": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "status": {
+      "pending": "Inasubiri",
+      "issued": "Imetolewa",
+      "cancelled": "Imesitishwa"
+    },
+    "form": {
+      "addTitle": "Ongeza mgeni",
+      "editTitle": "Hariri mgeni",
+      "name": "Jina kamili",
+      "phone": "Simu",
+      "phoneHint": "Mfano: 0754 123 456",
+      "cardType": "Aina ya kadi",
+      "partnerName": "Jina la mwenza (hiari)",
+      "consent": "Mgeni amekubali kupokea ujumbe kuhusu tukio hili (WhatsApp na SMS).",
+      "save": "Hifadhi",
+      "cancel": "Ghairi"
+    },
+    "edit": "Hariri",
+    "remove": "Ondoa",
+    "removeConfirm": "Ondoa {name} kwenye orodha ya wageni?",
+    "alreadyInvited": "{name} tayari yupo kwenye orodha ya wageni.",
+    "added": "{name} ameongezwa.",
+    "errors": {
+      "required": "Sehemu hii inahitajika.",
+      "phone": "Weka namba ya simu ya Tanzania, mfano 0754 123 456.",
+      "consent": "Tafadhali thibitisha kuwa mgeni amekubali kupokea ujumbe.",
+      "generic": "Imeshindikana kuhifadhi. Tafadhali jaribu tena."
+    },
+    "import": "Leta kutoka faili"
+  },
+  "imports": {
+    "title": "Leta wageni",
+    "back": "Rudi kwa wageni",
+    "file": {
+      "heading": "Kutoka Excel au CSV",
+      "intro": "Pakua kiolezo, jaza mgeni mmoja kwa kila mstari, kisha pakia. Safu: name, phone, card_type (single au double), partner_name.",
+      "example": "Mfano wa mstari: Juma Hamisi · 0754 123 456 · double · Neema Juma",
+      "templateXlsx": "Pakua kiolezo cha Excel",
+      "templateCsv": "Pakua kiolezo cha CSV",
+      "choose": "Chagua faili (.xlsx au .csv)",
+      "preview": "Kagua faili"
+    },
+    "copy": {
+      "heading": "Nakili kutoka tukio lililopita",
+      "intro": "Nakili watu kutoka moja ya matukio yako ya awali. Ahadi na majibu hayanakiliwi.",
+      "choose": "Tukio lililopita",
+      "none": "Huna matukio mengine ya kunakili.",
+      "preview": "Kagua wageni"
+    },
+    "report": {
+      "heading": "Kagua kabla ya kuleta",
+      "total": "Mistari kwenye faili: {count}",
+      "valid": "Tayari kuongezwa: {count}",
+      "invalid": "Mistari yenye matatizo",
+      "duplicates": "Imejirudia kwenye faili",
+      "existing": "Tayari wapo kwenye orodha",
+      "row": "Mstari {row}",
+      "sameAs": "namba sawa na mstari {row}",
+      "reasons": {
+        "invalid_phone": "namba ya simu si sahihi",
+        "name_required": "jina halipo",
+        "invalid_card_type": "aina ya kadi iwe single au double"
+      },
+      "consent": "Wageni hawa wamekubali kupokea ujumbe kuhusu tukio hili (WhatsApp na SMS).",
+      "import": "Ongeza wageni {count}",
+      "nothing": "Hakuna jipya la kuongeza."
+    },
+    "done": "Wageni {count} wameongezwa.",
+    "viewGuests": "Angalia orodha ya wageni",
+    "errors": {
+      "file": "Chagua faili kwanza.",
+      "consent": "Tafadhali thibitisha kuwa wageni wamekubali kupokea ujumbe.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "team": {
+    "title": "Timu",
+    "back": "Rudi kwenye tukio",
+    "roles": {
+      "treasurer": "Mweka hazina",
+      "committee": "Mjumbe wa kamati",
+      "door_staff": "Mlinzi wa mlango",
+      "walkin_approver": "Mwidhinishaji wa wageni"
+    },
+    "invite": {
+      "heading": "Alika mjumbe wa timu",
+      "role": "Nafasi",
+      "email": "Barua pepe (hiari)",
+      "emailHint": "Tutatuma kiungo kwa barua pepe ukiweka anwani. Unaweza pia kutuma kiungo mwenyewe.",
+      "create": "Tengeneza kiungo cha mwaliko",
+      "link": "Kiungo cha mwaliko (siku 7, mtu mmoja)",
+      "copy": "Nakili kiungo",
+      "copied": "Kimenakiliwa",
+      "emailQueued": "Tunatuma kiungo kwa {email}.",
+      "planLimit": "Kifurushi chako hakiruhusu walinzi wa mlango zaidi."
+    },
+    "members": {
+      "heading": "Wajumbe",
+      "empty": "Hakuna wajumbe bado.",
+      "remove": "Ondoa",
+      "removeConfirm": "Ondoa {email} ({role}) kwenye tukio hili?"
+    },
+    "pending": {
+      "heading": "Mialiko inayosubiri",
+      "empty": "Hakuna mialiko inayosubiri.",
+      "expires": "Inaisha {date}",
+      "revoke": "Futa",
+      "anyone": "Yeyote mwenye kiungo"
+    },
+    "errors": {
+      "email": "Weka barua pepe sahihi.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "invitePage": {
+    "title": "Umealikwa",
+    "body": "Umealikwa kujiunga na timu ya {event} kama {role}.",
+    "signIn": "Ingia ili ukubali",
+    "signUp": "Fungua akaunti",
+    "accept": "Kubali mwaliko",
+    "accepted": "Umejiunga na timu.",
+    "invalid": "Kiungo hiki cha mwaliko hakifai tena. Omba mwenyeji akutumie kipya.",
+    "notFound": "Kiungo hiki cha mwaliko hakikupatikana."
+  },
+  "adminEventTypes": {
+    "title": "Aina za matukio",
+    "intro": "Wenyeji huchagua kutoka aina zilizo hai wanapotengeneza tukio. Kuzima aina kunaificha kwa matukio mapya; matukio yaliyopo yanaibaki nayo.",
+    "key": "Ufunguo",
+    "keyHint": "Herufi ndogo, tarakimu na _ — hauwezi kubadilishwa baadaye.",
+    "nameSw": "Jina (Kiswahili)",
+    "nameEn": "Jina (Kiingereza)",
+    "status": "Hali",
+    "active": "Hai",
+    "inactive": "Imezimwa",
+    "create": "Ongeza aina ya tukio",
+    "createHeading": "Aina mpya ya tukio",
+    "save": "Hifadhi",
+    "saved": "Imehifadhiwa",
+    "activate": "Washa",
+    "deactivate": "Zima",
+    "errors": {
+      "required": "Inahitajika.",
+      "key": "Tumia herufi ndogo, tarakimu au _ (2–40, anza na herufi).",
+      "duplicate": "Ufunguo huu tayari upo.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  }
+}

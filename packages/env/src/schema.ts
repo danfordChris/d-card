@@ -51,6 +51,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("DATA_ENCRYPTION_KEY", "Base64 32-byte key encrypting Google refresh tokens at rest", /^[A-Za-z0-9+/]{43}=$/),
       opt("DCARD_PG_PORT", "Local Postgres host port (default 55432)", /^\d+$/),
       opt("DCARD_REDIS_PORT", "Local Redis host port (default 56379)", /^\d+$/),
+      opt("QUEUE_PREFIX", "BullMQ key prefix (default dcard; tests use unique prefixes)", /^[a-z0-9_-]+$/),
     ],
   },
   {
@@ -109,6 +110,15 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("SNIPPE_BASE_URL", "API base URL", URL_PATTERN),
       req("SNIPPE_API_KEY", "API key", /^snp_\S+$/),
       req("SNIPPE_WEBHOOK_SECRET", "Webhook signing secret (separate from the API key)"),
+    ],
+  },
+  {
+    id: "email",
+    name: "Email (Resend)",
+    source: "resend.com → API Keys; verify your sending domain (SPF/DKIM) under Domains.",
+    keys: [
+      req("RESEND_API_KEY", "Resend API key", /^re_\S+$/),
+      req("EMAIL_FROM", "Sender, e.g. D-Card <noreply@your-domain>", /^.+<\S+@\S+>$|^\S+@\S+$/),
     ],
   },
   {

@@ -15,6 +15,34 @@
       "when": 1790265969657,
       "tag": "0001_audit_log_append_only",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790278399530,
+      "tag": "0002_event_plan",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790279368560,
+      "tag": "0003_invitations",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790279821105,
+      "tag": "0004_import_job",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790280126795,
+      "tag": "0005_team_invite",
+      "breakpoints": true
     }
   ]
 }

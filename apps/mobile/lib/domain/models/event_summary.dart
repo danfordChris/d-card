@@ -1,0 +1,41 @@
+/// Event lifecycle states (docs/design/features/events.md).
+enum EventStatus { draft, published, completed, cancelled }
+
+/// What the host sees about an event in the list and summary screens.
+class EventSummary {
+  const EventSummary({
+    required this.id,
+    required this.title,
+    required this.status,
+    required this.typeNameSw,
+    required this.typeNameEn,
+    required this.planName,
+    required this.startsAt,
+    required this.contactName,
+    required this.contactPhone,
+    this.canManageGuests = false,
+    this.venueName,
+    this.venueAddress,
+    this.contact2Name,
+    this.contact2Phone,
+  });
+
+  final String id;
+  final String title;
+  final EventStatus status;
+  final String typeNameSw;
+  final String typeNameEn;
+  final String planName;
+  final DateTime startsAt;
+  final String? venueName;
+  final String? venueAddress;
+  final String contactName;
+  final String contactPhone;
+  final String? contact2Name;
+  final String? contact2Phone;
+
+  /// Host or committee on a draft/published event (GST-1, Access).
+  final bool canManageGuests;
+
+  String typeName(String languageCode) => languageCode == 'sw' ? typeNameSw : typeNameEn;
+}

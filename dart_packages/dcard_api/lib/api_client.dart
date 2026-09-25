@@ -184,14 +184,94 @@ class ApiClient {
           return value is DateTime ? value : DateTime.tryParse(value);
         case 'Account':
           return Account.fromJson(value);
+        case 'AdminEventType':
+          return AdminEventType.fromJson(value);
+        case 'AdminEventTypeCreateInput':
+          return AdminEventTypeCreateInput.fromJson(value);
+        case 'AdminEventTypeList':
+          return AdminEventTypeList.fromJson(value);
+        case 'AdminEventTypeUpdateInput':
+          return AdminEventTypeUpdateInput.fromJson(value);
         case 'AuthProvider':
           return AuthProviderTypeTransformer().decode(value);
+        case 'CardType':
+          return CardTypeTypeTransformer().decode(value);
         case 'ErrorResponse':
           return ErrorResponse.fromJson(value);
         case 'ErrorResponseError':
           return ErrorResponseError.fromJson(value);
+        case 'ErrorResponseErrorIssuesInner':
+          return ErrorResponseErrorIssuesInner.fromJson(value);
+        case 'Event':
+          return Event.fromJson(value);
+        case 'EventCreateInput':
+          return EventCreateInput.fromJson(value);
+        case 'EventList':
+          return EventList.fromJson(value);
+        case 'EventPlan':
+          return EventPlan.fromJson(value);
+        case 'EventType':
+          return EventType.fromJson(value);
+        case 'EventTypeList':
+          return EventTypeList.fromJson(value);
+        case 'EventUpdateInput':
+          return EventUpdateInput.fromJson(value);
+        case 'Guest':
+          return Guest.fromJson(value);
+        case 'GuestBulkInput':
+          return GuestBulkInput.fromJson(value);
+        case 'GuestBulkInputGuestsInner':
+          return GuestBulkInputGuestsInner.fromJson(value);
+        case 'GuestBulkResponse':
+          return GuestBulkResponse.fromJson(value);
+        case 'GuestBulkResponseInvalidInner':
+          return GuestBulkResponseInvalidInner.fromJson(value);
+        case 'GuestCreateInput':
+          return GuestCreateInput.fromJson(value);
+        case 'GuestCreateResponse':
+          return GuestCreateResponse.fromJson(value);
+        case 'GuestPage':
+          return GuestPage.fromJson(value);
+        case 'GuestUpdateInput':
+          return GuestUpdateInput.fromJson(value);
         case 'HealthResponse':
           return HealthResponse.fromJson(value);
+        case 'ImportConfirmInput':
+          return ImportConfirmInput.fromJson(value);
+        case 'ImportCopyInput':
+          return ImportCopyInput.fromJson(value);
+        case 'ImportPreview':
+          return ImportPreview.fromJson(value);
+        case 'ImportReport':
+          return ImportReport.fromJson(value);
+        case 'ImportReportDuplicatesInFileInner':
+          return ImportReportDuplicatesInFileInner.fromJson(value);
+        case 'ImportReportExistingInner':
+          return ImportReportExistingInner.fromJson(value);
+        case 'ImportReportInvalidInner':
+          return ImportReportInvalidInner.fromJson(value);
+        case 'ImportResult':
+          return ImportResult.fromJson(value);
+        case 'Invite':
+          return Invite.fromJson(value);
+        case 'InviteAccepted':
+          return InviteAccepted.fromJson(value);
+        case 'InviteCreateInput':
+          return InviteCreateInput.fromJson(value);
+        case 'InviteCreateResponse':
+          return InviteCreateResponse.fromJson(value);
+        case 'InviteInfo':
+          return InviteInfo.fromJson(value);
+        case 'Plan':
+          return Plan.fromJson(value);
+        case 'PlanList':
+          return PlanList.fromJson(value);
+        case 'Team':
+          return Team.fromJson(value);
+        case 'TeamMembersInner':
+          return TeamMembersInner.fromJson(value);
+        case 'TeamRole':
+          return TeamRoleTypeTransformer().decode(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

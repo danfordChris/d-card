@@ -16,6 +16,10 @@ dependencies:
   dcard_api: any
   dcard_core: any
   dcard_ui: any
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  shared_preferences: ^2.5.5
+  flutter_contacts: ^2.5.0
 
 dev_dependencies:
   flutter_test:

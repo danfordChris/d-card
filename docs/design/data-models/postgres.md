@@ -22,6 +22,7 @@
 | **walkin_request** | id (UUID from device), event_id, staff_user_id, device_id, invitation_id, description, source (online/offline), offline_reason, status (pending/approved/refused/admitted_offline/accepted/flagged), decided_by, decided_at, occurred_at |
 | **message_log** | id, event_id, invitation_id, channel, direction, type, provider_message_id, status, cost, created_at |
 | **audit_log** | id, created_at, actor, event_id, action, target_type, target_id, old_value, new_value, ip, device. Append-only. |
+| **team_invite** | id, event_id, role, email (nullable), token_hash (unique), created_by, expires_at, accepted_by, accepted_at, revoked_at, created_at |
 | **import_job** | id, event_id, source (csv/contacts/past_event), status, total, imported, errors (jsonb) |
 | **table, programme_item, menu_item, poll, poll_option, vote** | Phase 2, all linked to one event. |
 | **host_payment** | id, host_user_id, event_id, plan, guest_cards, amount, discount (e.g. launch offer), method, reference, paid_on |

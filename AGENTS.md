@@ -40,3 +40,10 @@ Do not define net-new behavior in implementation docs. Put unresolved behavior i
 - Payments: Snippe. SMS: NextSMS. WhatsApp: Meta Cloud API. Media: host's Google Drive (no media on D-Card servers).
 - Phone numbers: always stored as `255` + 9 digits.
 - Research market practice before recording a new product decision.
+
+## Git Commits and Pull Requests
+
+- **Never** add Claude, Claude Code or any AI tool as author, co-author or attribution in commits or PRs: no `Co-Authored-By:` trailers, no "Generated with Claude Code" lines, no AI footers.
+- Commit messages: short imperative subject (≤ 72 chars), blank line, body explaining what and why.
+- Commit only when asked; never force-push shared branches; never commit `.env` or secrets.
+- Enforced by `.claude/settings.json` (`attribution.commit` and `attribution.pr` set to `""`) and the `git-commit` skill.

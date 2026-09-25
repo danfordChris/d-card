@@ -9,21 +9,35 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src test",
-    "test": "vitest run"
+    "test": "vitest run",
+    "templates": "node scripts/generate-guest-templates.mjs"
   },
   "dependencies": {
     "@dcard/api-contract": "workspace:*",
     "@dcard/core": "workspace:*",
     "@dcard/db": "workspace:*",
+    "bullmq": "^6.3.8",
     "drizzle-orm": "^0.45.3",
+    "firebase": "^12.19.0",
     "firebase-admin": "^14.5.0",
+    "ioredis": "^6.0.0",
     "next": "^16.3.6",
+    "next-intl": "^4.14.7",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vercel/config": "^0.7.2"
+    "@vercel/config": "^0.7.2",
+    "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^29.1.1",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
+    "write-excel-file": "^4.1.1"
   }
 }

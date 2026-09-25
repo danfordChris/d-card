@@ -1,9 +1,195 @@
 {
   "@@locale": "en",
   "appTitle": "D-Card",
-  "@appTitle": { "description": "Application name shown in the app bar and task switcher." },
-  "homeTitle": "Welcome to D-Card",
-  "@homeTitle": { "description": "Heading on the placeholder home screen." },
-  "homeSubtitle": "Your digital invitation cards",
-  "@homeSubtitle": { "description": "Short description under the home heading." }
+  "@appTitle": {
+    "description": "Application name shown in the app bar and task switcher."
+  },
+  "loginTitle": "Welcome to D-Card",
+  "@loginTitle": {
+    "description": "Heading on the sign-in screen."
+  },
+  "loginSubtitle": "Sign in to manage your events",
+  "@loginSubtitle": {
+    "description": "Subtitle on the sign-in screen."
+  },
+  "emailLabel": "Email",
+  "@emailLabel": {
+    "description": "Email field label."
+  },
+  "passwordLabel": "Password",
+  "@passwordLabel": {
+    "description": "Password field label."
+  },
+  "signIn": "Sign in",
+  "@signIn": {
+    "description": "Sign-in button."
+  },
+  "signOut": "Sign out",
+  "@signOut": {
+    "description": "Sign-out action tooltip."
+  },
+  "errorEmailRequired": "Enter your email.",
+  "@errorEmailRequired": {
+    "description": "Validation: empty email."
+  },
+  "errorEmailInvalid": "Enter a valid email address.",
+  "@errorEmailInvalid": {
+    "description": "Validation: malformed email."
+  },
+  "errorPasswordRequired": "Enter your password.",
+  "@errorPasswordRequired": {
+    "description": "Validation: empty password."
+  },
+  "errorInvalidCredentials": "Wrong email or password.",
+  "@errorInvalidCredentials": {
+    "description": "Sign-in rejected."
+  },
+  "errorTooManyRequests": "Too many attempts. Wait a moment and try again.",
+  "@errorTooManyRequests": {
+    "description": "Rate limited."
+  },
+  "errorNetwork": "No connection. Check your internet and try again.",
+  "@errorNetwork": {
+    "description": "Network failure."
+  },
+  "errorUnauthorized": "Your session has ended. Please sign in again.",
+  "@errorUnauthorized": {
+    "description": "401/403 from the API."
+  },
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {
+    "description": "Unknown failure."
+  },
+  "retry": "Try again",
+  "@retry": {
+    "description": "Retry button."
+  },
+  "eventsTitle": "My events",
+  "@eventsTitle": {
+    "description": "Events list app bar title."
+  },
+  "eventsEmpty": "No events yet. Create your first event on the D-Card website.",
+  "@eventsEmpty": {
+    "description": "Empty events list."
+  },
+  "statusDraft": "Draft",
+  "@statusDraft": {
+    "description": "Event status."
+  },
+  "statusPublished": "Published",
+  "@statusPublished": {
+    "description": "Event status."
+  },
+  "statusCompleted": "Completed",
+  "@statusCompleted": {
+    "description": "Event status."
+  },
+  "statusCancelled": "Cancelled",
+  "@statusCancelled": {
+    "description": "Event status."
+  },
+  "eventType": "Event type",
+  "@eventType": {
+    "description": "Summary label."
+  },
+  "eventDate": "Date",
+  "@eventDate": {
+    "description": "Summary label."
+  },
+  "eventVenue": "Venue",
+  "@eventVenue": {
+    "description": "Summary label."
+  },
+  "eventContact": "Contact",
+  "@eventContact": {
+    "description": "Summary label."
+  },
+  "eventPlan": "Package",
+  "@eventPlan": {
+    "description": "Summary label."
+  },
+  "notSet": "Not set",
+  "@notSet": {
+    "description": "Placeholder for an empty optional field."
+  },
+  "contactsTitle": "Add from contacts",
+  "@contactsTitle": {
+    "description": "Contacts picker title and button."
+  },
+  "contactsPermissionTitle": "Allow access to contacts",
+  "@contactsPermissionTitle": {
+    "description": "Permission denied heading."
+  },
+  "contactsPermissionBody": "D-Card needs your contacts to pick guests. We only read the names and numbers you choose.",
+  "@contactsPermissionBody": {
+    "description": "Why the permission is needed."
+  },
+  "contactsOpenSettings": "Open settings",
+  "@contactsOpenSettings": {
+    "description": "Opens app settings."
+  },
+  "contactsSearch": "Search name or number",
+  "@contactsSearch": {
+    "description": "Search hint."
+  },
+  "contactsEmpty": "No contacts with phone numbers.",
+  "@contactsEmpty": {
+    "description": "No contacts."
+  },
+  "contactsNoName": "No name",
+  "@contactsNoName": {
+    "description": "Contact without a name."
+  },
+  "contactsInvalidNumber": "Not a valid Tanzanian number",
+  "@contactsInvalidNumber": {
+    "description": "Invalid number marker."
+  },
+  "contactsConsent": "These guests agreed to receive event messages",
+  "@contactsConsent": {
+    "description": "Consent checkbox (MSG-14)."
+  },
+  "contactsConsentRequired": "Confirm consent to continue.",
+  "@contactsConsentRequired": {
+    "description": "Consent missing."
+  },
+  "contactsAdd": "{count, plural, =0{Add guests} =1{Add 1 guest} other{Add {count} guests}}",
+  "@contactsAdd": {
+    "description": "Submit button.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsAdded": "{count, plural, =0{No new guests added} =1{1 guest added} other{{count} guests added}}",
+  "@contactsAdded": {
+    "description": "Result.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsExisting": "{count, plural, =1{1 was already invited} other{{count} were already invited}}",
+  "@contactsExisting": {
+    "description": "Result.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsInvalid": "{count, plural, =1{1 could not be added} other{{count} could not be added}}",
+  "@contactsInvalid": {
+    "description": "Result.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Close button."
+  }
 }
