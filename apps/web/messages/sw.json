@@ -90,7 +90,8 @@
       "singleAmount": "Mchango wa kadi Single (Tsh)",
       "doubleAmount": "Mchango wa kadi Double (Tsh)",
       "photoAlbumUrl": "Kiungo cha albamu ya Google Photos (hiari)",
-      "budgetAmount": "Lengo la bajeti ya michango (Tsh, hiari)"
+      "budgetAmount": "Lengo la bajeti ya michango (Tsh, hiari)",
+      "paymentDetails": "Namna ya kulipa michango (mf. M-Pesa 0754 123 456, Asha) — inaonekana kwenye ujumbe wa michango"
     },
     "errors": {
       "required": "Sehemu hii inahitajika.",
@@ -124,7 +125,8 @@
       "editTitle": "Hariri tukio",
       "guests": "Wageni",
       "team": "Timu",
-      "contributions": "Michango"
+      "contributions": "Michango",
+      "messages": "Ujumbe"
     }
   },
   "guests": {
@@ -428,6 +430,240 @@
       "hasPledge": "Mtu huyu tayari ana ahadi kwenye tukio hili.",
       "alreadyIssued": "Kadi imeshatolewa, kwa hiyo ahadi haiwezi kubadilishwa tena.",
       "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "adminMessaging": {
+    "active": "Inatumika",
+    "inactive": "Haitumiki",
+    "save": "Hifadhi",
+    "saved": "Imehifadhiwa",
+    "activate": "Washa",
+    "deactivate": "Zima",
+    "templates": {
+      "title": "Violezo vya WhatsApp",
+      "intro": "Sajili aina za violezo vya Meta na udhibiti violezo vilivyoidhinishwa ambavyo waandaaji wanaweza kuchagua.",
+      "createHeading": "Sajili aina ya kiolezo",
+      "messageType": "Aina ya ujumbe",
+      "variant": "Kitambulisho cha aina",
+      "language": "Lugha",
+      "metaName": "Jina la kiolezo Meta",
+      "category": "Kategoria",
+      "bodyParams": "Vigezo vya ujumbe",
+      "editableParams": "Vigezo vinavyohaririwa na mwandaaji",
+      "paramsHint": "Tenganisha vitambulisho kwa koma",
+      "headerImage": "Picha ya kichwa",
+      "confirmButtons": "Vitufe vya uthibitisho",
+      "status": "Hali ya Meta",
+      "active": "Upatikanaji",
+      "actions": "Vitendo",
+      "create": "Sajili kiolezo"
+    },
+    "rates": {
+      "title": "Viwango vya watoa huduma",
+      "intro": "Ongeza bei zenye tarehe ya kuanza zinazotumika kufuatilia gharama za ujumbe ndani ya mfumo.",
+      "createHeading": "Ongeza kiwango cha mtoa huduma",
+      "provider": "Mtoa huduma",
+      "channel": "Njia",
+      "category": "Kategoria",
+      "market": "Soko",
+      "price": "Bei (Tsh)",
+      "priceHint": "Bei ya ujumbe mmoja uliofikishwa au kipande kimoja cha SMS",
+      "effectiveFrom": "Kinaanza kutumika",
+      "create": "Ongeza kiwango"
+    },
+    "messageTypes": {
+      "contribution_request": "Ombi la mchango",
+      "thank_you": "Shukrani ya malipo",
+      "contribution_reminder": "Kikumbusho cha mchango",
+      "invitation_card": "Kadi ya mwaliko",
+      "card_upgraded": "Kadi imepandishwa daraja",
+      "attendance_confirmation": "Uthibitisho wa kuhudhuria",
+      "event_reminder": "Kikumbusho cha tukio",
+      "post_event_thanks": "Shukrani baada ya tukio"
+    },
+    "languages": {
+      "sw": "Kiswahili",
+      "en": "Kiingereza"
+    },
+    "statuses": {
+      "pending": "Inasubiri",
+      "approved": "Imeidhinishwa",
+      "rejected": "Imekataliwa",
+      "paused": "Imesimamishwa"
+    },
+    "categories": {
+      "utility": "Huduma",
+      "marketing": "Masoko",
+      "authentication": "Uthibitishaji",
+      "service": "Huduma ya mazungumzo",
+      "sms_segment": "Kipande cha SMS"
+    },
+    "providers": {
+      "meta": "Meta",
+      "nextsms": "NextSMS"
+    },
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS"
+    },
+    "errors": {
+      "required": "Jaza sehemu zinazohitajika.",
+      "duplicateTemplate": "Aina hiyo ya ujumbe, kiolezo na lugha tayari vipo.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "messageSettings": {
+    "title": "Ujumbe",
+    "back": "Rudi kwenye tukio",
+    "intro": "Chagua ujumbe upi wageni wapokee, kwa njia gani, kwa maneno gani na lini. Mabadiliko yanahusu ujumbe ambao haujatumwa bado.",
+    "planNote": "Baadhi ya vidhibiti havipo kwenye kifurushi chako ({plan}). Vilivyofungwa vina alama ya kufuli.",
+    "locked": "Haipo kwenye kifurushi chako",
+    "save": "Hifadhi ujumbe",
+    "saved": "Ujumbe umehifadhiwa.",
+    "saving": "Inahifadhi…",
+    "reset": "Tumia maneno ya kawaida",
+    "test": "Nitumie jaribio",
+    "testSent": "Jaribio limepangwa kwenda kwenye simu yako.",
+    "enabled": "Tuma ujumbe huu",
+    "alwaysOn": "Hutumwa kila wakati (kadi haiwezi kuzimwa)",
+    "channel": "Njia",
+    "channels": {
+      "both": "WhatsApp + SMS",
+      "sms": "SMS pekee",
+      "whatsapp": "WhatsApp pekee"
+    },
+    "whatsappOnlyWarning": "Wageni wenye simu za kawaida hawatapokea ujumbe wa WhatsApp pekee.",
+    "sms": "Maneno ya SMS",
+    "languages": {
+      "sw": "Kiswahili",
+      "en": "English"
+    },
+    "counter": "Herufi {chars} · {segments, plural, =1{SMS 1} other{SMS #}}",
+    "gsmWarning": "Herufi hizi zinafupisha sana kila sehemu ya SMS: {chars}. Tumia herufi za kawaida.",
+    "insert": "Weka",
+    "preview": "Mfano (mgeni wa mfano)",
+    "contactRequired": "'{contact_name}' na '{contact_phone}' lazima vibaki kwenye kila SMS.",
+    "whatsapp": "WhatsApp",
+    "variant": "Mtindo",
+    "note": "Ujumbe binafsi (hadi 200)",
+    "timing": "Muda",
+    "offsetDays": "Siku kabla ya tukio",
+    "offsetDaysAfter": "Siku baada ya tukio",
+    "timeOfDay": "Saa",
+    "frequencyDays": "Kila (siku)",
+    "maxCount": "Mara zisizozidi",
+    "types": {
+      "contribution_request": {
+        "name": "Ombi la mchango",
+        "when": "Mchangiaji anapoongezwa"
+      },
+      "thank_you": {
+        "name": "Asante na salio",
+        "when": "Baada ya kila malipo"
+      },
+      "contribution_reminder": {
+        "name": "Kumbusho la mchango",
+        "when": "Kila baada ya siku kadhaa, kwa wenye salio"
+      },
+      "invitation_card": {
+        "name": "Kadi ya mwaliko",
+        "when": "Kadi inapotolewa"
+      },
+      "card_upgraded": {
+        "name": "Kadi imepanda kuwa ya watu 2",
+        "when": "Ahadi inapopandishwa"
+      },
+      "attendance_confirmation": {
+        "name": "Uthibitisho wa kuhudhuria",
+        "when": "Kabla ya tukio (kama uthibitisho umewashwa)"
+      },
+      "event_reminder": {
+        "name": "Kumbusho la tukio",
+        "when": "Kabla ya tukio"
+      },
+      "post_event_thanks": {
+        "name": "Asante baada ya tukio",
+        "when": "Baada ya tukio"
+      }
+    },
+    "errors": {
+      "plan_limit": "Kifurushi chako hakiruhusu mabadiliko haya.",
+      "validation": "Angalia ujumbe uliowekwa alama.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "messageLog": {
+    "title": "Kumbukumbu za ujumbe",
+    "back": "Rudi kwenye ujumbe",
+    "openLog": "Kumbukumbu na tuma sasa",
+    "heading": "Hali ya ujumbe uliotumwa",
+    "send": {
+      "title": "Tuma ujumbe sasa",
+      "intro": "Tuma ujumbe uliouchagua kwa kundi la wageni sasa hivi. Saa za utulivu bado zinazingatiwa, hivyo ujumbe unaotumwa usiku sana utafika asubuhi.",
+      "messageType": "Ujumbe",
+      "group": "Wageni",
+      "groups": {
+        "all": "Wageni wote",
+        "unpaid": "Wenye ahadi ambazo hazijalipwa",
+        "not_confirmed": "Ambao hawajathibitisha",
+        "confirmed": "Waliothibitisha"
+      },
+      "check": "Angalia wapokeaji",
+      "checking": "Inaangalia…",
+      "recipients": "{count, plural, =0{Hakuna mgeni katika kundi hili.} =1{Mgeni 1 atapokea ujumbe huu.} other{Wageni # watapokea ujumbe huu.}}",
+      "usage": "Ujumbe uliotuma mwenyewe: {used} kati ya {allowed}",
+      "confirm": "Tuma sasa",
+      "sending": "Inatuma…",
+      "cancel": "Badilisha",
+      "queued": "{count, plural, =0{Hakuna ujumbe uliopangwa.} =1{Ujumbe 1 umepangwa kutumwa.} other{Jumbe # zimepangwa kutumwa.}}",
+      "locked": "Kutuma ujumbe mwenyewe hakupo kwenye kifurushi chako ({plan}). Pandisha kifurushi ili utume ujumbe sasa.",
+      "errors": {
+        "plan_limit": "Umetumia nafasi zote za kutuma mwenyewe zinazoruhusiwa na kifurushi chako kwa tukio hili.",
+        "validation": "Chagua ujumbe na kundi.",
+        "forbidden": "Mwenyeji pekee ndiye anaweza kutuma ujumbe.",
+        "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+      }
+    },
+    "filters": {
+      "status": "Hali",
+      "type": "Ujumbe",
+      "channel": "Njia",
+      "search": "Tafuta mgeni au namba ya simu",
+      "searchButton": "Tafuta",
+      "all": "Zote"
+    },
+    "statuses": {
+      "queued": "Umepangwa",
+      "sent": "Umetumwa",
+      "delivered": "Umefika",
+      "read": "Umesomwa",
+      "failed": "Umeshindwa",
+      "held": "Umesitishwa"
+    },
+    "channels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp"
+    },
+    "columns": {
+      "guest": "Mgeni",
+      "phone": "Simu",
+      "type": "Ujumbe",
+      "channel": "Njia",
+      "status": "Hali",
+      "time": "Muda"
+    },
+    "unknownGuest": "Mgeni asiyejulikana",
+    "unknownType": "Mwingine",
+    "empty": "Bado hakuna ujumbe.",
+    "loading": "Inapakia…",
+    "loadMore": "Pakia zaidi",
+    "refresh": "Onyesha upya",
+    "error": "Imeshindikana kupakia kumbukumbu za ujumbe. Tafadhali jaribu tena.",
+    "optOuts": {
+      "title": "Wageni waliositisha WhatsApp",
+      "intro": "Wageni hawa walijibu STOP. Watapokea SMS pekee kwa tukio hili.",
+      "empty": "Hakuna mgeni aliyesitisha ujumbe wa WhatsApp.",
+      "since": "Tangu {date}"
     }
   }
 }

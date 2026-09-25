@@ -23,6 +23,7 @@ export type EventFormValues = {
   singleAmount: string;
   doubleAmount: string;
   budgetAmount: string;
+  paymentDetails: string;
   photoAlbumUrl: string;
 };
 
@@ -36,7 +37,7 @@ export const STEP_FIELDS: Record<WizardStep, (keyof EventFormValues)[]> = {
   plan: ["planKey"],
   details: ["eventTypeKey", "title", "startsAt", "endsAt", "venueName", "venueAddress", "venueMapUrl"],
   contact: ["contactName", "contactPhone", "contact2Name", "contact2Phone"],
-  options: ["confirmationOffsetDays", "headcountPct", "singleAmount", "doubleAmount", "budgetAmount", "photoAlbumUrl"],
+  options: ["confirmationOffsetDays", "headcountPct", "singleAmount", "doubleAmount", "budgetAmount", "paymentDetails", "photoAlbumUrl"],
 };
 
 export const EMPTY_EVENT_FORM: EventFormValues = {
@@ -59,6 +60,7 @@ export const EMPTY_EVENT_FORM: EventFormValues = {
   singleAmount: "",
   doubleAmount: "",
   budgetAmount: "",
+  paymentDetails: "",
   photoAlbumUrl: "",
 };
 
@@ -139,6 +141,7 @@ export function toEventFields(values: EventFormValues) {
     singleAmount: amount(values.singleAmount),
     doubleAmount: amount(values.doubleAmount),
     budgetAmount: amount(values.budgetAmount),
+    paymentDetails: orNull(values.paymentDetails),
     photoAlbumUrl: orNull(values.photoAlbumUrl),
   };
 }

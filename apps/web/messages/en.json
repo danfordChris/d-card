@@ -90,7 +90,8 @@
       "singleAmount": "Single card contribution (Tsh)",
       "doubleAmount": "Double card contribution (Tsh)",
       "photoAlbumUrl": "Google Photos album link (optional)",
-      "budgetAmount": "Contribution budget target (Tsh, optional)"
+      "budgetAmount": "Contribution budget target (Tsh, optional)",
+      "paymentDetails": "How contributors pay (e.g. M-Pesa 0754 123 456, Asha) — shown in contribution messages"
     },
     "errors": {
       "required": "This field is required.",
@@ -124,7 +125,8 @@
       "editTitle": "Edit event",
       "guests": "Guests",
       "team": "Team",
-      "contributions": "Contributions"
+      "contributions": "Contributions",
+      "messages": "Messages"
     }
   },
   "guests": {
@@ -428,6 +430,240 @@
       "hasPledge": "This person already has a pledge for this event.",
       "alreadyIssued": "The card is already issued, so the pledge can no longer change.",
       "generic": "Something went wrong. Please try again."
+    }
+  },
+  "adminMessaging": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "save": "Save",
+    "saved": "Saved",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "templates": {
+      "title": "WhatsApp templates",
+      "intro": "Register Meta template variants and control which approved variants hosts can choose.",
+      "createHeading": "Register a template variant",
+      "messageType": "Message type",
+      "variant": "Variant key",
+      "language": "Language",
+      "metaName": "Meta template name",
+      "category": "Category",
+      "bodyParams": "Body parameters",
+      "editableParams": "Host-editable parameters",
+      "paramsHint": "Comma-separated parameter keys",
+      "headerImage": "Header image",
+      "confirmButtons": "Confirmation buttons",
+      "status": "Meta status",
+      "active": "Availability",
+      "actions": "Actions",
+      "create": "Register template"
+    },
+    "rates": {
+      "title": "Provider rates",
+      "intro": "Add effective-dated provider prices used for internal message cost tracking.",
+      "createHeading": "Add a provider rate",
+      "provider": "Provider",
+      "channel": "Channel",
+      "category": "Category",
+      "market": "Market",
+      "price": "Price (Tsh)",
+      "priceHint": "Price for one delivered message or SMS segment",
+      "effectiveFrom": "Effective from",
+      "create": "Add rate"
+    },
+    "messageTypes": {
+      "contribution_request": "Contribution request",
+      "thank_you": "Payment thank-you",
+      "contribution_reminder": "Contribution reminder",
+      "invitation_card": "Invitation card",
+      "card_upgraded": "Card upgraded",
+      "attendance_confirmation": "Attendance confirmation",
+      "event_reminder": "Event reminder",
+      "post_event_thanks": "Post-event thank-you"
+    },
+    "languages": {
+      "sw": "Swahili",
+      "en": "English"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "paused": "Paused"
+    },
+    "categories": {
+      "utility": "Utility",
+      "marketing": "Marketing",
+      "authentication": "Authentication",
+      "service": "Service",
+      "sms_segment": "SMS segment"
+    },
+    "providers": {
+      "meta": "Meta",
+      "nextsms": "NextSMS"
+    },
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS"
+    },
+    "errors": {
+      "required": "Complete the required fields.",
+      "duplicateTemplate": "That message type, variant and language already exist.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "messageSettings": {
+    "title": "Messages",
+    "back": "Back to event",
+    "intro": "Choose which messages guests receive, on which channel, with what wording and when. Changes apply to messages not yet sent.",
+    "planNote": "Some controls are not included in your plan ({plan}). Locked controls show a lock.",
+    "locked": "Not in your plan",
+    "save": "Save messages",
+    "saved": "Messages saved.",
+    "saving": "Saving…",
+    "reset": "Use default wording",
+    "test": "Send me a test",
+    "testSent": "Test queued to your phone.",
+    "enabled": "Send this message",
+    "alwaysOn": "Always sent (the card cannot be turned off)",
+    "channel": "Channel",
+    "channels": {
+      "both": "WhatsApp + SMS",
+      "sms": "SMS only",
+      "whatsapp": "WhatsApp only"
+    },
+    "whatsappOnlyWarning": "Guests with basic phones will not receive WhatsApp-only messages.",
+    "sms": "SMS wording",
+    "languages": {
+      "sw": "Kiswahili",
+      "en": "English"
+    },
+    "counter": "{chars} characters · {segments, plural, =1{1 SMS} other{# SMS}}",
+    "gsmWarning": "These characters make the SMS much shorter per part: {chars}. Use plain letters instead.",
+    "insert": "Insert",
+    "preview": "Preview (sample guest)",
+    "contactRequired": "'{contact_name}' and '{contact_phone}' must stay in every SMS.",
+    "whatsapp": "WhatsApp",
+    "variant": "Style",
+    "note": "Personal note (max 200)",
+    "timing": "Timing",
+    "offsetDays": "Days before the event",
+    "offsetDaysAfter": "Days after the event",
+    "timeOfDay": "Time of day",
+    "frequencyDays": "Every (days)",
+    "maxCount": "At most (times)",
+    "types": {
+      "contribution_request": {
+        "name": "Contribution request",
+        "when": "When a contributor is added"
+      },
+      "thank_you": {
+        "name": "Thank-you and balance",
+        "when": "After each payment"
+      },
+      "contribution_reminder": {
+        "name": "Contribution reminder",
+        "when": "Every few days, to contributors with a balance"
+      },
+      "invitation_card": {
+        "name": "Invitation card",
+        "when": "When a card is issued"
+      },
+      "card_upgraded": {
+        "name": "Card upgraded to Double",
+        "when": "When a pledge is upgraded"
+      },
+      "attendance_confirmation": {
+        "name": "Attendance confirmation",
+        "when": "Before the event (if confirmation is on)"
+      },
+      "event_reminder": {
+        "name": "Event reminder",
+        "when": "Before the event"
+      },
+      "post_event_thanks": {
+        "name": "Thank-you after the event",
+        "when": "After the event"
+      }
+    },
+    "errors": {
+      "plan_limit": "Your plan does not allow this change.",
+      "validation": "Check the highlighted messages.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "messageLog": {
+    "title": "Message log",
+    "back": "Back to messages",
+    "openLog": "Message log and send now",
+    "heading": "Delivery log",
+    "send": {
+      "title": "Send a message now",
+      "intro": "Send a chosen message to a group of guests now. Quiet hours still apply, so messages sent late at night go out in the morning.",
+      "messageType": "Message",
+      "group": "Guests",
+      "groups": {
+        "all": "All guests",
+        "unpaid": "Guests with an unpaid pledge",
+        "not_confirmed": "Guests who have not confirmed",
+        "confirmed": "Guests who confirmed"
+      },
+      "check": "Check recipients",
+      "checking": "Checking…",
+      "recipients": "{count, plural, =0{No guests match this group.} =1{1 guest will receive this message.} other{# guests will receive this message.}}",
+      "usage": "Manual sends used: {used} of {allowed}",
+      "confirm": "Send now",
+      "sending": "Sending…",
+      "cancel": "Change",
+      "queued": "{count, plural, =0{No messages were queued.} =1{1 message queued.} other{# messages queued.}}",
+      "locked": "Sending messages yourself is not included in your plan ({plan}). Upgrade to send messages now.",
+      "errors": {
+        "plan_limit": "You have used all the manual sends your plan allows for this event.",
+        "validation": "Choose a message and a group.",
+        "forbidden": "Only the host can send messages.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "filters": {
+      "status": "Status",
+      "type": "Message",
+      "channel": "Channel",
+      "search": "Search guest or phone",
+      "searchButton": "Search",
+      "all": "All"
+    },
+    "statuses": {
+      "queued": "Queued",
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "read": "Read",
+      "failed": "Failed",
+      "held": "On hold"
+    },
+    "channels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp"
+    },
+    "columns": {
+      "guest": "Guest",
+      "phone": "Phone",
+      "type": "Message",
+      "channel": "Channel",
+      "status": "Status",
+      "time": "Time"
+    },
+    "unknownGuest": "Unknown guest",
+    "unknownType": "Other",
+    "empty": "No messages yet.",
+    "loading": "Loading…",
+    "loadMore": "Load more",
+    "refresh": "Refresh",
+    "error": "Could not load the message log. Please try again.",
+    "optOuts": {
+      "title": "Guests who stopped WhatsApp",
+      "intro": "These guests replied STOP. They get SMS only for this event.",
+      "empty": "No guest has stopped WhatsApp messages.",
+      "since": "Since {date}"
     }
   }
 }

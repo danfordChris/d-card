@@ -1,12 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { API_KEY_HEADER, clientForApiKey } from "./server/api-key";
 
-// 1. API: every /api/v1 request needs a valid X-API-Key (server/api-key.ts).
+// 1. API: every /api request needs a valid X-API-Key (server/api-key.ts), except provider
+//    webhooks (/api/webhooks/*), which providers cannot send; those verify signatures instead.
 // 2. Pages under the app area need a session cookie (fast check only; full verification
 //    happens in the (app) layout and in every API route).
 const SESSION_COOKIE = "dcard_session";
 
 export function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/api/webhooks/")) {
+    return NextResponse.next();
+  }
   if (request.nextUrl.pathname.startsWith("/api/")) {
     const client = clientForApiKey(request.headers.get(API_KEY_HEADER));
     if (!client) {

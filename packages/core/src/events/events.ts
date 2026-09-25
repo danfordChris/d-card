@@ -16,6 +16,7 @@ export type EventSettingsInput = {
   singleAmount?: number | null;
   doubleAmount?: number | null;
   budgetAmount?: number | null;
+  paymentDetails?: string | null;
   reminderFrequencyDays?: number | null;
   photoAlbumUrl?: string | null;
 };
@@ -63,6 +64,7 @@ export type EventView = {
   singleAmount: number | null;
   doubleAmount: number | null;
   budgetAmount: number | null;
+  paymentDetails: string | null;
   reminderFrequencyDays: number | null;
   photoAlbumUrl: string | null;
   access: EventAccess;
@@ -149,6 +151,7 @@ export async function createEvent(db: DbExecutor, hostUserId: string, input: Cre
         singleAmount: input.singleAmount ?? null,
         doubleAmount: input.doubleAmount ?? null,
         budgetAmount: input.budgetAmount ?? null,
+        paymentDetails: input.paymentDetails?.trim() || null,
         reminderFrequencyDays: input.reminderFrequencyDays ?? null,
         photoAlbumUrl: input.photoAlbumUrl ?? null,
       })
@@ -209,6 +212,7 @@ function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access:
     singleAmount: e.singleAmount,
     doubleAmount: e.doubleAmount,
     budgetAmount: e.budgetAmount,
+    paymentDetails: e.paymentDetails,
     reminderFrequencyDays: e.reminderFrequencyDays,
     photoAlbumUrl: e.photoAlbumUrl,
     access,
@@ -265,6 +269,7 @@ const DETAIL_FIELDS = [
   "singleAmount",
   "doubleAmount",
   "budgetAmount",
+  "paymentDetails",
   "reminderFrequencyDays",
   "photoAlbumUrl",
 ] as const;

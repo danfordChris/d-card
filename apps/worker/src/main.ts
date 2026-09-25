@@ -1,8 +1,22 @@
+import { confirmationToken } from "@dcard/core";
+import { createDb } from "@dcard/db";
+import { fetchCardImage } from "./messaging/card-image.js";
+import { sendersFromEnv } from "./messaging/senders.js";
 import { createRedis } from "./redis.js";
 import { startWorkers } from "./worker.js";
 
 const connection = createRedis();
-const running = await startWorkers(connection);
+const database = createDb();
+const appUrl = process.env.APP_URL;
+const running = await startWorkers(connection, console.log, {
+  messaging: {
+    db: database.db,
+    ...sendersFromEnv(),
+    appUrl,
+    confirmToken: confirmationToken,
+    cardImage: (linkToken, language) => fetchCardImage({ appUrl: appUrl ?? "", apiKey: process.env.WORKER_API_KEY ?? "" }, linkToken, language),
+  },
+});
 
 let stopping = false;
 async function shutdown(signal: string): Promise<void> {
@@ -11,6 +25,7 @@ async function shutdown(signal: string): Promise<void> {
   console.log(`worker:stopping (${signal})`);
   await running.close();
   await connection.quit();
+  await database.close();
   console.log("worker:stopped");
   process.exit(0);
 }

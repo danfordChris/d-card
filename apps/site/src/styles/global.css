@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Same brand tokens as the web app (plum + gold). System fonts: nothing to download. */
+@theme {
+  --color-brand-50: #fbf2f7;
+  --color-brand-100: #f5e0ec;
+  --color-brand-500: #9b2d75;
+  --color-brand-600: #7a1f5c;
+  --color-brand-700: #62184a;
+  --color-brand-900: #3a0e2c;
+  --color-gold-400: #d9b84a;
+  --color-gold-500: #c9a227;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-gray-900 antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

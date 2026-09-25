@@ -61,6 +61,12 @@ String parameterToString(dynamic value) {
   if (value is CardType) {
     return CardTypeTypeTransformer().encode(value).toString();
   }
+  if (value is DeviceApp) {
+    return DeviceAppTypeTransformer().encode(value).toString();
+  }
+  if (value is DevicePlatform) {
+    return DevicePlatformTypeTransformer().encode(value).toString();
+  }
   if (value is PaymentMethod) {
     return PaymentMethodTypeTransformer().encode(value).toString();
   }

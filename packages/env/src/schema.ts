@@ -57,6 +57,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
         "Client API keys accepted in the X-API-Key header, as client:key pairs (e.g. web:…,mobile:…,door:…,tools:…); 32+ chars each",
         /^[a-z]+:[A-Za-z0-9_-]{32,}(,[a-z]+:[A-Za-z0-9_-]{32,})*$/,
       ),
+      req("WORKER_API_KEY", "The worker: key from API_KEYS; the worker uses it to fetch card images for WhatsApp", /^[A-Za-z0-9_-]{32,}$/),
       req("NEXT_PUBLIC_DCARD_API_KEY", "The web app's own key (the web: entry of API_KEYS); public in the browser", /^[A-Za-z0-9_-]{32,}$/),
     ],
   },
@@ -93,9 +94,10 @@ export const ENV_GROUPS: ProviderGroup[] = [
     source: "NextSMS dashboard → API; sender ID after registration; webhook token under Customer Info → Customization → Webhooks.",
     keys: [
       req("NEXTSMS_BASE_URL", "API base URL", URL_PATTERN),
-      req("NEXTSMS_API_TOKEN", "API bearer token"),
+      req("NEXTSMS_API_TOKEN", "Basic auth token: Base64 of username:password (sent as Authorization: Basic …)"),
       req("NEXTSMS_SENDER_ID", "Registered sender ID (e.g. DCARD)"),
-      req("NEXTSMS_WEBHOOK_VERIFY_TOKEN", "Delivery Callback Verify Token set in the NextSMS dashboard"),
+      opt("NEXTSMS_LIVE", "true = deliver real SMS; anything else uses the NextSMS test endpoint (no delivery). Set true in production only.", /^(true|false)$/),
+      req("NEXTSMS_WEBHOOK_VERIFY_TOKEN", "Verify token for an optional delivery callback (not in the public API docs; delivery status is polled from /api/sms/v1/logs)"),
     ],
   },
   {

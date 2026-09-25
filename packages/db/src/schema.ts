@@ -10,6 +10,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  numeric,
   date,
   unique,
   uuid,
@@ -148,6 +149,8 @@ export const event = pgTable(
     doubleAmount: integer("double_amount"),
     /** Contribution budget target (TZS), for dashboard progress (CON-9). */
     budgetAmount: integer("budget_amount"),
+    /** How contributors pay the committee (e.g. "M-Pesa 0754 123 456 (Asha)"); used in NTF-1/NTF-3. */
+    paymentDetails: text("payment_details"),
     currency: text("currency").notNull().default("TZS"),
     photoAlbumUrl: text("photo_album_url"),
     reminderFrequencyDays: integer("reminder_frequency_days"),
@@ -224,6 +227,7 @@ export const eventPlan = pgTable(
 export const cardTypeEnum = pgEnum("card_type", ["single", "double"]);
 export const invitationStatusEnum = pgEnum("invitation_status", ["pending", "issued", "cancelled"]);
 export const rsvpStatusEnum = pgEnum("rsvp_status", ["none", "yes", "no"]);
+export const confirmationStatusEnum = pgEnum("confirmation_status", ["none", "yes", "no"]);
 export const consentSourceEnum = pgEnum("consent_source", ["form", "import", "contacts", "copy"]);
 
 /**
@@ -258,6 +262,10 @@ export const invitation = pgTable(
     rsvpStatus: rsvpStatusEnum("rsvp_status").notNull().default("none"),
     rsvpAt: timestamp("rsvp_at", { withTimezone: true }),
     dietaryNotes: text("dietary_notes"),
+    // NTF-6 attendance confirmation (WhatsApp buttons now; host-recorded answers in phase 04).
+    confirmationStatus: confirmationStatusEnum("confirmation_status").notNull().default("none"),
+    confirmationAt: timestamp("confirmation_at", { withTimezone: true }),
+    confirmationSource: text("confirmation_source"),
     createdBy: uuid("created_by").references(() => userAccount.id),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -401,3 +409,184 @@ export const payment = pgTable(
   ],
 );
 
+// ── Messaging (docs/design/features/notifications.md, docs/design/integrations/messaging.md) ──
+
+export const messageTypeEnum = pgEnum("message_type", [
+  "contribution_request", // NTF-1
+  "thank_you", // NTF-2
+  "contribution_reminder", // NTF-3
+  "invitation_card", // NTF-4
+  "card_upgraded", // NTF-5
+  "attendance_confirmation", // NTF-6
+  "event_reminder", // NTF-7
+  "post_event_thanks", // NTF-8
+]);
+export const messageChannelEnum = pgEnum("message_channel", ["sms", "whatsapp"]);
+export const messageStatusEnum = pgEnum("message_status", ["queued", "sent", "delivered", "read", "failed", "held"]);
+export const messageDirectionEnum = pgEnum("message_direction", ["outbound", "inbound"]);
+export const templateCategoryEnum = pgEnum("template_category", ["utility", "marketing", "authentication"]);
+export const templateStatusEnum = pgEnum("template_status", ["pending", "approved", "rejected", "paused"]);
+export const channelChoiceEnum = pgEnum("channel_choice", ["both", "sms", "whatsapp"]);
+
+/** Transactional outbox: written with the business change, dispatched by the worker (ADR 0003). */
+export const outbox = pgTable(
+  "outbox",
+  {
+    id: id(),
+    /** Idempotency key, e.g. `thank_you:payment:<paymentId>`. */
+    key: text("key").notNull().unique(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    invitationId: uuid("invitation_id").references(() => invitation.id, { onDelete: "cascade" }),
+    messageType: messageTypeEnum("message_type").notNull(),
+    /** Extra values for placeholders (e.g. payment amount at the time). */
+    payload: jsonb("payload").$type<Record<string, string | number | null>>().notNull().default({}),
+    /** Only these channels (manual/test sends); null = use event settings. */
+    channels: channelChoiceEnum("channels"),
+    /** Test sends go to this phone instead of the guest. */
+    toPhone: text("to_phone"),
+    createdAt: createdAt(),
+    dispatchedAt: timestamp("dispatched_at", { withTimezone: true }),
+  },
+  (t) => [index("outbox_pending_idx").on(t.dispatchedAt, t.createdAt)],
+);
+
+export const messageLog = pgTable(
+  "message_log",
+  {
+    id: id(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    invitationId: uuid("invitation_id").references(() => invitation.id, { onDelete: "set null" }),
+    outboxId: uuid("outbox_id").references(() => outbox.id, { onDelete: "set null" }),
+    channel: messageChannelEnum("channel").notNull(),
+    direction: messageDirectionEnum("direction").notNull().default("outbound"),
+    messageType: messageTypeEnum("message_type"),
+    toPhone: text("to_phone"),
+    language: languageEnum("language").notNull().default("sw"),
+    /** SMS text as sent (WhatsApp: template name + params live in `detail`). */
+    body: text("body"),
+    detail: jsonb("detail").$type<Record<string, unknown>>(),
+    templateId: uuid("template_id"),
+    providerMessageId: text("provider_message_id"),
+    status: messageStatusEnum("status").notNull().default("queued"),
+    error: text("error"),
+    segments: integer("segments"),
+    /** Estimated cost in TZS (internal; hosts never see it). */
+    costTzs: numeric("cost_tzs", { precision: 12, scale: 2 }),
+    attempts: integer("attempts").notNull().default(0),
+    createdAt: createdAt(),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    unique("message_log_outbox_channel_unique").on(t.outboxId, t.channel),
+    index("message_log_event_idx").on(t.eventId, t.createdAt),
+    index("message_log_provider_idx").on(t.providerMessageId),
+  ],
+);
+
+export type MessageSchedule = {
+  offsetDays?: number; // days before (negative = after) the event start
+  timeOfDay?: string; // "HH:MM" in the event time zone
+  frequencyDays?: number;
+  maxCount?: number;
+  stopOffsetDays?: number;
+  quietStart?: string;
+  quietEnd?: string;
+};
+
+export const eventMessageSetting = pgTable(
+  "event_message_setting",
+  {
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    messageType: messageTypeEnum("message_type").notNull(),
+    enabled: boolean("enabled").notNull(),
+    channels: channelChoiceEnum("channels").notNull().default("both"),
+    smsTextSw: text("sms_text_sw"),
+    smsTextEn: text("sms_text_en"),
+    whatsappTemplateVariant: text("whatsapp_template_variant"),
+    whatsappNote: text("whatsapp_note"),
+    schedule: jsonb("schedule").$type<MessageSchedule>(),
+    updatedBy: uuid("updated_by").references(() => userAccount.id),
+    updatedAt: updatedAt(),
+  },
+  (t) => [primaryKey({ columns: [t.eventId, t.messageType] })],
+);
+
+export const whatsappTemplate = pgTable(
+  "whatsapp_template",
+  {
+    id: id(),
+    messageType: messageTypeEnum("message_type").notNull(),
+    variantName: text("variant_name").notNull(),
+    language: languageEnum("language").notNull(),
+    metaTemplateName: text("meta_template_name").notNull(),
+    category: templateCategoryEnum("category").notNull(),
+    /** Placeholder keys for the body parameters, in order ({{1}}, {{2}}, …). */
+    bodyParams: jsonb("body_params").$type<string[]>().notNull(),
+    /** Parameters the host may edit (e.g. ["note"]). */
+    editableParams: jsonb("editable_params").$type<string[]>().notNull().default([]),
+    headerImage: boolean("header_image").notNull().default(false),
+    /** Quick-reply confirmation buttons (NTF-6). */
+    confirmButtons: boolean("confirm_buttons").notNull().default(false),
+    status: templateStatusEnum("status").notNull().default("pending"),
+    active: boolean("active").notNull().default(true),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [unique("whatsapp_template_variant_unique").on(t.messageType, t.variantName, t.language)],
+);
+
+export const providerRate = pgTable("provider_rate", {
+  id: id(),
+  provider: text("provider").notNull(), // meta | nextsms
+  channel: messageChannelEnum("channel").notNull(),
+  /** Meta category or `sms_segment`. */
+  category: text("category").notNull(),
+  market: text("market").notNull().default("TZ"),
+  priceTzs: numeric("price_tzs", { precision: 12, scale: 4 }).notNull(),
+  effectiveFrom: timestamp("effective_from", { withTimezone: true }).notNull(),
+  createdAt: createdAt(),
+});
+
+export const whatsappOptout = pgTable(
+  "whatsapp_optout",
+  {
+    personId: uuid("person_id")
+      .notNull()
+      .references(() => person.id, { onDelete: "cascade" }),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.personId, t.eventId] })],
+);
+
+// T03-08 push notification setup (docs/design/integrations/firebase.md › FCM/APNs)
+
+export const devicePlatformEnum = pgEnum("device_platform", ["android", "ios"]);
+export const deviceAppEnum = pgEnum("device_app", ["mobile", "door"]);
+
+/** An FCM registration token for one app install, owned by the signed-in user. */
+export const deviceToken = pgTable(
+  "device_token",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => userAccount.id, { onDelete: "cascade" }),
+    token: text("token").notNull().unique(),
+    platform: devicePlatformEnum("platform").notNull(),
+    app: deviceAppEnum("app").notNull(),
+    createdAt: createdAt(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("device_token_user_idx").on(t.userId)],
+);

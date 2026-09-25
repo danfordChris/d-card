@@ -30,6 +30,7 @@ Name | Type | Description | Notes
 **singleAmount** | **int** |  | 
 **doubleAmount** | **int** |  | 
 **budgetAmount** | **int** |  | 
+**paymentDetails** | **String** |  | 
 **reminderFrequencyDays** | **int** |  | 
 **photoAlbumUrl** | **String** |  | 
 **access** | **String** |  | 

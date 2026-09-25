@@ -24,6 +24,8 @@ import {
   PledgeUpdateInput,
 } from "./contributions.js";
 import { AdminEventTypeCreateInput, AdminEventTypeListResponse, AdminEventTypeSchema, AdminEventTypeUpdateInput } from "./admin.js";
+import { registerDevicePaths } from "./devices.js";
+import { registerMessagePaths } from "./messages.js";
 import { z } from "zod";
 
 // Contract source of truth: docs/design/integrations/firebase.md, docs/design/architecture/codebase.md
@@ -437,6 +439,79 @@ export function buildOpenApiDocument(): OpenApiDocument {
     request: { params: z.object({ key: z.string() }), body: { content: { "application/json": { schema: AdminEventTypeUpdateInput } } } },
     responses: { 200: json(AdminEventTypeSchema, "Updated"), 403: error("Admins only"), 404: error("Unknown key") },
   });
+
+  // T03-07 append-only admin messaging contract.
+  const adminMessageType = z.enum(["contribution_request", "thank_you", "contribution_reminder", "invitation_card", "card_upgraded", "attendance_confirmation", "event_reminder", "post_event_thanks"]);
+  const templateLanguage = z.enum(["sw", "en"]);
+  const templateCategory = z.enum(["utility", "marketing", "authentication"]);
+  const templateStatus = z.enum(["pending", "approved", "rejected", "paused"]);
+  const templateInput = z.object({
+    messageType: adminMessageType,
+    variantName: z.string(),
+    language: templateLanguage,
+    metaTemplateName: z.string(),
+    category: templateCategory,
+    bodyParams: z.array(z.string()),
+    editableParams: z.array(z.string()),
+    headerImage: z.boolean(),
+    confirmButtons: z.boolean(),
+    status: templateStatus,
+    active: z.boolean(),
+  });
+  const templateSchema = templateInput.extend({ id: z.uuid(), createdAt: z.iso.datetime(), updatedAt: z.iso.datetime() });
+  const providerRateInput = z.object({
+    provider: z.enum(["meta", "nextsms"]),
+    channel: z.enum(["whatsapp", "sms"]),
+    category: z.string(),
+    market: z.string(),
+    priceTzs: z.string(),
+    effectiveFrom: z.iso.datetime(),
+  });
+  const providerRateSchema = providerRateInput.extend({ id: z.uuid(), createdAt: z.iso.datetime() });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/admin/whatsapp-templates",
+    operationId: "adminListWhatsappTemplates",
+    summary: "List all WhatsApp template variants (admin)",
+    security: secured,
+    responses: { 200: json(z.object({ templates: z.array(templateSchema) }), "WhatsApp templates"), 403: error("Admins only") },
+  });
+  registry.registerPath({
+    method: "post",
+    path: "/api/v1/admin/whatsapp-templates",
+    operationId: "adminCreateWhatsappTemplate",
+    security: secured,
+    request: { body: { content: { "application/json": { schema: templateInput } } } },
+    responses: { 201: json(templateSchema, "Created"), 403: error("Admins only"), 409: error("Duplicate variant"), 422: error("Validation error") },
+  });
+  registry.registerPath({
+    method: "patch",
+    path: "/api/v1/admin/whatsapp-templates/{id}",
+    operationId: "adminUpdateWhatsappTemplate",
+    summary: "Update registration, Meta status or host availability",
+    security: secured,
+    request: { params: z.object({ id: z.uuid() }), body: { content: { "application/json": { schema: templateInput.partial() } } } },
+    responses: { 200: json(templateSchema, "Updated"), 403: error("Admins only"), 404: error("Unknown template"), 409: error("Duplicate variant"), 422: error("Validation error") },
+  });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/admin/provider-rates",
+    operationId: "adminListProviderRates",
+    summary: "List effective-dated messaging provider rates (admin)",
+    security: secured,
+    responses: { 200: json(z.object({ rates: z.array(providerRateSchema) }), "Provider rates"), 403: error("Admins only") },
+  });
+  registry.registerPath({
+    method: "post",
+    path: "/api/v1/admin/provider-rates",
+    operationId: "adminCreateProviderRate",
+    security: secured,
+    request: { body: { content: { "application/json": { schema: providerRateInput } } } },
+    responses: { 201: json(providerRateSchema, "Created"), 403: error("Admins only"), 422: error("Validation error") },
+  });
+
+  registerDevicePaths(registry, secured);
+  registerMessagePaths(registry, secured);
 
   return new OpenApiGeneratorV31(registry.definitions).generateDocument({
     openapi: "3.1.0",

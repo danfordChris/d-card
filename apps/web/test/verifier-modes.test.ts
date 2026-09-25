@@ -1,4 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+// No network in tests: a non-fake token goes to this stand-in for firebase-admin.
+vi.mock("../src/server/auth/firebase-admin", () => ({
+  getFirebaseAuth: () => ({ verifyIdToken: () => Promise.reject(new Error("auth/argument-error")) }),
+}));
 import { createSessionCookie, getVerifier, verifySessionCookie } from "../src/server/auth/verifier";
 
 // setup-env sets AUTH_VERIFIER=fake; each test switches mode explicitly.
@@ -11,7 +16,7 @@ describe("AUTH_VERIFIER modes", () => {
   it("dev accepts fake tokens and sends other tokens to Firebase", async () => {
     process.env.AUTH_VERIFIER = "dev";
     expect(await getVerifier()("fake:u1:a@example.com")).toMatchObject({ uid: "u1", email: "a@example.com" });
-    // A non-fake token goes to firebase-admin; without credentials in tests it is rejected as unauthorized.
+    // A non-fake token goes to firebase-admin (mocked above) and is rejected as unauthorized.
     await expect(getVerifier()("not-a-real-jwt")).rejects.toMatchObject({ code: "unauthorized" });
   });
 

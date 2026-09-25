@@ -356,6 +356,12 @@
               "null"
             ]
           },
+          "paymentDetails": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "reminderFrequencyDays": {
             "type": [
               "integer",
@@ -410,6 +416,7 @@
           "singleAmount",
           "doubleAmount",
           "budgetAmount",
+          "paymentDetails",
           "reminderFrequencyDays",
           "photoAlbumUrl",
           "access",
@@ -530,6 +537,14 @@
               "null"
             ],
             "minimum": 0
+          },
+          "paymentDetails": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "example": "M-Pesa 0754 123 456 (Asha)"
           },
           "reminderFrequencyDays": {
             "type": [
@@ -664,6 +679,14 @@
               "null"
             ],
             "minimum": 0
+          },
+          "paymentDetails": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "example": "M-Pesa 0754 123 456 (Asha)"
           },
           "reminderFrequencyDays": {
             "type": [
@@ -1998,6 +2021,419 @@
             "type": "boolean"
           }
         }
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "platform": {
+            "$ref": "#/components/schemas/DevicePlatform"
+          },
+          "app": {
+            "$ref": "#/components/schemas/DeviceApp"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "app",
+          "createdAt",
+          "lastSeenAt"
+        ]
+      },
+      "DevicePlatform": {
+        "type": "string",
+        "enum": [
+          "android",
+          "ios"
+        ]
+      },
+      "DeviceApp": {
+        "type": "string",
+        "enum": [
+          "mobile",
+          "door"
+        ]
+      },
+      "DeviceRegisterInput": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "platform": {
+            "$ref": "#/components/schemas/DevicePlatform"
+          },
+          "app": {
+            "$ref": "#/components/schemas/DeviceApp"
+          }
+        },
+        "required": [
+          "token",
+          "platform",
+          "app"
+        ],
+        "additionalProperties": false
+      },
+      "MessageSettings": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "type": "string",
+                  "enum": [
+                    "contribution_request",
+                    "thank_you",
+                    "contribution_reminder",
+                    "invitation_card",
+                    "card_upgraded",
+                    "attendance_confirmation",
+                    "event_reminder",
+                    "post_event_thanks"
+                  ]
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "channels": {
+                  "type": "string",
+                  "enum": [
+                    "both",
+                    "sms",
+                    "whatsapp"
+                  ]
+                },
+                "smsTextSw": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1,
+                  "maxLength": 1000
+                },
+                "smsTextEn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1,
+                  "maxLength": 1000
+                },
+                "whatsappTemplateVariant": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "whatsappNote": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "schedule": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "offsetDays": {
+                      "type": "integer",
+                      "minimum": -30,
+                      "maximum": 30
+                    },
+                    "timeOfDay": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                    },
+                    "frequencyDays": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 60
+                    },
+                    "maxCount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 20
+                    },
+                    "stopOffsetDays": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 90
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "messageType",
+                "enabled",
+                "channels",
+                "smsTextSw",
+                "smsTextEn",
+                "whatsappTemplateVariant",
+                "whatsappNote",
+                "schedule"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "limits": {
+            "$ref": "#/components/schemas/MessagePlanLimits"
+          },
+          "templates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "type": "string",
+                  "enum": [
+                    "contribution_request",
+                    "thank_you",
+                    "contribution_reminder",
+                    "invitation_card",
+                    "card_upgraded",
+                    "attendance_confirmation",
+                    "event_reminder",
+                    "post_event_thanks"
+                  ]
+                },
+                "variantName": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "sw",
+                    "en"
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "variantName",
+                "language"
+              ]
+            }
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "queuedOrSent": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "queuedOrSent"
+            ]
+          }
+        },
+        "required": [
+          "settings",
+          "limits",
+          "templates",
+          "usage"
+        ]
+      },
+      "MessagePlanLimits": {
+        "type": "object",
+        "properties": {
+          "channelPerMessage": {
+            "type": "boolean"
+          },
+          "smsWordingEdit": {
+            "type": "boolean"
+          },
+          "maxSmsSegments": {
+            "type": "integer"
+          },
+          "whatsappTemplateStyles": {
+            "type": "boolean"
+          },
+          "customTiming": {
+            "type": "boolean"
+          },
+          "maxContributionReminders": {
+            "type": "integer"
+          },
+          "maxManualSends": {
+            "type": "integer"
+          },
+          "marketingMessages": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "channelPerMessage",
+          "smsWordingEdit",
+          "maxSmsSegments",
+          "whatsappTemplateStyles",
+          "customTiming",
+          "maxContributionReminders",
+          "maxManualSends",
+          "marketingMessages"
+        ]
+      },
+      "MessageLog": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "guestName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "toPhone": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "messageType": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "contribution_request",
+                    "thank_you",
+                    "contribution_reminder",
+                    "invitation_card",
+                    "card_upgraded",
+                    "attendance_confirmation",
+                    "event_reminder",
+                    "post_event_thanks",
+                    null
+                  ]
+                },
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "sms",
+                    "whatsapp"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "sent",
+                    "delivered",
+                    "read",
+                    "failed",
+                    "held"
+                  ]
+                },
+                "error": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "sentAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "deliveredAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "guestName",
+                "toPhone",
+                "messageType",
+                "channel",
+                "status",
+                "error",
+                "createdAt",
+                "sentAt",
+                "deliveredAt"
+              ]
+            }
+          },
+          "nextBefore": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "optOuts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "phone",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items",
+          "nextBefore",
+          "counts",
+          "optOuts"
+        ]
       }
     },
     "parameters": {}
@@ -4286,6 +4722,1594 @@
           },
           "404": {
             "description": "Unknown key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/whatsapp-templates": {
+      "get": {
+        "operationId": "adminListWhatsappTemplates",
+        "summary": "List all WhatsApp template variants (admin)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WhatsApp templates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "templates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "messageType": {
+                            "type": "string",
+                            "enum": [
+                              "contribution_request",
+                              "thank_you",
+                              "contribution_reminder",
+                              "invitation_card",
+                              "card_upgraded",
+                              "attendance_confirmation",
+                              "event_reminder",
+                              "post_event_thanks"
+                            ]
+                          },
+                          "variantName": {
+                            "type": "string"
+                          },
+                          "language": {
+                            "type": "string",
+                            "enum": [
+                              "sw",
+                              "en"
+                            ]
+                          },
+                          "metaTemplateName": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string",
+                            "enum": [
+                              "utility",
+                              "marketing",
+                              "authentication"
+                            ]
+                          },
+                          "bodyParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "editableParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "headerImage": {
+                            "type": "boolean"
+                          },
+                          "confirmButtons": {
+                            "type": "boolean"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "pending",
+                              "approved",
+                              "rejected",
+                              "paused"
+                            ]
+                          },
+                          "active": {
+                            "type": "boolean"
+                          },
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "messageType",
+                          "variantName",
+                          "language",
+                          "metaTemplateName",
+                          "category",
+                          "bodyParams",
+                          "editableParams",
+                          "headerImage",
+                          "confirmButtons",
+                          "status",
+                          "active",
+                          "id",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "templates"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "adminCreateWhatsappTemplate",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messageType": {
+                    "type": "string",
+                    "enum": [
+                      "contribution_request",
+                      "thank_you",
+                      "contribution_reminder",
+                      "invitation_card",
+                      "card_upgraded",
+                      "attendance_confirmation",
+                      "event_reminder",
+                      "post_event_thanks"
+                    ]
+                  },
+                  "variantName": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "enum": [
+                      "sw",
+                      "en"
+                    ]
+                  },
+                  "metaTemplateName": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "utility",
+                      "marketing",
+                      "authentication"
+                    ]
+                  },
+                  "bodyParams": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "editableParams": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "headerImage": {
+                    "type": "boolean"
+                  },
+                  "confirmButtons": {
+                    "type": "boolean"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "approved",
+                      "rejected",
+                      "paused"
+                    ]
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "messageType",
+                  "variantName",
+                  "language",
+                  "metaTemplateName",
+                  "category",
+                  "bodyParams",
+                  "editableParams",
+                  "headerImage",
+                  "confirmButtons",
+                  "status",
+                  "active"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messageType": {
+                      "type": "string",
+                      "enum": [
+                        "contribution_request",
+                        "thank_you",
+                        "contribution_reminder",
+                        "invitation_card",
+                        "card_upgraded",
+                        "attendance_confirmation",
+                        "event_reminder",
+                        "post_event_thanks"
+                      ]
+                    },
+                    "variantName": {
+                      "type": "string"
+                    },
+                    "language": {
+                      "type": "string",
+                      "enum": [
+                        "sw",
+                        "en"
+                      ]
+                    },
+                    "metaTemplateName": {
+                      "type": "string"
+                    },
+                    "category": {
+                      "type": "string",
+                      "enum": [
+                        "utility",
+                        "marketing",
+                        "authentication"
+                      ]
+                    },
+                    "bodyParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "editableParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "headerImage": {
+                      "type": "boolean"
+                    },
+                    "confirmButtons": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "approved",
+                        "rejected",
+                        "paused"
+                      ]
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "messageType",
+                    "variantName",
+                    "language",
+                    "metaTemplateName",
+                    "category",
+                    "bodyParams",
+                    "editableParams",
+                    "headerImage",
+                    "confirmButtons",
+                    "status",
+                    "active",
+                    "id",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Duplicate variant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/whatsapp-templates/{id}": {
+      "patch": {
+        "operationId": "adminUpdateWhatsappTemplate",
+        "summary": "Update registration, Meta status or host availability",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messageType": {
+                    "type": "string",
+                    "enum": [
+                      "contribution_request",
+                      "thank_you",
+                      "contribution_reminder",
+                      "invitation_card",
+                      "card_upgraded",
+                      "attendance_confirmation",
+                      "event_reminder",
+                      "post_event_thanks"
+                    ]
+                  },
+                  "variantName": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "enum": [
+                      "sw",
+                      "en"
+                    ]
+                  },
+                  "metaTemplateName": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "utility",
+                      "marketing",
+                      "authentication"
+                    ]
+                  },
+                  "bodyParams": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "editableParams": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "headerImage": {
+                    "type": "boolean"
+                  },
+                  "confirmButtons": {
+                    "type": "boolean"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "approved",
+                      "rejected",
+                      "paused"
+                    ]
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messageType": {
+                      "type": "string",
+                      "enum": [
+                        "contribution_request",
+                        "thank_you",
+                        "contribution_reminder",
+                        "invitation_card",
+                        "card_upgraded",
+                        "attendance_confirmation",
+                        "event_reminder",
+                        "post_event_thanks"
+                      ]
+                    },
+                    "variantName": {
+                      "type": "string"
+                    },
+                    "language": {
+                      "type": "string",
+                      "enum": [
+                        "sw",
+                        "en"
+                      ]
+                    },
+                    "metaTemplateName": {
+                      "type": "string"
+                    },
+                    "category": {
+                      "type": "string",
+                      "enum": [
+                        "utility",
+                        "marketing",
+                        "authentication"
+                      ]
+                    },
+                    "bodyParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "editableParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "headerImage": {
+                      "type": "boolean"
+                    },
+                    "confirmButtons": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "approved",
+                        "rejected",
+                        "paused"
+                      ]
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "messageType",
+                    "variantName",
+                    "language",
+                    "metaTemplateName",
+                    "category",
+                    "bodyParams",
+                    "editableParams",
+                    "headerImage",
+                    "confirmButtons",
+                    "status",
+                    "active",
+                    "id",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown template",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Duplicate variant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/provider-rates": {
+      "get": {
+        "operationId": "adminListProviderRates",
+        "summary": "List effective-dated messaging provider rates (admin)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider rates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "meta",
+                              "nextsms"
+                            ]
+                          },
+                          "channel": {
+                            "type": "string",
+                            "enum": [
+                              "whatsapp",
+                              "sms"
+                            ]
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "market": {
+                            "type": "string"
+                          },
+                          "priceTzs": {
+                            "type": "string"
+                          },
+                          "effectiveFrom": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "channel",
+                          "category",
+                          "market",
+                          "priceTzs",
+                          "effectiveFrom",
+                          "id",
+                          "createdAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "rates"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "adminCreateProviderRate",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "meta",
+                      "nextsms"
+                    ]
+                  },
+                  "channel": {
+                    "type": "string",
+                    "enum": [
+                      "whatsapp",
+                      "sms"
+                    ]
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "market": {
+                    "type": "string"
+                  },
+                  "priceTzs": {
+                    "type": "string"
+                  },
+                  "effectiveFrom": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "channel",
+                  "category",
+                  "market",
+                  "priceTzs",
+                  "effectiveFrom"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "enum": [
+                        "meta",
+                        "nextsms"
+                      ]
+                    },
+                    "channel": {
+                      "type": "string",
+                      "enum": [
+                        "whatsapp",
+                        "sms"
+                      ]
+                    },
+                    "category": {
+                      "type": "string"
+                    },
+                    "market": {
+                      "type": "string"
+                    },
+                    "priceTzs": {
+                      "type": "string"
+                    },
+                    "effectiveFrom": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "provider",
+                    "channel",
+                    "category",
+                    "market",
+                    "priceTzs",
+                    "effectiveFrom",
+                    "id",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/devices": {
+      "post": {
+        "operationId": "registerDevice",
+        "summary": "Register (upsert) this device's push token for the signed-in user",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceRegisterInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token already known; refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Token registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Account not provisioned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/devices/{token}": {
+      "delete": {
+        "operationId": "unregisterDevice",
+        "summary": "Remove a push token of the signed-in user (idempotent; call on sign-out)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed (or was not registered)"
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Account not provisioned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/messages": {
+      "get": {
+        "operationId": "getMessageSettings",
+        "summary": "Message settings for NTF-1…8 with the plan's limits (host, committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateMessageSettings",
+        "summary": "Save all 8 message settings (host)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "settings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "messageType": {
+                          "type": "string",
+                          "enum": [
+                            "contribution_request",
+                            "thank_you",
+                            "contribution_reminder",
+                            "invitation_card",
+                            "card_upgraded",
+                            "attendance_confirmation",
+                            "event_reminder",
+                            "post_event_thanks"
+                          ]
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "channels": {
+                          "type": "string",
+                          "enum": [
+                            "both",
+                            "sms",
+                            "whatsapp"
+                          ]
+                        },
+                        "smsTextSw": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 1000
+                        },
+                        "smsTextEn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 1000
+                        },
+                        "whatsappTemplateVariant": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "whatsappNote": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 200
+                        },
+                        "schedule": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "offsetDays": {
+                              "type": "integer",
+                              "minimum": -30,
+                              "maximum": 30
+                            },
+                            "timeOfDay": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "frequencyDays": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 60
+                            },
+                            "maxCount": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 20
+                            },
+                            "stopOffsetDays": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 90
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "messageType",
+                        "enabled",
+                        "channels",
+                        "smsTextSw",
+                        "smsTextEn",
+                        "whatsappTemplateVariant",
+                        "whatsappNote",
+                        "schedule"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "settings"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "plan_limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/messages/{type}/test": {
+      "post": {
+        "operationId": "sendTestMessage",
+        "summary": "Send a message with sample values to the host's own phone (rate-limited)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "contribution_request",
+                "thank_you",
+                "contribution_reminder",
+                "invitation_card",
+                "card_upgraded",
+                "attendance_confirmation",
+                "event_reminder",
+                "post_event_thanks"
+              ]
+            },
+            "required": true,
+            "name": "type",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "channels": {
+                    "type": "string",
+                    "enum": [
+                      "both",
+                      "sms",
+                      "whatsapp"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "queued": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "queued"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "plan_limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/messages/send": {
+      "post": {
+        "operationId": "sendManualMessage",
+        "summary": "Send a message now to a guest group, or preview the recipient count (host)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messageType": {
+                    "type": "string",
+                    "enum": [
+                      "invitation_card",
+                      "contribution_reminder",
+                      "attendance_confirmation",
+                      "event_reminder",
+                      "post_event_thanks"
+                    ]
+                  },
+                  "group": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "unpaid",
+                      "not_confirmed",
+                      "confirmed"
+                    ]
+                  },
+                  "preview": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "messageType",
+                  "group"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "recipients": {
+                      "type": "integer"
+                    },
+                    "sendsUsed": {
+                      "type": "integer"
+                    },
+                    "sendsAllowed": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "recipients",
+                    "sendsUsed",
+                    "sendsAllowed"
+                  ]
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "queued": {
+                      "type": "integer"
+                    },
+                    "sendsUsed": {
+                      "type": "integer"
+                    },
+                    "sendsAllowed": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "queued",
+                    "sendsUsed",
+                    "sendsAllowed"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "plan_limit, no recipients or event closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/messages/log": {
+      "get": {
+        "operationId": "listMessageLog",
+        "summary": "Event message log (no costs) and WhatsApp opt-outs (host, committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "sent",
+                "delivered",
+                "read",
+                "failed",
+                "held"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "contribution_request",
+                "thank_you",
+                "contribution_reminder",
+                "invitation_card",
+                "card_upgraded",
+                "attendance_confirmation",
+                "event_reminder",
+                "post_event_thanks"
+              ]
+            },
+            "required": false,
+            "name": "messageType",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sms",
+                "whatsapp"
+              ]
+            },
+            "required": false,
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "required": false,
+            "name": "before",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageLog"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid filters",
             "content": {
               "application/json": {
                 "schema": {

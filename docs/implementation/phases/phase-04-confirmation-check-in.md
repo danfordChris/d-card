@@ -36,6 +36,7 @@
 ## Task Checklist
 
 - [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [ ] Carried from T03-08: wire the door app's real FCM token source and `PushRegistrationRepository` into door sign-in, and add the first `sendToUser` caller (walk-in push to host/approvers).
 
 ## Acceptance Criteria
 

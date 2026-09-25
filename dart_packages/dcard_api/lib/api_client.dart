@@ -184,6 +184,10 @@ class ApiClient {
           return value is DateTime ? value : DateTime.tryParse(value);
         case 'Account':
           return Account.fromJson(value);
+        case 'AdminCreateProviderRateRequest':
+          return AdminCreateProviderRateRequest.fromJson(value);
+        case 'AdminCreateWhatsappTemplateRequest':
+          return AdminCreateWhatsappTemplateRequest.fromJson(value);
         case 'AdminEventType':
           return AdminEventType.fromJson(value);
         case 'AdminEventTypeCreateInput':
@@ -192,6 +196,16 @@ class ApiClient {
           return AdminEventTypeList.fromJson(value);
         case 'AdminEventTypeUpdateInput':
           return AdminEventTypeUpdateInput.fromJson(value);
+        case 'AdminListProviderRates200Response':
+          return AdminListProviderRates200Response.fromJson(value);
+        case 'AdminListProviderRates200ResponseRatesInner':
+          return AdminListProviderRates200ResponseRatesInner.fromJson(value);
+        case 'AdminListWhatsappTemplates200Response':
+          return AdminListWhatsappTemplates200Response.fromJson(value);
+        case 'AdminListWhatsappTemplates200ResponseTemplatesInner':
+          return AdminListWhatsappTemplates200ResponseTemplatesInner.fromJson(value);
+        case 'AdminUpdateWhatsappTemplateRequest':
+          return AdminUpdateWhatsappTemplateRequest.fromJson(value);
         case 'AuthProvider':
           return AuthProviderTypeTransformer().decode(value);
         case 'Card':
@@ -210,6 +224,14 @@ class ApiClient {
           return ContributorCreateInput.fromJson(value);
         case 'ContributorCreateResponse':
           return ContributorCreateResponse.fromJson(value);
+        case 'Device':
+          return Device.fromJson(value);
+        case 'DeviceApp':
+          return DeviceAppTypeTransformer().decode(value);
+        case 'DevicePlatform':
+          return DevicePlatformTypeTransformer().decode(value);
+        case 'DeviceRegisterInput':
+          return DeviceRegisterInput.fromJson(value);
         case 'ErrorResponse':
           return ErrorResponse.fromJson(value);
         case 'ErrorResponseError':
@@ -276,6 +298,22 @@ class ApiClient {
           return InviteCreateResponse.fromJson(value);
         case 'InviteInfo':
           return InviteInfo.fromJson(value);
+        case 'MessageLog':
+          return MessageLog.fromJson(value);
+        case 'MessageLogItemsInner':
+          return MessageLogItemsInner.fromJson(value);
+        case 'MessageLogOptOutsInner':
+          return MessageLogOptOutsInner.fromJson(value);
+        case 'MessagePlanLimits':
+          return MessagePlanLimits.fromJson(value);
+        case 'MessageSettings':
+          return MessageSettings.fromJson(value);
+        case 'MessageSettingsSettingsInner':
+          return MessageSettingsSettingsInner.fromJson(value);
+        case 'MessageSettingsTemplatesInner':
+          return MessageSettingsTemplatesInner.fromJson(value);
+        case 'MessageSettingsUsage':
+          return MessageSettingsUsage.fromJson(value);
         case 'Payment':
           return Payment.fromJson(value);
         case 'PaymentCreateInput':
@@ -306,12 +344,28 @@ class ApiClient {
           return Rsvp.fromJson(value);
         case 'RsvpInput':
           return RsvpInput.fromJson(value);
+        case 'SendManualMessage200Response':
+          return SendManualMessage200Response.fromJson(value);
+        case 'SendManualMessage202Response':
+          return SendManualMessage202Response.fromJson(value);
+        case 'SendManualMessageRequest':
+          return SendManualMessageRequest.fromJson(value);
+        case 'SendTestMessage202Response':
+          return SendTestMessage202Response.fromJson(value);
+        case 'SendTestMessageRequest':
+          return SendTestMessageRequest.fromJson(value);
         case 'Team':
           return Team.fromJson(value);
         case 'TeamMembersInner':
           return TeamMembersInner.fromJson(value);
         case 'TeamRole':
           return TeamRoleTypeTransformer().decode(value);
+        case 'UpdateMessageSettingsRequest':
+          return UpdateMessageSettingsRequest.fromJson(value);
+        case 'UpdateMessageSettingsRequestSettingsInner':
+          return UpdateMessageSettingsRequestSettingsInner.fromJson(value);
+        case 'UpdateMessageSettingsRequestSettingsInnerSchedule':
+          return UpdateMessageSettingsRequestSettingsInnerSchedule.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

@@ -26,6 +26,7 @@ const settingsFields = {
   singleAmount: z.number().int().min(0).nullable().optional(),
   doubleAmount: z.number().int().min(0).nullable().optional(),
   budgetAmount: z.number().int().min(0).nullable().optional(),
+  paymentDetails: z.string().trim().max(120).nullable().optional().openapi({ example: "M-Pesa 0754 123 456 (Asha)" }),
   reminderFrequencyDays: z.number().int().min(1).max(60).nullable().optional(),
   photoAlbumUrl: z.url().max(500).nullable().optional(),
 };
@@ -83,6 +84,7 @@ export const EventSchema = z
     singleAmount: z.number().int().nullable(),
     doubleAmount: z.number().int().nullable(),
     budgetAmount: z.number().int().nullable(),
+    paymentDetails: z.string().nullable(),
     reminderFrequencyDays: z.number().int().nullable(),
     photoAlbumUrl: z.string().nullable(),
     access: z.enum(["host", "treasurer", "committee", "door_staff", "walkin_approver"]),

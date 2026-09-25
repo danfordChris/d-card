@@ -11,6 +11,10 @@
     "./phone": {
       "types": "./dist/phone/phone.d.ts",
       "default": "./dist/phone/phone.js"
+    },
+    "./sms": {
+      "types": "./dist/messaging/client.d.ts",
+      "default": "./dist/messaging/client.js"
     }
   },
   "scripts": {

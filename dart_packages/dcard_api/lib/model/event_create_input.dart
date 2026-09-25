@@ -33,6 +33,7 @@ class EventCreateInput {
     this.singleAmount,
     this.doubleAmount,
     this.budgetAmount,
+    this.paymentDetails,
     this.reminderFrequencyDays,
     this.photoAlbumUrl,
   });
@@ -114,6 +115,8 @@ class EventCreateInput {
   /// Minimum value: 0
   int? budgetAmount;
 
+  String? paymentDetails;
+
   /// Minimum value: 1
   /// Maximum value: 60
   int? reminderFrequencyDays;
@@ -142,6 +145,7 @@ class EventCreateInput {
     other.singleAmount == singleAmount &&
     other.doubleAmount == doubleAmount &&
     other.budgetAmount == budgetAmount &&
+    other.paymentDetails == paymentDetails &&
     other.reminderFrequencyDays == reminderFrequencyDays &&
     other.photoAlbumUrl == photoAlbumUrl;
 
@@ -168,11 +172,12 @@ class EventCreateInput {
     (singleAmount == null ? 0 : singleAmount!.hashCode) +
     (doubleAmount == null ? 0 : doubleAmount!.hashCode) +
     (budgetAmount == null ? 0 : budgetAmount!.hashCode) +
+    (paymentDetails == null ? 0 : paymentDetails!.hashCode) +
     (reminderFrequencyDays == null ? 0 : reminderFrequencyDays!.hashCode) +
     (photoAlbumUrl == null ? 0 : photoAlbumUrl!.hashCode);
 
   @override
-  String toString() => 'EventCreateInput[planKey=$planKey, eventTypeKey=$eventTypeKey, title=$title, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, budgetAmount=$budgetAmount, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl]';
+  String toString() => 'EventCreateInput[planKey=$planKey, eventTypeKey=$eventTypeKey, title=$title, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, budgetAmount=$budgetAmount, paymentDetails=$paymentDetails, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -252,6 +257,11 @@ class EventCreateInput {
     } else {
       json[r'budgetAmount'] = null;
     }
+    if (this.paymentDetails != null) {
+      json[r'paymentDetails'] = this.paymentDetails;
+    } else {
+      json[r'paymentDetails'] = null;
+    }
     if (this.reminderFrequencyDays != null) {
       json[r'reminderFrequencyDays'] = this.reminderFrequencyDays;
     } else {
@@ -304,6 +314,7 @@ class EventCreateInput {
         singleAmount: mapValueOfType<int>(json, r'singleAmount'),
         doubleAmount: mapValueOfType<int>(json, r'doubleAmount'),
         budgetAmount: mapValueOfType<int>(json, r'budgetAmount'),
+        paymentDetails: mapValueOfType<String>(json, r'paymentDetails'),
         reminderFrequencyDays: mapValueOfType<int>(json, r'reminderFrequencyDays'),
         photoAlbumUrl: mapValueOfType<String>(json, r'photoAlbumUrl'),
       );

@@ -164,6 +164,7 @@ Event fakeEvent({
   singleAmount: null,
   doubleAmount: null,
   budgetAmount: null,
+  paymentDetails: null,
   reminderFrequencyDays: null,
   photoAlbumUrl: null,
   access: access ?? EventAccessEnum.host,

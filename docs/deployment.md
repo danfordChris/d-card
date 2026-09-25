@@ -44,6 +44,7 @@
    - `APP_URL`, `AUTH_VERIFIER=firebase`, `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY`, `REDIS_URL`
    - `API_KEYS` (one `client:key` pair per client: `web`, `mobile`, `door`, `tools`) and `NEXT_PUBLIC_DCARD_API_KEY` (the `web` key). Use different keys per environment; build the mobile and door apps with their key (`--dart-define=API_KEY=…`).
    - Firebase, WhatsApp, NextSMS, Google Drive and Snippe keys
+   - `NEXTSMS_LIVE=true` on the production worker only (anywhere else SMS go to the NextSMS test endpoint and reach no phone)
    - Never set `AUTH_VERIFIER=fake` or `dev` on Vercel (the server refuses both in production).
 
 ### 3. GitHub (Settings → Secrets and variables → Actions)
@@ -75,3 +76,12 @@ Also create the GitHub environment **`production`** (Settings → Environments).
 
 - Workflows lint clean: `docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest -no-color`
 - Vercel build command works locally: `cd apps/web && sh -c "cd ../.. && pnpm turbo run build --filter=@dcard/web..."`
+
+## Marketing site (`apps/site`)
+
+A separate Vercel project (static, no functions):
+
+- Root directory `apps/site`; framework preset Astro; build command `pnpm --filter @dcard/site build`; output `dist`.
+- Environment variables: `SITE_URL` (the site's own domain, used for canonical/hreflang/sitemap), `SITE_APP_URL` (the web app, for the sign-up button), and optionally `SITE_WHATSAPP`, `SITE_PHONE` (any Tanzanian format), `SITE_EMAIL` — contact buttons stay hidden until set.
+- Check locally: `pnpm --filter @dcard/site build && pnpm --filter @dcard/site preview`.
+

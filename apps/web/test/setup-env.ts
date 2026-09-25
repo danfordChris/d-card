@@ -7,3 +7,6 @@ process.env.QUEUE_PREFIX = `webtest_${process.pid}`;
 process.env.APP_URL = "https://dcard.test";
 process.env.API_KEYS = "web:test_web_key_0123456789abcdefghijklmnop,mobile:test_mobile_key_0123456789abcdefghijk,door:dummy_door_key";
 process.env.NEXT_PUBLIC_DCARD_API_KEY = "test_web_key_0123456789abcdefghijklmnop";
+process.env.WHATSAPP_APP_SECRET = "test_meta_app_secret";
+process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN = "test_meta_verify";
+process.env.NEXTSMS_WEBHOOK_VERIFY_TOKEN = "test_nextsms_verify";

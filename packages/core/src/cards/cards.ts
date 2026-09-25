@@ -6,6 +6,7 @@ import { requireEventRole } from "../auth/roles.js";
 import { decryptSecret, encryptSecret } from "../crypto/secrets.js";
 import { inTransaction, type DbExecutor } from "../db-types.js";
 import { ConflictError, NotFoundError } from "../errors.js";
+import { enqueueMessage } from "../messaging/outbox.js";
 import { generateToken, hashToken } from "../tokens.js";
 
 // docs/design/features/guests-and-cards.md (GST-8..11, Invitation States).
@@ -87,6 +88,8 @@ export async function issueInvitationInTx(
     targetId: row.id,
     newValue: { cardNumber, cardType: row.cardType, reason: params.reason },
   });
+  // NTF-4: the invitation card (always sent; cannot be turned off).
+  await enqueueMessage(tx, { key: `invitation_card:${row.id}`, eventId: params.eventId, invitationId: row.id, messageType: "invitation_card" });
   return toCard(updated!);
 }
 

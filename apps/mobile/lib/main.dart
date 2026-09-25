@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,31 +9,41 @@ import 'config.dart';
 import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
+import 'data/repositories/push_registration_repository.dart';
 import 'data/repositories/session_repository.dart';
 import 'data/services/api_factory.dart';
 import 'data/services/auth_service.dart';
 import 'data/services/contacts_source.dart';
 import 'data/services/dev_auth_service.dart';
 import 'data/services/firebase_auth_service.dart';
+import 'data/services/push_token_source.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = AppConfig.fromEnvironment();
   final AuthService auth;
+  PushTokenSource pushTokens = const NoPushTokenSource();
   if (config.useFakeAuth) {
     auth = DevAuthService();
   } else if (config.firebaseOptions != null) {
     await Firebase.initializeApp(options: config.firebaseOptions);
     auth = FirebaseAuthService(FirebaseAuth.instance);
+    pushTokens = FirebasePushTokenSource(FirebaseMessaging.instance);
   } else {
     runApp(const _MissingConfigApp());
     return;
   }
   final api = createApi(baseUrl: config.apiBaseUrl, apiKey: config.apiKey, auth: auth);
   final prefs = await SharedPreferences.getInstance();
+  final session = SessionRepository(
+    auth: auth,
+    api: api,
+    prefs: prefs,
+    push: PushRegistrationRepository(api: api, source: pushTokens),
+  )..restore();
   runApp(
     DCardApp(
-      session: SessionRepository(auth: auth, api: api, prefs: prefs),
+      session: session,
       events: EventsRepository(api),
       guests: GuestsRepository(api),
       contacts: DeviceContactsSource(),

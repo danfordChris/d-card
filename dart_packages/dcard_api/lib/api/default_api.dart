@@ -282,6 +282,100 @@ class DefaultApi {
     return null;
   }
 
+  /// Performs an HTTP 'POST /api/v1/admin/provider-rates' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [AdminCreateProviderRateRequest] adminCreateProviderRateRequest:
+  Future<Response> adminCreateProviderRateWithHttpInfo({ AdminCreateProviderRateRequest? adminCreateProviderRateRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/provider-rates';
+
+    // ignore: prefer_final_locals
+    Object? postBody = adminCreateProviderRateRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [AdminCreateProviderRateRequest] adminCreateProviderRateRequest:
+  Future<AdminListProviderRates200ResponseRatesInner?> adminCreateProviderRate({ AdminCreateProviderRateRequest? adminCreateProviderRateRequest, }) async {
+    final response = await adminCreateProviderRateWithHttpInfo( adminCreateProviderRateRequest: adminCreateProviderRateRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminListProviderRates200ResponseRatesInner',) as AdminListProviderRates200ResponseRatesInner;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'POST /api/v1/admin/whatsapp-templates' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [AdminCreateWhatsappTemplateRequest] adminCreateWhatsappTemplateRequest:
+  Future<Response> adminCreateWhatsappTemplateWithHttpInfo({ AdminCreateWhatsappTemplateRequest? adminCreateWhatsappTemplateRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/whatsapp-templates';
+
+    // ignore: prefer_final_locals
+    Object? postBody = adminCreateWhatsappTemplateRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [AdminCreateWhatsappTemplateRequest] adminCreateWhatsappTemplateRequest:
+  Future<AdminListWhatsappTemplates200ResponseTemplatesInner?> adminCreateWhatsappTemplate({ AdminCreateWhatsappTemplateRequest? adminCreateWhatsappTemplateRequest, }) async {
+    final response = await adminCreateWhatsappTemplateWithHttpInfo( adminCreateWhatsappTemplateRequest: adminCreateWhatsappTemplateRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminListWhatsappTemplates200ResponseTemplatesInner',) as AdminListWhatsappTemplates200ResponseTemplatesInner;
+    
+    }
+    return null;
+  }
+
   /// All event types, including inactive (admin)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -321,6 +415,94 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminEventTypeList',) as AdminEventTypeList;
+    
+    }
+    return null;
+  }
+
+  /// List effective-dated messaging provider rates (admin)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> adminListProviderRatesWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/provider-rates';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// List effective-dated messaging provider rates (admin)
+  Future<AdminListProviderRates200Response?> adminListProviderRates() async {
+    final response = await adminListProviderRatesWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminListProviderRates200Response',) as AdminListProviderRates200Response;
+    
+    }
+    return null;
+  }
+
+  /// List all WhatsApp template variants (admin)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> adminListWhatsappTemplatesWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/whatsapp-templates';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// List all WhatsApp template variants (admin)
+  Future<AdminListWhatsappTemplates200Response?> adminListWhatsappTemplates() async {
+    final response = await adminListWhatsappTemplatesWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminListWhatsappTemplates200Response',) as AdminListWhatsappTemplates200Response;
     
     }
     return null;
@@ -378,6 +560,63 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminEventType',) as AdminEventType;
+    
+    }
+    return null;
+  }
+
+  /// Update registration, Meta status or host availability
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [AdminUpdateWhatsappTemplateRequest] adminUpdateWhatsappTemplateRequest:
+  Future<Response> adminUpdateWhatsappTemplateWithHttpInfo(String id, { AdminUpdateWhatsappTemplateRequest? adminUpdateWhatsappTemplateRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/whatsapp-templates/{id}'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = adminUpdateWhatsappTemplateRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PATCH',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Update registration, Meta status or host availability
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [AdminUpdateWhatsappTemplateRequest] adminUpdateWhatsappTemplateRequest:
+  Future<AdminListWhatsappTemplates200ResponseTemplatesInner?> adminUpdateWhatsappTemplate(String id, { AdminUpdateWhatsappTemplateRequest? adminUpdateWhatsappTemplateRequest, }) async {
+    final response = await adminUpdateWhatsappTemplateWithHttpInfo(id,  adminUpdateWhatsappTemplateRequest: adminUpdateWhatsappTemplateRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminListWhatsappTemplates200ResponseTemplatesInner',) as AdminListWhatsappTemplates200ResponseTemplatesInner;
     
     }
     return null;
@@ -1028,6 +1267,59 @@ class DefaultApi {
     return null;
   }
 
+  /// Message settings for NTF-1…8 with the plan's limits (host, committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> getMessageSettingsWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/messages'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Message settings for NTF-1…8 with the plan's limits (host, committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<MessageSettings?> getMessageSettings(String id,) async {
+    final response = await getMessageSettingsWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MessageSettings',) as MessageSettings;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/v1/events/{id}/pledges/{pledgeId}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -1408,6 +1700,102 @@ class DefaultApi {
     return null;
   }
 
+  /// Event message log (no costs) and WhatsApp opt-outs (host, committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] status:
+  ///
+  /// * [String] messageType:
+  ///
+  /// * [String] channel:
+  ///
+  /// * [String] q:
+  ///
+  /// * [String] before:
+  ///
+  /// * [int] limit:
+  Future<Response> listMessageLogWithHttpInfo(String id, { String? status, String? messageType, String? channel, String? q, String? before, int? limit, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/messages/log'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (status != null) {
+      queryParams.addAll(_queryParams('', 'status', status));
+    }
+    if (messageType != null) {
+      queryParams.addAll(_queryParams('', 'messageType', messageType));
+    }
+    if (channel != null) {
+      queryParams.addAll(_queryParams('', 'channel', channel));
+    }
+    if (q != null) {
+      queryParams.addAll(_queryParams('', 'q', q));
+    }
+    if (before != null) {
+      queryParams.addAll(_queryParams('', 'before', before));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Event message log (no costs) and WhatsApp opt-outs (host, committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] status:
+  ///
+  /// * [String] messageType:
+  ///
+  /// * [String] channel:
+  ///
+  /// * [String] q:
+  ///
+  /// * [String] before:
+  ///
+  /// * [int] limit:
+  Future<MessageLog?> listMessageLog(String id, { String? status, String? messageType, String? channel, String? q, String? before, int? limit, }) async {
+    final response = await listMessageLogWithHttpInfo(id,  status: status, messageType: messageType, channel: channel, q: q, before: before, limit: limit, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MessageLog',) as MessageLog;
+    
+    }
+    return null;
+  }
+
   /// Active plans with price per guest and entitlements
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1682,6 +2070,58 @@ class DefaultApi {
     return null;
   }
 
+  /// Register (upsert) this device's push token for the signed-in user
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DeviceRegisterInput] deviceRegisterInput:
+  Future<Response> registerDeviceWithHttpInfo({ DeviceRegisterInput? deviceRegisterInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/me/devices';
+
+    // ignore: prefer_final_locals
+    Object? postBody = deviceRegisterInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Register (upsert) this device's push token for the signed-in user
+  ///
+  /// Parameters:
+  ///
+  /// * [DeviceRegisterInput] deviceRegisterInput:
+  Future<Device?> registerDevice({ DeviceRegisterInput? deviceRegisterInput, }) async {
+    final response = await registerDeviceWithHttpInfo( deviceRegisterInput: deviceRegisterInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Device',) as Device;
+    
+    }
+    return null;
+  }
+
   /// Reinstate a cancelled card (host): same number and tokens.
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1881,6 +2321,125 @@ class DefaultApi {
     }
   }
 
+  /// Send a message now to a guest group, or preview the recipient count (host)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [SendManualMessageRequest] sendManualMessageRequest:
+  Future<Response> sendManualMessageWithHttpInfo(String id, { SendManualMessageRequest? sendManualMessageRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/messages/send'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = sendManualMessageRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Send a message now to a guest group, or preview the recipient count (host)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [SendManualMessageRequest] sendManualMessageRequest:
+  Future<SendManualMessage200Response?> sendManualMessage(String id, { SendManualMessageRequest? sendManualMessageRequest, }) async {
+    final response = await sendManualMessageWithHttpInfo(id,  sendManualMessageRequest: sendManualMessageRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'SendManualMessage200Response',) as SendManualMessage200Response;
+    
+    }
+    return null;
+  }
+
+  /// Send a message with sample values to the host's own phone (rate-limited)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] type (required):
+  ///
+  /// * [SendTestMessageRequest] sendTestMessageRequest:
+  Future<Response> sendTestMessageWithHttpInfo(String id, String type, { SendTestMessageRequest? sendTestMessageRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/messages/{type}/test'
+      .replaceAll('{id}', id)
+      .replaceAll('{type}', type);
+
+    // ignore: prefer_final_locals
+    Object? postBody = sendTestMessageRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Send a message with sample values to the host's own phone (rate-limited)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] type (required):
+  ///
+  /// * [SendTestMessageRequest] sendTestMessageRequest:
+  Future<SendTestMessage202Response?> sendTestMessage(String id, String type, { SendTestMessageRequest? sendTestMessageRequest, }) async {
+    final response = await sendTestMessageWithHttpInfo(id, type,  sendTestMessageRequest: sendTestMessageRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'SendTestMessage202Response',) as SendTestMessage202Response;
+    
+    }
+    return null;
+  }
+
   /// RSVP Yes/No with dietary note (public); editable until the event starts
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1936,6 +2495,51 @@ class DefaultApi {
     
     }
     return null;
+  }
+
+  /// Remove a push token of the signed-in user (idempotent; call on sign-out)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<Response> unregisterDeviceWithHttpInfo(String token,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/me/devices/{token}'
+      .replaceAll('{token}', token);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Remove a push token of the signed-in user (idempotent; call on sign-out)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<void> unregisterDevice(String token,) async {
+    final response = await unregisterDeviceWithHttpInfo(token,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
   }
 
   /// Edit details, contact and settings (host only)
@@ -2047,6 +2651,63 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Guest',) as Guest;
+    
+    }
+    return null;
+  }
+
+  /// Save all 8 message settings (host)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [UpdateMessageSettingsRequest] updateMessageSettingsRequest:
+  Future<Response> updateMessageSettingsWithHttpInfo(String id, { UpdateMessageSettingsRequest? updateMessageSettingsRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/messages'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = updateMessageSettingsRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Save all 8 message settings (host)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [UpdateMessageSettingsRequest] updateMessageSettingsRequest:
+  Future<MessageSettings?> updateMessageSettings(String id, { UpdateMessageSettingsRequest? updateMessageSettingsRequest, }) async {
+    final response = await updateMessageSettingsWithHttpInfo(id,  updateMessageSettingsRequest: updateMessageSettingsRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MessageSettings',) as MessageSettings;
     
     }
     return null;

@@ -2,8 +2,8 @@
 
 ## Status
 
-- `pending`
-- Last updated: 2026-09-24
+- `in-progress`
+- Last updated: 2026-09-25
 
 ## Objective
 
@@ -35,7 +35,14 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [x] T03-01 — Messaging foundation: schema, templates, adapters, send queue, message log (`docs/implementation/tasks/t03-01-messaging-foundation.md`)
+- [ ] T03-02 — Transactional messages: contribution request, thank-you, card, upgrade (`docs/implementation/tasks/t03-02-transactional-messages.md`)
+- [ ] T03-03 — Provider webhooks: delivery status, button replies, STOP, template category guard (`docs/implementation/tasks/t03-03-webhooks-stop.md`)
+- [ ] T03-04 — Scheduled messages: reminders, confirmation, event reminder, thank-you, quiet hours, plan limits (`docs/implementation/tasks/t03-04-scheduled-messages.md`)
+- [ ] T03-05 — Web message settings, SMS editor and test send (`docs/implementation/tasks/t03-05-web-message-settings.md`)
+- [ ] T03-06 — Manual send to groups and host message log (`docs/implementation/tasks/t03-06-manual-send-and-log.md`)
+- [ ] T03-07 — Admin WhatsApp template registry and provider rates (`docs/implementation/tasks/t03-07-admin-templates-rates.md`)
+- [ ] T03-08 — Push notification setup (device tokens, FCM sender) (`docs/implementation/tasks/t03-08-push-setup.md`)
 
 ## Acceptance Criteria
 
@@ -45,8 +52,15 @@
 
 ## Blockers
 
-- Previous phase not done.
+- None for building and testing (fakes). Live sends need real NextSMS/Meta keys, a registered sender ID and approved templates (T00-10).
 
 ## Linked Tasks
 
-- None yet.
+- docs/implementation/tasks/t03-01-messaging-foundation.md
+- docs/implementation/tasks/t03-02-transactional-messages.md
+- docs/implementation/tasks/t03-03-webhooks-stop.md
+- docs/implementation/tasks/t03-04-scheduled-messages.md
+- docs/implementation/tasks/t03-05-web-message-settings.md
+- docs/implementation/tasks/t03-06-manual-send-and-log.md
+- docs/implementation/tasks/t03-07-admin-templates-rates.md
+- docs/implementation/tasks/t03-08-push-setup.md

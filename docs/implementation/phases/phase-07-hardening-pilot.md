@@ -24,7 +24,8 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [ ] T07-01 — Marketing site (`docs/implementation/tasks/t07-01-marketing-site.md`) — started early at the owner's request
+- [ ] Break the rest of the scope into task files before the phase starts (vertical slices, per `task-spec.md`).
 
 ## Acceptance Criteria
 
@@ -38,4 +39,4 @@
 
 ## Linked Tasks
 
-- None yet.
+- docs/implementation/tasks/t07-01-marketing-site.md

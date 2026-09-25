@@ -49,7 +49,14 @@ in-progress
 
 ### P03
 
-- [ ] Messaging — `docs/implementation/phases/phase-03-messaging.md`
+- [x] T03-01 Messaging foundation: schema, templates, adapters, send queue, message log
+- [ ] T03-02 Transactional messages: contribution request, thank-you, card, upgrade
+- [ ] T03-03 Provider webhooks: delivery status, button replies, STOP, template category guard
+- [ ] T03-04 Scheduled messages: reminders, confirmation, event reminder, thank-you, quiet hours, plan limits
+- [ ] T03-05 Web message settings, SMS editor and test send
+- [ ] T03-06 Manual send to groups and host message log
+- [ ] T03-07 Admin WhatsApp template registry and provider rates
+- [ ] T03-08 Push notification setup (device tokens, FCM sender)
 
 ### P04
 
@@ -65,6 +72,7 @@ in-progress
 
 ### P07
 
+- [ ] T07-01 Marketing site (started early, owner request 2026-09-25)
 - [ ] Hardening and pilot — `docs/implementation/phases/phase-07-hardening-pilot.md`
 
 ### Owner requests (2026-09-25) — to design and schedule
@@ -76,4 +84,3 @@ Raised after reviewing the web app. Each needs a design decision (order, scope, 
 - [ ] **Google Drive folders created automatically.** When the host connects Google, create the event folders (card, story, gallery) with the private/link sharing choice (`docs/design/integrations/google-drive.md`). Planned in P05; owner expects it earlier.
 - [ ] **Events I'm invited to.** Needs guest sign-in with Google/Apple linked to the Person (AUTH-3, GST-16 event history).
 - [x] **"Host can only create one event"** — checked 2026-09-25: two events created back to back in the web wizard both appear on the dashboard. The reported block came from the broken sign-in (`/events/new` redirected to `/login`) and the missing navigation (covered above).
-

@@ -74,8 +74,13 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**addGuest**](doc//DefaultApi.md#addguest) | **POST** /api/v1/events/{id}/guests | Add a guest (host, committee). Existing phone returns the existing invitation with 200.
 *DefaultApi* | [**addGuestsBulk**](doc//DefaultApi.md#addguestsbulk) | **POST** /api/v1/events/{id}/guests/bulk | Add up to 500 guests picked from phone contacts (host, committee). Invalid rows are reported, not fatal.
 *DefaultApi* | [**adminCreateEventType**](doc//DefaultApi.md#admincreateeventtype) | **POST** /api/v1/admin/event-types | 
+*DefaultApi* | [**adminCreateProviderRate**](doc//DefaultApi.md#admincreateproviderrate) | **POST** /api/v1/admin/provider-rates | 
+*DefaultApi* | [**adminCreateWhatsappTemplate**](doc//DefaultApi.md#admincreatewhatsapptemplate) | **POST** /api/v1/admin/whatsapp-templates | 
 *DefaultApi* | [**adminListEventTypes**](doc//DefaultApi.md#adminlisteventtypes) | **GET** /api/v1/admin/event-types | All event types, including inactive (admin)
+*DefaultApi* | [**adminListProviderRates**](doc//DefaultApi.md#adminlistproviderrates) | **GET** /api/v1/admin/provider-rates | List effective-dated messaging provider rates (admin)
+*DefaultApi* | [**adminListWhatsappTemplates**](doc//DefaultApi.md#adminlistwhatsapptemplates) | **GET** /api/v1/admin/whatsapp-templates | List all WhatsApp template variants (admin)
 *DefaultApi* | [**adminUpdateEventType**](doc//DefaultApi.md#adminupdateeventtype) | **PATCH** /api/v1/admin/event-types/{key} | Rename or activate/deactivate (existing events keep their type)
+*DefaultApi* | [**adminUpdateWhatsappTemplate**](doc//DefaultApi.md#adminupdatewhatsapptemplate) | **PATCH** /api/v1/admin/whatsapp-templates/{id} | Update registration, Meta status or host availability
 *DefaultApi* | [**cancelCard**](doc//DefaultApi.md#cancelcard) | **POST** /api/v1/events/{id}/guests/{guestId}/cancel | Cancel the card (host). Payments are kept.
 *DefaultApi* | [**cancelEvent**](doc//DefaultApi.md#cancelevent) | **POST** /api/v1/events/{id}/cancel | Cancel a draft or published event (host only)
 *DefaultApi* | [**confirmGuestImport**](doc//DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
@@ -88,6 +93,7 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**getHealth**](doc//DefaultApi.md#gethealth) | **GET** /api/v1/health | Service health
 *DefaultApi* | [**getInvite**](doc//DefaultApi.md#getinvite) | **GET** /api/v1/invites/{token} | Public invite info for the accept page
 *DefaultApi* | [**getMe**](doc//DefaultApi.md#getme) | **GET** /api/v1/me | Current account
+*DefaultApi* | [**getMessageSettings**](doc//DefaultApi.md#getmessagesettings) | **GET** /api/v1/events/{id}/messages | Message settings for NTF-1…8 with the plan's limits (host, committee)
 *DefaultApi* | [**getPledge**](doc//DefaultApi.md#getpledge) | **GET** /api/v1/events/{id}/pledges/{pledgeId} | 
 *DefaultApi* | [**getPublicCard**](doc//DefaultApi.md#getpubliccard) | **GET** /api/v1/cards/{token} | Guest card by link token (public, no login)
 *DefaultApi* | [**getTeam**](doc//DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
@@ -95,18 +101,24 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**listEventTypes**](doc//DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
 *DefaultApi* | [**listEvents**](doc//DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
 *DefaultApi* | [**listGuests**](doc//DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
+*DefaultApi* | [**listMessageLog**](doc//DefaultApi.md#listmessagelog) | **GET** /api/v1/events/{id}/messages/log | Event message log (no costs) and WhatsApp opt-outs (host, committee)
 *DefaultApi* | [**listPlans**](doc//DefaultApi.md#listplans) | **GET** /api/v1/plans | Active plans with price per guest and entitlements
 *DefaultApi* | [**previewCopyGuests**](doc//DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
 *DefaultApi* | [**previewGuestImport**](doc//DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 *DefaultApi* | [**provisionMe**](doc//DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
 *DefaultApi* | [**recordPayment**](doc//DefaultApi.md#recordpayment) | **POST** /api/v1/events/{id}/pledges/{pledgeId}/payments | Record a payment or refund (host, treasurer). Final payment issues the card.
+*DefaultApi* | [**registerDevice**](doc//DefaultApi.md#registerdevice) | **POST** /api/v1/me/devices | Register (upsert) this device's push token for the signed-in user
 *DefaultApi* | [**reinstateCard**](doc//DefaultApi.md#reinstatecard) | **POST** /api/v1/events/{id}/guests/{guestId}/reinstate | Reinstate a cancelled card (host): same number and tokens.
 *DefaultApi* | [**removeGuest**](doc//DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
 *DefaultApi* | [**removeMember**](doc//DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
 *DefaultApi* | [**revokeInvite**](doc//DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
+*DefaultApi* | [**sendManualMessage**](doc//DefaultApi.md#sendmanualmessage) | **POST** /api/v1/events/{id}/messages/send | Send a message now to a guest group, or preview the recipient count (host)
+*DefaultApi* | [**sendTestMessage**](doc//DefaultApi.md#sendtestmessage) | **POST** /api/v1/events/{id}/messages/{type}/test | Send a message with sample values to the host's own phone (rate-limited)
 *DefaultApi* | [**submitRsvp**](doc//DefaultApi.md#submitrsvp) | **POST** /api/v1/cards/{token}/rsvp | RSVP Yes/No with dietary note (public); editable until the event starts
+*DefaultApi* | [**unregisterDevice**](doc//DefaultApi.md#unregisterdevice) | **DELETE** /api/v1/me/devices/{token} | Remove a push token of the signed-in user (idempotent; call on sign-out)
 *DefaultApi* | [**updateEvent**](doc//DefaultApi.md#updateevent) | **PATCH** /api/v1/events/{id} | Edit details, contact and settings (host only)
 *DefaultApi* | [**updateGuest**](doc//DefaultApi.md#updateguest) | **PATCH** /api/v1/events/{id}/guests/{guestId} | 
+*DefaultApi* | [**updateMessageSettings**](doc//DefaultApi.md#updatemessagesettings) | **PUT** /api/v1/events/{id}/messages | Save all 8 message settings (host)
 *DefaultApi* | [**updatePayment**](doc//DefaultApi.md#updatepayment) | **PATCH** /api/v1/events/{id}/payments/{paymentId} | Correct a payment record (host, treasurer); audited
 *DefaultApi* | [**updatePledge**](doc//DefaultApi.md#updatepledge) | **PATCH** /api/v1/events/{id}/pledges/{pledgeId} | Change amount/card type before issue (host, treasurer); issues if already covered
 
@@ -114,10 +126,17 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [Account](doc//Account.md)
+ - [AdminCreateProviderRateRequest](doc//AdminCreateProviderRateRequest.md)
+ - [AdminCreateWhatsappTemplateRequest](doc//AdminCreateWhatsappTemplateRequest.md)
  - [AdminEventType](doc//AdminEventType.md)
  - [AdminEventTypeCreateInput](doc//AdminEventTypeCreateInput.md)
  - [AdminEventTypeList](doc//AdminEventTypeList.md)
  - [AdminEventTypeUpdateInput](doc//AdminEventTypeUpdateInput.md)
+ - [AdminListProviderRates200Response](doc//AdminListProviderRates200Response.md)
+ - [AdminListProviderRates200ResponseRatesInner](doc//AdminListProviderRates200ResponseRatesInner.md)
+ - [AdminListWhatsappTemplates200Response](doc//AdminListWhatsappTemplates200Response.md)
+ - [AdminListWhatsappTemplates200ResponseTemplatesInner](doc//AdminListWhatsappTemplates200ResponseTemplatesInner.md)
+ - [AdminUpdateWhatsappTemplateRequest](doc//AdminUpdateWhatsappTemplateRequest.md)
  - [AuthProvider](doc//AuthProvider.md)
  - [Card](doc//Card.md)
  - [CardLink](doc//CardLink.md)
@@ -127,6 +146,10 @@ Class | Method | HTTP request | Description
  - [ContributionsSummaryCounts](doc//ContributionsSummaryCounts.md)
  - [ContributorCreateInput](doc//ContributorCreateInput.md)
  - [ContributorCreateResponse](doc//ContributorCreateResponse.md)
+ - [Device](doc//Device.md)
+ - [DeviceApp](doc//DeviceApp.md)
+ - [DevicePlatform](doc//DevicePlatform.md)
+ - [DeviceRegisterInput](doc//DeviceRegisterInput.md)
  - [ErrorResponse](doc//ErrorResponse.md)
  - [ErrorResponseError](doc//ErrorResponseError.md)
  - [ErrorResponseErrorIssuesInner](doc//ErrorResponseErrorIssuesInner.md)
@@ -160,6 +183,14 @@ Class | Method | HTTP request | Description
  - [InviteCreateInput](doc//InviteCreateInput.md)
  - [InviteCreateResponse](doc//InviteCreateResponse.md)
  - [InviteInfo](doc//InviteInfo.md)
+ - [MessageLog](doc//MessageLog.md)
+ - [MessageLogItemsInner](doc//MessageLogItemsInner.md)
+ - [MessageLogOptOutsInner](doc//MessageLogOptOutsInner.md)
+ - [MessagePlanLimits](doc//MessagePlanLimits.md)
+ - [MessageSettings](doc//MessageSettings.md)
+ - [MessageSettingsSettingsInner](doc//MessageSettingsSettingsInner.md)
+ - [MessageSettingsTemplatesInner](doc//MessageSettingsTemplatesInner.md)
+ - [MessageSettingsUsage](doc//MessageSettingsUsage.md)
  - [Payment](doc//Payment.md)
  - [PaymentCreateInput](doc//PaymentCreateInput.md)
  - [PaymentMethod](doc//PaymentMethod.md)
@@ -175,9 +206,17 @@ Class | Method | HTTP request | Description
  - [PublicCardEvent](doc//PublicCardEvent.md)
  - [Rsvp](doc//Rsvp.md)
  - [RsvpInput](doc//RsvpInput.md)
+ - [SendManualMessage200Response](doc//SendManualMessage200Response.md)
+ - [SendManualMessage202Response](doc//SendManualMessage202Response.md)
+ - [SendManualMessageRequest](doc//SendManualMessageRequest.md)
+ - [SendTestMessage202Response](doc//SendTestMessage202Response.md)
+ - [SendTestMessageRequest](doc//SendTestMessageRequest.md)
  - [Team](doc//Team.md)
  - [TeamMembersInner](doc//TeamMembersInner.md)
  - [TeamRole](doc//TeamRole.md)
+ - [UpdateMessageSettingsRequest](doc//UpdateMessageSettingsRequest.md)
+ - [UpdateMessageSettingsRequestSettingsInner](doc//UpdateMessageSettingsRequestSettingsInner.md)
+ - [UpdateMessageSettingsRequestSettingsInnerSchedule](doc//UpdateMessageSettingsRequestSettingsInnerSchedule.md)
 
 
 ## Documentation For Authorization
