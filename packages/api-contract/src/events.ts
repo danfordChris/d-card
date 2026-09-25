@@ -25,6 +25,7 @@ const settingsFields = {
   autoUpgradeEnabled: z.boolean().optional(),
   singleAmount: z.number().int().min(0).nullable().optional(),
   doubleAmount: z.number().int().min(0).nullable().optional(),
+  budgetAmount: z.number().int().min(0).nullable().optional(),
   reminderFrequencyDays: z.number().int().min(1).max(60).nullable().optional(),
   photoAlbumUrl: z.url().max(500).nullable().optional(),
 };
@@ -81,6 +82,7 @@ export const EventSchema = z
     autoUpgradeEnabled: z.boolean(),
     singleAmount: z.number().int().nullable(),
     doubleAmount: z.number().int().nullable(),
+    budgetAmount: z.number().int().nullable(),
     reminderFrequencyDays: z.number().int().nullable(),
     photoAlbumUrl: z.string().nullable(),
     access: z.enum(["host", "treasurer", "committee", "door_staff", "walkin_approver"]),

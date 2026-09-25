@@ -31,6 +31,7 @@ export function SignupForm() {
       await startServerSession(await cred.user.getIdToken());
       setSent(true);
     } catch (err) {
+      console.error("sign-in failed", err);
       setErrors({ form: mapFirebaseError((err as { code?: string }).code) });
     } finally {
       setBusy(false);

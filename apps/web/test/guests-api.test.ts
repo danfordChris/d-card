@@ -9,6 +9,12 @@ let events: typeof import("../src/app/api/v1/events/route");
 let guests: typeof import("../src/app/api/v1/events/[id]/guests/route");
 let guest: typeof import("../src/app/api/v1/events/[id]/guests/[guestId]/route");
 let bulk: typeof import("../src/app/api/v1/events/[id]/guests/bulk/route");
+let cardRoutes: {
+  issue: typeof import("../src/app/api/v1/events/[id]/guests/[guestId]/issue/route");
+  cancel: typeof import("../src/app/api/v1/events/[id]/guests/[guestId]/cancel/route");
+  reinstate: typeof import("../src/app/api/v1/events/[id]/guests/[guestId]/reinstate/route");
+  card: typeof import("../src/app/api/v1/events/[id]/guests/[guestId]/card/route");
+};
 let resetDb: () => Promise<void>;
 let eventId: string;
 
@@ -34,6 +40,12 @@ beforeAll(async () => {
   guests = await import("../src/app/api/v1/events/[id]/guests/route");
   guest = await import("../src/app/api/v1/events/[id]/guests/[guestId]/route");
   bulk = await import("../src/app/api/v1/events/[id]/guests/bulk/route");
+  cardRoutes = {
+    issue: await import("../src/app/api/v1/events/[id]/guests/[guestId]/issue/route"),
+    cancel: await import("../src/app/api/v1/events/[id]/guests/[guestId]/cancel/route"),
+    reinstate: await import("../src/app/api/v1/events/[id]/guests/[guestId]/reinstate/route"),
+    card: await import("../src/app/api/v1/events/[id]/guests/[guestId]/card/route"),
+  };
   ({ resetDb } = await import("../src/server/db"));
   for (const t of [HOST, TREASURER, STRANGER]) await me.POST(req("POST", t));
   const created = await events.POST(
@@ -153,5 +165,29 @@ describe("POST /api/v1/events/{id}/guests/bulk", () => {
     const again = await bulk.POST(req("POST", HOST, { guests: [{ name: "Bahati", phone: "0713100001" }], consent: true }), p());
     expect(again.status).toBe(200);
     expect((await bulk.POST(req("POST", TREASURER, { guests: [{ name: "X", phone: "0713100009" }], consent: true }), p())).status).toBe(403);
+  });
+});
+
+describe("card issue, cancel, reinstate and link", () => {
+  it("host issues, committee/treasurer cannot, link is returned, cancel/reinstate keep the number", async () => {
+    const { issue, cancel, reinstate, card } = cardRoutes;
+    const created = await (await guests.POST(req("POST", HOST, { name: "Rehema", phone: "0713300001", consent: true }), p())).json();
+    const id = created.guest.id;
+    expect((await card.GET(req("GET", HOST), pg(id))).status).toBe(409);
+    expect((await issue.POST(req("POST", TREASURER), pg(id))).status).toBe(403);
+    const issued = await issue.POST(req("POST", HOST), pg(id));
+    expect(issued.status).toBe(200);
+    const body = await issued.json();
+    expect(body).toMatchObject({ status: "issued", cardType: "single" });
+    expect(body.cardNumber).toMatch(/^\d{3}-\d{4}$/);
+    expect((await issue.POST(req("POST", HOST), pg(id))).status).toBe(409);
+    const link = await (await card.GET(req("GET", HOST), pg(id))).json();
+    expect(link.link).toMatch(/^https:\/\/dcard\.test\/c\/[A-Za-z0-9_-]{43}$/);
+    expect((await guest.PATCH(req("PATCH", HOST, { cardType: "double" }), pg(id))).status).toBe(409);
+    expect((await cancel.POST(req("POST", HOST), pg(id))).status).toBe(200);
+    const back = await (await reinstate.POST(req("POST", HOST), pg(id))).json();
+    expect(back).toMatchObject({ status: "issued", cardNumber: body.cardNumber });
+    const list = await (await guests.GET(req("GET", TREASURER, undefined, "http://localhost/x?q=rehema"), p())).json();
+    expect(list.guests[0]).toMatchObject({ status: "issued", cardNumber: body.cardNumber });
   });
 });

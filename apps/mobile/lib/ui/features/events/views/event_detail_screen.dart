@@ -6,6 +6,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../core/app_scope.dart';
 import '../../contacts/view_models/contacts_picker_view_model.dart';
 import '../../contacts/views/contacts_picker_screen.dart';
+import '../../contributions/view_models/contributions_view_model.dart';
+import '../../contributions/views/contributions_screen.dart';
 import 'event_format.dart';
 
 /// Read-only event summary: type, date, venue, contact.
@@ -45,6 +47,25 @@ class EventDetailScreen extends StatelessWidget {
             ].join('\n'),
           ),
           _Row(icon: Icons.workspace_premium_outlined, label: l10n.eventPlan, value: event.planName),
+          if (event.canViewContributions)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.payments_outlined),
+                label: Text(l10n.contributionsTitle),
+                onPressed: () {
+                  final scope = AppScope.of(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => ContributionsScreen(
+                        viewModel: ContributionsViewModel(eventId: event.id, repository: scope.contributions),
+                        canRecord: event.canRecordPayments,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           if (event.canManageGuests)
             Padding(
               padding: const EdgeInsets.all(16),

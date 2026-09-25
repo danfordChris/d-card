@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'config.dart';
+import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
 import 'data/repositories/session_repository.dart';
@@ -27,7 +28,7 @@ Future<void> main() async {
     runApp(const _MissingConfigApp());
     return;
   }
-  final api = createApi(baseUrl: config.apiBaseUrl, auth: auth);
+  final api = createApi(baseUrl: config.apiBaseUrl, apiKey: config.apiKey, auth: auth);
   final prefs = await SharedPreferences.getInstance();
   runApp(
     DCardApp(
@@ -35,6 +36,7 @@ Future<void> main() async {
       events: EventsRepository(api),
       guests: GuestsRepository(api),
       contacts: DeviceContactsSource(),
+      contributions: ContributionsRepository(api),
     ),
   );
 }

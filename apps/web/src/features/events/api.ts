@@ -2,6 +2,7 @@
 
 import type { EventFormErrors } from "./event-form";
 import { errorsFromIssues } from "./event-form";
+import { apiFetch } from "../../lib/api-fetch";
 
 type ApiError = { error?: { code?: string; message?: string; issues?: { path: string }[] } };
 
@@ -11,7 +12,7 @@ export type SubmitResult<T> = { ok: true; data: T } | { ok: false; fieldErrors: 
 export async function sendJson<T>(url: string, method: string, body?: unknown): Promise<SubmitResult<T>> {
   let res: Response;
   try {
-    res = await fetch(url, {
+    res = await apiFetch(url, {
       method,
       headers: { "content-type": "application/json" },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),

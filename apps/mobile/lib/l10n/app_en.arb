@@ -191,5 +191,132 @@
   "done": "Done",
   "@done": {
     "description": "Close button."
+  },
+  "contributionsTitle": "Contributions",
+  "@contributionsTitle": {
+    "description": "Contributions screen and button."
+  },
+  "contributionsSearch": "Search name or phone",
+  "@contributionsSearch": {
+    "description": "Search hint."
+  },
+  "contributionsEmpty": "No contributors.",
+  "@contributionsEmpty": {
+    "description": "Empty list."
+  },
+  "totalPledged": "Pledged",
+  "@totalPledged": {
+    "description": "Total."
+  },
+  "totalCollected": "Collected",
+  "@totalCollected": {
+    "description": "Total."
+  },
+  "totalOutstanding": "Outstanding",
+  "@totalOutstanding": {
+    "description": "Total."
+  },
+  "filterAll": "All",
+  "@filterAll": {
+    "description": "Filter chip."
+  },
+  "statusNotPaid": "Not paid",
+  "@statusNotPaid": {
+    "description": "Pledge status."
+  },
+  "statusPartPaid": "Part paid",
+  "@statusPartPaid": {
+    "description": "Pledge status."
+  },
+  "statusFullyPaid": "Fully paid",
+  "@statusFullyPaid": {
+    "description": "Pledge status."
+  },
+  "paidOf": "Paid {paid} of {pledged}",
+  "@paidOf": {
+    "description": "Paid vs pledged.",
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "pledged": {
+        "type": "String"
+      }
+    }
+  },
+  "balanceShort": "Balance {amount}",
+  "@balanceShort": {
+    "description": "Balance.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "extraShort": "Extra {amount}",
+  "@extraShort": {
+    "description": "Extra contribution.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "recordPaymentTitle": "Record payment",
+  "@recordPaymentTitle": {
+    "description": "Screen title."
+  },
+  "recordPaymentButton": "Record payment",
+  "@recordPaymentButton": {
+    "description": "Submit."
+  },
+  "amountLabel": "Amount (Tsh)",
+  "@amountLabel": {
+    "description": "Field."
+  },
+  "methodLabel": "Method",
+  "@methodLabel": {
+    "description": "Field."
+  },
+  "referenceLabel": "Reference (optional)",
+  "@referenceLabel": {
+    "description": "Field."
+  },
+  "paidOnLabel": "Date paid",
+  "@paidOnLabel": {
+    "description": "Field."
+  },
+  "methodBank": "Bank",
+  "@methodBank": {
+    "description": "Method."
+  },
+  "methodCash": "Cash",
+  "@methodCash": {
+    "description": "Method."
+  },
+  "methodOther": "Other",
+  "@methodOther": {
+    "description": "Method."
+  },
+  "errorAmountRequired": "Enter the amount.",
+  "@errorAmountRequired": {
+    "description": "Validation."
+  },
+  "errorAmountInvalid": "Enter a whole amount in Tsh.",
+  "@errorAmountInvalid": {
+    "description": "Validation."
+  },
+  "paymentSaved": "Payment saved.",
+  "@paymentSaved": {
+    "description": "Success."
+  },
+  "cardIssuedNow": "Fully paid. Card {number} has been issued.",
+  "@cardIssuedNow": {
+    "description": "Auto-issue.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
   }
 }

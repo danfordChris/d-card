@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dcard_api/api.dart';
 import 'package:dcard_mobile/app.dart';
+import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
@@ -29,6 +30,7 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
       events: EventsRepository(p),
       guests: GuestsRepository(p),
       contacts: contacts ?? FakeContactsSource(),
+      contributions: ContributionsRepository(p),
       locale: Locale(locale),
     ),
   );

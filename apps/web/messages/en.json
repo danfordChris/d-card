@@ -29,7 +29,10 @@
       "invalidCredentials": "Email or password is incorrect.",
       "emailInUse": "An account with this email already exists.",
       "network": "Network problem. Check your connection and try again.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "tooManyRequests": "Too many attempts. Wait a few minutes and try again.",
+      "authConfig": "Sign-in is not set up correctly for this site (Firebase settings). Please contact support.",
+      "serverSession": "Your account was created in Firebase, but D-Card could not start your session. Try signing in; if it keeps failing, contact support."
     }
   },
   "dashboard": {
@@ -86,7 +89,8 @@
       "autoUpgradeLocked": "Not included in the Msingi plan",
       "singleAmount": "Single card contribution (Tsh)",
       "doubleAmount": "Double card contribution (Tsh)",
-      "photoAlbumUrl": "Google Photos album link (optional)"
+      "photoAlbumUrl": "Google Photos album link (optional)",
+      "budgetAmount": "Contribution budget target (Tsh, optional)"
     },
     "errors": {
       "required": "This field is required.",
@@ -119,7 +123,8 @@
       "save": "Save changes",
       "editTitle": "Edit event",
       "guests": "Guests",
-      "team": "Team"
+      "team": "Team",
+      "contributions": "Contributions"
     }
   },
   "guests": {
@@ -136,7 +141,8 @@
       "phone": "Phone",
       "card": "Card",
       "status": "Status",
-      "actions": "Actions"
+      "actions": "Actions",
+      "cardNumber": "Card number"
     },
     "card": {
       "single": "Single",
@@ -170,7 +176,22 @@
       "consent": "Please confirm the guest agreed to receive messages.",
       "generic": "Could not save. Please try again."
     },
-    "import": "Import"
+    "import": "Import",
+    "cardActions": {
+      "issue": "Issue card",
+      "cancel": "Cancel card",
+      "reinstate": "Reinstate",
+      "copyLink": "Copy link",
+      "open": "Open card",
+      "issueConfirm": "Issue a card to {name} now? The card type cannot change after this.",
+      "cancelConfirm": "Cancel the card for {name}? Door scans will show \"Card cancelled\". Payments are kept.",
+      "reinstateConfirm": "Reinstate the card for {name}? It keeps the same card number and QR code.",
+      "issueDone": "Card {number} issued to {name}.",
+      "cancelDone": "Card for {name} cancelled.",
+      "reinstateDone": "Card for {name} reinstated.",
+      "copied": "Card link for {name} copied.",
+      "error": "Something went wrong. Please try again."
+    }
   },
   "imports": {
     "title": "Import guests",
@@ -286,6 +307,126 @@
       "required": "Required.",
       "key": "Use 2–40 lowercase letters, digits or _ (start with a letter).",
       "duplicate": "This key already exists.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "cardPage": {
+    "invitationFor": "Invitation for",
+    "and": "and",
+    "entries": "{count, plural, =1{Admits 1} other{Admits {count}}}",
+    "date": "Date",
+    "time": "Time",
+    "venue": "Venue",
+    "map": "Open map",
+    "cardNumber": "Card number",
+    "showQr": "Show this QR code or card number at the door.",
+    "contact": "Event contact",
+    "calendar": "Add to calendar",
+    "calendarApple": "Calendar file (.ics)",
+    "calendarGoogle": "Google Calendar",
+    "rsvpTitle": "Will you attend?",
+    "rsvpYes": "Yes, I will attend",
+    "rsvpNo": "No, I can't attend",
+    "dietary": "Dietary needs (optional)",
+    "dietaryHint": "For example: vegetarian, no pork, allergies.",
+    "save": "Send answer",
+    "saved": "Thank you. Your answer has been saved.",
+    "yourAnswer": "Your answer: {answer}",
+    "answerYes": "attending",
+    "answerNo": "not attending",
+    "rsvpClosed": "Answers are closed for this event.",
+    "change": "You can change your answer until the event starts.",
+    "cancelledTitle": "Card cancelled",
+    "cancelledBody": "This card has been cancelled by the host. Please contact the event contact if you think this is a mistake.",
+    "notFoundTitle": "Card not found",
+    "notFoundBody": "This card link is not valid. Check the link in your message.",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "rateLimited": "Too many attempts. Please try again later.",
+      "closed": "Answers are closed for this event."
+    },
+    "poweredBy": "D-Card digital invitation",
+    "download": "Download card image"
+  },
+  "contributions": {
+    "title": "Contributions",
+    "back": "Back to event",
+    "add": "Add contributor",
+    "addTitle": "New contributor",
+    "search": "Search name or phone",
+    "empty": "No contributors match.",
+    "exportXlsx": "Export Excel",
+    "exportCsv": "Export CSV",
+    "budget": "Budget progress (target {budget})",
+    "cardNumber": "Card number",
+    "history": "Payments",
+    "noPayments": "No payments yet.",
+    "recordHeading": "Record a payment or refund",
+    "recordPayment": "Record payment",
+    "recordRefund": "Record refund",
+    "recorded": "Saved.",
+    "cardIssued": "Fully paid. Card {number} has been issued.",
+    "editPledge": "Edit pledge",
+    "savePledge": "Save pledge",
+    "pledgeSaved": "Pledge updated.",
+    "cancel": "Cancel",
+    "consent": "This contributor agreed to receive event messages (WhatsApp and SMS).",
+    "totals": {
+      "pledged": "Pledged",
+      "collected": "Collected",
+      "outstanding": "Outstanding",
+      "extras": "Extra contributions",
+      "refunds": "Refunds"
+    },
+    "filters": {
+      "all": "All",
+      "not_paid": "Not paid",
+      "part_paid": "Part paid",
+      "fully_paid": "Fully paid",
+      "cancelled": "Cancelled"
+    },
+    "fields": {
+      "name": "Name",
+      "phone": "Phone",
+      "cardType": "Card type",
+      "partnerName": "Partner name",
+      "amountPledged": "Pledge",
+      "amountPaid": "Paid",
+      "balance": "Balance",
+      "amountExtra": "Extra",
+      "status": "Status",
+      "kind": "Type",
+      "amount": "Amount (Tsh)",
+      "method": "Method",
+      "reference": "Reference (optional)",
+      "paidOn": "Date paid"
+    },
+    "cardTypes": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "kinds": {
+      "payment": "Payment",
+      "refund": "Refund"
+    },
+    "methods": {
+      "mpesa": "M-Pesa",
+      "mixx_by_yas": "Mixx by Yas",
+      "airtel_money": "Airtel Money",
+      "halopesa": "HaloPesa",
+      "bank": "Bank",
+      "cash": "Cash",
+      "other": "Other"
+    },
+    "errors": {
+      "required": "Required.",
+      "phone": "Enter a valid Tanzanian phone number.",
+      "amount": "Enter a whole amount in Tsh.",
+      "date": "Choose a date.",
+      "consent": "Confirm consent to continue.",
+      "refundTooLarge": "A refund cannot be more than the amount paid.",
+      "hasPledge": "This person already has a pledge for this event.",
+      "alreadyIssued": "The card is already issued, so the pledge can no longer change.",
       "generic": "Something went wrong. Please try again."
     }
   }

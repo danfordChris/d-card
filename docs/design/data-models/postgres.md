@@ -11,11 +11,11 @@
 | **user_account** | id, **firebase_uid (unique)**, email (nullable), auth_provider (password/google/apple), person_id (nullable), is_admin, email_verified_at, created_at. *Passwords are held by Firebase Auth, not in Postgres.* |
 | **event_type** | id, key, name_sw, name_en, active (admin-managed) |
 | **card_template** | id, event_type_id, name, assets, active |
-| **event** | id, host_user_id, event_type_id, title, starts_at, ends_at, time_zone, venue fields, contact_name, contact_phone, contact2_name, contact2_phone, status, confirmation_enabled, confirmation_offset, headcount_pct, auto_upgrade_enabled (default true), single_amount, double_amount, currency, photo_album_url, reminder_frequency, retention_processed_at |
+| **event** | id, host_user_id, event_type_id, title, starts_at, ends_at, time_zone, venue fields, contact_name, contact_phone, contact2_name, contact2_phone, status, confirmation_enabled, confirmation_offset, headcount_pct, auto_upgrade_enabled (default true), single_amount, double_amount, budget_amount, currency, photo_album_url, reminder_frequency, retention_processed_at |
 | **event_role** | event_id, user_id, role (treasurer / committee / door_staff / walkin_approver) |
-| **invitation** | id, event_id, person_id (nullable after anonymisation), **guest_name, guest_phone** (host-owned snapshot), partner_name, card_type, total_entries, entries_used (derived), over_used, guest_seq, card_number, qr_token_hash, link_token_hash, status, rsvp_status, confirmation_status, dietary_notes, table_id, issued_at, cancelled_at, anonymised_at. **Unique (event_id, person_id).** |
+| **invitation** | id, event_id, person_id (nullable after anonymisation), **guest_name, guest_phone** (host-owned snapshot), partner_name, card_type, total_entries, entries_used (derived), over_used, guest_seq, card_number, qr_token_hash, link_token_hash, qr_token_enc, link_token_enc, status, rsvp_status (none/yes/no), rsvp_at, confirmation_status, dietary_notes, table_id, issued_at, cancelled_at, anonymised_at. **Unique (event_id, person_id).** |
 | **pledge** | id, invitation_id, amount_pledged, card_type, amount_paid, amount_extra, status, upgraded_at |
-| **payment** | id, pledge_id, kind (payment/refund), amount, method, reference, paid_on, recorded_by, recorded_at |
+| **payment** | id, pledge_id, kind (payment/refund), amount (signed; refunds negative), method (mpesa/mixx_by_yas/airtel_money/halopesa/bank/cash/other), reference, paid_on, recorded_by, recorded_at |
 | **reply_window** *(backlog)* | id, phone, invitation_id, status, opened_at, expires_at |
 | **entry** | **id (UUID from device)**, event_id, invitation_id (nullable), walkin_request_id (nullable), staff_user_id, device_id, admitted_count, method, **occurred_at**, received_at, source (online/offline) |
 | **door_device** | id, event_id, staff_user_id, last_sync_at, revoked_at |

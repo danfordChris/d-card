@@ -64,6 +64,63 @@ class DefaultApi {
     return null;
   }
 
+  /// Add a contributor with a pledge (host, committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [ContributorCreateInput] contributorCreateInput:
+  Future<Response> addContributorWithHttpInfo(String id, { ContributorCreateInput? contributorCreateInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/contributions'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = contributorCreateInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Add a contributor with a pledge (host, committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [ContributorCreateInput] contributorCreateInput:
+  Future<ContributorCreateResponse?> addContributor(String id, { ContributorCreateInput? contributorCreateInput, }) async {
+    final response = await addContributorWithHttpInfo(id,  contributorCreateInput: contributorCreateInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ContributorCreateResponse',) as ContributorCreateResponse;
+    
+    }
+    return null;
+  }
+
   /// Add a guest (host, committee). Existing phone returns the existing invitation with 200.
   ///
   /// Note: This method returns the HTTP [Response].
@@ -326,6 +383,64 @@ class DefaultApi {
     return null;
   }
 
+  /// Cancel the card (host). Payments are kept.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Response> cancelCardWithHttpInfo(String id, String guestId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/guests/{guestId}/cancel'
+      .replaceAll('{id}', id)
+      .replaceAll('{guestId}', guestId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Cancel the card (host). Payments are kept.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Card?> cancelCard(String id, String guestId,) async {
+    final response = await cancelCardWithHttpInfo(id, guestId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Card',) as Card;
+    
+    }
+    return null;
+  }
+
   /// Cancel a draft or published event (host only)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -545,6 +660,185 @@ class DefaultApi {
     return null;
   }
 
+  /// Calendar entry (text/calendar)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<Response> getCardCalendarWithHttpInfo(String token,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/calendar.ics'
+      .replaceAll('{token}', token);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Calendar entry (text/calendar)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<String?> getCardCalendar(String token,) async {
+    final response = await getCardCalendarWithHttpInfo(token,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'String',) as String;
+    
+    }
+    return null;
+  }
+
+  /// Card number and link (host, committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Response> getCardLinkWithHttpInfo(String id, String guestId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/guests/{guestId}/card'
+      .replaceAll('{id}', id)
+      .replaceAll('{guestId}', guestId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Card number and link (host, committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<CardLink?> getCardLink(String id, String guestId,) async {
+    final response = await getCardLinkWithHttpInfo(id, guestId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'CardLink',) as CardLink;
+    
+    }
+    return null;
+  }
+
+  /// Totals and contributors (host, committee, treasurer)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] status:
+  ///
+  /// * [String] q:
+  Future<Response> getContributionsWithHttpInfo(String id, { String? status, String? q, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/contributions'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (status != null) {
+      queryParams.addAll(_queryParams('', 'status', status));
+    }
+    if (q != null) {
+      queryParams.addAll(_queryParams('', 'q', q));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Totals and contributors (host, committee, treasurer)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] status:
+  ///
+  /// * [String] q:
+  Future<Contributions?> getContributions(String id, { String? status, String? q, }) async {
+    final response = await getContributionsWithHttpInfo(id,  status: status, q: q, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Contributions',) as Contributions;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/v1/events/{id}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -734,6 +1028,112 @@ class DefaultApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/v1/events/{id}/pledges/{pledgeId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] pledgeId (required):
+  Future<Response> getPledgeWithHttpInfo(String id, String pledgeId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/pledges/{pledgeId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{pledgeId}', pledgeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] pledgeId (required):
+  Future<PledgeDetail?> getPledge(String id, String pledgeId,) async {
+    final response = await getPledgeWithHttpInfo(id, pledgeId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PledgeDetail',) as PledgeDetail;
+    
+    }
+    return null;
+  }
+
+  /// Guest card by link token (public, no login)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<Response> getPublicCardWithHttpInfo(String token,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}'
+      .replaceAll('{token}', token);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Guest card by link token (public, no login)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<PublicCard?> getPublicCard(String token,) async {
+    final response = await getPublicCardWithHttpInfo(token,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PublicCard',) as PublicCard;
+    
+    }
+    return null;
+  }
+
   /// Members and pending invites (host only)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -782,6 +1182,64 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Team',) as Team;
+    
+    }
+    return null;
+  }
+
+  /// Issue the card directly (host). Pending only.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Response> issueCardWithHttpInfo(String id, String guestId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/guests/{guestId}/issue'
+      .replaceAll('{id}', id)
+      .replaceAll('{guestId}', guestId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Issue the card directly (host). Pending only.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Card?> issueCard(String id, String guestId,) async {
+    final response = await issueCardWithHttpInfo(id, guestId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Card',) as Card;
     
     }
     return null;
@@ -1162,6 +1620,126 @@ class DefaultApi {
     return null;
   }
 
+  /// Record a payment or refund (host, treasurer). Final payment issues the card.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] pledgeId (required):
+  ///
+  /// * [PaymentCreateInput] paymentCreateInput:
+  Future<Response> recordPaymentWithHttpInfo(String id, String pledgeId, { PaymentCreateInput? paymentCreateInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/pledges/{pledgeId}/payments'
+      .replaceAll('{id}', id)
+      .replaceAll('{pledgeId}', pledgeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = paymentCreateInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Record a payment or refund (host, treasurer). Final payment issues the card.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] pledgeId (required):
+  ///
+  /// * [PaymentCreateInput] paymentCreateInput:
+  Future<PaymentResult?> recordPayment(String id, String pledgeId, { PaymentCreateInput? paymentCreateInput, }) async {
+    final response = await recordPaymentWithHttpInfo(id, pledgeId,  paymentCreateInput: paymentCreateInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PaymentResult',) as PaymentResult;
+    
+    }
+    return null;
+  }
+
+  /// Reinstate a cancelled card (host): same number and tokens.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Response> reinstateCardWithHttpInfo(String id, String guestId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/guests/{guestId}/reinstate'
+      .replaceAll('{id}', id)
+      .replaceAll('{guestId}', guestId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Reinstate a cancelled card (host): same number and tokens.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  Future<Card?> reinstateCard(String id, String guestId,) async {
+    final response = await reinstateCardWithHttpInfo(id, guestId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Card',) as Card;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'DELETE /api/v1/events/{id}/guests/{guestId}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -1303,6 +1881,63 @@ class DefaultApi {
     }
   }
 
+  /// RSVP Yes/No with dietary note (public); editable until the event starts
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [RsvpInput] rsvpInput:
+  Future<Response> submitRsvpWithHttpInfo(String token, { RsvpInput? rsvpInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/rsvp'
+      .replaceAll('{token}', token);
+
+    // ignore: prefer_final_locals
+    Object? postBody = rsvpInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// RSVP Yes/No with dietary note (public); editable until the event starts
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [RsvpInput] rsvpInput:
+  Future<Rsvp?> submitRsvp(String token, { RsvpInput? rsvpInput, }) async {
+    final response = await submitRsvpWithHttpInfo(token,  rsvpInput: rsvpInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Rsvp',) as Rsvp;
+    
+    }
+    return null;
+  }
+
   /// Edit details, contact and settings (host only)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1412,6 +2047,130 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Guest',) as Guest;
+    
+    }
+    return null;
+  }
+
+  /// Correct a payment record (host, treasurer); audited
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] paymentId (required):
+  ///
+  /// * [PaymentUpdateInput] paymentUpdateInput:
+  Future<Response> updatePaymentWithHttpInfo(String id, String paymentId, { PaymentUpdateInput? paymentUpdateInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/payments/{paymentId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{paymentId}', paymentId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = paymentUpdateInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PATCH',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Correct a payment record (host, treasurer); audited
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] paymentId (required):
+  ///
+  /// * [PaymentUpdateInput] paymentUpdateInput:
+  Future<PaymentResult?> updatePayment(String id, String paymentId, { PaymentUpdateInput? paymentUpdateInput, }) async {
+    final response = await updatePaymentWithHttpInfo(id, paymentId,  paymentUpdateInput: paymentUpdateInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PaymentResult',) as PaymentResult;
+    
+    }
+    return null;
+  }
+
+  /// Change amount/card type before issue (host, treasurer); issues if already covered
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] pledgeId (required):
+  ///
+  /// * [PledgeUpdateInput] pledgeUpdateInput:
+  Future<Response> updatePledgeWithHttpInfo(String id, String pledgeId, { PledgeUpdateInput? pledgeUpdateInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/pledges/{pledgeId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{pledgeId}', pledgeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = pledgeUpdateInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PATCH',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Change amount/card type before issue (host, treasurer); issues if already covered
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] pledgeId (required):
+  ///
+  /// * [PledgeUpdateInput] pledgeUpdateInput:
+  Future<Pledge?> updatePledge(String id, String pledgeId, { PledgeUpdateInput? pledgeUpdateInput, }) async {
+    final response = await updatePledgeWithHttpInfo(id, pledgeId,  pledgeUpdateInput: pledgeUpdateInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Pledge',) as Pledge;
     
     }
     return null;

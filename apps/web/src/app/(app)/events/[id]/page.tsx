@@ -37,6 +37,14 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
               {t("summary.guests")}
             </Link>
           )}
+          {["host", "committee", "treasurer"].includes(event.access) && (
+            <Link
+              href={`/events/${event.id}/contributions`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {t("summary.contributions")}
+            </Link>
+          )}
         {editable && (
           <>
             <Link

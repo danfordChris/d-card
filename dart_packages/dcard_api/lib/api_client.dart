@@ -194,8 +194,22 @@ class ApiClient {
           return AdminEventTypeUpdateInput.fromJson(value);
         case 'AuthProvider':
           return AuthProviderTypeTransformer().decode(value);
+        case 'Card':
+          return Card.fromJson(value);
+        case 'CardLink':
+          return CardLink.fromJson(value);
         case 'CardType':
           return CardTypeTypeTransformer().decode(value);
+        case 'Contributions':
+          return Contributions.fromJson(value);
+        case 'ContributionsSummary':
+          return ContributionsSummary.fromJson(value);
+        case 'ContributionsSummaryCounts':
+          return ContributionsSummaryCounts.fromJson(value);
+        case 'ContributorCreateInput':
+          return ContributorCreateInput.fromJson(value);
+        case 'ContributorCreateResponse':
+          return ContributorCreateResponse.fromJson(value);
         case 'ErrorResponse':
           return ErrorResponse.fromJson(value);
         case 'ErrorResponseError':
@@ -262,10 +276,36 @@ class ApiClient {
           return InviteCreateResponse.fromJson(value);
         case 'InviteInfo':
           return InviteInfo.fromJson(value);
+        case 'Payment':
+          return Payment.fromJson(value);
+        case 'PaymentCreateInput':
+          return PaymentCreateInput.fromJson(value);
+        case 'PaymentMethod':
+          return PaymentMethodTypeTransformer().decode(value);
+        case 'PaymentResult':
+          return PaymentResult.fromJson(value);
+        case 'PaymentUpdateInput':
+          return PaymentUpdateInput.fromJson(value);
         case 'Plan':
           return Plan.fromJson(value);
         case 'PlanList':
           return PlanList.fromJson(value);
+        case 'Pledge':
+          return Pledge.fromJson(value);
+        case 'PledgeDetail':
+          return PledgeDetail.fromJson(value);
+        case 'PledgeStatus':
+          return PledgeStatusTypeTransformer().decode(value);
+        case 'PledgeUpdateInput':
+          return PledgeUpdateInput.fromJson(value);
+        case 'PublicCard':
+          return PublicCard.fromJson(value);
+        case 'PublicCardEvent':
+          return PublicCardEvent.fromJson(value);
+        case 'Rsvp':
+          return Rsvp.fromJson(value);
+        case 'RsvpInput':
+          return RsvpInput.fromJson(value);
         case 'Team':
           return Team.fromJson(value);
         case 'TeamMembersInner':

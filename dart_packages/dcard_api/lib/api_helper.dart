@@ -61,6 +61,12 @@ String parameterToString(dynamic value) {
   if (value is CardType) {
     return CardTypeTypeTransformer().encode(value).toString();
   }
+  if (value is PaymentMethod) {
+    return PaymentMethodTypeTransformer().encode(value).toString();
+  }
+  if (value is PledgeStatus) {
+    return PledgeStatusTypeTransformer().encode(value).toString();
+  }
   if (value is TeamRole) {
     return TeamRoleTypeTransformer().encode(value).toString();
   }

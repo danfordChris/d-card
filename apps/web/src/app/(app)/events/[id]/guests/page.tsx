@@ -26,6 +26,8 @@ export default async function GuestsPage({ params }: { params: Promise<{ id: str
         eventId={event.id}
         initial={JSON.parse(JSON.stringify(page))}
         canManage={editable && (event.access === "host" || event.access === "committee")}
+        canManageCards={editable && event.access === "host"}
+        canViewCards={event.access === "host" || event.access === "committee"}
       />
     </section>
   );

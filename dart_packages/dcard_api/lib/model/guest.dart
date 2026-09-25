@@ -22,6 +22,8 @@ class Guest {
     required this.cardType,
     required this.totalEntries,
     required this.status,
+    required this.cardNumber,
+    required this.issuedAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -44,6 +46,10 @@ class Guest {
 
   GuestStatusEnum status;
 
+  String? cardNumber;
+
+  DateTime? issuedAt;
+
   DateTime createdAt;
 
   DateTime updatedAt;
@@ -59,6 +65,8 @@ class Guest {
     other.cardType == cardType &&
     other.totalEntries == totalEntries &&
     other.status == status &&
+    other.cardNumber == cardNumber &&
+    other.issuedAt == issuedAt &&
     other.createdAt == createdAt &&
     other.updatedAt == updatedAt;
 
@@ -74,11 +82,13 @@ class Guest {
     (cardType.hashCode) +
     (totalEntries.hashCode) +
     (status.hashCode) +
+    (cardNumber == null ? 0 : cardNumber!.hashCode) +
+    (issuedAt == null ? 0 : issuedAt!.hashCode) +
     (createdAt.hashCode) +
     (updatedAt.hashCode);
 
   @override
-  String toString() => 'Guest[id=$id, eventId=$eventId, personId=$personId, name=$name, phone=$phone, partnerName=$partnerName, cardType=$cardType, totalEntries=$totalEntries, status=$status, createdAt=$createdAt, updatedAt=$updatedAt]';
+  String toString() => 'Guest[id=$id, eventId=$eventId, personId=$personId, name=$name, phone=$phone, partnerName=$partnerName, cardType=$cardType, totalEntries=$totalEntries, status=$status, cardNumber=$cardNumber, issuedAt=$issuedAt, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -99,6 +109,16 @@ class Guest {
       json[r'cardType'] = this.cardType;
       json[r'totalEntries'] = this.totalEntries;
       json[r'status'] = this.status;
+    if (this.cardNumber != null) {
+      json[r'cardNumber'] = this.cardNumber;
+    } else {
+      json[r'cardNumber'] = null;
+    }
+    if (this.issuedAt != null) {
+      json[r'issuedAt'] = this.issuedAt!.toUtc().toIso8601String();
+    } else {
+      json[r'issuedAt'] = null;
+    }
       json[r'createdAt'] = this.createdAt.toUtc().toIso8601String();
       json[r'updatedAt'] = this.updatedAt.toUtc().toIso8601String();
     return json;
@@ -132,6 +152,8 @@ class Guest {
         cardType: CardType.fromJson(json[r'cardType'])!,
         totalEntries: mapValueOfType<int>(json, r'totalEntries')!,
         status: GuestStatusEnum.fromJson(json[r'status'])!,
+        cardNumber: mapValueOfType<String>(json, r'cardNumber'),
+        issuedAt: mapDateTime(json, r'issuedAt', r''),
         createdAt: mapDateTime(json, r'createdAt', r'')!,
         updatedAt: mapDateTime(json, r'updatedAt', r'')!,
       );
@@ -190,6 +212,8 @@ class Guest {
     'cardType',
     'totalEntries',
     'status',
+    'cardNumber',
+    'issuedAt',
     'createdAt',
     'updatedAt',
   };

@@ -22,6 +22,7 @@ export type EventFormValues = {
   autoUpgradeEnabled: boolean;
   singleAmount: string;
   doubleAmount: string;
+  budgetAmount: string;
   photoAlbumUrl: string;
 };
 
@@ -35,7 +36,7 @@ export const STEP_FIELDS: Record<WizardStep, (keyof EventFormValues)[]> = {
   plan: ["planKey"],
   details: ["eventTypeKey", "title", "startsAt", "endsAt", "venueName", "venueAddress", "venueMapUrl"],
   contact: ["contactName", "contactPhone", "contact2Name", "contact2Phone"],
-  options: ["confirmationOffsetDays", "headcountPct", "singleAmount", "doubleAmount", "photoAlbumUrl"],
+  options: ["confirmationOffsetDays", "headcountPct", "singleAmount", "doubleAmount", "budgetAmount", "photoAlbumUrl"],
 };
 
 export const EMPTY_EVENT_FORM: EventFormValues = {
@@ -57,6 +58,7 @@ export const EMPTY_EVENT_FORM: EventFormValues = {
   autoUpgradeEnabled: true,
   singleAmount: "",
   doubleAmount: "",
+  budgetAmount: "",
   photoAlbumUrl: "",
 };
 
@@ -91,7 +93,7 @@ export function validateFields(values: EventFormValues, fields: (keyof EventForm
     const e = intInRange(values.headcountPct, 0, 100);
     if (e) errors.headcountPct = e;
   }
-  for (const f of ["singleAmount", "doubleAmount"] as const) {
+  for (const f of ["singleAmount", "doubleAmount", "budgetAmount"] as const) {
     if (has(f) && values[f].trim()) {
       const e = intInRange(values[f].replace(/[,\s]/g, ""), 0, 100_000_000);
       if (e) errors[f] = e;
@@ -136,6 +138,7 @@ export function toEventFields(values: EventFormValues) {
     autoUpgradeEnabled: values.autoUpgradeEnabled,
     singleAmount: amount(values.singleAmount),
     doubleAmount: amount(values.doubleAmount),
+    budgetAmount: amount(values.budgetAmount),
     photoAlbumUrl: orNull(values.photoAlbumUrl),
   };
 }

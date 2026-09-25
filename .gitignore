@@ -17,3 +17,5 @@ apps/*/lib/l10n/app_localizations*.dart
 .vercel/
 # IDE
 .idea/
+# JetBrains HTTP Client secrets (http/)
+http/http-client.private.env.json

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import { Alert, Button, Card, Field, Input } from "../../components/ui";
+import { apiFetch } from "../../lib/api-fetch";
 
 export type AdminEventType = { id: string; key: string; nameSw: string; nameEn: string; active: boolean };
 
@@ -41,7 +42,7 @@ export function EventTypesAdmin({ initial }: { initial: AdminEventType[] }) {
     setError(undefined);
     if (Object.keys(next).length) return;
     setBusy(true);
-    const res = await fetch(API, {
+    const res = await apiFetch(API, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ ...draft, key }),
@@ -58,7 +59,7 @@ export function EventTypesAdmin({ initial }: { initial: AdminEventType[] }) {
 
   async function patch(key: string, body: Partial<AdminEventType>): Promise<boolean> {
     setError(undefined);
-    const res = await fetch(`${API}/${encodeURIComponent(key)}`, {
+    const res = await apiFetch(`${API}/${encodeURIComponent(key)}`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(body),

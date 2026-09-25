@@ -6,7 +6,7 @@ import { Redis } from "ioredis";
 
 const g = globalThis as unknown as { __dcardEmailQueue?: Queue; __dcardRedis?: Redis };
 
-function connection(): Redis {
+export function connection(): Redis {
   const url = process.env.REDIS_URL;
   if (!url) throw new Error("REDIS_URL is not set");
   g.__dcardRedis ??= new Redis(url, { maxRetriesPerRequest: null });

@@ -1,6 +1,9 @@
 process.env.DATABASE_URL ??= "postgres://dcard:dcard@localhost:55432/dcard";
 process.env.AUTH_VERIFIER = "fake";
+process.env.DATA_ENCRYPTION_KEY ??= "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=";
 process.env.TOKEN_HASH_SECRET ??= "test-token-hash-secret-0123456789abcdef";
 process.env.REDIS_URL ??= "redis://localhost:56379";
 process.env.QUEUE_PREFIX = `webtest_${process.pid}`;
 process.env.APP_URL = "https://dcard.test";
+process.env.API_KEYS = "web:test_web_key_0123456789abcdefghijklmnop,mobile:test_mobile_key_0123456789abcdefghijk,door:dummy_door_key";
+process.env.NEXT_PUBLIC_DCARD_API_KEY = "test_web_key_0123456789abcdefghijklmnop";

@@ -57,6 +57,8 @@
 | O15 | Drive folder sharing | **Host chooses per event** when creating it: **private** (default; D-Card serves media only to valid card links, pays a little bandwidth) or **anyone with the link** (served directly by Drive). |
 | O16 | Payment gateway (host plan payments) | **Snippe** (snippe.sh): USSD push on M-Pesa, Airtel Money, Mixx by Yas, Halotel; hosted checkout incl. cards; 2.5% per mobile-money payment, no monthly fee; webhooks + idempotency. Payouts available for Phase 3 contributions. |
 | O17 | Authentication | **Firebase Auth** for all logins; **Postgres + Drizzle** for all data, including roles and per-event permissions (keyed by Firebase UID). |
+| O19 | RSVP choices | **Yes / No only** (plus a dietary note). No "maybe": it has no place in the headcount rule (GST-14). Market: [research/market-pricing.md](../research/market-pricing.md#rsvp-options). |
+| O20 | Card design before templates | **Built-in default design per event type** (title, names, date, venue, QR, card number) until admin card templates (EVT-5) land; templates then replace it. |
 | O18 | Team invitations | **Shareable invite link + email** (7-day, single-use token; role per event). Replaces "by email" only. |
 | O13 | Photo studio and catering packages | **Backlog:** future all-in-one packages with partner photo studios and caterers. |
 | O12 | WhatsApp consent | **Host confirms guests agreed to receive messages; every WhatsApp message offers STOP; stopped guests get SMS only.** |

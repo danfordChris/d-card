@@ -42,8 +42,9 @@
 4. Add environment variables in Vercel (Settings → Environment Variables) for **Production** and **Preview**, using `.env.example` as the list:
    - `DATABASE_URL` (Production: Neon **pooled** URL; Preview is overridden per PR by the pipeline)
    - `APP_URL`, `AUTH_VERIFIER=firebase`, `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY`, `REDIS_URL`
+   - `API_KEYS` (one `client:key` pair per client: `web`, `mobile`, `door`, `tools`) and `NEXT_PUBLIC_DCARD_API_KEY` (the `web` key). Use different keys per environment; build the mobile and door apps with their key (`--dart-define=API_KEY=…`).
    - Firebase, WhatsApp, NextSMS, Google Drive and Snippe keys
-   - Never set `AUTH_VERIFIER=fake` on Vercel (the server refuses it in production).
+   - Never set `AUTH_VERIFIER=fake` or `dev` on Vercel (the server refuses both in production).
 
 ### 3. GitHub (Settings → Secrets and variables → Actions)
 

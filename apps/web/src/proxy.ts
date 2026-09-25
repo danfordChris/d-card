@@ -1,10 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { API_KEY_HEADER, clientForApiKey } from "./server/api-key";
 
-// Fast check only: pages under the app area need a session cookie.
-// Full verification happens in the (app) layout and in every API route.
+// 1. API: every /api/v1 request needs a valid X-API-Key (server/api-key.ts).
+// 2. Pages under the app area need a session cookie (fast check only; full verification
+//    happens in the (app) layout and in every API route).
 const SESSION_COOKIE = "dcard_session";
 
 export function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/api/")) {
+    const client = clientForApiKey(request.headers.get(API_KEY_HEADER));
+    if (!client) {
+      return NextResponse.json(
+        { error: { code: "invalid_api_key", message: "Send a valid X-API-Key header." } },
+        { status: 401, headers: { "cache-control": "no-store" } },
+      );
+    }
+    const headers = new Headers(request.headers);
+    headers.set("x-dcard-client", client);
+    return NextResponse.next({ request: { headers } });
+  }
   if (!request.cookies.has(SESSION_COOKIE)) {
     const login = new URL("/login", request.url);
     login.searchParams.set("next", request.nextUrl.pathname);
@@ -14,5 +28,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/events/:path*", "/admin/:path*"],
+  matcher: ["/api/:path*", "/dashboard/:path*", "/events/:path*", "/admin/:path*"],
 };

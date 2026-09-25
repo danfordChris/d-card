@@ -28,6 +28,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     headcountPct: String(event.headcountPct),
     autoUpgradeEnabled: event.autoUpgradeEnabled,
     singleAmount: event.singleAmount?.toString() ?? "",
+    budgetAmount: event.budgetAmount?.toString() ?? "",
     doubleAmount: event.doubleAmount?.toString() ?? "",
     photoAlbumUrl: event.photoAlbumUrl ?? "",
   };

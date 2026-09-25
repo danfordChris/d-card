@@ -1,0 +1,90 @@
+# D-Card API — events (host)
+# Run top to bottom. Later requests reuse the event created here.
+
+
+### Setup: provision the host
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Create an event (any signed-in user becomes its host)
+# Required: planKey, eventTypeKey, title, startsAt (ISO with offset), contactName, contactPhone.
+# Optional: endsAt, venueName, venueAddress, venueMapUrl, contact2Name, contact2Phone,
+#   confirmationEnabled (default true), confirmationOffsetDays (0–30, default 2), headcountPct (0–100, default 70),
+#   autoUpgradeEnabled (plan default; 422 if the plan does not allow it), singleAmount, doubleAmount,
+#   budgetAmount (contribution target), reminderFrequencyDays (1–60), photoAlbumUrl.
+# 201 → Event (same shape as GET /events/{id}, access "host") · 422 validation_error / invalid_phone.
+# @name createEvent
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{
+  "planKey": "kawaida",
+  "eventTypeKey": "wedding",
+  "title": "Harusi ya Juma na Neema",
+  "startsAt": "2026-12-12T15:00:00+03:00",
+  "endsAt": "2026-12-12T22:00:00+03:00",
+  "venueName": "Diamond Jubilee Hall",
+  "venueAddress": "Upanga, Dar es Salaam",
+  "venueMapUrl": "https://maps.google.com/?q=Diamond+Jubilee+Hall",
+  "contactName": "Asha",
+  "contactPhone": "0754 123 456",
+  "singleAmount": 50000,
+  "doubleAmount": 100000,
+  "budgetAmount": 5000000
+}
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+### List my events (host or any team role)
+# Newest first. `access` tells the caller's role: host|committee|treasurer|door_staff|walkin_approver.
+# 200 → { "events": [Event…] }
+GET {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Get one event
+# 200 → Event { id, title, status: draft|published|completed|cancelled, eventType, plan { key, name, pricePerGuest, guestLimit, paid },
+#   startsAt, endsAt, timeZone, venue…, contact…, settings…, singleAmount, doubleAmount, budgetAmount, access, createdAt, updatedAt }
+# 404 unknown/malformed id · 403 no role on this event.
+GET {{baseUrl}}/api/v1/events/{{eventId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Someone without a role → 403
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{strangerToken}}
+
+###
+GET {{baseUrl}}/api/v1/events/{{eventId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{strangerToken}}
+
+### Update event details and settings (host; draft or published only)
+# Any subset of the create fields except planKey/eventTypeKey. Audited.
+# 200 → Event · 409 event cancelled/completed · 422 validation.
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "headcountPct": 75, "contact2Name": "Neema", "contact2Phone": "0713 222 333" }
+
+### Validation error example → 422 with issues
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "headcountPct": 150, "venueMapUrl": "not a url" }
+
+### Cancel the event (host) — run last; cancelled events are read-only
+# 200 → Event with status "cancelled" · 409 already cancelled/completed.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/cancel
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}

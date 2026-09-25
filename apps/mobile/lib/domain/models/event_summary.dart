@@ -14,6 +14,8 @@ class EventSummary {
     required this.contactName,
     required this.contactPhone,
     this.canManageGuests = false,
+    this.canViewContributions = false,
+    this.canRecordPayments = false,
     this.venueName,
     this.venueAddress,
     this.contact2Name,
@@ -36,6 +38,12 @@ class EventSummary {
 
   /// Host or committee on a draft/published event (GST-1, Access).
   final bool canManageGuests;
+
+  /// Host, committee and treasurers see contribution amounts (CON-12).
+  final bool canViewContributions;
+
+  /// Host and treasurers record payments (CON-2).
+  final bool canRecordPayments;
 
   String typeName(String languageCode) => languageCode == 'sw' ? typeNameSw : typeNameEn;
 }

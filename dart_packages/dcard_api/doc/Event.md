@@ -29,6 +29,7 @@ Name | Type | Description | Notes
 **autoUpgradeEnabled** | **bool** |  | 
 **singleAmount** | **int** |  | 
 **doubleAmount** | **int** |  | 
+**budgetAmount** | **int** |  | 
 **reminderFrequencyDays** | **int** |  | 
 **photoAlbumUrl** | **String** |  | 
 **access** | **String** |  | 

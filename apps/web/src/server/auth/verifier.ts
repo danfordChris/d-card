@@ -65,37 +65,50 @@ export const fakeVerifier: TokenVerifier = async (idToken) => {
   return { uid, email: email || null, emailVerified: Boolean(email), provider: mapped };
 };
 
-export function getVerifier(): TokenVerifier {
-  const mode = process.env.AUTH_VERIFIER ?? "firebase";
-  if (mode === "fake") {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("AUTH_VERIFIER=fake is not allowed in production.");
-    }
-    return fakeVerifier;
+const isFakeToken = (token: string) => token.startsWith("fake:");
+
+/**
+ * Local development: `fake:` tokens (tests, http/ docs) use the fake verifier and real
+ * Firebase ID tokens use Firebase, so sign-up works against a real project too.
+ */
+export const devVerifier: TokenVerifier = (idToken) => (isFakeToken(idToken) ? fakeVerifier(idToken) : firebaseVerifier(idToken));
+
+type AuthMode = "firebase" | "fake" | "dev";
+
+function authMode(): AuthMode {
+  const mode = (process.env.AUTH_VERIFIER ?? "firebase") as AuthMode;
+  if ((mode === "fake" || mode === "dev") && process.env.NODE_ENV === "production") {
+    throw new Error(`AUTH_VERIFIER=${mode} is not allowed in production.`);
   }
-  return firebaseVerifier;
+  return mode === "fake" || mode === "dev" ? mode : "firebase";
+}
+
+export function getVerifier(): TokenVerifier {
+  const mode = authMode();
+  return mode === "fake" ? fakeVerifier : mode === "dev" ? devVerifier : firebaseVerifier;
 }
 
 // ── Web sessions (httpOnly cookie) ─────────────────────────────────────────
 export const SESSION_COOKIE = "dcard_session";
 export const SESSION_MAX_AGE_SECONDS = 5 * 24 * 60 * 60; // 5 days
 
-function isFakeMode(): boolean {
-  getVerifier(); // throws if fake mode is misconfigured in production
-  return (process.env.AUTH_VERIFIER ?? "firebase") === "fake";
+/** Fake tokens double as their own session value; only in fake/dev modes (never production). */
+function usesFakeSession(value: string): boolean {
+  const mode = authMode();
+  return mode === "fake" || (mode === "dev" && isFakeToken(value));
 }
 
 /** Turns a fresh ID token into a session cookie value (Firebase session cookie, or the fake token in tests). */
 export async function createSessionCookie(idToken: string): Promise<{ value: string; token: VerifiedToken }> {
   const token = await getVerifier()(idToken);
-  if (isFakeMode()) return { value: idToken, token };
+  if (usesFakeSession(idToken)) return { value: idToken, token };
   const { getFirebaseAuth } = await import("./firebase-admin");
   const value = await getFirebaseAuth().createSessionCookie(idToken, { expiresIn: SESSION_MAX_AGE_SECONDS * 1000 });
   return { value, token };
 }
 
 export async function verifySessionCookie(value: string): Promise<VerifiedToken> {
-  if (isFakeMode()) return fakeVerifier(value);
+  if (usesFakeSession(value)) return fakeVerifier(value);
   const { getFirebaseAuth } = await import("./firebase-admin");
   try {
     return fromDecoded(await getFirebaseAuth().verifySessionCookie(value, true));

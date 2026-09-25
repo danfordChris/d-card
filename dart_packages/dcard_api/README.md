@@ -46,6 +46,10 @@ import 'package:dcard_api/api.dart';
 // Case 2. Use Function which generate token.
 // String yourTokenGeneratorFunction() { ... }
 //defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
 
 final api_instance = DefaultApi();
 final token = token_example; // String | 
@@ -66,20 +70,28 @@ All URIs are relative to *http://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *DefaultApi* | [**acceptInvite**](doc//DefaultApi.md#acceptinvite) | **POST** /api/v1/invites/{token}/accept | 
+*DefaultApi* | [**addContributor**](doc//DefaultApi.md#addcontributor) | **POST** /api/v1/events/{id}/contributions | Add a contributor with a pledge (host, committee)
 *DefaultApi* | [**addGuest**](doc//DefaultApi.md#addguest) | **POST** /api/v1/events/{id}/guests | Add a guest (host, committee). Existing phone returns the existing invitation with 200.
 *DefaultApi* | [**addGuestsBulk**](doc//DefaultApi.md#addguestsbulk) | **POST** /api/v1/events/{id}/guests/bulk | Add up to 500 guests picked from phone contacts (host, committee). Invalid rows are reported, not fatal.
 *DefaultApi* | [**adminCreateEventType**](doc//DefaultApi.md#admincreateeventtype) | **POST** /api/v1/admin/event-types | 
 *DefaultApi* | [**adminListEventTypes**](doc//DefaultApi.md#adminlisteventtypes) | **GET** /api/v1/admin/event-types | All event types, including inactive (admin)
 *DefaultApi* | [**adminUpdateEventType**](doc//DefaultApi.md#adminupdateeventtype) | **PATCH** /api/v1/admin/event-types/{key} | Rename or activate/deactivate (existing events keep their type)
+*DefaultApi* | [**cancelCard**](doc//DefaultApi.md#cancelcard) | **POST** /api/v1/events/{id}/guests/{guestId}/cancel | Cancel the card (host). Payments are kept.
 *DefaultApi* | [**cancelEvent**](doc//DefaultApi.md#cancelevent) | **POST** /api/v1/events/{id}/cancel | Cancel a draft or published event (host only)
 *DefaultApi* | [**confirmGuestImport**](doc//DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
 *DefaultApi* | [**createEvent**](doc//DefaultApi.md#createevent) | **POST** /api/v1/events | Create a draft event (caller becomes host)
 *DefaultApi* | [**createInvite**](doc//DefaultApi.md#createinvite) | **POST** /api/v1/events/{id}/team/invites | Create a 7-day, single-use invite link; emails it when an email is given (host only)
+*DefaultApi* | [**getCardCalendar**](doc//DefaultApi.md#getcardcalendar) | **GET** /api/v1/cards/{token}/calendar.ics | Calendar entry (text/calendar)
+*DefaultApi* | [**getCardLink**](doc//DefaultApi.md#getcardlink) | **GET** /api/v1/events/{id}/guests/{guestId}/card | Card number and link (host, committee)
+*DefaultApi* | [**getContributions**](doc//DefaultApi.md#getcontributions) | **GET** /api/v1/events/{id}/contributions | Totals and contributors (host, committee, treasurer)
 *DefaultApi* | [**getEvent**](doc//DefaultApi.md#getevent) | **GET** /api/v1/events/{id} | 
 *DefaultApi* | [**getHealth**](doc//DefaultApi.md#gethealth) | **GET** /api/v1/health | Service health
 *DefaultApi* | [**getInvite**](doc//DefaultApi.md#getinvite) | **GET** /api/v1/invites/{token} | Public invite info for the accept page
 *DefaultApi* | [**getMe**](doc//DefaultApi.md#getme) | **GET** /api/v1/me | Current account
+*DefaultApi* | [**getPledge**](doc//DefaultApi.md#getpledge) | **GET** /api/v1/events/{id}/pledges/{pledgeId} | 
+*DefaultApi* | [**getPublicCard**](doc//DefaultApi.md#getpubliccard) | **GET** /api/v1/cards/{token} | Guest card by link token (public, no login)
 *DefaultApi* | [**getTeam**](doc//DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
+*DefaultApi* | [**issueCard**](doc//DefaultApi.md#issuecard) | **POST** /api/v1/events/{id}/guests/{guestId}/issue | Issue the card directly (host). Pending only.
 *DefaultApi* | [**listEventTypes**](doc//DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
 *DefaultApi* | [**listEvents**](doc//DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
 *DefaultApi* | [**listGuests**](doc//DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
@@ -87,11 +99,16 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**previewCopyGuests**](doc//DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
 *DefaultApi* | [**previewGuestImport**](doc//DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 *DefaultApi* | [**provisionMe**](doc//DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
+*DefaultApi* | [**recordPayment**](doc//DefaultApi.md#recordpayment) | **POST** /api/v1/events/{id}/pledges/{pledgeId}/payments | Record a payment or refund (host, treasurer). Final payment issues the card.
+*DefaultApi* | [**reinstateCard**](doc//DefaultApi.md#reinstatecard) | **POST** /api/v1/events/{id}/guests/{guestId}/reinstate | Reinstate a cancelled card (host): same number and tokens.
 *DefaultApi* | [**removeGuest**](doc//DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
 *DefaultApi* | [**removeMember**](doc//DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
 *DefaultApi* | [**revokeInvite**](doc//DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
+*DefaultApi* | [**submitRsvp**](doc//DefaultApi.md#submitrsvp) | **POST** /api/v1/cards/{token}/rsvp | RSVP Yes/No with dietary note (public); editable until the event starts
 *DefaultApi* | [**updateEvent**](doc//DefaultApi.md#updateevent) | **PATCH** /api/v1/events/{id} | Edit details, contact and settings (host only)
 *DefaultApi* | [**updateGuest**](doc//DefaultApi.md#updateguest) | **PATCH** /api/v1/events/{id}/guests/{guestId} | 
+*DefaultApi* | [**updatePayment**](doc//DefaultApi.md#updatepayment) | **PATCH** /api/v1/events/{id}/payments/{paymentId} | Correct a payment record (host, treasurer); audited
+*DefaultApi* | [**updatePledge**](doc//DefaultApi.md#updatepledge) | **PATCH** /api/v1/events/{id}/pledges/{pledgeId} | Change amount/card type before issue (host, treasurer); issues if already covered
 
 
 ## Documentation For Models
@@ -102,7 +119,14 @@ Class | Method | HTTP request | Description
  - [AdminEventTypeList](doc//AdminEventTypeList.md)
  - [AdminEventTypeUpdateInput](doc//AdminEventTypeUpdateInput.md)
  - [AuthProvider](doc//AuthProvider.md)
+ - [Card](doc//Card.md)
+ - [CardLink](doc//CardLink.md)
  - [CardType](doc//CardType.md)
+ - [Contributions](doc//Contributions.md)
+ - [ContributionsSummary](doc//ContributionsSummary.md)
+ - [ContributionsSummaryCounts](doc//ContributionsSummaryCounts.md)
+ - [ContributorCreateInput](doc//ContributorCreateInput.md)
+ - [ContributorCreateResponse](doc//ContributorCreateResponse.md)
  - [ErrorResponse](doc//ErrorResponse.md)
  - [ErrorResponseError](doc//ErrorResponseError.md)
  - [ErrorResponseErrorIssuesInner](doc//ErrorResponseErrorIssuesInner.md)
@@ -136,8 +160,21 @@ Class | Method | HTTP request | Description
  - [InviteCreateInput](doc//InviteCreateInput.md)
  - [InviteCreateResponse](doc//InviteCreateResponse.md)
  - [InviteInfo](doc//InviteInfo.md)
+ - [Payment](doc//Payment.md)
+ - [PaymentCreateInput](doc//PaymentCreateInput.md)
+ - [PaymentMethod](doc//PaymentMethod.md)
+ - [PaymentResult](doc//PaymentResult.md)
+ - [PaymentUpdateInput](doc//PaymentUpdateInput.md)
  - [Plan](doc//Plan.md)
  - [PlanList](doc//PlanList.md)
+ - [Pledge](doc//Pledge.md)
+ - [PledgeDetail](doc//PledgeDetail.md)
+ - [PledgeStatus](doc//PledgeStatus.md)
+ - [PledgeUpdateInput](doc//PledgeUpdateInput.md)
+ - [PublicCard](doc//PublicCard.md)
+ - [PublicCardEvent](doc//PublicCardEvent.md)
+ - [Rsvp](doc//Rsvp.md)
+ - [RsvpInput](doc//RsvpInput.md)
  - [Team](doc//Team.md)
  - [TeamMembersInner](doc//TeamMembersInner.md)
  - [TeamRole](doc//TeamRole.md)
@@ -147,6 +184,12 @@ Class | Method | HTTP request | Description
 
 
 Authentication schemes defined for the API:
+### apiKey
+
+- **Type**: API key
+- **API key parameter name**: X-API-Key
+- **Location**: HTTP header
+
 ### firebaseIdToken
 
 - **Type**: HTTP Bearer authentication

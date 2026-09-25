@@ -9,8 +9,19 @@
       "url": "/"
     }
   ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
   "components": {
     "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Client key from the server's API_KEYS (web, mobile, door, tools). Required on every /api/v1 request; missing or wrong → 401 invalid_api_key."
+      },
       "firebaseIdToken": {
         "type": "http",
         "scheme": "bearer",
@@ -339,6 +350,12 @@
               "null"
             ]
           },
+          "budgetAmount": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
           "reminderFrequencyDays": {
             "type": [
               "integer",
@@ -392,6 +409,7 @@
           "autoUpgradeEnabled",
           "singleAmount",
           "doubleAmount",
+          "budgetAmount",
           "reminderFrequencyDays",
           "photoAlbumUrl",
           "access",
@@ -500,6 +518,13 @@
             "minimum": 0
           },
           "doubleAmount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "budgetAmount": {
             "type": [
               "integer",
               "null"
@@ -633,6 +658,13 @@
             ],
             "minimum": 0
           },
+          "budgetAmount": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
           "reminderFrequencyDays": {
             "type": [
               "integer",
@@ -717,6 +749,20 @@
               "cancelled"
             ]
           },
+          "cardNumber": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "005-4827"
+          },
+          "issuedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -736,6 +782,8 @@
           "cardType",
           "totalEntries",
           "status",
+          "cardNumber",
+          "issuedAt",
           "createdAt",
           "updatedAt"
         ]
@@ -907,6 +955,74 @@
             "$ref": "#/components/schemas/CardType"
           }
         }
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "guestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "issued",
+              "cancelled"
+            ]
+          },
+          "cardNumber": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "issuedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "guestId",
+          "status",
+          "cardNumber",
+          "cardType",
+          "issuedAt",
+          "cancelledAt"
+        ]
+      },
+      "CardLink": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Card"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "link": {
+                "type": "string",
+                "format": "uri",
+                "example": "https://dcard.co.tz/c/abc"
+              }
+            },
+            "required": [
+              "link"
+            ]
+          }
+        ]
       },
       "ImportPreview": {
         "type": "object",
@@ -1228,6 +1344,576 @@
           "role"
         ]
       },
+      "Contributions": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "object",
+            "properties": {
+              "pledged": {
+                "type": "integer"
+              },
+              "collected": {
+                "type": "integer"
+              },
+              "outstanding": {
+                "type": "integer"
+              },
+              "extras": {
+                "type": "integer"
+              },
+              "refunds": {
+                "type": "integer"
+              },
+              "budget": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "counts": {
+                "type": "object",
+                "properties": {
+                  "not_paid": {
+                    "type": "integer"
+                  },
+                  "part_paid": {
+                    "type": "integer"
+                  },
+                  "fully_paid": {
+                    "type": "integer"
+                  },
+                  "cancelled": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "not_paid",
+                  "part_paid",
+                  "fully_paid",
+                  "cancelled"
+                ]
+              }
+            },
+            "required": [
+              "pledged",
+              "collected",
+              "outstanding",
+              "extras",
+              "refunds",
+              "budget",
+              "counts"
+            ]
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pledge"
+            }
+          }
+        },
+        "required": [
+          "summary",
+          "contributors"
+        ]
+      },
+      "Pledge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "guestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "amountPledged": {
+            "type": "integer"
+          },
+          "amountPaid": {
+            "type": "integer"
+          },
+          "amountExtra": {
+            "type": "integer"
+          },
+          "balance": {
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PledgeStatus"
+          },
+          "upgradedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "invitationStatus": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "issued",
+              "cancelled"
+            ]
+          },
+          "cardNumber": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "guestId",
+          "name",
+          "phone",
+          "partnerName",
+          "cardType",
+          "amountPledged",
+          "amountPaid",
+          "amountExtra",
+          "balance",
+          "status",
+          "upgradedAt",
+          "invitationStatus",
+          "cardNumber"
+        ]
+      },
+      "PledgeStatus": {
+        "type": "string",
+        "enum": [
+          "not_paid",
+          "part_paid",
+          "fully_paid"
+        ]
+      },
+      "ContributorCreateResponse": {
+        "type": "object",
+        "properties": {
+          "pledge": {
+            "$ref": "#/components/schemas/Pledge"
+          },
+          "existingGuest": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pledge",
+          "existingGuest"
+        ]
+      },
+      "ContributorCreateInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "consent": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "phone",
+          "amount",
+          "consent"
+        ]
+      },
+      "PledgeDetail": {
+        "type": "object",
+        "properties": {
+          "pledge": {
+            "$ref": "#/components/schemas/Pledge"
+          },
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Payment"
+            }
+          }
+        },
+        "required": [
+          "pledge",
+          "payments"
+        ]
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "payment",
+              "refund"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Signed: refunds are negative"
+          },
+          "method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "reference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "paidOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "recordedBy": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "amount",
+          "method",
+          "reference",
+          "paidOn",
+          "recordedBy",
+          "recordedAt"
+        ]
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": [
+          "mpesa",
+          "mixx_by_yas",
+          "airtel_money",
+          "halopesa",
+          "bank",
+          "cash",
+          "other"
+        ]
+      },
+      "PledgeUpdateInput": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          }
+        }
+      },
+      "PaymentResult": {
+        "type": "object",
+        "properties": {
+          "pledge": {
+            "$ref": "#/components/schemas/Pledge"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/Payment"
+          }
+        },
+        "required": [
+          "pledge",
+          "payment"
+        ]
+      },
+      "PaymentCreateInput": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "payment",
+              "refund"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000,
+            "description": "Positive; refunds are stored negative"
+          },
+          "method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "reference": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "paidOn": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "amount",
+          "method",
+          "paidOn"
+        ]
+      },
+      "PaymentUpdateInput": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "reference": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "paidOn": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "PublicCard": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "issued",
+              "cancelled"
+            ]
+          },
+          "guestName": {
+            "type": "string"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "cardNumber": {
+            "type": "string"
+          },
+          "qrToken": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rsvp": {
+            "$ref": "#/components/schemas/Rsvp"
+          },
+          "event": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "typeKey": {
+                "type": "string"
+              },
+              "typeNameSw": {
+                "type": "string"
+              },
+              "typeNameEn": {
+                "type": "string"
+              },
+              "startsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endsAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "timeZone": {
+                "type": "string"
+              },
+              "venueName": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "venueAddress": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "venueMapUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "contactName": {
+                "type": "string"
+              },
+              "contactPhone": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "published",
+                  "completed",
+                  "cancelled"
+                ]
+              }
+            },
+            "required": [
+              "title",
+              "typeKey",
+              "typeNameSw",
+              "typeNameEn",
+              "startsAt",
+              "endsAt",
+              "timeZone",
+              "venueName",
+              "venueAddress",
+              "venueMapUrl",
+              "contactName",
+              "contactPhone",
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "guestName",
+          "partnerName",
+          "cardType",
+          "cardNumber",
+          "qrToken",
+          "rsvp",
+          "event"
+        ]
+      },
+      "Rsvp": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "none",
+              "yes",
+              "no"
+            ]
+          },
+          "dietaryNotes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "open": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status",
+          "dietaryNotes",
+          "at",
+          "open"
+        ]
+      },
+      "RsvpInput": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ]
+          },
+          "dietaryNotes": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "answer"
+        ]
+      },
       "AdminEventTypeList": {
         "type": "object",
         "properties": {
@@ -1471,7 +2157,8 @@
         "summary": "Events where the caller is host or team member",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "responses": {
@@ -1502,7 +2189,8 @@
         "summary": "Create a draft event (caller becomes host)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "requestBody": {
@@ -1563,7 +2251,8 @@
         "operationId": "getEvent",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -1615,7 +2304,8 @@
         "summary": "Edit details, contact and settings (host only)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -1688,7 +2378,8 @@
         "summary": "Cancel a draft or published event (host only)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -1742,7 +2433,8 @@
         "summary": "Guests of an event, newest first (host, committee, treasurer)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -1812,7 +2504,8 @@
         "summary": "Add a guest (host, committee). Existing phone returns the existing invitation with 200.",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -1895,7 +2588,8 @@
         "summary": "Add up to 500 guests picked from phone contacts (host, committee). Invalid rows are reported, not fatal.",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -1977,7 +2671,8 @@
         "operationId": "updateGuest",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2046,7 +2741,8 @@
         "operationId": "removeGuest",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2096,13 +2792,300 @@
         }
       }
     },
+    "/api/v1/events/{id}/guests/{guestId}/issue": {
+      "post": {
+        "operationId": "issueCard",
+        "summary": "Issue the card directly (host). Pending only.",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Card"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Wrong state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/guests/{guestId}/cancel": {
+      "post": {
+        "operationId": "cancelCard",
+        "summary": "Cancel the card (host). Payments are kept.",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Card"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Wrong state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/guests/{guestId}/reinstate": {
+      "post": {
+        "operationId": "reinstateCard",
+        "summary": "Reinstate a cancelled card (host): same number and tokens.",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Card"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not the host",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Wrong state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/guests/{guestId}/card": {
+      "get": {
+        "operationId": "getCardLink",
+        "summary": "Card number and link (host, committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardLink"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No card yet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/events/{id}/imports": {
       "post": {
         "operationId": "previewGuestImport",
         "summary": "Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2174,7 +3157,8 @@
         "summary": "Preview copying people from the caller's past event",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2226,7 +3210,8 @@
         "operationId": "confirmGuestImport",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2298,7 +3283,8 @@
         "summary": "Members and pending invites (host only)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2342,7 +3328,8 @@
         "summary": "Create a 7-day, single-use invite link; emails it when an email is given (host only)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2404,7 +3391,8 @@
         "operationId": "revokeInvite",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2449,7 +3437,8 @@
         "operationId": "removeMember",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2550,7 +3539,8 @@
         "operationId": "acceptInvite",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [
@@ -2597,13 +3587,567 @@
         }
       }
     },
+    "/api/v1/events/{id}/contributions": {
+      "get": {
+        "operationId": "getContributions",
+        "summary": "Totals and contributors (host, committee, treasurer)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "not_paid",
+                "part_paid",
+                "fully_paid",
+                "cancelled"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contributions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contributions"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addContributor",
+        "summary": "Add a contributor with a pledge (host, committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContributorCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorCreateResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Already has a pledge",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error or consent_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/pledges/{pledgeId}": {
+      "get": {
+        "operationId": "getPledge",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "pledgeId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pledge and payments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PledgeDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updatePledge",
+        "summary": "Change amount/card type before issue (host, treasurer); issues if already covered",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "pledgeId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PledgeUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pledge"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Card already issued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/pledges/{pledgeId}/payments": {
+      "post": {
+        "operationId": "recordPayment",
+        "summary": "Record a payment or refund (host, treasurer). Final payment issues the card.",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "pledgeId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/payments/{paymentId}": {
+      "patch": {
+        "operationId": "updatePayment",
+        "summary": "Correct a payment record (host, treasurer); audited",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "paymentId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}": {
+      "get": {
+        "operationId": "getPublicCard",
+        "summary": "Guest card by link token (public, no login)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicCard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/rsvp": {
+      "post": {
+        "operationId": "submitRsvp",
+        "summary": "RSVP Yes/No with dietary note (public); editable until the event starts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RsvpInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rsvp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Cancelled or closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/calendar.ics": {
+      "get": {
+        "operationId": "getCardCalendar",
+        "summary": "Calendar entry (text/calendar)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ICS file",
+            "content": {
+              "text/calendar": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/event-types": {
       "get": {
         "operationId": "adminListEventTypes",
         "summary": "All event types, including inactive (admin)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "responses": {
@@ -2633,7 +4177,8 @@
         "operationId": "adminCreateEventType",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "requestBody": {
@@ -2695,7 +4240,8 @@
         "summary": "Rename or activate/deactivate (existing events keep their type)",
         "security": [
           {
-            "firebaseIdToken": []
+            "firebaseIdToken": [],
+            "apiKey": []
           }
         ],
         "parameters": [

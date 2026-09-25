@@ -13,6 +13,7 @@ const STATUS_BY_CODE: Record<string, number> = {
   plan_limit: 409,
   account_not_provisioned: 403,
   invite_gone: 410,
+  rate_limited: 429,
 };
 
 export function jsonError(status: number, code: string, message: string): Response {

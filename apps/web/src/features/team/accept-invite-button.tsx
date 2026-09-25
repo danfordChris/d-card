@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Alert, Button } from "../../components/ui";
+import { apiFetch } from "../../lib/api-fetch";
 
 export function AcceptInviteButton({ token }: { token: string }) {
   const t = useTranslations("invitePage");
@@ -18,7 +19,7 @@ export function AcceptInviteButton({ token }: { token: string }) {
         disabled={busy}
         onClick={async () => {
           setBusy(true);
-          const res = await fetch(`/api/v1/invites/${encodeURIComponent(token)}/accept`, { method: "POST" }).catch(() => null);
+          const res = await apiFetch(`/api/v1/invites/${encodeURIComponent(token)}/accept`, { method: "POST" }).catch(() => null);
           setBusy(false);
           if (res?.ok) {
             const { eventId } = (await res.json()) as { eventId: string };

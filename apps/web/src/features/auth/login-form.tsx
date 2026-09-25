@@ -29,6 +29,7 @@ export function LoginForm() {
       await startServerSession(await cred.user.getIdToken());
       router.replace(next.startsWith("/") ? next : "/dashboard");
     } catch (err) {
+      console.error("sign-in failed", err);
       setErrors({ form: mapFirebaseError((err as { code?: string }).code) });
     } finally {
       setBusy(false);

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { Alert, Button, Card, Field, Input } from "../../components/ui";
 import { ImportReportView, type ImportReport } from "./import-report";
+import { apiFetch } from "../../lib/api-fetch";
 
 type Preview = { jobId: string; report: ImportReport; kind: "file" | "copy" };
 
@@ -31,7 +32,7 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
     setError(undefined);
     const form = new FormData();
     form.append("file", file);
-    const res = await fetch(base, { method: "POST", body: form }).catch(() => null);
+    const res = await apiFetch(base, { method: "POST", body: form }).catch(() => null);
     setBusy(false);
     if (!res?.ok) return setError(res ? await readError(res) : t("errors.generic"));
     setPreview({ ...(await res.json()), kind: "file" });
@@ -43,7 +44,7 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
     e.preventDefault();
     setBusy(true);
     setError(undefined);
-    const res = await fetch(`${base}/copy`, {
+    const res = await apiFetch(`${base}/copy`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ fromEventId }),
@@ -60,7 +61,7 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
     if (!consent) return setError(t("errors.consent"));
     setBusy(true);
     setError(undefined);
-    const res = await fetch(`${base}/${preview.jobId}/confirm`, {
+    const res = await apiFetch(`${base}/${preview.jobId}/confirm`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ consent: true }),

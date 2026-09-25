@@ -34,6 +34,7 @@ class Event {
     required this.autoUpgradeEnabled,
     required this.singleAmount,
     required this.doubleAmount,
+    required this.budgetAmount,
     required this.reminderFrequencyDays,
     required this.photoAlbumUrl,
     required this.access,
@@ -83,6 +84,8 @@ class Event {
 
   int? doubleAmount;
 
+  int? budgetAmount;
+
   int? reminderFrequencyDays;
 
   String? photoAlbumUrl;
@@ -116,6 +119,7 @@ class Event {
     other.autoUpgradeEnabled == autoUpgradeEnabled &&
     other.singleAmount == singleAmount &&
     other.doubleAmount == doubleAmount &&
+    other.budgetAmount == budgetAmount &&
     other.reminderFrequencyDays == reminderFrequencyDays &&
     other.photoAlbumUrl == photoAlbumUrl &&
     other.access == access &&
@@ -146,6 +150,7 @@ class Event {
     (autoUpgradeEnabled.hashCode) +
     (singleAmount == null ? 0 : singleAmount!.hashCode) +
     (doubleAmount == null ? 0 : doubleAmount!.hashCode) +
+    (budgetAmount == null ? 0 : budgetAmount!.hashCode) +
     (reminderFrequencyDays == null ? 0 : reminderFrequencyDays!.hashCode) +
     (photoAlbumUrl == null ? 0 : photoAlbumUrl!.hashCode) +
     (access.hashCode) +
@@ -153,7 +158,7 @@ class Event {
     (updatedAt.hashCode);
 
   @override
-  String toString() => 'Event[id=$id, title=$title, status=$status, eventType=$eventType, plan=$plan, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl, access=$access, createdAt=$createdAt, updatedAt=$updatedAt]';
+  String toString() => 'Event[id=$id, title=$title, status=$status, eventType=$eventType, plan=$plan, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, budgetAmount=$budgetAmount, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl, access=$access, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -209,6 +214,11 @@ class Event {
       json[r'doubleAmount'] = this.doubleAmount;
     } else {
       json[r'doubleAmount'] = null;
+    }
+    if (this.budgetAmount != null) {
+      json[r'budgetAmount'] = this.budgetAmount;
+    } else {
+      json[r'budgetAmount'] = null;
     }
     if (this.reminderFrequencyDays != null) {
       json[r'reminderFrequencyDays'] = this.reminderFrequencyDays;
@@ -266,6 +276,7 @@ class Event {
         autoUpgradeEnabled: mapValueOfType<bool>(json, r'autoUpgradeEnabled')!,
         singleAmount: mapValueOfType<int>(json, r'singleAmount'),
         doubleAmount: mapValueOfType<int>(json, r'doubleAmount'),
+        budgetAmount: mapValueOfType<int>(json, r'budgetAmount'),
         reminderFrequencyDays: mapValueOfType<int>(json, r'reminderFrequencyDays'),
         photoAlbumUrl: mapValueOfType<String>(json, r'photoAlbumUrl'),
         access: EventAccessEnum.fromJson(json[r'access'])!,
@@ -339,6 +350,7 @@ class Event {
     'autoUpgradeEnabled',
     'singleAmount',
     'doubleAmount',
+    'budgetAmount',
     'reminderFrequencyDays',
     'photoAlbumUrl',
     'access',

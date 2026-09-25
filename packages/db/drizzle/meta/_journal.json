@@ -43,6 +43,34 @@
       "when": 1790280126795,
       "tag": "0005_team_invite",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790310110199,
+      "tag": "0006_card_issue",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790310110584,
+      "tag": "0007_card_type_immutable",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790310341833,
+      "tag": "0008_contributions",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790310688950,
+      "tag": "0009_rsvp",
+      "breakpoints": true
     }
   ]
 }

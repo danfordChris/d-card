@@ -1,0 +1,117 @@
+# D-Card API — team invitations and members (host)
+# Roles: treasurer, committee, door_staff, walkin_approver. Invite links are single-use and valid 7 days.
+# Door staff accounts are limited by plan (Msingi 2, Kawaida 5, Premium unlimited).
+
+
+### Setup: users
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+###
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{treasurerToken}}
+
+###
+# @name event
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "msingi", "eventTypeKey": "birthday", "title": "Team demo", "startsAt": "2026-11-20T18:00:00+03:00", "contactName": "Asha", "contactPhone": "0754123456" }
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+### Create an invite link (host); email is optional
+# With an email, the worker sends the link by email (Resend). The link also works when shared anywhere.
+# 201 → { "invite": { id, eventId, role, email, expiresAt, createdAt }, "link": "<APP_URL>/invite/<token>", "emailQueued": bool }
+# 409 plan_limit for door staff beyond the plan · 403 not host.
+# @name invite
+POST {{baseUrl}}/api/v1/events/{{eventId}}/team/invites
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "role": "treasurer", "email": "treasurer@example.com" }
+
+> {%
+  // The token is the last part of the invite link: <baseUrl>/invite/<token>
+  client.global.set("inviteToken", response.body.link.split("/invite/")[1]);
+%}
+
+### Look up an invite (public; shows the event and role before sign-in)
+# Uses the token saved from the invite link above.
+# 200 → { eventId, eventTitle, role, expiresAt } · 404 unknown · 410 invite_gone (used, revoked, expired).
+GET {{baseUrl}}/api/v1/invites/{{inviteToken}}
+X-API-Key: {{apiKey}}
+
+### Accept the invite (the invited user, signed in)
+# 200 → { eventId, role } · 410 invite_gone on second use.
+POST {{baseUrl}}/api/v1/invites/{{inviteToken}}/accept
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{treasurerToken}}
+
+### Team: members and pending invites (host)
+# 200 → { "members": [{ userId, email, role, since }], "invites": [{ id, role, email, expiresAt, … }] }
+# @name team
+GET {{baseUrl}}/api/v1/events/{{eventId}}/team
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+> {%
+  // Saved for "Remove a member's role" below: the treasurer who accepted the invite.
+  const treasurer = response.body.members.find((m) => m.role === "treasurer");
+  if (treasurer) client.global.set("memberId", treasurer.userId);
+%}
+
+### Door staff beyond the Msingi limit (2) → third one is 409 plan_limit
+POST {{baseUrl}}/api/v1/events/{{eventId}}/team/invites
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "role": "door_staff" }
+
+###
+POST {{baseUrl}}/api/v1/events/{{eventId}}/team/invites
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "role": "door_staff" }
+
+###
+POST {{baseUrl}}/api/v1/events/{{eventId}}/team/invites
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "role": "door_staff" }
+
+### Revoke a pending invite (host) → 204
+# @name spare
+POST {{baseUrl}}/api/v1/events/{{eventId}}/team/invites
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "role": "committee" }
+
+> {%
+  client.global.set("spareInviteId", response.body.invite.id);
+%}
+
+###
+DELETE {{baseUrl}}/api/v1/events/{{eventId}}/team/invites/{{spareInviteId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Remove a member's role (host) → 204
+# Query `role` picks which role to remove when a user holds several. memberId comes from the team list above.
+DELETE {{baseUrl}}/api/v1/events/{{eventId}}/team/members/{{memberId}}?role=treasurer
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}

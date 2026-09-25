@@ -10,6 +10,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  date,
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
@@ -141,8 +142,12 @@ export const event = pgTable(
     confirmationOffsetDays: integer("confirmation_offset_days").notNull().default(2),
     headcountPct: integer("headcount_pct").notNull().default(70),
     autoUpgradeEnabled: boolean("auto_upgrade_enabled").notNull().default(true),
+    /** Next card guest sequence (the NNN in NNN-PPPP), taken atomically at issue. */
+    nextGuestSeq: integer("next_guest_seq").notNull().default(1),
     singleAmount: integer("single_amount"),
     doubleAmount: integer("double_amount"),
+    /** Contribution budget target (TZS), for dashboard progress (CON-9). */
+    budgetAmount: integer("budget_amount"),
     currency: text("currency").notNull().default("TZS"),
     photoAlbumUrl: text("photo_album_url"),
     reminderFrequencyDays: integer("reminder_frequency_days"),
@@ -218,6 +223,7 @@ export const eventPlan = pgTable(
 
 export const cardTypeEnum = pgEnum("card_type", ["single", "double"]);
 export const invitationStatusEnum = pgEnum("invitation_status", ["pending", "issued", "cancelled"]);
+export const rsvpStatusEnum = pgEnum("rsvp_status", ["none", "yes", "no"]);
 export const consentSourceEnum = pgEnum("consent_source", ["form", "import", "contacts", "copy"]);
 
 /**
@@ -238,12 +244,29 @@ export const invitation = pgTable(
     cardType: cardTypeEnum("card_type").notNull().default("single"),
     totalEntries: integer("total_entries").notNull().default(1),
     status: invitationStatusEnum("status").notNull().default("pending"),
+    // Card (set once at issue; kept on cancel/reinstate). Tokens: HMAC hash for lookup,
+    // AES-GCM copy so the card can be re-sent (docs/adr/0003-technical-stack.md).
+    guestSeq: integer("guest_seq"),
+    cardNumber: text("card_number"),
+    qrTokenHash: text("qr_token_hash").unique(),
+    linkTokenHash: text("link_token_hash").unique(),
+    qrTokenEnc: text("qr_token_enc"),
+    linkTokenEnc: text("link_token_enc"),
+    issuedAt: timestamp("issued_at", { withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+    // GST-12: RSVP (Yes/No, ADR 0001 O19) and dietary needs through the card link.
+    rsvpStatus: rsvpStatusEnum("rsvp_status").notNull().default("none"),
+    rsvpAt: timestamp("rsvp_at", { withTimezone: true }),
+    dietaryNotes: text("dietary_notes"),
     createdBy: uuid("created_by").references(() => userAccount.id),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
   (t) => [
     unique("invitation_event_person_unique").on(t.eventId, t.personId),
+    unique("invitation_event_card_number_unique").on(t.eventId, t.cardNumber),
+    unique("invitation_event_guest_seq_unique").on(t.eventId, t.guestSeq),
+    check("invitation_card_number_format", sql`${t.cardNumber} IS NULL OR ${t.cardNumber} ~ '^[0-9]{3,}-[0-9]{4}$'`),
     index("invitation_event_created_idx").on(t.eventId, t.createdAt),
     check("invitation_guest_phone_format", sql`${t.guestPhone} ~ '^255[0-9]{9}$'`),
     check(
@@ -319,3 +342,62 @@ export const teamInvite = pgTable("team_invite", {
   revokedAt: timestamp("revoked_at", { withTimezone: true }),
   createdAt: createdAt(),
 });
+
+// ── Contributions (docs/design/features/contributions.md) ───────────────────
+// D-Card never holds contribution money: payments are records of money paid outside.
+
+export const pledgeStatusEnum = pgEnum("pledge_status", ["not_paid", "part_paid", "fully_paid"]);
+export const paymentKindEnum = pgEnum("payment_kind", ["payment", "refund"]);
+export const paymentMethodEnum = pgEnum("payment_method", ["mpesa", "mixx_by_yas", "airtel_money", "halopesa", "bank", "cash", "other"]);
+
+export const pledge = pgTable(
+  "pledge",
+  {
+    id: id(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    invitationId: uuid("invitation_id")
+      .notNull()
+      .unique()
+      .references(() => invitation.id, { onDelete: "cascade" }),
+    amountPledged: integer("amount_pledged").notNull(),
+    cardType: cardTypeEnum("card_type").notNull(),
+    /** Net of refunds. Maintained with every payment change. */
+    amountPaid: integer("amount_paid").notNull().default(0),
+    amountExtra: integer("amount_extra").notNull().default(0),
+    status: pledgeStatusEnum("status").notNull().default("not_paid"),
+    upgradedAt: timestamp("upgraded_at", { withTimezone: true }),
+    createdBy: uuid("created_by").references(() => userAccount.id),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [check("pledge_amount_positive", sql`${t.amountPledged} > 0`), index("pledge_event_idx").on(t.eventId)],
+);
+
+export const payment = pgTable(
+  "payment",
+  {
+    id: id(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    pledgeId: uuid("pledge_id")
+      .notNull()
+      .references(() => pledge.id, { onDelete: "cascade" }),
+    kind: paymentKindEnum("kind").notNull(),
+    /** Signed: positive for payments, negative for refunds. */
+    amount: integer("amount").notNull(),
+    method: paymentMethodEnum("method").notNull(),
+    reference: text("reference"),
+    paidOn: date("paid_on").notNull(),
+    recordedBy: uuid("recorded_by").references(() => userAccount.id),
+    recordedAt: timestamp("recorded_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    check("payment_sign_matches_kind", sql`(${t.kind} = 'payment' AND ${t.amount} > 0) OR (${t.kind} = 'refund' AND ${t.amount} < 0)`),
+    index("payment_pledge_idx").on(t.pledgeId),
+  ],
+);
+

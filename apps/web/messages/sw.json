@@ -29,7 +29,10 @@
       "invalidCredentials": "Barua pepe au nenosiri si sahihi.",
       "emailInUse": "Akaunti yenye barua pepe hii tayari ipo.",
       "network": "Tatizo la mtandao. Angalia muunganisho kisha jaribu tena.",
-      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena.",
+      "tooManyRequests": "Majaribio mengi mno. Subiri dakika chache kisha ujaribu tena.",
+      "authConfig": "Kuingia hakujasanidiwa vizuri kwa tovuti hii (mipangilio ya Firebase). Tafadhali wasiliana na msaada.",
+      "serverSession": "Akaunti yako imefunguliwa kwenye Firebase, lakini D-Card imeshindwa kuanzisha kipindi chako. Jaribu kuingia; ikiendelea kushindwa, wasiliana na msaada."
     }
   },
   "dashboard": {
@@ -86,7 +89,8 @@
       "autoUpgradeLocked": "Haipo kwenye kifurushi cha Msingi",
       "singleAmount": "Mchango wa kadi Single (Tsh)",
       "doubleAmount": "Mchango wa kadi Double (Tsh)",
-      "photoAlbumUrl": "Kiungo cha albamu ya Google Photos (hiari)"
+      "photoAlbumUrl": "Kiungo cha albamu ya Google Photos (hiari)",
+      "budgetAmount": "Lengo la bajeti ya michango (Tsh, hiari)"
     },
     "errors": {
       "required": "Sehemu hii inahitajika.",
@@ -119,7 +123,8 @@
       "save": "Hifadhi mabadiliko",
       "editTitle": "Hariri tukio",
       "guests": "Wageni",
-      "team": "Timu"
+      "team": "Timu",
+      "contributions": "Michango"
     }
   },
   "guests": {
@@ -136,7 +141,8 @@
       "phone": "Simu",
       "card": "Kadi",
       "status": "Hali",
-      "actions": "Vitendo"
+      "actions": "Vitendo",
+      "cardNumber": "Namba ya kadi"
     },
     "card": {
       "single": "Single",
@@ -170,7 +176,22 @@
       "consent": "Tafadhali thibitisha kuwa mgeni amekubali kupokea ujumbe.",
       "generic": "Imeshindikana kuhifadhi. Tafadhali jaribu tena."
     },
-    "import": "Leta kutoka faili"
+    "import": "Leta kutoka faili",
+    "cardActions": {
+      "issue": "Toa kadi",
+      "cancel": "Sitisha kadi",
+      "reinstate": "Rejesha",
+      "copyLink": "Nakili kiungo",
+      "open": "Fungua kadi",
+      "issueConfirm": "Mtolee {name} kadi sasa? Aina ya kadi haitaweza kubadilishwa baada ya hapo.",
+      "cancelConfirm": "Sitisha kadi ya {name}? Ikiskaniwa mlangoni itaonyesha \"Kadi imesitishwa\". Malipo yanabaki.",
+      "reinstateConfirm": "Rejesha kadi ya {name}? Itabaki na namba ya kadi na QR ile ile.",
+      "issueDone": "Kadi {number} imetolewa kwa {name}.",
+      "cancelDone": "Kadi ya {name} imesitishwa.",
+      "reinstateDone": "Kadi ya {name} imerejeshwa.",
+      "copied": "Kiungo cha kadi ya {name} kimenakiliwa.",
+      "error": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
   },
   "imports": {
     "title": "Leta wageni",
@@ -286,6 +307,126 @@
       "required": "Inahitajika.",
       "key": "Tumia herufi ndogo, tarakimu au _ (2–40, anza na herufi).",
       "duplicate": "Ufunguo huu tayari upo.",
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena."
+    }
+  },
+  "cardPage": {
+    "invitationFor": "Mwaliko kwa",
+    "and": "na",
+    "entries": "{count, plural, =1{Mtu 1} other{Watu {count}}}",
+    "date": "Tarehe",
+    "time": "Saa",
+    "venue": "Mahali",
+    "map": "Fungua ramani",
+    "cardNumber": "Namba ya kadi",
+    "showQr": "Onyesha QR hii au namba ya kadi mlangoni.",
+    "contact": "Mawasiliano ya tukio",
+    "calendar": "Weka kwenye kalenda",
+    "calendarApple": "Faili la kalenda (.ics)",
+    "calendarGoogle": "Google Calendar",
+    "rsvpTitle": "Utahudhuria?",
+    "rsvpYes": "Ndiyo, nitahudhuria",
+    "rsvpNo": "Hapana, sitaweza kuhudhuria",
+    "dietary": "Mahitaji ya chakula (hiari)",
+    "dietaryHint": "Mfano: sili nyama, sili nguruwe, mzio.",
+    "save": "Tuma jibu",
+    "saved": "Asante. Jibu lako limehifadhiwa.",
+    "yourAnswer": "Jibu lako: {answer}",
+    "answerYes": "nitahudhuria",
+    "answerNo": "sitahudhuria",
+    "rsvpClosed": "Majibu yamefungwa kwa tukio hili.",
+    "change": "Unaweza kubadilisha jibu lako hadi tukio lianze.",
+    "cancelledTitle": "Kadi imesitishwa",
+    "cancelledBody": "Kadi hii imesitishwa na mwenyeji. Tafadhali wasiliana na mhusika wa tukio kama unadhani ni kosa.",
+    "notFoundTitle": "Kadi haikupatikana",
+    "notFoundBody": "Kiungo hiki cha kadi si sahihi. Angalia kiungo kwenye ujumbe wako.",
+    "errors": {
+      "generic": "Kuna hitilafu. Tafadhali jaribu tena.",
+      "rateLimited": "Majaribio mengi mno. Tafadhali jaribu baadaye.",
+      "closed": "Majibu yamefungwa kwa tukio hili."
+    },
+    "poweredBy": "Kadi ya mwaliko ya D-Card",
+    "download": "Pakua picha ya kadi"
+  },
+  "contributions": {
+    "title": "Michango",
+    "back": "Rudi kwenye tukio",
+    "add": "Ongeza mchangiaji",
+    "addTitle": "Mchangiaji mpya",
+    "search": "Tafuta jina au simu",
+    "empty": "Hakuna mchangiaji anayelingana.",
+    "exportXlsx": "Pakua Excel",
+    "exportCsv": "Pakua CSV",
+    "budget": "Maendeleo ya bajeti (lengo {budget})",
+    "cardNumber": "Namba ya kadi",
+    "history": "Malipo",
+    "noPayments": "Bado hakuna malipo.",
+    "recordHeading": "Rekodi malipo au marejesho",
+    "recordPayment": "Rekodi malipo",
+    "recordRefund": "Rekodi marejesho",
+    "recorded": "Imehifadhiwa.",
+    "cardIssued": "Amelipa kikamilifu. Kadi {number} imetolewa.",
+    "editPledge": "Badilisha ahadi",
+    "savePledge": "Hifadhi ahadi",
+    "pledgeSaved": "Ahadi imebadilishwa.",
+    "cancel": "Ghairi",
+    "consent": "Mchangiaji huyu amekubali kupokea ujumbe wa tukio (WhatsApp na SMS).",
+    "totals": {
+      "pledged": "Ahadi",
+      "collected": "Zilizokusanywa",
+      "outstanding": "Zinazodaiwa",
+      "extras": "Michango ya ziada",
+      "refunds": "Marejesho"
+    },
+    "filters": {
+      "all": "Wote",
+      "not_paid": "Hajalipa",
+      "part_paid": "Amelipa sehemu",
+      "fully_paid": "Amelipa yote",
+      "cancelled": "Imesitishwa"
+    },
+    "fields": {
+      "name": "Jina",
+      "phone": "Simu",
+      "cardType": "Aina ya kadi",
+      "partnerName": "Jina la mwenza",
+      "amountPledged": "Ahadi",
+      "amountPaid": "Amelipa",
+      "balance": "Salio",
+      "amountExtra": "Ziada",
+      "status": "Hali",
+      "kind": "Aina",
+      "amount": "Kiasi (Tsh)",
+      "method": "Njia",
+      "reference": "Kumbukumbu (hiari)",
+      "paidOn": "Tarehe ya malipo"
+    },
+    "cardTypes": {
+      "single": "Moja",
+      "double": "Mbili"
+    },
+    "kinds": {
+      "payment": "Malipo",
+      "refund": "Marejesho"
+    },
+    "methods": {
+      "mpesa": "M-Pesa",
+      "mixx_by_yas": "Mixx by Yas",
+      "airtel_money": "Airtel Money",
+      "halopesa": "HaloPesa",
+      "bank": "Benki",
+      "cash": "Taslimu",
+      "other": "Nyingine"
+    },
+    "errors": {
+      "required": "Inahitajika.",
+      "phone": "Weka namba sahihi ya simu ya Tanzania.",
+      "amount": "Weka kiasi kamili kwa Tsh.",
+      "date": "Chagua tarehe.",
+      "consent": "Thibitisha ridhaa ili kuendelea.",
+      "refundTooLarge": "Marejesho hayawezi kuzidi kiasi kilicholipwa.",
+      "hasPledge": "Mtu huyu tayari ana ahadi kwenye tukio hili.",
+      "alreadyIssued": "Kadi imeshatolewa, kwa hiyo ahadi haiwezi kubadilishwa tena.",
       "generic": "Kuna hitilafu. Tafadhali jaribu tena."
     }
   }

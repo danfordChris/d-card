@@ -7,10 +7,22 @@ import {
   EventUpdateInput,
   PlanListResponse,
 } from "./events.js";
-import { GuestBulkInput, GuestBulkResponse, GuestCreateInput, GuestCreateResponse, GuestListQuery, GuestPageResponse, GuestSchema, GuestUpdateInput } from "./guests.js";
+import { CardLinkSchema, CardSchema, PublicCardSchema, RsvpInput, RsvpSchema, GuestBulkInput, GuestBulkResponse, GuestCreateInput, GuestCreateResponse, GuestListQuery, GuestPageResponse, GuestSchema, GuestUpdateInput } from "./guests.js";
 import { ImportConfirmInput, ImportConfirmResponse, ImportCopyInput, ImportPreviewResponse } from "./imports.js";
 import { InviteAcceptResponse, InviteCreateInput, InviteCreateResponse, InviteInfoResponse, TeamResponse, TeamRoleSchema } from "./team.js";
 import { Account, ErrorResponse, HealthResponse } from "./schemas.js";
+import {
+  ContributionsQuery,
+  ContributionsResponse,
+  ContributorCreateInput,
+  ContributorCreateResponse,
+  PaymentCreateInput,
+  PaymentResultResponse,
+  PaymentUpdateInput,
+  PledgeDetailResponse,
+  PledgeSchema,
+  PledgeUpdateInput,
+} from "./contributions.js";
 import { AdminEventTypeCreateInput, AdminEventTypeListResponse, AdminEventTypeSchema, AdminEventTypeUpdateInput } from "./admin.js";
 import { z } from "zod";
 
@@ -21,6 +33,12 @@ export type OpenApiDocument = Record<string, unknown>;
 
 export function buildOpenApiDocument(): OpenApiDocument {
   const registry = new OpenAPIRegistry();
+  const apiKey = registry.registerComponent("securitySchemes", "apiKey", {
+    type: "apiKey",
+    in: "header",
+    name: "X-API-Key",
+    description: "Client key from the server's API_KEYS (web, mobile, door, tools). Required on every /api/v1 request; missing or wrong → 401 invalid_api_key.",
+  });
   const bearer = registry.registerComponent("securitySchemes", "firebaseIdToken", {
     type: "http",
     scheme: "bearer",
@@ -72,7 +90,8 @@ export function buildOpenApiDocument(): OpenApiDocument {
     description,
     content: { "application/json": { schema } },
   });
-  const secured = [{ [bearer.name]: [] }];
+  // Every request needs the client API key; signed-in routes also need the Firebase ID token (both at once).
+  const secured = [{ [bearer.name]: [], [apiKey.name]: [] }];
   const eventId = z.object({ id: z.uuid() });
 
   registry.registerPath({
@@ -200,6 +219,31 @@ export function buildOpenApiDocument(): OpenApiDocument {
     responses: { 204: { description: "Removed" }, 409: error("Card already issued"), 404: error("Not found") },
   });
 
+  for (const [action, operationId, summary] of [
+    ["issue", "issueCard", "Issue the card directly (host). Pending only."],
+    ["cancel", "cancelCard", "Cancel the card (host). Payments are kept."],
+    ["reinstate", "reinstateCard", "Reinstate a cancelled card (host): same number and tokens."],
+  ] as const) {
+    registry.registerPath({
+      method: "post",
+      path: `/api/v1/events/{id}/guests/{guestId}/${action}`,
+      operationId,
+      summary,
+      security: secured,
+      request: { params: guestIds },
+      responses: { 200: json(CardSchema, "Card"), 403: error("Not the host"), 404: error("Not found"), 409: error("Wrong state") },
+    });
+  }
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/events/{id}/guests/{guestId}/card",
+    operationId: "getCardLink",
+    summary: "Card number and link (host, committee)",
+    security: secured,
+    request: { params: guestIds },
+    responses: { 200: json(CardLinkSchema, "Card link"), 403: error("No access"), 409: error("No card yet") },
+  });
+
   registry.registerPath({
     method: "post",
     path: "/api/v1/events/{id}/imports",
@@ -284,6 +328,90 @@ export function buildOpenApiDocument(): OpenApiDocument {
     responses: { 200: json(InviteAcceptResponse, "Accepted"), 404: error("Unknown"), 410: error("Used, revoked or expired") },
   });
 
+  const pledgeIds = z.object({ id: z.uuid(), pledgeId: z.uuid() });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/events/{id}/contributions",
+    operationId: "getContributions",
+    summary: "Totals and contributors (host, committee, treasurer)",
+    security: secured,
+    request: { params: eventId, query: ContributionsQuery },
+    responses: { 200: json(ContributionsResponse, "Contributions"), 403: error("No access") },
+  });
+  registry.registerPath({
+    method: "post",
+    path: "/api/v1/events/{id}/contributions",
+    operationId: "addContributor",
+    summary: "Add a contributor with a pledge (host, committee)",
+    security: secured,
+    request: { params: eventId, body: { content: { "application/json": { schema: ContributorCreateInput } } } },
+    responses: { 201: json(ContributorCreateResponse, "Added"), 403: error("No access"), 409: error("Already has a pledge"), 422: error("Validation error or consent_required") },
+  });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/events/{id}/pledges/{pledgeId}",
+    operationId: "getPledge",
+    security: secured,
+    request: { params: pledgeIds },
+    responses: { 200: json(PledgeDetailResponse, "Pledge and payments"), 404: error("Not found") },
+  });
+  registry.registerPath({
+    method: "patch",
+    path: "/api/v1/events/{id}/pledges/{pledgeId}",
+    operationId: "updatePledge",
+    summary: "Change amount/card type before issue (host, treasurer); issues if already covered",
+    security: secured,
+    request: { params: pledgeIds, body: { content: { "application/json": { schema: PledgeUpdateInput } } } },
+    responses: { 200: json(PledgeSchema, "Updated"), 403: error("No access"), 409: error("Card already issued") },
+  });
+  registry.registerPath({
+    method: "post",
+    path: "/api/v1/events/{id}/pledges/{pledgeId}/payments",
+    operationId: "recordPayment",
+    summary: "Record a payment or refund (host, treasurer). Final payment issues the card.",
+    security: secured,
+    request: { params: pledgeIds, body: { content: { "application/json": { schema: PaymentCreateInput } } } },
+    responses: { 201: json(PaymentResultResponse, "Recorded"), 403: error("No access"), 422: error("Validation error") },
+  });
+  registry.registerPath({
+    method: "patch",
+    path: "/api/v1/events/{id}/payments/{paymentId}",
+    operationId: "updatePayment",
+    summary: "Correct a payment record (host, treasurer); audited",
+    security: secured,
+    request: {
+      params: z.object({ id: z.uuid(), paymentId: z.uuid() }),
+      body: { content: { "application/json": { schema: PaymentUpdateInput } } },
+    },
+    responses: { 200: json(PaymentResultResponse, "Updated"), 403: error("No access"), 404: error("Not found") },
+  });
+
+  const cardToken = z.object({ token: z.string() });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/cards/{token}",
+    operationId: "getPublicCard",
+    summary: "Guest card by link token (public, no login)",
+    request: { params: cardToken },
+    responses: { 200: json(PublicCardSchema, "Card"), 404: error("Unknown link") },
+  });
+  registry.registerPath({
+    method: "post",
+    path: "/api/v1/cards/{token}/rsvp",
+    operationId: "submitRsvp",
+    summary: "RSVP Yes/No with dietary note (public); editable until the event starts",
+    request: { params: cardToken, body: { content: { "application/json": { schema: RsvpInput } } } },
+    responses: { 200: json(RsvpSchema, "Saved"), 404: error("Unknown link"), 409: error("Cancelled or closed"), 429: error("Too many requests") },
+  });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/cards/{token}/calendar.ics",
+    operationId: "getCardCalendar",
+    summary: "Calendar entry (text/calendar)",
+    request: { params: cardToken },
+    responses: { 200: { description: "ICS file", content: { "text/calendar": { schema: z.string() } } }, 404: error("Unknown link") },
+  });
+
   registry.registerPath({
     method: "get",
     path: "/api/v1/admin/event-types",
@@ -314,5 +442,6 @@ export function buildOpenApiDocument(): OpenApiDocument {
     openapi: "3.1.0",
     info: { title: "D-Card API", version: "0.1.0" },
     servers: [{ url: "/" }],
+    security: [{ [apiKey.name]: [] }],
   }) as unknown as OpenApiDocument;
 }

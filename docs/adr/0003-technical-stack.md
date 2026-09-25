@@ -24,6 +24,9 @@
 | API contract | Zod → OpenAPI → generated Dart client |
 | Web UI | **Tailwind CSS only** (own components, no component library); `next-intl` for Swahili/English |
 | Email | **Resend** (team invitation emails), behind `EmailSender` |
+| API client keys | Every `/api/v1` request sends `X-API-Key`; keys are per client (`API_KEYS`: web, mobile, door, tools) and checked in the Next.js proxy (constant-time, SHA-256 digests) before any route runs. They identify and allow the calling app and can be rotated per client; user identity stays Firebase + roles. The web key is public in the browser |
+| Local auth mode | `AUTH_VERIFIER=dev` accepts `fake:` test tokens and real Firebase tokens (non-production only); `fake` is for automated tests; production uses `firebase` |
+| Card link and QR tokens | 32 random bytes (base64url). Stored as an HMAC-SHA256 hash (`TOKEN_HASH_SECRET`) for lookup, plus an AES-256-GCM encrypted copy (`DATA_ENCRYPTION_KEY`) so a card can be re-sent without changing its link or QR |
 
 ## Reason
 

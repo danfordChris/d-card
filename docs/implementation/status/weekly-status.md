@@ -14,3 +14,10 @@
 - Phase 01 planned and started: T01-01…T01-10 (events API, web foundation/login, event wizard, guests API/UI, import, team invitations, mobile login/events, contacts import, admin event types). Decisions: invite link + email (Resend), web UI Tailwind only (ADR 0001 O18, ADR 0003).
 - Exception: phase 00 stays open only for T00-10 (live spikes, blocked on keys); does not block phase 01.
 - Phase 01 done and reviewed (`docs/implementation/reviews/2026-09-24-phase-01-review.md`): events API + web wizard, guests (form, Excel/CSV import, copy from past event, phone contacts in the D-Card app), team invitations (link + email), D-Card app host login and events, admin event types. Live Firebase/Resend checks wait for real keys.
+
+## 2026-09-25
+
+- Phase 02 planned and started: T02-01…T02-07 (card issue core, contributions core, guest card page, card image renderer, web contributions, web card issue, mobile treasurer). Decisions: RSVP Yes/No (O19), built-in card design until templates (O20), card tokens hashed + encrypted copy (ADR 0003). Branch `feat/phase-02-contributions-cards` stacked on PR #2.
+- Phase 02 done and reviewed (`docs/implementation/reviews/2026-09-25-phase-02-review.md`): card issue with numbers and tokens, cancel/reinstate, pledges/payments/refunds with auto-upgrade and auto-issue, web contributions dashboard and export, guest card page with RSVP and calendar, card image renderer, D-Card app treasurer screens.
+- Web sign-up fix: local `AUTH_VERIFIER=dev` (test + real Firebase tokens) and specific error messages; the owner must enable Firebase Authentication (Email/Password) in the console (`auth/configuration-not-found`).
+- API client keys: `X-API-Key` required on every `/api/v1` request (per-client `API_KEYS`), sent by the web app, the D-Card app (`--dart-define=API_KEY`) and every `http/` request; OpenAPI declares the scheme.

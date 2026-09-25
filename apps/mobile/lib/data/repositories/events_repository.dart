@@ -31,5 +31,11 @@ class EventsRepository {
     canManageGuests:
         (e.access == EventAccessEnum.host || e.access == EventAccessEnum.committee) &&
         (e.status == EventStatusEnum.draft || e.status == EventStatusEnum.published),
+    canViewContributions: const [
+      EventAccessEnum.host,
+      EventAccessEnum.committee,
+      EventAccessEnum.treasurer,
+    ].contains(e.access),
+    canRecordPayments: e.access == EventAccessEnum.host || e.access == EventAccessEnum.treasurer,
   );
 }

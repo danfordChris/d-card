@@ -15,6 +15,7 @@ export type EventSettingsInput = {
   autoUpgradeEnabled?: boolean;
   singleAmount?: number | null;
   doubleAmount?: number | null;
+  budgetAmount?: number | null;
   reminderFrequencyDays?: number | null;
   photoAlbumUrl?: string | null;
 };
@@ -61,6 +62,7 @@ export type EventView = {
   autoUpgradeEnabled: boolean;
   singleAmount: number | null;
   doubleAmount: number | null;
+  budgetAmount: number | null;
   reminderFrequencyDays: number | null;
   photoAlbumUrl: string | null;
   access: EventAccess;
@@ -78,7 +80,7 @@ function checkSettings(input: EventSettingsInput & { startsAt?: Date; endsAt?: D
   if (input.confirmationOffsetDays !== undefined && (input.confirmationOffsetDays < 0 || input.confirmationOffsetDays > 30)) {
     issues.push({ path: "confirmationOffsetDays", message: "Must be between 0 and 30 days." });
   }
-  for (const key of ["singleAmount", "doubleAmount"] as const) {
+  for (const key of ["singleAmount", "doubleAmount", "budgetAmount"] as const) {
     const v = input[key];
     if (v !== undefined && v !== null && (!Number.isInteger(v) || v < 0)) {
       issues.push({ path: key, message: "Must be a whole, non-negative amount in TZS." });
@@ -146,6 +148,7 @@ export async function createEvent(db: DbExecutor, hostUserId: string, input: Cre
         autoUpgradeEnabled: input.autoUpgradeEnabled ?? chosenPlan.entitlements.autoUpgrade,
         singleAmount: input.singleAmount ?? null,
         doubleAmount: input.doubleAmount ?? null,
+        budgetAmount: input.budgetAmount ?? null,
         reminderFrequencyDays: input.reminderFrequencyDays ?? null,
         photoAlbumUrl: input.photoAlbumUrl ?? null,
       })
@@ -205,6 +208,7 @@ function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access:
     autoUpgradeEnabled: e.autoUpgradeEnabled,
     singleAmount: e.singleAmount,
     doubleAmount: e.doubleAmount,
+    budgetAmount: e.budgetAmount,
     reminderFrequencyDays: e.reminderFrequencyDays,
     photoAlbumUrl: e.photoAlbumUrl,
     access,
@@ -260,6 +264,7 @@ const DETAIL_FIELDS = [
   "autoUpgradeEnabled",
   "singleAmount",
   "doubleAmount",
+  "budgetAmount",
   "reminderFrequencyDays",
   "photoAlbumUrl",
 ] as const;

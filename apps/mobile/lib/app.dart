@@ -1,6 +1,7 @@
 import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 
+import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
 import 'data/repositories/session_repository.dart';
@@ -20,6 +21,7 @@ class DCardApp extends StatelessWidget {
     required this.events,
     required this.guests,
     required this.contacts,
+    required this.contributions,
     this.locale,
   });
 
@@ -27,6 +29,7 @@ class DCardApp extends StatelessWidget {
   final EventsRepository events;
   final GuestsRepository guests;
   final ContactsSource contacts;
+  final ContributionsRepository contributions;
 
   /// Forces a locale (tests); null follows the device.
   final Locale? locale;
@@ -36,6 +39,7 @@ class DCardApp extends StatelessWidget {
     return AppScope(
       guests: guests,
       contacts: contacts,
+      contributions: contributions,
       child: MaterialApp(
         onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
         theme: DCardTheme.light(),

@@ -1,0 +1,74 @@
+# D-Card API — cards: direct issue, link, cancel, reinstate (host; committee reads the link)
+# Card number NNN-PPPP = guest sequence in the event + random PIN. QR and link tokens are stored hashed + encrypted.
+
+
+### Setup
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+###
+# @name event
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "kawaida", "eventTypeKey": "wedding", "title": "Cards demo", "startsAt": "2026-12-12T15:00:00+03:00", "venueName": "Diamond Jubilee Hall", "contactName": "Asha", "contactPhone": "0754123456" }
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+###
+# @name guest
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Rehema", "phone": "0713300001", "cardType": "double", "partnerName": "Hamisi", "consent": true }
+
+> {%
+  client.global.set("guestId", response.body.guest.id);
+%}
+
+### No card yet → 409
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/card
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Issue the card directly (host)
+# pending → issued. Assigns the card number and tokens. Sending comes in phase 03.
+# 200 → Card { guestId, status: "issued", cardNumber: "001-4827", cardType, issuedAt, cancelledAt: null }
+# 409 not pending or event cancelled · 403 not host.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/issue
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Card number and link (host, committee)
+# 200 → Card + { "link": "<APP_URL>/c/<token>" }. Open the link in a browser to see the guest card page.
+# @name card
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/card
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Card type is fixed after issue → 409
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "cardType": "single" }
+
+### Cancel the card (host)
+# Scans show "Card cancelled"; payments are kept. 200 → Card (status cancelled) · 409 already cancelled.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/cancel
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Reinstate (host)
+# Back to issued with the same number and tokens (or pending if it was never issued). 409 if not cancelled.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/reinstate
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
