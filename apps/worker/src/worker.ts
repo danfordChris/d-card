@@ -11,6 +11,16 @@ import { processSystemJob } from "./processors/system.js";
 import { createPushProcessor } from "./push/processor.js";
 import type { PushSender } from "./push/push.js";
 
+/**
+ * Idle workers block on the queue marker, so a long drainDelay does not delay pickup (a new job
+ * wakes them at once) but cuts idle Redis commands ~90 %. Stall checks every 5 min are enough for
+ * our short jobs. Keeps Redis cheap (single small instance; docs/deployment.md).
+ */
+export const WORKER_REDIS_OPTIONS = { drainDelay: 60, stalledInterval: 300_000 } as const;
+
+/** Outbox dispatch cadence in production (ms). Guests never need sub-15 s delivery. */
+export const DEFAULT_DISPATCH_EVERY_MS = 15_000;
+
 export type RunningWorkers = {
   workers: Worker[];
   close: () => Promise<void>;
@@ -66,12 +76,13 @@ export async function startWorkers(
       }
       return processSystemJob(job);
     },
-    { connection, concurrency: 5, prefix },
+    { connection, concurrency: 5, prefix, ...WORKER_REDIS_OPTIONS },
   );
   system.on("failed", (job, err) => log(`job:failed ${QUEUES.system}/${job?.name} ${err.message}`));
   workers.push(system);
 
   const email = new Worker(QUEUES.email, createEmailProcessor(deps.emailSender ?? new ResendEmailSender(), log), {
+    ...WORKER_REDIS_OPTIONS,
     connection,
     concurrency: 5,
     prefix,
@@ -80,7 +91,7 @@ export async function startWorkers(
   workers.push(email);
 
   if (deps.push) {
-    const push = new Worker(QUEUES.push, createPushProcessor(deps.push.db, deps.push.sender, log), { connection, concurrency: 5, prefix });
+    const push = new Worker(QUEUES.push, createPushProcessor(deps.push.db, deps.push.sender, log), { connection, concurrency: 5, prefix, ...WORKER_REDIS_OPTIONS });
     push.on("failed", (job, err) => log(`job:failed ${QUEUES.push}/${job?.name} ${err.message}`));
     workers.push(push);
   }
@@ -88,14 +99,14 @@ export async function startWorkers(
   if (m) {
     const processors = { [QUEUES.sms]: createSendProcessor({ ...m, log }), [QUEUES.whatsapp]: createWhatsAppProcessor({ ...m, log }) };
     for (const name of [QUEUES.sms, QUEUES.whatsapp] as const) {
-      const w = new Worker(name, processors[name], { connection, concurrency: 10, prefix });
+      const w = new Worker(name, processors[name], { connection, concurrency: 10, prefix, ...WORKER_REDIS_OPTIONS });
       w.on("failed", (job, err) => log(`job:failed ${name}/${job?.id} ${err.message}`));
       workers.push(w);
     }
-    if ((m.dispatchEveryMs ?? 5000) > 0) {
+    if ((m.dispatchEveryMs ?? DEFAULT_DISPATCH_EVERY_MS) > 0) {
       const systemQueue = new Queue(QUEUES.system, { connection, prefix });
       queues.push(systemQueue);
-      await systemQueue.upsertJobScheduler("dispatch-messages", { every: m.dispatchEveryMs ?? 5000 }, { name: SYSTEM_JOBS.dispatchMessages });
+      await systemQueue.upsertJobScheduler("dispatch-messages", { every: m.dispatchEveryMs ?? DEFAULT_DISPATCH_EVERY_MS }, { name: SYSTEM_JOBS.dispatchMessages });
       await systemQueue.upsertJobScheduler("schedule-messages", { every: 5 * 60_000 }, { name: SYSTEM_JOBS.scheduleMessages });
       await systemQueue.upsertJobScheduler("poll-sms-delivery", { every: 10 * 60_000 }, { name: SYSTEM_JOBS.pollSmsDelivery });
     }

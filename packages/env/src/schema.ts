@@ -45,6 +45,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("APP_URL", "Public base URL of the web app and API", URL_PATTERN),
       req("DATABASE_URL", "Postgres connection string (Neon pooled URL in production)", /^postgres(ql)?:\/\/\S+$/),
       opt("DATABASE_URL_UNPOOLED", "Direct (non-pooled) Postgres URL for migrations on Neon", /^postgres(ql)?:\/\/\S+$/),
+      opt("REDIS_TLS_CA_B64", "Base64 PEM of the private CA that signed the Redis TLS certificate (production Railway Redis); pins TLS", /^[A-Za-z0-9+/=]+$/),
       req("REDIS_URL", "Redis connection string for BullMQ", /^rediss?:\/\/\S+$/),
       req("AUTH_VERIFIER", "firebase (real), dev (local: fake: tokens + real Firebase) or fake (tests only); dev/fake are refused in production", /^(firebase|dev|fake)$/),
       req("TOKEN_HASH_SECRET", "Secret for hashing card QR/link tokens (32+ random chars)", /^.{32,}$/),

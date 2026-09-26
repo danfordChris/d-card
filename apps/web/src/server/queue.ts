@@ -1,15 +1,27 @@
 import { EMAIL_JOBS, MESSAGE_JOBS, PUSH_JOBS, QUEUES, type PushNotifyJob, type TeamInviteEmailJob, type WhatsAppReply } from "@dcard/core";
 import { Queue } from "bullmq";
-import { Redis } from "ioredis";
+import { Redis, type RedisOptions } from "ioredis";
 
 // Producer side of the Redis queues (docs/design/architecture/system.md). The worker consumes them.
 
 const g = globalThis as unknown as { __dcardEmailQueue?: Queue; __dcardPushQueue?: Queue; __dcardWhatsAppQueue?: Queue; __dcardRedis?: Redis };
 
+/**
+ * Production Redis runs on Railway behind a TCP proxy that does not encrypt, so the server
+ * speaks TLS itself with a private certificate. `REDIS_TLS_CA_B64` pins that CA: only a
+ * certificate it signed is accepted (the hostname check is skipped because the proxy host is
+ * not in the certificate; chain verification still applies). docs/deployment.md
+ */
+export function redisOptions(env: Record<string, string | undefined> = process.env): RedisOptions {
+  const caB64 = env.REDIS_TLS_CA_B64;
+  const tls = caB64 ? { tls: { ca: Buffer.from(caB64, "base64").toString("utf8"), checkServerIdentity: () => undefined } } : {};
+  return { maxRetriesPerRequest: null, ...tls };
+}
+
 export function connection(): Redis {
   const url = process.env.REDIS_URL;
   if (!url) throw new Error("REDIS_URL is not set");
-  g.__dcardRedis ??= new Redis(url, { maxRetriesPerRequest: null });
+  g.__dcardRedis ??= new Redis(url, redisOptions());
   return g.__dcardRedis;
 }
 

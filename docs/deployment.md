@@ -9,8 +9,9 @@
 |-----------|--------|---------|
 | `apps/web` — web dashboard + REST API + webhooks | Vercel project `dcard-web` (https://api.dcard.danfordchris.dev; also dcard-web.vercel.app), functions in `fra1` (Frankfurt, next to the database) | `deploy.yml`, or `vercel deploy --prod` from the repo root |
 | Database | Neon Postgres `dcard` (Vercel Marketplace, `aws-eu-central-1`), connected to `dcard-web` (sets `DATABASE_URL`, `DATABASE_URL_UNPOOLED`) | Migrated by `deploy.yml` before each deploy |
-| Redis | Upstash Redis `dcard-redis` (Vercel Marketplace, `fra1`, free, auto-upgrade off) | — |
-| `apps/worker` | Railway (planned, not automated yet) | — |
+| Upstash Redis `dcard-redis` | Unused since 2026-09-26 (BullMQ polling would exceed the free 500K commands/month); can be removed | — |
+| `apps/worker` | Railway project `dcard`, service `worker` (europe-west4, Dockerfile `apps/worker/Dockerfile`) | `railway up --service worker --detach` from the repo root |
+| Redis (queues, rate limits) | Railway service `redis` (`redis:7-alpine`, volume in europe-west4, password, AOF, `noeviction`) | Railway |
 | `apps/mobile`, `apps/door` | Play Store / App Store | Manual by the owner |
 
 ## Pipeline
@@ -74,6 +75,16 @@ Also create the GitHub environment **`production`** (Settings → Environments).
 - Still to add: Resend/NextSMS/Snippe/Google keys; the worker host (Railway) is not set up yet, so queued messages and emails are not sent from production.
 - Domains (DNS at Cloudflare): `dcard.danfordchris.dev` → `dcard-site` (marketing site; `dcard-site.vercel.app` redirects to it); `api.dcard.danfordchris.dev` → `dcard-web` (API, webhooks and dashboard). The API host is two levels deep, which Cloudflare's free Universal SSL does not cover, so its record is a **DNS-only** (grey cloud) `CNAME api.dcard → cname.vercel-dns.com` and Vercel issues the certificate.
 - Meta webhook: callback `https://api.dcard.danfordchris.dev/api/webhooks/whatsapp`, verify token = production `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.
+
+## Worker and Redis on Railway (2026-09-26)
+
+- Cost: Railway Hobby ($5/month including $5 usage) covers the worker and Redis; no Upstash charges. BullMQ is tuned for low idle traffic (`drainDelay` 60 s, stall check 5 min, outbox dispatch every 15 s: `apps/worker/src/worker.ts`).
+- Regions: both services in `europe-west4` (Amsterdam), next to Neon (Frankfurt). Hobby allows one region per service; keep `sfo`/`us-west` replicas at 0.
+- Worker → Redis: private network (`redis.railway.internal:6379`, `family: 0`), `REDIS_URL` references `${{redis.REDIS_PASSWORD}}`.
+- Vercel → Redis: Railway TCP proxy to Redis' TLS port 6380. The proxy does not encrypt, so Redis serves TLS with a private certificate (base64 in `REDIS_TLS_CERT_B64` / `REDIS_TLS_KEY_B64` on the redis service; start command writes them to `/tls`). The web app pins the CA with `REDIS_TLS_CA_B64` (`apps/web/src/server/queue.ts`); plain access through the proxy is refused.
+- Worker variables: same `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY`, `WORKER_API_KEY`, `APP_URL` as the web app; Neon direct URL; provider keys; `NEXTSMS_LIVE=true`, `WHATSAPP_LIVE=true` (the only place real messages are sent).
+- Rotate Redis TLS: generate a CA + server cert with OpenSSL 3 (named curve P-256, SHA-256), set both `*_B64` variables, redeploy redis (`serviceInstanceDeployV2`), update `REDIS_TLS_CA_B64` on Vercel and redeploy web.
+- Checks (2026-09-26): unauthenticated and non-TLS access refused; web rate limit hits Redis (21st request → 429); a `system/ping` job queued through the proxy was processed by the Railway worker in ~0.6 s.
 
 ## Operations
 

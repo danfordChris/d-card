@@ -94,5 +94,5 @@ Proposal: `docs/changes/proposed/ui-design-system.md`; sources: `docs/research/u
 - [ ] **Clickable prototype for approval** — host app dashboard + event screen, web shell with side navigation (merges the 2026-09-25 "App navigation" request).
 - [ ] **Roll out** — web shell and lists/forms, mobile shell and dashboard, door result screens, admin area; four states (loading/empty/no results/error) on every async surface.
 - [ ] **Money flows** — review → confirm → receipt pattern for payments and plan checkout (P05), one currency formatter.
-- [ ] **Worker hosting at lowest cost** — choose and set up the worker host (Railway or cheaper equivalent) with `NEXTSMS_LIVE`/`WHATSAPP_LIVE` only there; record monthly cost.
+- [x] **Worker hosting at lowest cost** — done 2026-09-26: Railway Hobby (worker + Redis, ~$5/month), `NEXTSMS_LIVE`/`WHATSAPP_LIVE` only there (`docs/deployment.md`).
 - [ ] **Service boundaries** — keep bounded contexts separable in `packages/core` (events, guests, contributions, cards, messaging, check-in, confirmations, admin); document which could split first when scaling.
