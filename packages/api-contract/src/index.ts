@@ -65,3 +65,5 @@ export * from "./checkin.js";
 
 // T04-03 confirmation recording.
 export * from "./confirmations.js";
+export * from "./billing.js";
+export * from "./media.js";

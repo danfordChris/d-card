@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dcard_api/api.dart';
 import 'package:dcard_mobile/app.dart';
+import 'package:dcard_mobile/data/repositories/billing_repository.dart';
 import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
@@ -22,6 +23,7 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
   FakeApi? api,
   FakeContactsSource? contacts,
   FakePushMessageSource? push,
+  FakeLinkOpener? links,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
@@ -36,6 +38,8 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
       contributions: ContributionsRepository(p),
       walkIns: WalkInsRepository(p),
       walkInAlerts: WalkInAlertsRepository(push ?? FakePushMessageSource()),
+      billing: BillingRepository(p),
+      links: links ?? FakeLinkOpener(),
       locale: Locale(locale),
     ),
   );

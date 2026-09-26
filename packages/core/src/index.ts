@@ -23,3 +23,5 @@ export * from "./checkin/index.js";
 // T03-07 admin WhatsApp templates and provider rates; T04-03 confirmations.
 export * from "./admin/messaging/messaging.js";
 export * from "./confirmations/confirmations.js";
+export * from "./billing/index.js";
+export * from "./media/index.js";

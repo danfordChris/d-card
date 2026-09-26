@@ -270,7 +270,7 @@
   "@recordPaymentButton": {
     "description": "Submit."
   },
-  "amountLabel": "Amount (Tsh)",
+  "amountLabel": "Amount (TSh)",
   "@amountLabel": {
     "description": "Field."
   },
@@ -302,7 +302,7 @@
   "@errorAmountRequired": {
     "description": "Validation."
   },
-  "errorAmountInvalid": "Enter a whole amount in Tsh.",
+  "errorAmountInvalid": "Enter a whole amount in TSh.",
   "@errorAmountInvalid": {
     "description": "Validation."
   },
@@ -477,5 +477,518 @@
   "walkInOpen": "Open",
   "@walkInOpen": {
     "description": "Open the walk-ins screen from the banner."
+  },
+  "paymentTitle": "Payment",
+  "@paymentTitle": {
+    "description": "Event screen entry and billing screen title."
+  },
+  "billingPayBannerText": "Guest cards for this event are not paid for yet. Pay before sending cards.",
+  "@billingPayBannerText": {
+    "description": "Billing/checkout: billingPayBannerText."
+  },
+  "billingPayForCards": "Pay for cards",
+  "@billingPayForCards": {
+    "description": "Billing/checkout: billingPayForCards."
+  },
+  "billingPlan": "{name} plan",
+  "@billingPlan": {
+    "description": "Billing/checkout: billingPlan.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPricePerGuest": "{amount} per guest card",
+  "@billingPricePerGuest": {
+    "description": "Billing/checkout: billingPricePerGuest.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPaidBadge": "Paid",
+  "@billingPaidBadge": {
+    "description": "Billing/checkout: billingPaidBadge."
+  },
+  "billingUnpaidBadge": "Not paid",
+  "@billingUnpaidBadge": {
+    "description": "Billing/checkout: billingUnpaidBadge."
+  },
+  "billingCardsPaid": "Cards paid",
+  "@billingCardsPaid": {
+    "description": "Billing/checkout: billingCardsPaid."
+  },
+  "billingCardsIssued": "Cards issued",
+  "@billingCardsIssued": {
+    "description": "Billing/checkout: billingCardsIssued."
+  },
+  "billingGuests": "Guests added",
+  "@billingGuests": {
+    "description": "Billing/checkout: billingGuests."
+  },
+  "billingAmountPaid": "Amount paid",
+  "@billingAmountPaid": {
+    "description": "Billing/checkout: billingAmountPaid."
+  },
+  "billingUnpaidText": "Pay for your guest cards before sending them. You can add more cards later in blocks of 10.",
+  "@billingUnpaidText": {
+    "description": "Billing/checkout: billingUnpaidText."
+  },
+  "billingOverLimit": "You have {guests} guests but {paid} cards paid. Add more cards to invite everyone.",
+  "@billingOverLimit": {
+    "description": "Billing/checkout: billingOverLimit.",
+    "placeholders": {
+      "guests": {
+        "type": "int"
+      },
+      "paid": {
+        "type": "int"
+      }
+    }
+  },
+  "billingLaunchOffer": "Launch offer: {percent}% off your first event.",
+  "@billingLaunchOffer": {
+    "description": "Billing/checkout: billingLaunchOffer.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "billingAddBlock": "Add {size} more",
+  "@billingAddBlock": {
+    "description": "Billing/checkout: billingAddBlock.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "billingUpgrade": "Upgrade plan",
+  "@billingUpgrade": {
+    "description": "Billing/checkout: billingUpgrade."
+  },
+  "billingPendingTitle": "A payment is waiting",
+  "@billingPendingTitle": {
+    "description": "Billing/checkout: billingPendingTitle."
+  },
+  "billingPendingBody": "{amount}, started {date}.",
+  "@billingPendingBody": {
+    "description": "Billing/checkout: billingPendingBody.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPendingResume": "Check status",
+  "@billingPendingResume": {
+    "description": "Billing/checkout: billingPendingResume."
+  },
+  "billingReceiptsTitle": "Receipts",
+  "@billingReceiptsTitle": {
+    "description": "Billing/checkout: billingReceiptsTitle."
+  },
+  "billingReceiptsEmpty": "No payments yet.",
+  "@billingReceiptsEmpty": {
+    "description": "Billing/checkout: billingReceiptsEmpty."
+  },
+  "receiptReference": "Reference",
+  "@receiptReference": {
+    "description": "Billing/checkout: receiptReference."
+  },
+  "receiptAmount": "Amount",
+  "@receiptAmount": {
+    "description": "Billing/checkout: receiptAmount."
+  },
+  "receiptDiscount": "Launch offer",
+  "@receiptDiscount": {
+    "description": "Billing/checkout: receiptDiscount."
+  },
+  "receiptCards": "Guest cards",
+  "@receiptCards": {
+    "description": "Billing/checkout: receiptCards."
+  },
+  "receiptCardsValue": "{count, plural, =1{1 card} other{{count} cards}}",
+  "@receiptCardsValue": {
+    "description": "Billing/checkout: receiptCardsValue.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptPlan": "Plan",
+  "@receiptPlan": {
+    "description": "Billing/checkout: receiptPlan."
+  },
+  "receiptDate": "Date",
+  "@receiptDate": {
+    "description": "Billing/checkout: receiptDate."
+  },
+  "checkoutTitleBuy": "Buy guest cards",
+  "@checkoutTitleBuy": {
+    "description": "Billing/checkout: checkoutTitleBuy."
+  },
+  "checkoutTitleAdd": "Add more cards",
+  "@checkoutTitleAdd": {
+    "description": "Billing/checkout: checkoutTitleAdd."
+  },
+  "checkoutTitleUpgrade": "Upgrade plan",
+  "@checkoutTitleUpgrade": {
+    "description": "Billing/checkout: checkoutTitleUpgrade."
+  },
+  "checkoutIntro": "Choose how many cards you need. The price below comes from D-Card and updates as you change it.",
+  "@checkoutIntro": {
+    "description": "Billing/checkout: checkoutIntro."
+  },
+  "checkoutPlan": "Plan",
+  "@checkoutPlan": {
+    "description": "Billing/checkout: checkoutPlan."
+  },
+  "checkoutPlanOption": "{name} · {price} per card",
+  "@checkoutPlanOption": {
+    "description": "Billing/checkout: checkoutPlanOption.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutPlanCurrent": "{name} · {price} per card (current)",
+  "@checkoutPlanCurrent": {
+    "description": "Billing/checkout: checkoutPlanCurrent.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutCards": "Guest cards",
+  "@checkoutCards": {
+    "description": "Billing/checkout: checkoutCards."
+  },
+  "checkoutDecrease": "{size} fewer cards",
+  "@checkoutDecrease": {
+    "description": "Billing/checkout: checkoutDecrease.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutIncrease": "{size} more cards",
+  "@checkoutIncrease": {
+    "description": "Billing/checkout: checkoutIncrease.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutBlockHint": "You have {paid} cards paid. Extra cards come in blocks of {size}.",
+  "@checkoutBlockHint": {
+    "description": "Billing/checkout: checkoutBlockHint.",
+    "placeholders": {
+      "paid": {
+        "type": "int"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutSuggestHint": "Suggested: one card for each of your {count} guests.",
+  "@checkoutSuggestHint": {
+    "description": "Billing/checkout: checkoutSuggestHint.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutCalculating": "Calculating the price…",
+  "@checkoutCalculating": {
+    "description": "Billing/checkout: checkoutCalculating."
+  },
+  "checkoutMinimumNote": "The minimum charge per event is {amount}, so you get {count} cards.",
+  "@checkoutMinimumNote": {
+    "description": "Billing/checkout: checkoutMinimumNote.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutEffectiveCards": "You get {count} cards (blocks of {size}).",
+  "@checkoutEffectiveCards": {
+    "description": "Billing/checkout: checkoutEffectiveCards.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutNothingToPay": "Nothing to pay: these cards are already paid for. Choose more cards or a higher plan.",
+  "@checkoutNothingToPay": {
+    "description": "Billing/checkout: checkoutNothingToPay."
+  },
+  "checkoutLineNewCards": "{quantity} cards × {unitPrice}",
+  "@checkoutLineNewCards": {
+    "description": "Billing/checkout: checkoutLineNewCards.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unitPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutLineExtraCards": "{quantity} extra cards × {unitPrice}",
+  "@checkoutLineExtraCards": {
+    "description": "Billing/checkout: checkoutLineExtraCards.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unitPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutLineUpgrade": "Upgrade {quantity} cards (+{unitPrice} each)",
+  "@checkoutLineUpgrade": {
+    "description": "Billing/checkout: checkoutLineUpgrade.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unitPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutLineOther": "Other ({quantity})",
+  "@checkoutLineOther": {
+    "description": "Billing/checkout: checkoutLineOther.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutSubtotal": "Subtotal",
+  "@checkoutSubtotal": {
+    "description": "Billing/checkout: checkoutSubtotal."
+  },
+  "checkoutLaunchOffer": "Launch offer ({percent}% off)",
+  "@checkoutLaunchOffer": {
+    "description": "Billing/checkout: checkoutLaunchOffer.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutTotal": "Total",
+  "@checkoutTotal": {
+    "description": "Billing/checkout: checkoutTotal."
+  },
+  "checkoutContinue": "Review",
+  "@checkoutContinue": {
+    "description": "Billing/checkout: checkoutContinue."
+  },
+  "checkoutBack": "Back",
+  "@checkoutBack": {
+    "description": "Billing/checkout: checkoutBack."
+  },
+  "checkoutReviewTitle": "Review and pay",
+  "@checkoutReviewTitle": {
+    "description": "Billing/checkout: checkoutReviewTitle."
+  },
+  "checkoutReviewIntro": "{plan} plan, {count, plural, =1{1 guest card} other{{count} guest cards}} in total.",
+  "@checkoutReviewIntro": {
+    "description": "Billing/checkout: checkoutReviewIntro.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutMethod": "How do you want to pay?",
+  "@checkoutMethod": {
+    "description": "Billing/checkout: checkoutMethod."
+  },
+  "checkoutMethodMobile": "Mobile money",
+  "@checkoutMethodMobile": {
+    "description": "Billing/checkout: checkoutMethodMobile."
+  },
+  "checkoutMethodMobileHint": "M-Pesa, Airtel Money, Mixx by Yas or HaloPesa. You confirm with your PIN.",
+  "@checkoutMethodMobileHint": {
+    "description": "Billing/checkout: checkoutMethodMobileHint."
+  },
+  "checkoutMethodSession": "Card or other",
+  "@checkoutMethodSession": {
+    "description": "Billing/checkout: checkoutMethodSession."
+  },
+  "checkoutMethodSessionHint": "Opens a secure payment page in your browser.",
+  "@checkoutMethodSessionHint": {
+    "description": "Billing/checkout: checkoutMethodSessionHint."
+  },
+  "checkoutPhone": "Mobile money number",
+  "@checkoutPhone": {
+    "description": "Billing/checkout: checkoutPhone."
+  },
+  "checkoutPhoneHint": "For example 0754 123 456",
+  "@checkoutPhoneHint": {
+    "description": "Billing/checkout: checkoutPhoneHint."
+  },
+  "checkoutSecure": "Secure payment through Snippe.",
+  "@checkoutSecure": {
+    "description": "Billing/checkout: checkoutSecure."
+  },
+  "checkoutPay": "Pay {amount}",
+  "@checkoutPay": {
+    "description": "Billing/checkout: checkoutPay.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutPaying": "Starting payment…",
+  "@checkoutPaying": {
+    "description": "Billing/checkout: checkoutPaying."
+  },
+  "checkoutWaitingMobileTitle": "Check your phone and enter your PIN",
+  "@checkoutWaitingMobileTitle": {
+    "description": "Billing/checkout: checkoutWaitingMobileTitle."
+  },
+  "checkoutWaitingMobileBody": "We sent a request for {amount} to {phone}. Enter your mobile money PIN to pay.",
+  "@checkoutWaitingMobileBody": {
+    "description": "Billing/checkout: checkoutWaitingMobileBody.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutWaitingSessionTitle": "Finish paying in your browser",
+  "@checkoutWaitingSessionTitle": {
+    "description": "Billing/checkout: checkoutWaitingSessionTitle."
+  },
+  "checkoutWaitingSessionBody": "Pay {amount} on the payment page. This screen updates when the payment is done.",
+  "@checkoutWaitingSessionBody": {
+    "description": "Billing/checkout: checkoutWaitingSessionBody.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutOpenPage": "Open the payment page",
+  "@checkoutOpenPage": {
+    "description": "Billing/checkout: checkoutOpenPage."
+  },
+  "checkoutPolling": "Waiting for confirmation…",
+  "@checkoutPolling": {
+    "description": "Billing/checkout: checkoutPolling."
+  },
+  "checkoutLater": "Close and check later",
+  "@checkoutLater": {
+    "description": "Billing/checkout: checkoutLater."
+  },
+  "checkoutSuccessTitle": "Payment received",
+  "@checkoutSuccessTitle": {
+    "description": "Billing/checkout: checkoutSuccessTitle."
+  },
+  "checkoutSuccessNext": "You can now send cards to up to {count} guests.",
+  "@checkoutSuccessNext": {
+    "description": "Billing/checkout: checkoutSuccessNext.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutDone": "Done",
+  "@checkoutDone": {
+    "description": "Billing/checkout: checkoutDone."
+  },
+  "checkoutFailureTitle": "The payment did not go through",
+  "@checkoutFailureTitle": {
+    "description": "Billing/checkout: checkoutFailureTitle."
+  },
+  "checkoutExpiredTitle": "The payment request expired",
+  "@checkoutExpiredTitle": {
+    "description": "Billing/checkout: checkoutExpiredTitle."
+  },
+  "checkoutFailureBody": "No money was taken. You can try again.",
+  "@checkoutFailureBody": {
+    "description": "Billing/checkout: checkoutFailureBody."
+  },
+  "checkoutPhoneRequired": "Enter the mobile money number to pay from.",
+  "@checkoutPhoneRequired": {
+    "description": "Billing/checkout: checkoutPhoneRequired."
+  },
+  "checkoutPhoneInvalid": "Enter a Tanzanian number, for example 0754 123 456.",
+  "@checkoutPhoneInvalid": {
+    "description": "Billing/checkout: checkoutPhoneInvalid."
+  },
+  "checkoutQuoteChanged": "The price changed. Check the new total and confirm again.",
+  "@checkoutQuoteChanged": {
+    "description": "Billing/checkout: checkoutQuoteChanged."
+  },
+  "checkoutNothingToPayError": "There is nothing to pay for these cards.",
+  "@checkoutNothingToPayError": {
+    "description": "Billing/checkout: checkoutNothingToPayError."
+  },
+  "checkoutPaymentInProgress": "Another payment for this event is still waiting. Check its status first.",
+  "@checkoutPaymentInProgress": {
+    "description": "Billing/checkout: checkoutPaymentInProgress."
+  },
+  "checkoutProviderUnavailable": "The payment service is not available right now. Please try again shortly.",
+  "@checkoutProviderUnavailable": {
+    "description": "Billing/checkout: checkoutProviderUnavailable."
+  },
+  "checkoutValidation": "Check the details and try again.",
+  "@checkoutValidation": {
+    "description": "Billing/checkout: checkoutValidation."
+  },
+  "checkoutForbidden": "Only the host can pay for this event.",
+  "@checkoutForbidden": {
+    "description": "Billing/checkout: checkoutForbidden."
+  },
+  "checkoutEventClosed": "This event is closed and cannot be paid for.",
+  "@checkoutEventClosed": {
+    "description": "Billing/checkout: checkoutEventClosed."
+  },
+  "checkoutQuoteError": "Could not get the price. Please try again.",
+  "@checkoutQuoteError": {
+    "description": "Billing/checkout: checkoutQuoteError."
   }
 }

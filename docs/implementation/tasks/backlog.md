@@ -96,3 +96,4 @@ Proposal: `docs/changes/proposed/ui-design-system.md`; sources: `docs/research/u
 - [ ] **Money flows** — review → confirm → receipt pattern for payments and plan checkout (P05), one currency formatter.
 - [x] **Worker hosting at lowest cost** — done 2026-09-26: Railway Hobby (worker + Redis, ~$5/month), `NEXTSMS_LIVE`/`WHATSAPP_LIVE` only there (`docs/deployment.md`).
 - [ ] **Service boundaries** — keep bounded contexts separable in `packages/core` (events, guests, contributions, cards, messaging, check-in, confirmations, admin); document which could split first when scaling.
+- [ ] **Guest upload from the D-Card app** (phase 05 scope C, optional) — the card link is the primary upload path; add in-app upload if hosts ask for it.

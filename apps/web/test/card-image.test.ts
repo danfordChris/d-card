@@ -52,6 +52,7 @@ beforeAll(async () => {
     }),
   );
   const eventId = (await ev.json()).id;
+  await (await import("@dcard/core")).grantGuestCards(handle.db, eventId, 500); // paid event (T05-01 payment gate)
   token = (await issuedToken(eventId, "0713900001", "double")).token;
   const c = await issuedToken(eventId, "0713900002");
   cancelledToken = c.token;

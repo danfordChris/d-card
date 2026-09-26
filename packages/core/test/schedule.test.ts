@@ -2,11 +2,11 @@ import { eventMessageSetting, outbox, pledge, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq, like } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addContributor,
   addGuest,
   atLocalTime,
-  createEvent,
   dispatchOutbox,
   enqueueMessage,
   inQuietHours,
@@ -26,7 +26,7 @@ let hostId: string;
 let n = 0;
 
 async function newEvent(planKey: "msingi" | "kawaida" | "premium", extra: Record<string, unknown> = {}) {
-  return createEvent(handle.db, hostId, {
+  return createPaidEvent(handle.db, hostId, {
     planKey,
     eventTypeKey: "wedding",
     title: `E${++n}`,

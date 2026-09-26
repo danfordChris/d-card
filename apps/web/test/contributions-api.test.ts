@@ -53,6 +53,7 @@ beforeAll(async () => {
     }),
   );
   eventId = (await created.json()).id;
+  await (await import("@dcard/core")).grantGuestCards(handle.db, eventId, 500); // paid event (T05-01 payment gate)
   for (const [uid, role] of [["c-treasurer", "treasurer"], ["c-committee", "committee"]] as const) {
     const [u] = await handle.db.select().from(userAccount).where(eq(userAccount.firebaseUid, uid));
     await handle.db.insert(eventRole).values({ eventId, userId: u!.id, role });

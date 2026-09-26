@@ -424,7 +424,74 @@
       "closed": "Majibu yamefungwa kwa tukio hili."
     },
     "poweredBy": "Kadi ya mwaliko ya D-Card",
-    "download": "Pakua picha ya kadi"
+    "download": "Pakua picha ya kadi",
+    "story": {
+      "title": "Hadithi yetu"
+    },
+    "gallery": {
+      "title": "Picha na video za tukio",
+      "photo": "Picha",
+      "video": "Video",
+      "empty": "Bado hakuna picha wala video. Kuwa wa kwanza kushiriki.",
+      "emptyClosed": "Bado hakuna picha wala video.",
+      "add": "Ongeza picha/video",
+      "left": "{count, plural, =0{Huwezi kuongeza zaidi.} =1{Unaweza kuongeza 1 zaidi.} other{Unaweza kuongeza # zaidi.}}",
+      "hint": "Picha hupunguzwa ukubwa kabla ya kupakiwa ili kuokoa bando. Video hadi sekunde {seconds}.",
+      "closesAt": "Upakiaji utafungwa {date}.",
+      "limitUsed": "Umetumia nafasi zako zote {limit} za kupakia. Asante kwa kushiriki.",
+      "pageClosed": "Ukurasa wa picha wa tukio hili umefungwa. Picha na video zinabaki kwa mwenyeji.",
+      "loadError": "Imeshindikana kupakua picha na video. Angalia mtandao wako.",
+      "retryLoad": "Jaribu tena",
+      "closed": {
+        "not_started": "Upakiaji bado haujafunguliwa. Tafadhali rudi baadaye.",
+        "window_closed": "Muda wa kupakia picha na video umekwisha.",
+        "drive_full": "Hifadhi ya mwenyeji imejaa, kwa hiyo upakiaji umesimamishwa.",
+        "gallery_closed": "Ukurasa huu wa picha umefungwa.",
+        "not_available": "Wageni hawawezi kupakia picha kwa tukio hili."
+      },
+      "queueTitle": "Upakiaji wako",
+      "clearDone": "Ondoa vilivyokamilika",
+      "retry": "Jaribu tena",
+      "status": {
+        "waiting": "Inasubiri",
+        "preparing": "Inaandaliwa…",
+        "uploading": "Inapakiwa {percent}%",
+        "finishing": "Inakamilishwa…",
+        "done": "Imepakiwa",
+        "failed": "Haijapakiwa"
+      },
+      "errors": {
+        "type": "Aina hii ya faili haikubaliki. Chagua picha au video.",
+        "tooLarge": "Faili hili ni kubwa mno (mwisho MB {mb}).",
+        "tooLong": "Video hii ni ndefu mno (mwisho sekunde {seconds}).",
+        "duration": "Imeshindikana kusoma video hii. Jaribu faili jingine.",
+        "limitReached": "Umefikia kikomo chako cha kupakia.",
+        "uploadsClosed": "Upakiaji umefungwa.",
+        "driveFull": "Hifadhi ya mwenyeji imejaa, kwa hiyo upakiaji umesimamishwa.",
+        "rateLimited": "Unapakia vingi kwa wakati mmoja. Subiri kidogo, kisha jaribu tena.",
+        "invalidFile": "Faili hili halikukubaliwa. Angalia aina, ukubwa na urefu wake.",
+        "network": "Mtandao umekatika. Angalia mtandao wako, kisha jaribu tena.",
+        "sessionExpired": "Muda wa kupakia umeisha. Jaribu tena kuanza upya.",
+        "generic": "Imeshindikana kupakia. Tafadhali jaribu tena."
+      },
+      "viewer": {
+        "position": "{index} kati ya {total}",
+        "close": "Funga",
+        "previous": "Iliyotangulia",
+        "next": "Inayofuata",
+        "loading": "Inapakua…",
+        "loadFailed": "Imeshindikana kufungua hiki.",
+        "by": "Imeshirikiwa na {name}",
+        "byYou": "Umeshiriki wewe",
+        "delete": "Futa",
+        "deleteConfirm": "Ufute ulichopakia? Hutaweza kukirudisha.",
+        "report": "Ripoti",
+        "reportConfirm": "Ripoti hiki kwa mwenyeji?",
+        "reported": "Asante. Mwenyeji amearifiwa.",
+        "cancel": "Ghairi",
+        "actionFailed": "Imeshindikana. Tafadhali jaribu tena."
+      }
+    }
   },
   "contributions": {
     "title": "Michango",
@@ -830,5 +897,328 @@
     "errors": {
       "generic": "Imeshindikana kuhifadhi uthibitisho. Tafadhali jaribu tena."
     }
+  },
+  "billing": {
+    "title": "Kifurushi na malipo",
+    "back": "Rudi kwenye tukio",
+    "loading": "Inapakia…",
+    "loadError": "Imeshindikana kupakia kifurushi na malipo. Tafadhali jaribu tena.",
+    "retry": "Jaribu tena",
+    "banner": {
+      "text": "Kadi za wageni wa tukio hili bado hazijalipiwa. Lipia kabla ya kutuma kadi.",
+      "link": "Lipia kadi"
+    },
+    "summary": {
+      "plan": "Kifurushi cha {name}",
+      "pricePerGuest": "{amount} kwa kadi ya mgeni",
+      "paid": "Imelipiwa",
+      "unpaidBadge": "Haijalipiwa",
+      "cardsPaid": "Kadi zilizolipiwa",
+      "cardsIssued": "Kadi zilizotolewa",
+      "guests": "Wageni walioongezwa",
+      "amountPaid": "Kiasi kilicholipwa",
+      "unpaid": "Lipia kadi za wageni kabla ya kuzituma. Unaweza kuongeza kadi baadaye kwa vifungu vya 10.",
+      "overLimit": "Una wageni {guests} lakini kadi {paid} tu zimelipiwa. Ongeza kadi ili uwaalike wote.",
+      "launchOffer": "Ofa ya uzinduzi: punguzo la {percent}% kwa tukio lako la kwanza."
+    },
+    "actions": {
+      "buy": "Nunua kadi",
+      "addBlock": "Ongeza kadi 10",
+      "upgrade": "Pandisha kifurushi"
+    },
+    "pending": {
+      "title": "Kuna malipo yanayosubiri",
+      "body": "{amount}, yalianzishwa {date}.",
+      "resume": "Angalia hali"
+    },
+    "history": {
+      "title": "Risiti",
+      "empty": "Bado hakuna malipo."
+    },
+    "receipt": {
+      "reference": "Kumbukumbu",
+      "amount": "Kiasi",
+      "discount": "Ofa ya uzinduzi",
+      "cards": "Kadi za wageni",
+      "cardsValue": "{count, plural, one {kadi #} other {kadi #}}",
+      "plan": "Kifurushi",
+      "date": "Tarehe"
+    },
+    "checkout": {
+      "titles": {
+        "buy": "Nunua kadi za wageni",
+        "add": "Ongeza kadi",
+        "upgrade": "Pandisha kifurushi",
+        "resume": "Malipo"
+      },
+      "intro": "Chagua idadi ya kadi unazohitaji. Bei hapa chini inatoka D-Card na inabadilika unapobadilisha.",
+      "plan": "Kifurushi",
+      "planOption": "{name} · {price} kwa kadi",
+      "planCurrent": "{name} · {price} kwa kadi (cha sasa)",
+      "cards": "Kadi za wageni",
+      "decrease": "Punguza kadi {size}",
+      "increase": "Ongeza kadi {size}",
+      "blockHint": "Umelipia kadi {paid}. Kadi za ziada zinanunuliwa kwa vifungu vya {size}.",
+      "suggestHint": "Tunapendekeza kadi moja kwa kila mmoja wa wageni wako {count}.",
+      "calculating": "Tunakokotoa bei…",
+      "minimumNote": "Malipo ya chini kwa kila tukio ni {amount}.",
+      "nothingToPay": "Hakuna cha kulipa: kadi hizi zimeshalipiwa.",
+      "lines": {
+        "new_cards": "Kadi {quantity} × {unitPrice}",
+        "extra_cards": "Kadi za ziada {quantity} × {unitPrice}",
+        "upgrade": "Kupandisha kadi {quantity} (+{unitPrice} kila moja)",
+        "minimum_top_up": "Nyongeza hadi malipo ya chini",
+        "other": "Mengineyo ({quantity})"
+      },
+      "subtotal": "Jumla ndogo",
+      "launchOffer": "Ofa ya uzinduzi (punguzo la {percent}%)",
+      "total": "Jumla",
+      "continue": "Kagua",
+      "cancel": "Ghairi",
+      "back": "Rudi",
+      "review": {
+        "title": "Kagua na ulipe",
+        "intro": "Kifurushi cha {plan}, jumla ya {count, plural, one {kadi # ya mgeni} other {kadi # za wageni}}.",
+        "method": "Ungependa kulipa vipi?",
+        "methods": {
+          "mobile": "Pesa kwa simu",
+          "mobileHint": "M-Pesa, Airtel Money, Mixx by Yas au HaloPesa. Utathibitisha kwa PIN yako.",
+          "session": "Kadi au njia nyingine",
+          "sessionHint": "Inafungua ukurasa salama wa malipo kwenye kichupo kipya."
+        },
+        "phone": "Namba ya pesa kwa simu",
+        "phoneHint": "Kwa mfano 0754 123 456",
+        "secure": "Malipo salama kupitia Snippe.",
+        "pay": "Lipa {amount}",
+        "paying": "Tunaanzisha malipo…"
+      },
+      "waiting": {
+        "mobileTitle": "Angalia simu yako na uweke PIN",
+        "mobileBody": "Tumetuma ombi la {amount} kwenda {phone}. Weka PIN yako ya pesa kwa simu ili kulipa.",
+        "sessionTitle": "Maliza kulipa kwenye kichupo kipya",
+        "sessionBody": "Lipa {amount} kwenye ukurasa wa malipo. Ukurasa huu utabadilika malipo yakikamilika.",
+        "openPage": "Fungua ukurasa wa malipo",
+        "polling": "Tunasubiri uthibitisho…",
+        "later": "Funga na uangalie baadaye"
+      },
+      "success": {
+        "title": "Malipo yamepokelewa",
+        "next": "Sasa unaweza kutuma kadi kwa wageni hadi {count}.",
+        "done": "Maliza"
+      },
+      "failure": {
+        "title": "Malipo hayakufanikiwa",
+        "expiredTitle": "Muda wa ombi la malipo umeisha",
+        "body": "Hakuna pesa iliyokatwa. Unaweza kujaribu tena.",
+        "retry": "Jaribu tena"
+      },
+      "errors": {
+        "phoneRequired": "Weka namba ya pesa kwa simu utakayolipia.",
+        "phoneInvalid": "Weka namba ya Tanzania, kwa mfano 0754 123 456.",
+        "quote_changed": "Bei imebadilika. Angalia jumla mpya kisha uthibitishe tena.",
+        "nothing_to_pay": "Hakuna cha kulipa kwa kadi hizi.",
+        "payment_in_progress": "Kuna malipo mengine ya tukio hili yanayosubiri. Angalia hali yake kwanza.",
+        "provider": "Huduma ya malipo haipatikani kwa sasa. Tafadhali jaribu tena baada ya muda mfupi.",
+        "validation": "Kagua taarifa kisha ujaribu tena.",
+        "forbidden": "Mwenyeji pekee ndiye anaweza kulipia tukio hili.",
+        "generic": "Imeshindikana kuanzisha malipo. Tafadhali jaribu tena.",
+        "quote": "Imeshindikana kupata bei. Tafadhali jaribu tena.",
+        "quoteInvalid": "Chagua angalau kadi {min} na kifurushi sawa au cha juu kuliko cha sasa."
+      }
+    },
+    "admin": {
+      "title": "Mipangilio ya malipo",
+      "pageIntro": "Ofa zinazohusu malipo ya wenyeji.",
+      "launchOffer": "Ofa ya uzinduzi",
+      "intro": "Punguzo kwa tukio la kwanza la mwenyeji. Unaweza kuizima au kubadilisha asilimia wakati wowote; malipo yaliyokwisha fanyika hayaathiriki.",
+      "enabled": "Ofa ya uzinduzi imewashwa",
+      "percent": "Punguzo (%)",
+      "percentHint": "0 hadi 90",
+      "percentError": "Weka namba kamili kuanzia 0 hadi 90.",
+      "statusOn": "Wenyeji sasa wanapata punguzo la {percent}% kwa tukio lao la kwanza.",
+      "statusOff": "Hakuna ofa ya uzinduzi kwa sasa.",
+      "saved": "Imehifadhiwa.",
+      "error": "Imeshindikana kuhifadhi. Tafadhali jaribu tena.",
+      "loadError": "Imeshindikana kupakia mipangilio.",
+      "loading": "Inapakia…",
+      "save": "Hifadhi",
+      "saving": "Inahifadhi…"
+    },
+    "nav": "Mpango na malipo"
+  },
+  "media": {
+    "nav": "Picha na video",
+    "back": "Rudi kwenye tukio",
+    "title": "Picha na video",
+    "intro": "Picha na video zinahifadhiwa kwenye Google Drive yako mwenyewe. D-Card huhifadhi kumbukumbu za faili tu, si faili zenyewe.",
+    "loading": "Inapakia picha na video…",
+    "loadError": "Imeshindikana kupakia mipangilio ya picha na video.",
+    "retry": "Jaribu tena",
+    "readOnly": "Mwenyeji pekee ndiye anaweza kubadilisha picha, video na albamu ya wageni. Wewe unaweza kuziona hapa.",
+    "msingi": "Kifurushi cha Msingi hakina picha wala video kwenye kadi. Bado unaweza kuwashirikisha wageni kiungo cha albamu ya Google Photos.",
+    "drive": {
+      "title": "Google Drive",
+      "intro": "Picha na video zinakwenda moja kwa moja kwenye folda ya “D-Card – jina la tukio” ndani ya Google Drive yako.",
+      "notConnected": "Google Drive bado haijaunganishwa. Iunganishe ili kuweka picha za kadi, ukurasa wa hadithi na albamu ya wageni.",
+      "connect": "Unganisha Google Drive",
+      "hostOnly": "Mwenyeji pekee ndiye anaweza kuunganisha Google Drive.",
+      "scopeNote": "D-Card inaona tu faili inazounda kwenye folda hiyo, kamwe si faili zako nyingine za Drive.",
+      "connected": "Google Drive imeunganishwa.",
+      "connectedAs": "Imeunganishwa kama {email}",
+      "openFolder": "Fungua folda kwenye Drive",
+      "downloadHint": "Kupakua zote, fungua folda kwenye Google Drive na utumie upakuaji wa Drive yenyewe.",
+      "disconnect": "Tenganisha",
+      "disconnected": "Google Drive imetenganishwa. Faili zako zinabaki kwenye Drive yako.",
+      "needsReconnect": "D-Card haiwezi tena kufikia baadhi ya faili kwenye Google Drive yako. Unganisha upya ili wageni waone picha na video tena.",
+      "reconnect": "Unganisha Google Drive upya",
+      "cancel": "Ghairi",
+      "disconnectConfirm": {
+        "title": "Tenganisha Google Drive?",
+        "body": "Wageni hawataona picha za kadi, hadithi na albamu mpaka uunganishe tena. Hakuna kinachofutwa: faili zinabaki kwenye Drive yako."
+      },
+      "quota": {
+        "title": "Nafasi ya Drive",
+        "used": "Umetumia {used} kati ya {limit}",
+        "usedNoLimit": "Umetumia {used}",
+        "free": "Nafasi iliyobaki: {free}",
+        "warning": "Drive yako huenda ikawa ndogo kwa picha na video wageni wanazotarajiwa kupakia. Futa baadhi ya vitu au nunua nafasi zaidi ya Google kabla ya tukio. Upakiaji wa wageni husimama Drive ikijaa."
+      },
+      "sharing": {
+        "title": "Nani anaweza kufungua faili",
+        "intro": "Unaweza kubadilisha hili wakati wowote.",
+        "default": "Inapendekezwa",
+        "private": {
+          "title": "Binafsi",
+          "body": "Wewe pekee ndiye unaweza kufungua folda kwenye Drive. Wageni wanaona picha na video kupitia D-Card tu kwa kiungo halali cha kadi, na ruhusa inaisha ukurasa wa albamu ukifungwa."
+        },
+        "link": {
+          "title": "Yeyote mwenye kiungo",
+          "body": "Rahisi zaidi: wageni wanafungua faili moja kwa moja kutoka Drive. Lakini yeyote atakayetumiwa kiungo anaweza kuzifungua, mpaka ubadilishe mpangilio huu."
+        },
+        "save": "Hifadhi chaguo",
+        "connectFirst": "Unganisha Google Drive kwanza."
+      },
+      "modeSaved": "Chaguo la kushirikisha limehifadhiwa.",
+      "errors": {
+        "notConnected": "Unganisha Google Drive kabla ya kuchagua jinsi faili zinavyoshirikishwa.",
+        "generic": "Kuna tatizo limetokea. Tafadhali jaribu tena."
+      }
+    },
+    "photosLink": {
+      "title": "Albamu ya Google Photos",
+      "intro": "Hiari: bandika kiungo cha albamu ya Google Photos iliyoshirikishwa ili ionekane kwenye kadi. D-Card haihifadhi chochote kutoka humo.",
+      "introMsingi": "Bandika kiungo cha albamu ya Google Photos iliyoshirikishwa na wageni wataiona kwenye kadi. D-Card haihifadhi chochote kutoka humo.",
+      "label": "Kiungo cha albamu",
+      "hint": "Kwenye Google Photos, fungua albamu, gusa Shiriki kisha nakili kiungo. Acha wazi ili kukiondoa.",
+      "save": "Hifadhi kiungo",
+      "saved": "Kiungo cha albamu kimehifadhiwa.",
+      "cleared": "Kiungo cha albamu kimeondolewa.",
+      "invalid": "Bandika kiungo kamili kinachoanza na https://",
+      "error": "Imeshindikana kuhifadhi kiungo. Tafadhali jaribu tena."
+    },
+    "editor": {
+      "card": {
+        "title": "Picha na video za kadi",
+        "intro": "Zinaonekana kwenye kadi ya mwaliko kama mfululizo wa picha, pamoja na video fupi."
+      },
+      "story": {
+        "title": "Ukurasa wa hadithi",
+        "intro": "Picha na video zenu kwenye kiungo cha kadi, wageni wazifurahie kabla ya tukio."
+      },
+      "counts": "Picha {photos}/{maxPhotos} · Video {videos}/{maxVideos}",
+      "rules": "Picha hupunguzwa ukubwa kabla ya kupakiwa. Video hadi sekunde {seconds}.",
+      "limitReached": "Umetumia picha na video zote ambazo kifurushi chako kinaruhusu hapa.",
+      "connectFirst": "Unganisha Google Drive hapo juu ili kuweka picha na video.",
+      "addPhotos": "Weka picha",
+      "addVideo": "Weka video",
+      "empty": "Bado hakuna picha wala video.",
+      "loadError": "Imeshindikana kupakia picha na video.",
+      "retry": "Jaribu tena",
+      "dismiss": "Ondoa kwenye orodha",
+      "photoAlt": "Picha",
+      "videoAlt": "Video",
+      "delete": "Futa",
+      "deleteError": "Imeshindikana kufuta. Tafadhali jaribu tena.",
+      "cancel": "Ghairi",
+      "deleteConfirm": {
+        "title": "Futa kipengele hiki?",
+        "body": "Kitaondolewa kwenye kadi na kufutwa kwenye folda ya D-Card ndani ya Drive yako."
+      },
+      "status": {
+        "hidden": "Imefichwa",
+        "missing": "Haipatikani"
+      },
+      "stage": {
+        "checking": "Inakagua…",
+        "resizing": "Inapunguza ukubwa wa picha…",
+        "uploading": "Inapakia… {pct}%",
+        "finishing": "Inamalizia…"
+      },
+      "errors": {
+        "type": "Aina hii ya faili haikubaliki. Tumia picha za JPG, PNG, WebP au HEIC, au video za MP4, MOV au WebM.",
+        "tooBig": "Faili hili ni kubwa kuliko kifurushi chako kinavyoruhusu.",
+        "tooLong": "Video hii ni ndefu kuliko sekunde {seconds}. Ifupishe kisha ujaribu tena.",
+        "duration": "Imeshindikana kusoma urefu wa video. Jaribu faili lingine.",
+        "photoLimit": "Umefikia kikomo cha picha cha kifurushi chako.",
+        "videoLimit": "Umefikia kikomo cha video cha kifurushi chako.",
+        "plan_limit": "Kifurushi chako hakiruhusu zaidi hapa.",
+        "drive_full": "Google Drive yako imejaa. Futa baadhi ya vitu kisha ujaribu tena.",
+        "drive_not_connected": "Google Drive haijaunganishwa.",
+        "validation": "Faili hili haliwezi kupakiwa.",
+        "drive": "Kupakia kwenye Google Drive kumeshindikana.",
+        "network": "Mtandao umekatika wakati wa kupakia."
+      }
+    },
+    "gallery": {
+      "title": "Albamu ya wageni",
+      "intro": "Picha na video ambazo wageni wanapakia kutoka kwenye kiungo cha kadi. Ficha chochote usichotaka kionekane; vilivyoripotiwa vinakuja kwanza.",
+      "refresh": "Onyesha upya",
+      "loading": "Inapakia albamu…",
+      "loadError": "Imeshindikana kupakia albamu.",
+      "error": "Imeshindikana kuhifadhi mabadiliko. Tafadhali jaribu tena.",
+      "empty": "Bado wageni hawajapakia chochote.",
+      "reportedCount": "{count, plural, one {Kipengele # kimeripotiwa na mgeni.} other {Vipengele # vimeripotiwa na wageni.}}",
+      "host": "Mwenyeji",
+      "photoAlt": "Picha kutoka kwa {name}",
+      "videoAlt": "Video kutoka kwa {name}",
+      "show": "Onyesha",
+      "keep": "Endelea kuonyesha",
+      "hide": "Ficha",
+      "delete": "Futa",
+      "cancel": "Ghairi",
+      "deleteConfirm": {
+        "title": "Futa kilichopakiwa na {name}?",
+        "body": "Kitaondolewa kwenye albamu na kufutwa kwenye folda ya D-Card ndani ya Drive yako. Hili haliwezi kutenduliwa."
+      },
+      "status": {
+        "uploading": "Inapakiwa",
+        "visible": "Kinaonekana",
+        "hidden": "Kimefichwa",
+        "reported": "Kimeripotiwa",
+        "deleted": "Kimefutwa",
+        "missing": "Hakipatikani"
+      }
+    },
+    "slideshow": {
+      "title": "Onyesho la picha mubashara",
+      "intro": "Onyesha picha za wageni kwenye skrini ya ukumbini zinapoingia. Ifungue kwenye kompyuta iliyounganishwa na skrini.",
+      "open": "Fungua onyesho"
+    },
+    "slideshowPage": {
+      "notAvailable": "Onyesho la picha mubashara ni sehemu ya kifurushi cha Premium.",
+      "back": "Rudi kwenye picha na video",
+      "waiting": "Tunasubiri picha za wageni…",
+      "photoBy": "Picha kutoka kwa {name}",
+      "host": "mwenyeji",
+      "fullscreen": "Skrini nzima",
+      "exit": "Toka"
+    }
+  },
+  "adminNav": {
+    "label": "Sehemu za usimamizi",
+    "eventTypes": "Aina za matukio",
+    "templates": "Violezo vya WhatsApp",
+    "rates": "Bei za watoa huduma",
+    "billing": "Malipo"
   }
 }

@@ -1,5 +1,5 @@
 import { confirmationToken, dispatchOutbox, enqueueMessage, recordSendOutcome } from "@dcard/core";
-import { auditLog, event, eventType, invitation, messageLog, person, userAccount, whatsappOptout, whatsappTemplate } from "@dcard/db";
+import { auditLog, event, eventPlan, eventType, invitation, messageLog, person, plan, userAccount, whatsappOptout, whatsappTemplate } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { NextRequest } from "next/server";
 import { createHmac } from "node:crypto";
@@ -50,6 +50,8 @@ beforeAll(async () => {
     .values({ hostUserId: u!.id, eventTypeId: t!.id, title: "Harusi", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "255754123456" })
     .returning();
   eventId = ev!.id;
+  const [pl] = await handle.db.select().from(plan).limit(1);
+  await handle.db.insert(eventPlan).values({ eventId, planId: pl!.id, pricePerGuest: pl!.pricePerGuest, guestLimit: 100 }); // paid event
   const [p] = await handle.db.insert(person).values({ phone: PHONE, name: "Juma" }).returning();
   personId = p!.id;
   const [inv] = await handle.db.insert(invitation).values({ eventId, personId, guestName: "Juma", guestPhone: PHONE }).returning();

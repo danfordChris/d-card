@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'config.dart';
+import 'data/repositories/billing_repository.dart';
 import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
@@ -55,6 +56,7 @@ Future<void> main() async {
       contributions: ContributionsRepository(api),
       walkIns: WalkInsRepository(api),
       walkInAlerts: WalkInAlertsRepository(pushMessages),
+      billing: BillingRepository(api),
     ),
   );
 }

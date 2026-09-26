@@ -2,12 +2,12 @@ import { auditLog, eventRole, invitation, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addGuest,
   cancelCard,
   cancelEvent,
   ConflictError,
-  createEvent,
   decryptSecret,
   encryptSecret,
   ForbiddenError,
@@ -38,7 +38,7 @@ beforeAll(async () => {
     .values(["host", "committee"].map((u) => ({ firebaseUid: u, email: `${u}@example.com`, authProvider: "password" as const })))
     .returning({ id: userAccount.id });
   [hostId, committeeId] = users.map((u) => u.id) as [string, string];
-  eventId = await createEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Harusi" });
+  eventId = await createPaidEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Harusi" });
   await handle.db.insert(eventRole).values({ eventId, userId: committeeId, role: "committee" });
 });
 
@@ -120,7 +120,7 @@ describe("cancel, reinstate and link", () => {
   });
 
   it("refuses to issue on a cancelled event", async () => {
-    const other = await createEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Other" });
+    const other = await createPaidEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Other" });
     const { guest: g } = await addGuest(handle.db, hostId, other, { name: "X", phone: "0713200005", consent: true });
     await cancelEvent(handle.db, hostId, other);
     await expect(issueCard(handle.db, hostId, other, g.id)).rejects.toBeInstanceOf(ConflictError);

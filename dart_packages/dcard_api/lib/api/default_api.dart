@@ -733,6 +733,130 @@ class DefaultApi {
     return null;
   }
 
+  /// Register the guest's Drive file after upload
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [UploadCompleteInput] uploadCompleteInput:
+  Future<Response> completeGuestUploadWithHttpInfo(String token, String itemId, { UploadCompleteInput? uploadCompleteInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/media/{itemId}/complete'
+      .replaceAll('{token}', token)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = uploadCompleteInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Register the guest's Drive file after upload
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [UploadCompleteInput] uploadCompleteInput:
+  Future<MediaItem?> completeGuestUpload(String token, String itemId, { UploadCompleteInput? uploadCompleteInput, }) async {
+    final response = await completeGuestUploadWithHttpInfo(token, itemId,  uploadCompleteInput: uploadCompleteInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MediaItem',) as MediaItem;
+    
+    }
+    return null;
+  }
+
+  /// Register the Drive file after the upload finished
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [UploadCompleteInput] uploadCompleteInput:
+  Future<Response> completeHostUploadWithHttpInfo(String id, String itemId, { UploadCompleteInput? uploadCompleteInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/{itemId}/complete'
+      .replaceAll('{id}', id)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = uploadCompleteInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Register the Drive file after the upload finished
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [UploadCompleteInput] uploadCompleteInput:
+  Future<MediaItem?> completeHostUpload(String id, String itemId, { UploadCompleteInput? uploadCompleteInput, }) async {
+    final response = await completeHostUploadWithHttpInfo(id, itemId,  uploadCompleteInput: uploadCompleteInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MediaItem',) as MediaItem;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/v1/events/{id}/imports/{jobId}/confirm' operation and returns the [Response].
   /// Parameters:
   ///
@@ -790,6 +914,52 @@ class DefaultApi {
     return null;
   }
 
+  /// Redirects the host to Google consent (drive.file) for an event
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] eventId (required):
+  Future<Response> connectGoogleDriveWithHttpInfo(String eventId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/media/google/connect';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'eventId', eventId));
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Redirects the host to Google consent (drive.file) for an event
+  ///
+  /// Parameters:
+  ///
+  /// * [String] eventId (required):
+  Future<void> connectGoogleDrive(String eventId,) async {
+    final response = await connectGoogleDriveWithHttpInfo(eventId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
   /// Create a draft event (caller becomes host)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -837,6 +1007,120 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Event',) as Event;
+    
+    }
+    return null;
+  }
+
+  /// Guest gallery upload from the card link: Drive resumable URL within window and per-guest limits
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [UploadSessionInput] uploadSessionInput:
+  Future<Response> createGuestUploadSessionWithHttpInfo(String token, { UploadSessionInput? uploadSessionInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/media/upload-sessions'
+      .replaceAll('{token}', token);
+
+    // ignore: prefer_final_locals
+    Object? postBody = uploadSessionInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Guest gallery upload from the card link: Drive resumable URL within window and per-guest limits
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [UploadSessionInput] uploadSessionInput:
+  Future<UploadSession?> createGuestUploadSession(String token, { UploadSessionInput? uploadSessionInput, }) async {
+    final response = await createGuestUploadSessionWithHttpInfo(token,  uploadSessionInput: uploadSessionInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'UploadSession',) as UploadSession;
+    
+    }
+    return null;
+  }
+
+  /// Host upload (card or story): returns a Drive resumable URL within plan limits
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [UploadSessionInput] uploadSessionInput:
+  Future<Response> createHostUploadSessionWithHttpInfo(String id, { UploadSessionInput? uploadSessionInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/upload-sessions'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = uploadSessionInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Host upload (card or story): returns a Drive resumable URL within plan limits
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [UploadSessionInput] uploadSessionInput:
+  Future<UploadSession?> createHostUploadSession(String id, { UploadSessionInput? uploadSessionInput, }) async {
+    final response = await createHostUploadSessionWithHttpInfo(id,  uploadSessionInput: uploadSessionInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'UploadSession',) as UploadSession;
     
     }
     return null;
@@ -959,6 +1243,142 @@ class DefaultApi {
     
     }
     return null;
+  }
+
+  /// Delete an item (also deletes the Drive file D-Card created)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  Future<Response> deleteEventMediaWithHttpInfo(String id, String itemId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/{itemId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Delete an item (also deletes the Drive file D-Card created)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  Future<void> deleteEventMedia(String id, String itemId,) async {
+    final response = await deleteEventMediaWithHttpInfo(id, itemId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Guest deletes their own upload
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  Future<Response> deleteGuestMediaWithHttpInfo(String token, String itemId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/media/{itemId}'
+      .replaceAll('{token}', token)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Guest deletes their own upload
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  Future<void> deleteGuestMedia(String token, String itemId,) async {
+    final response = await deleteGuestMediaWithHttpInfo(token, itemId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Disconnect Google Drive (files stay in the host's Drive)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> disconnectGoogleDriveWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/media/google';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Disconnect Google Drive (files stay in the host's Drive)
+  Future<void> disconnectGoogleDrive() async {
+    final response = await disconnectGoogleDriveWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
   }
 
   /// Admit 1 or 2 on a card, atomically (idempotent per entry id)
@@ -1296,6 +1716,103 @@ class DefaultApi {
     return null;
   }
 
+  /// Plan, paid guest cards, payments and any pending payment (host)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> getBillingWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/billing'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Plan, paid guest cards, payments and any pending payment (host)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<BillingSummary?> getBilling(String id,) async {
+    final response = await getBillingWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BillingSummary',) as BillingSummary;
+    
+    }
+    return null;
+  }
+
+  /// Launch offer setting (admin)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> getBillingSettingsWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/billing/settings';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Launch offer setting (admin)
+  Future<BillingSettings?> getBillingSettings() async {
+    final response = await getBillingSettingsWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BillingSettings',) as BillingSettings;
+    
+    }
+    return null;
+  }
+
   /// Calendar entry (text/calendar)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1402,6 +1919,64 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'CardLink',) as CardLink;
+    
+    }
+    return null;
+  }
+
+  /// Payment status (poll while pending)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] attemptId (required):
+  Future<Response> getCheckoutWithHttpInfo(String id, String attemptId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/checkout/{attemptId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{attemptId}', attemptId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Payment status (poll while pending)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] attemptId (required):
+  Future<PaymentAttempt?> getCheckout(String id, String attemptId,) async {
+    final response = await getCheckoutWithHttpInfo(id, attemptId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PaymentAttempt',) as PaymentAttempt;
     
     }
     return null;
@@ -1521,6 +2096,175 @@ class DefaultApi {
     
     }
     return null;
+  }
+
+  /// Private mode: streams the thumbnail or file for the host (?size=thumb|full)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [String] size:
+  Future<Response> getEventMediaContentWithHttpInfo(String id, String itemId, { String? size, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/{itemId}/content'
+      .replaceAll('{id}', id)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (size != null) {
+      queryParams.addAll(_queryParams('', 'size', size));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Private mode: streams the thumbnail or file for the host (?size=thumb|full)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [String] size:
+  Future<void> getEventMediaContent(String id, String itemId, { String? size, }) async {
+    final response = await getEventMediaContentWithHttpInfo(id, itemId,  size: size, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Story and gallery for a card link (no login); upload window and the guest's remaining uploads
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<Response> getGuestMediaWithHttpInfo(String token,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/media'
+      .replaceAll('{token}', token);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Story and gallery for a card link (no login); upload window and the guest's remaining uploads
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  Future<GuestMedia?> getGuestMedia(String token,) async {
+    final response = await getGuestMediaWithHttpInfo(token,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'GuestMedia',) as GuestMedia;
+    
+    }
+    return null;
+  }
+
+  /// Private mode: streams a visible item for a valid card link (?size=thumb|full)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [String] size:
+  Future<Response> getGuestMediaContentWithHttpInfo(String token, String itemId, { String? size, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/media/{itemId}/content'
+      .replaceAll('{token}', token)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (size != null) {
+      queryParams.addAll(_queryParams('', 'size', size));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Private mode: streams a visible item for a valid card link (?size=thumb|full)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [String] size:
+  Future<void> getGuestMediaContent(String token, String itemId, { String? size, }) async {
+    final response = await getGuestMediaContentWithHttpInfo(token, itemId,  size: size, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
   }
 
   /// Service health
@@ -1659,6 +2403,59 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Account',) as Account;
+    
+    }
+    return null;
+  }
+
+  /// Drive connection, sharing mode, quota, plan limits and counts (host, committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> getMediaSettingsWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/settings'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Drive connection, sharing mode, quota, plan limits and counts (host, committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<MediaSettings?> getMediaSettings(String id,) async {
+    final response = await getMediaSettingsWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MediaSettings',) as MediaSettings;
     
     }
     return null;
@@ -1934,6 +2731,59 @@ class DefaultApi {
     return null;
   }
 
+  /// Confirmation states and expected headcount (host or committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> listConfirmationsWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/confirmations'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Confirmation states and expected headcount (host or committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ListConfirmations200Response?> listConfirmations(String id,) async {
+    final response = await listConfirmationsWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListConfirmations200Response',) as ListConfirmations200Response;
+    
+    }
+    return null;
+  }
+
   /// Door devices of an event with last sync (host, committee)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -2026,6 +2876,67 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListDoorEvents200Response',) as ListDoorEvents200Response;
+    
+    }
+    return null;
+  }
+
+  /// Media of an event for the host (all statuses except deleted)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [MediaKind] kind:
+  Future<Response> listEventMediaWithHttpInfo(String id, { MediaKind? kind, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (kind != null) {
+      queryParams.addAll(_queryParams('', 'kind', kind));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Media of an event for the host (all statuses except deleted)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [MediaKind] kind:
+  Future<ListEventMedia200Response?> listEventMedia(String id, { MediaKind? kind, }) async {
+    final response = await listEventMediaWithHttpInfo(id,  kind: kind, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListEventMedia200Response',) as ListEventMedia200Response;
     
     }
     return null;
@@ -2563,6 +3474,63 @@ class DefaultApi {
     return null;
   }
 
+  /// Price for buying cards, adding blocks of 10 or upgrading (minimum charge, launch offer applied)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [BillingQuoteInput] billingQuoteInput:
+  Future<Response> quoteBillingWithHttpInfo(String id, { BillingQuoteInput? billingQuoteInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/billing/quote'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = billingQuoteInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Price for buying cards, adding blocks of 10 or upgrading (minimum charge, launch offer applied)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [BillingQuoteInput] billingQuoteInput:
+  Future<BillingQuote?> quoteBilling(String id, { BillingQuoteInput? billingQuoteInput, }) async {
+    final response = await quoteBillingWithHttpInfo(id,  billingQuoteInput: billingQuoteInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BillingQuote',) as BillingQuote;
+    
+    }
+    return null;
+  }
+
   /// Record a payment or refund (host, treasurer). Final payment issues the card.
   ///
   /// Note: This method returns the HTTP [Response].
@@ -2883,6 +3851,56 @@ class DefaultApi {
     }
   }
 
+  /// Report an item to the host
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  Future<Response> reportGuestMediaWithHttpInfo(String token, String itemId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/cards/{token}/media/{itemId}/report'
+      .replaceAll('{token}', token)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Report an item to the host
+  ///
+  /// Parameters:
+  ///
+  /// * [String] token (required):
+  ///
+  /// * [String] itemId (required):
+  Future<void> reportGuestMedia(String token, String itemId,) async {
+    final response = await reportGuestMediaWithHttpInfo(token, itemId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
   /// Revoke a door device (host); its next door call gets 403
   ///
   /// Note: This method returns the HTTP [Response].
@@ -3097,6 +4115,187 @@ class DefaultApi {
     return null;
   }
 
+  /// Record or override a guest confirmation (host or committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  ///
+  /// * [SetConfirmationRequest] setConfirmationRequest:
+  Future<Response> setConfirmationWithHttpInfo(String id, String guestId, { SetConfirmationRequest? setConfirmationRequest, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/confirmations/{guestId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{guestId}', guestId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = setConfirmationRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Record or override a guest confirmation (host or committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] guestId (required):
+  ///
+  /// * [SetConfirmationRequest] setConfirmationRequest:
+  Future<ListConfirmations200ResponseGuestsInner?> setConfirmation(String id, String guestId, { SetConfirmationRequest? setConfirmationRequest, }) async {
+    final response = await setConfirmationWithHttpInfo(id, guestId,  setConfirmationRequest: setConfirmationRequest, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListConfirmations200ResponseGuestsInner',) as ListConfirmations200ResponseGuestsInner;
+    
+    }
+    return null;
+  }
+
+  /// Hide or show an item (host moderation, audited)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [MediaStatusInput] mediaStatusInput:
+  Future<Response> setMediaStatusWithHttpInfo(String id, String itemId, { MediaStatusInput? mediaStatusInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/{itemId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{itemId}', itemId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = mediaStatusInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PATCH',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Hide or show an item (host moderation, audited)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] itemId (required):
+  ///
+  /// * [MediaStatusInput] mediaStatusInput:
+  Future<MediaItem?> setMediaStatus(String id, String itemId, { MediaStatusInput? mediaStatusInput, }) async {
+    final response = await setMediaStatusWithHttpInfo(id, itemId,  mediaStatusInput: mediaStatusInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MediaItem',) as MediaItem;
+    
+    }
+    return null;
+  }
+
+  /// Start a Snippe payment: mobile-money push or hosted checkout session
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [CheckoutInput] checkoutInput:
+  Future<Response> startCheckoutWithHttpInfo(String id, { CheckoutInput? checkoutInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/checkout'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = checkoutInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Start a Snippe payment: mobile-money push or hosted checkout session
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [CheckoutInput] checkoutInput:
+  Future<PaymentAttempt?> startCheckout(String id, { CheckoutInput? checkoutInput, }) async {
+    final response = await startCheckoutWithHttpInfo(id,  checkoutInput: checkoutInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PaymentAttempt',) as PaymentAttempt;
+    
+    }
+    return null;
+  }
+
   /// RSVP Yes/No with dietary note (public); editable until the event starts
   ///
   /// Note: This method returns the HTTP [Response].
@@ -3197,6 +4396,58 @@ class DefaultApi {
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+  }
+
+  /// Change or switch off the launch offer (admin, audited)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [BillingSettings] billingSettings:
+  Future<Response> updateBillingSettingsWithHttpInfo({ BillingSettings? billingSettings, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/billing/settings';
+
+    // ignore: prefer_final_locals
+    Object? postBody = billingSettings;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Change or switch off the launch offer (admin, audited)
+  ///
+  /// Parameters:
+  ///
+  /// * [BillingSettings] billingSettings:
+  Future<BillingSettings?> updateBillingSettings({ BillingSettings? billingSettings, }) async {
+    final response = await updateBillingSettingsWithHttpInfo( billingSettings: billingSettings, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BillingSettings',) as BillingSettings;
+    
+    }
+    return null;
   }
 
   /// Edit details, contact and settings (host only)
@@ -3308,6 +4559,63 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Guest',) as Guest;
+    
+    }
+    return null;
+  }
+
+  /// Change sharing mode or the Google Photos link (host, audited)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [MediaSettingsInput] mediaSettingsInput:
+  Future<Response> updateMediaSettingsWithHttpInfo(String id, { MediaSettingsInput? mediaSettingsInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/media/settings'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody = mediaSettingsInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Change sharing mode or the Google Photos link (host, audited)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [MediaSettingsInput] mediaSettingsInput:
+  Future<MediaSettings?> updateMediaSettings(String id, { MediaSettingsInput? mediaSettingsInput, }) async {
+    final response = await updateMediaSettingsWithHttpInfo(id,  mediaSettingsInput: mediaSettingsInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MediaSettings',) as MediaSettings;
     
     }
     return null;

@@ -1,4 +1,4 @@
-import { applySmsDelivery, QUEUES, scheduleDueMessages, smsAwaitingDelivery, SYSTEM_JOBS } from "@dcard/core";
+import { applySmsDelivery, gatewayFromEnv, pollPendingPayments, QUEUES, scheduleDueMessages, smsAwaitingDelivery, SYSTEM_JOBS, type PaymentGateway } from "@dcard/core";
 import type { Database } from "@dcard/db";
 import { Queue, Worker, type Job } from "bullmq";
 import type { Redis } from "ioredis";
@@ -38,7 +38,7 @@ export type MessagingDeps = Omit<SendDeps, "db" | "sms" | "whatsapp" | "log"> & 
 export async function startWorkers(
   connection: Redis,
   log: (msg: string) => void = console.log,
-  deps: { emailSender?: EmailSender; prefix?: string; messaging?: MessagingDeps; push?: { db: Database; sender: PushSender } } = {},
+  deps: { emailSender?: EmailSender; prefix?: string; messaging?: MessagingDeps; push?: { db: Database; sender: PushSender }; payments?: PaymentGateway } = {},
 ): Promise<RunningWorkers> {
   const prefix = deps.prefix ?? process.env.QUEUE_PREFIX ?? "dcard";
   const queues: Queue[] = [];
@@ -69,6 +69,10 @@ export async function startWorkers(
           if (report && (await applySmsDelivery(m.db, logId, report))) updated++;
         }
         return { checked: pending.length, updated };
+      }
+      if (job.name === SYSTEM_JOBS.pollPayments) {
+        if (!m) return { checked: 0, changed: 0 };
+        return pollPendingPayments(m.db, deps.payments ?? gatewayFromEnv());
       }
       if (job.name === SYSTEM_JOBS.scheduleMessages) {
         if (!m) throw new Error("messaging is not configured");
@@ -109,6 +113,7 @@ export async function startWorkers(
       await systemQueue.upsertJobScheduler("dispatch-messages", { every: m.dispatchEveryMs ?? DEFAULT_DISPATCH_EVERY_MS }, { name: SYSTEM_JOBS.dispatchMessages });
       await systemQueue.upsertJobScheduler("schedule-messages", { every: 5 * 60_000 }, { name: SYSTEM_JOBS.scheduleMessages });
       await systemQueue.upsertJobScheduler("poll-sms-delivery", { every: 10 * 60_000 }, { name: SYSTEM_JOBS.pollSmsDelivery });
+      await systemQueue.upsertJobScheduler("poll-payments", { every: 2 * 60_000 }, { name: SYSTEM_JOBS.pollPayments });
     }
   }
 

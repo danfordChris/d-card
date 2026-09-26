@@ -119,6 +119,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
     keys: [
       req("SNIPPE_BASE_URL", "API base URL", URL_PATTERN),
       req("SNIPPE_API_KEY", "API key", /^snp_\S+$/),
+      opt("SNIPPE_LIVE", "true = real Snippe payments (production only; Snippe has no sandbox). Otherwise a fake gateway is used.", /^(true|false)$/),
       req("SNIPPE_WEBHOOK_SECRET", "Webhook signing secret (separate from the API key)"),
     ],
   },

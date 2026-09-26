@@ -1,0 +1,19 @@
+# dcard_api.model.CheckoutInput
+
+## Load the model package
+```dart
+import 'package:dcard_api/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**planKey** | [**PlanKey**](PlanKey.md) |  | [optional] 
+**guestCards** | **int** |  | 
+**method** | [**HostPaymentMethod**](HostPaymentMethod.md) |  | 
+**phone** | **String** |  | [optional] 
+**expectedTotal** | **int** |  | 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

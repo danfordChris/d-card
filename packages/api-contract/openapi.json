@@ -3364,6 +3364,796 @@
           "method"
         ],
         "additionalProperties": false
+      },
+      "BillingSummary": {
+        "type": "object",
+        "properties": {
+          "planKey": {
+            "$ref": "#/components/schemas/PlanKey"
+          },
+          "planName": {
+            "type": "string"
+          },
+          "pricePerGuest": {
+            "type": "integer"
+          },
+          "guestLimit": {
+            "type": "integer"
+          },
+          "amountPaid": {
+            "type": "integer"
+          },
+          "paid": {
+            "type": "boolean"
+          },
+          "issuedCards": {
+            "type": "integer"
+          },
+          "guestCount": {
+            "type": "integer"
+          },
+          "launchOfferPercent": {
+            "type": "integer"
+          },
+          "launchOfferEligible": {
+            "type": "boolean"
+          },
+          "pendingAttempt": {
+            "$ref": "#/components/schemas/PaymentAttempt"
+          },
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HostPayment"
+            }
+          }
+        },
+        "required": [
+          "planKey",
+          "planName",
+          "pricePerGuest",
+          "guestLimit",
+          "amountPaid",
+          "paid",
+          "issuedCards",
+          "guestCount",
+          "launchOfferPercent",
+          "launchOfferEligible",
+          "pendingAttempt",
+          "payments"
+        ]
+      },
+      "PlanKey": {
+        "type": "string",
+        "enum": [
+          "msingi",
+          "kawaida",
+          "premium"
+        ]
+      },
+      "PaymentAttempt": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "method": {
+            "$ref": "#/components/schemas/HostPaymentMethod"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "planKey": {
+            "$ref": "#/components/schemas/PlanKey"
+          },
+          "guestCards": {
+            "type": "integer"
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checkoutUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "failureReason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "method",
+          "amount",
+          "planKey",
+          "guestCards",
+          "phone",
+          "checkoutUrl",
+          "reference",
+          "failureReason",
+          "createdAt",
+          "completedAt"
+        ]
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "completed",
+          "failed",
+          "expired"
+        ]
+      },
+      "HostPaymentMethod": {
+        "type": "string",
+        "enum": [
+          "mobile",
+          "session"
+        ]
+      },
+      "HostPayment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "planKey": {
+            "$ref": "#/components/schemas/PlanKey"
+          },
+          "guestCards": {
+            "type": "integer"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "discountAmount": {
+            "type": "integer"
+          },
+          "method": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "paidAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "planKey",
+          "guestCards",
+          "amount",
+          "discountAmount",
+          "method",
+          "reference",
+          "paidAt"
+        ]
+      },
+      "BillingQuote": {
+        "type": "object",
+        "properties": {
+          "planKey": {
+            "$ref": "#/components/schemas/PlanKey"
+          },
+          "planName": {
+            "type": "string"
+          },
+          "pricePerGuest": {
+            "type": "integer"
+          },
+          "currentGuestCards": {
+            "type": "integer"
+          },
+          "guestCards": {
+            "type": "integer"
+          },
+          "blockSize": {
+            "type": "integer"
+          },
+          "minimumCharge": {
+            "type": "integer"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BillingQuoteLine"
+            }
+          },
+          "subtotal": {
+            "type": "integer"
+          },
+          "discountPercent": {
+            "type": "integer"
+          },
+          "discountAmount": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "payable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "planKey",
+          "planName",
+          "pricePerGuest",
+          "currentGuestCards",
+          "guestCards",
+          "blockSize",
+          "minimumCharge",
+          "lines",
+          "subtotal",
+          "discountPercent",
+          "discountAmount",
+          "total",
+          "payable"
+        ]
+      },
+      "BillingQuoteLine": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "unitPrice": {
+            "type": "integer"
+          },
+          "amount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "quantity",
+          "unitPrice",
+          "amount"
+        ]
+      },
+      "BillingQuoteInput": {
+        "type": "object",
+        "properties": {
+          "planKey": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlanKey"
+              },
+              {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "guestCards": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "guestCards"
+        ],
+        "additionalProperties": false
+      },
+      "CheckoutInput": {
+        "type": "object",
+        "properties": {
+          "planKey": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlanKey"
+              },
+              {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "guestCards": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000
+          },
+          "method": {
+            "$ref": "#/components/schemas/HostPaymentMethod"
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 20
+          },
+          "expectedTotal": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "guestCards",
+          "method",
+          "expectedTotal"
+        ],
+        "additionalProperties": false
+      },
+      "BillingSettings": {
+        "type": "object",
+        "properties": {
+          "launchOfferEnabled": {
+            "type": "boolean"
+          },
+          "launchOfferPercent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 90
+          }
+        },
+        "required": [
+          "launchOfferEnabled",
+          "launchOfferPercent"
+        ],
+        "additionalProperties": false
+      },
+      "MediaSettings": {
+        "type": "object",
+        "properties": {
+          "mediaEnabled": {
+            "type": "boolean"
+          },
+          "connected": {
+            "type": "boolean"
+          },
+          "googleEmail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "needsReconnect": {
+            "type": "boolean"
+          },
+          "sharingMode": {
+            "$ref": "#/components/schemas/SharingMode"
+          },
+          "folderUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quotaUsedBytes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "quotaLimitBytes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "quotaWarning": {
+            "type": "boolean"
+          },
+          "googlePhotosUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "limits": {
+            "$ref": "#/components/schemas/MediaLimits"
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "cardPhotos": {
+                "type": "integer"
+              },
+              "cardVideos": {
+                "type": "integer"
+              },
+              "storyPhotos": {
+                "type": "integer"
+              },
+              "storyVideos": {
+                "type": "integer"
+              },
+              "gallery": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "cardPhotos",
+              "cardVideos",
+              "storyPhotos",
+              "storyVideos",
+              "gallery"
+            ]
+          }
+        },
+        "required": [
+          "mediaEnabled",
+          "connected",
+          "googleEmail",
+          "needsReconnect",
+          "sharingMode",
+          "folderUrl",
+          "quotaUsedBytes",
+          "quotaLimitBytes",
+          "quotaWarning",
+          "googlePhotosUrl",
+          "limits",
+          "counts"
+        ]
+      },
+      "SharingMode": {
+        "type": "string",
+        "enum": [
+          "private",
+          "link"
+        ]
+      },
+      "MediaLimits": {
+        "type": "object",
+        "properties": {
+          "cardPhotos": {
+            "type": "integer"
+          },
+          "cardVideos": {
+            "type": "integer"
+          },
+          "cardVideoSeconds": {
+            "type": "integer"
+          },
+          "storyPhotos": {
+            "type": "integer"
+          },
+          "storyVideos": {
+            "type": "integer"
+          },
+          "storyVideoSeconds": {
+            "type": "integer"
+          },
+          "galleryEnabled": {
+            "type": "boolean"
+          },
+          "galleryVideoSeconds": {
+            "type": "integer"
+          },
+          "galleryUploadsPerGuest": {
+            "type": "integer"
+          },
+          "galleryUploadDays": {
+            "type": "integer"
+          },
+          "galleryOpenMonths": {
+            "type": "integer"
+          },
+          "maxPhotoBytes": {
+            "type": "integer"
+          },
+          "maxVideoBytes": {
+            "type": "integer"
+          },
+          "slideshow": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cardPhotos",
+          "cardVideos",
+          "cardVideoSeconds",
+          "storyPhotos",
+          "storyVideos",
+          "storyVideoSeconds",
+          "galleryEnabled",
+          "galleryVideoSeconds",
+          "galleryUploadsPerGuest",
+          "galleryUploadDays",
+          "galleryOpenMonths",
+          "maxPhotoBytes",
+          "maxVideoBytes",
+          "slideshow"
+        ]
+      },
+      "MediaSettingsInput": {
+        "type": "object",
+        "properties": {
+          "sharingMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SharingMode"
+              },
+              {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "googlePhotosUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/MediaKind"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MediaType"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "number"
+          },
+          "durationSeconds": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/MediaStatus"
+          },
+          "uploadedBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mine": {
+            "type": "boolean"
+          },
+          "thumbnailUrl": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "type",
+          "mimeType",
+          "sizeBytes",
+          "durationSeconds",
+          "status",
+          "uploadedBy",
+          "mine",
+          "thumbnailUrl",
+          "url",
+          "createdAt"
+        ]
+      },
+      "MediaKind": {
+        "type": "string",
+        "enum": [
+          "card",
+          "story",
+          "gallery"
+        ]
+      },
+      "MediaType": {
+        "type": "string",
+        "enum": [
+          "photo",
+          "video"
+        ]
+      },
+      "MediaStatus": {
+        "type": "string",
+        "enum": [
+          "uploading",
+          "visible",
+          "hidden",
+          "reported",
+          "deleted",
+          "missing"
+        ]
+      },
+      "UploadSession": {
+        "type": "object",
+        "properties": {
+          "mediaItemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uploadUrl": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "mediaItemId",
+          "uploadUrl",
+          "expiresAt"
+        ]
+      },
+      "UploadSessionInput": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/MediaKind"
+          },
+          "fileName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "mimeType": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "durationSeconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "required": [
+          "kind",
+          "fileName",
+          "mimeType",
+          "sizeBytes"
+        ],
+        "additionalProperties": false
+      },
+      "UploadCompleteInput": {
+        "type": "object",
+        "properties": {
+          "driveFileId": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "driveFileId"
+        ],
+        "additionalProperties": false
+      },
+      "MediaStatusInput": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "visible",
+              "hidden"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "GuestMedia": {
+        "type": "object",
+        "properties": {
+          "story": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaItem"
+            }
+          },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaItem"
+            }
+          },
+          "galleryEnabled": {
+            "type": "boolean"
+          },
+          "uploadsOpen": {
+            "type": "boolean"
+          },
+          "uploadsClosedReason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "uploadsClosesAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "myUploadsLeft": {
+            "type": "integer"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/MediaLimits"
+          }
+        },
+        "required": [
+          "story",
+          "gallery",
+          "galleryEnabled",
+          "uploadsOpen",
+          "uploadsClosedReason",
+          "uploadsClosesAt",
+          "myUploadsLeft",
+          "limits"
+        ]
       }
     },
     "parameters": {}
@@ -6505,6 +7295,324 @@
         }
       }
     },
+    "/api/v1/events/{id}/confirmations": {
+      "get": {
+        "operationId": "listConfirmations",
+        "summary": "Confirmation states and expected headcount (host or committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "guests": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
+                          },
+                          "partnerName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "cardType": {
+                            "type": "string",
+                            "enum": [
+                              "single",
+                              "double"
+                            ]
+                          },
+                          "totalEntries": {
+                            "type": "integer"
+                          },
+                          "confirmationStatus": {
+                            "type": "string",
+                            "enum": [
+                              "none",
+                              "yes",
+                              "no"
+                            ]
+                          },
+                          "confirmationAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "format": "date-time"
+                          },
+                          "confirmationSource": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "phone",
+                          "partnerName",
+                          "cardType",
+                          "totalEntries",
+                          "confirmationStatus",
+                          "confirmationAt",
+                          "confirmationSource"
+                        ]
+                      }
+                    },
+                    "counts": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "yes": {
+                          "type": "integer"
+                        },
+                        "no": {
+                          "type": "integer"
+                        },
+                        "none": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "yes",
+                        "no",
+                        "none"
+                      ]
+                    },
+                    "totalEntries": {
+                      "type": "integer"
+                    },
+                    "expectedHeadcount": {
+                      "type": "number"
+                    },
+                    "headcountPct": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "guests",
+                    "counts",
+                    "totalEntries",
+                    "expectedHeadcount",
+                    "headcountPct"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/confirmations/{guestId}": {
+      "put": {
+        "operationId": "setConfirmation",
+        "summary": "Record or override a guest confirmation (host or committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "guestId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "yes",
+                      "no"
+                    ]
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "partnerName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "cardType": {
+                      "type": "string",
+                      "enum": [
+                        "single",
+                        "double"
+                      ]
+                    },
+                    "totalEntries": {
+                      "type": "integer"
+                    },
+                    "confirmationStatus": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "yes",
+                        "no"
+                      ]
+                    },
+                    "confirmationAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "confirmationSource": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "phone",
+                    "partnerName",
+                    "cardType",
+                    "totalEntries",
+                    "confirmationStatus",
+                    "confirmationAt",
+                    "confirmationSource"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Guest not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/me/devices": {
       "post": {
         "operationId": "registerDevice",
@@ -7999,6 +9107,1307 @@
           },
           "422": {
             "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/billing": {
+      "get": {
+        "operationId": "getBilling",
+        "summary": "Plan, paid guest cards, payments and any pending payment (host)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingSummary"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/billing/quote": {
+      "post": {
+        "operationId": "quoteBilling",
+        "summary": "Price for buying cards, adding blocks of 10 or upgrading (minimum charge, launch offer applied)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BillingQuoteInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Quote",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingQuote"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error (e.g. fewer cards than already paid, downgrade)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/checkout": {
+      "post": {
+        "operationId": "startCheckout",
+        "summary": "Start a Snippe payment: mobile-money push or hosted checkout session",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentAttempt"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "quote_changed, nothing_to_pay or payment_in_progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Payment provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/checkout/{attemptId}": {
+      "get": {
+        "operationId": "getCheckout",
+        "summary": "Payment status (poll while pending)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "attemptId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentAttempt"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/billing/settings": {
+      "get": {
+        "operationId": "getBillingSettings",
+        "summary": "Launch offer setting (admin)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateBillingSettings",
+        "summary": "Change or switch off the launch offer (admin, audited)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BillingSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media/google/connect": {
+      "get": {
+        "operationId": "connectGoogleDrive",
+        "summary": "Redirects the host to Google consent (drive.file) for an event",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "eventId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to Google"
+          },
+          "403": {
+            "description": "Host only or plan without media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media/google": {
+      "delete": {
+        "operationId": "disconnectGoogleDrive",
+        "summary": "Disconnect Google Drive (files stay in the host's Drive)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Disconnected"
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/media/settings": {
+      "get": {
+        "operationId": "getMediaSettings",
+        "summary": "Drive connection, sharing mode, quota, plan limits and counts (host, committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateMediaSettings",
+        "summary": "Change sharing mode or the Google Photos link (host, audited)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MediaSettingsInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "drive_not_connected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/media": {
+      "get": {
+        "operationId": "listEventMedia",
+        "summary": "Media of an event for the host (all statuses except deleted)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/MediaKind"
+            },
+            "required": false,
+            "name": "kind",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MediaItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/media/upload-sessions": {
+      "post": {
+        "operationId": "createHostUploadSession",
+        "summary": "Host upload (card or story): returns a Drive resumable URL within plan limits",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadSessionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSession"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "plan_limit, drive_not_connected or drive_full",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error (type, size, length)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/media/{itemId}/complete": {
+      "post": {
+        "operationId": "completeHostUpload",
+        "summary": "Register the Drive file after the upload finished",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadCompleteInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaItem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "File not found in Drive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/media/{itemId}": {
+      "patch": {
+        "operationId": "setMediaStatus",
+        "summary": "Hide or show an item (host moderation, audited)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MediaStatusInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaItem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEventMedia",
+        "summary": "Delete an item (also deletes the Drive file D-Card created)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/media/{itemId}/content": {
+      "get": {
+        "operationId": "getEventMediaContent",
+        "summary": "Private mode: streams the thumbnail or file for the host (?size=thumb|full)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "thumb",
+                "full"
+              ]
+            },
+            "required": false,
+            "name": "size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image or video bytes"
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Missing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/media": {
+      "get": {
+        "operationId": "getGuestMedia",
+        "summary": "Story and gallery for a card link (no login); upload window and the guest's remaining uploads",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestMedia"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gallery closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/media/upload-sessions": {
+      "post": {
+        "operationId": "createGuestUploadSession",
+        "summary": "Guest gallery upload from the card link: Drive resumable URL within window and per-guest limits",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadSessionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "uploads_closed, upload_limit or drive_full",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/media/{itemId}/complete": {
+      "post": {
+        "operationId": "completeGuestUpload",
+        "summary": "Register the guest's Drive file after upload",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadCompleteInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown card or item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/media/{itemId}": {
+      "delete": {
+        "operationId": "deleteGuestMedia",
+        "summary": "Guest deletes their own upload",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "403": {
+            "description": "Not your upload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/media/{itemId}/report": {
+      "post": {
+        "operationId": "reportGuestMedia",
+        "summary": "Report an item to the host",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Reported"
+          },
+          "404": {
+            "description": "Unknown item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{token}/media/{itemId}/content": {
+      "get": {
+        "operationId": "getGuestMediaContent",
+        "summary": "Private mode: streams a visible item for a valid card link (?size=thumb|full)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "itemId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "thumb",
+                "full"
+              ]
+            },
+            "required": false,
+            "name": "size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image or video bytes"
+          },
+          "404": {
+            "description": "Unknown or hidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gallery closed",
             "content": {
               "application/json": {
                 "schema": {

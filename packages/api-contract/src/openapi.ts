@@ -24,7 +24,9 @@ import {
   PledgeUpdateInput,
 } from "./contributions.js";
 import { AdminEventTypeCreateInput, AdminEventTypeListResponse, AdminEventTypeSchema, AdminEventTypeUpdateInput } from "./admin.js";
+import { registerBillingPaths } from "./billing.js";
 import { registerCheckinPaths } from "./checkin.js";
+import { registerMediaPaths } from "./media.js";
 import { registerDevicePaths } from "./devices.js";
 import { registerMessagePaths } from "./messages.js";
 import { z } from "zod";
@@ -554,6 +556,8 @@ export function buildOpenApiDocument(): OpenApiDocument {
   registerDevicePaths(registry, secured);
   registerMessagePaths(registry, secured);
   registerCheckinPaths(registry, secured);
+  registerBillingPaths(registry, secured);
+  registerMediaPaths(registry, secured);
 
   return new OpenApiGeneratorV31(registry.definitions).generateDocument({
     openapi: "3.1.0",

@@ -2,9 +2,9 @@ import { auditLog, eventRole, invitation, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import { issueCard } from "../src/cards/cards.js";
 import { addGuest } from "../src/guests/guests.js";
-import { createEvent } from "../src/events/events.js";
 import { ForbiddenError } from "../src/errors.js";
 import { listConfirmations, setConfirmation } from "../src/confirmations/confirmations.js";
 
@@ -25,7 +25,7 @@ beforeAll(async () => {
     .values(["host", "committee", "treasurer", "stranger"].map((name) => ({ firebaseUid: `cnf-${name}`, authProvider: "password" as const })))
     .returning({ id: userAccount.id });
   [hostId, committeeId, treasurerId, strangerId] = users.map((row) => row.id) as [string, string, string, string];
-  eventId = await createEvent(handle.db, hostId, {
+  eventId = await createPaidEvent(handle.db, hostId, {
     planKey: "kawaida",
     eventTypeKey: "wedding",
     title: "Confirmation maths",

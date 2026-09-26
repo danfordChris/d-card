@@ -1,6 +1,7 @@
 import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 
+import 'data/repositories/billing_repository.dart';
 import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
@@ -8,6 +9,7 @@ import 'data/repositories/session_repository.dart';
 import 'data/repositories/walk_in_alerts_repository.dart';
 import 'data/repositories/walk_ins_repository.dart';
 import 'data/services/contacts_source.dart';
+import 'data/services/link_opener.dart';
 import 'l10n/app_localizations.dart';
 import 'ui/core/app_scope.dart';
 import 'ui/features/auth/view_models/login_view_model.dart';
@@ -27,6 +29,8 @@ class DCardApp extends StatelessWidget {
     required this.contributions,
     required this.walkIns,
     required this.walkInAlerts,
+    required this.billing,
+    this.links = const ExternalLinkOpener(),
     this.locale,
   });
 
@@ -40,6 +44,12 @@ class DCardApp extends StatelessWidget {
   /// Walk-in pushes (foreground banners, tapped notifications).
   final WalkInAlertsRepository walkInAlerts;
 
+  /// Host billing and checkout (T05-03).
+  final BillingRepository billing;
+
+  /// Opens the hosted payment page outside the app.
+  final LinkOpener links;
+
   /// Forces a locale (tests); null follows the device.
   final Locale? locale;
 
@@ -51,6 +61,8 @@ class DCardApp extends StatelessWidget {
       contributions: contributions,
       walkIns: walkIns,
       walkInAlerts: walkInAlerts,
+      billing: billing,
+      links: links,
       child: MaterialApp(
         onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
         theme: DCardTheme.light(),

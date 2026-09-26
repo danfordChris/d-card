@@ -2,12 +2,12 @@ import { eventMessageSetting, messageLog, outbox, person, userAccount, whatsappO
 import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 
 // Dispatch holds guest messages in quiet hours (21:00–07:00 EAT); use a fixed daytime clock.
 const DAYTIME = new Date("2026-10-01T09:00:00Z");
 import {
   addGuest,
-  createEvent,
   DEFAULT_SMS,
   dispatchOutbox,
   enqueueMessage,
@@ -42,7 +42,7 @@ beforeAll(async () => {
     .values({ firebaseUid: "host", email: "host@example.com", authProvider: "password" })
     .returning({ id: userAccount.id });
   hostId = u!.id;
-  eventId = await createEvent(handle.db, hostId, {
+  eventId = await createPaidEvent(handle.db, hostId, {
     planKey: "kawaida",
     eventTypeKey: "wedding",
     title: "Harusi ya Juma",
@@ -173,7 +173,7 @@ describe("outbox dispatch", () => {
   });
 
   it("rejects an invitation from a different event without consuming the outbox row", async () => {
-    const otherEventId = await createEvent(handle.db, hostId, {
+    const otherEventId = await createPaidEvent(handle.db, hostId, {
       planKey: "kawaida",
       eventTypeKey: "wedding",
       title: "Other event",

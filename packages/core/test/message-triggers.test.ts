@@ -2,7 +2,8 @@ import { eventRole, outbox, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { asc, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { addContributor, addGuest, createEvent, issueCard, recordPayment, updatePledge, ValidationError } from "../src/index.js";
+import { createPaidEvent } from "./helpers.js";
+import { addContributor, addGuest, issueCard, recordPayment, updatePledge, ValidationError } from "../src/index.js";
 
 let handle: Awaited<ReturnType<typeof createTestDatabase>>;
 let hostId: string;
@@ -22,7 +23,7 @@ beforeAll(async () => {
   handle = await createTestDatabase("dcard_test_core_message_triggers", { seed: true });
   const [u] = await handle.db.insert(userAccount).values({ firebaseUid: "host", email: "host@example.com", authProvider: "password" }).returning();
   hostId = u!.id;
-  eventId = await createEvent(handle.db, hostId, {
+  eventId = await createPaidEvent(handle.db, hostId, {
     planKey: "kawaida",
     eventTypeKey: "wedding",
     title: "Harusi",

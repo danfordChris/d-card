@@ -14,6 +14,21 @@ const STATUS_BY_CODE: Record<string, number> = {
   account_not_provisioned: 403,
   invite_gone: 410,
   rate_limited: 429,
+  // Billing (T05-01)
+  payment_required: 409,
+  guest_limit: 409,
+  quote_changed: 409,
+  nothing_to_pay: 409,
+  payment_in_progress: 409,
+  event_closed: 409,
+  provider_unavailable: 502,
+  // Media (T05-04)
+  drive_not_connected: 409,
+  drive_full: 409,
+  drive_unavailable: 502,
+  uploads_closed: 409,
+  upload_limit: 409,
+  gallery_closed: 410,
 };
 
 export function jsonError(status: number, code: string, message: string): Response {

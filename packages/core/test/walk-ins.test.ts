@@ -3,9 +3,9 @@ import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq, like } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addGuest,
-  createEvent,
   createWalkIn,
   decideWalkIn,
   DoorRefusalError,
@@ -40,7 +40,7 @@ beforeAll(async () => {
     .values(["host", "staff", "mc", "auntie", "committee"].map((u) => ({ firebaseUid: u, email: `${u}@example.com`, authProvider: "password" as const })))
     .returning();
   [hostId, staffId, mcId, auntieId, committeeId] = users.map((u) => u.id) as [string, string, string, string, string];
-  eventId = await createEvent(handle.db, hostId, { planKey: "kawaida", eventTypeKey: "wedding", title: "Harusi", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" });
+  eventId = await createPaidEvent(handle.db, hostId, { planKey: "kawaida", eventTypeKey: "wedding", title: "Harusi", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" });
   await handle.db.insert(eventRole).values([
     { eventId, userId: staffId, role: "door_staff" },
     { eventId, userId: mcId, role: "walkin_approver" },

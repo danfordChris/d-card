@@ -2,12 +2,12 @@
 
 ## Status
 
-- `pending`
-- Last updated: 2026-09-24
+- `in-progress`
+- Last updated: 2026-09-27
 
 ## Objective
 
-- a host pays via Snippe (test mode), cards unlock, and guests upload to the host's Drive (both sharing modes).
+- a host pays via Snippe (fake gateway in tests; one real Tsh 500 payment in production — Snippe has no sandbox), cards unlock, and guests upload to the host's Drive (both sharing modes).
 
 ## Scope
 
@@ -32,18 +32,25 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [x] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
 
 ## Acceptance Criteria
 
 - [ ] a host pays via Snippe (test mode), cards unlock, and guests upload to the host's Drive (both sharing modes).
-- [ ] Every linked task is `done` with verification evidence.
-- [ ] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
+- [x] Every linked task is `done` with verification evidence.
+- [x] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
 
 ## Blockers
 
-- Previous phase not done.
+- Google OAuth consent screen (test users) and the production redirect URI `https://api.dcard.danfordchris.dev/api/v1/media/google/callback` (owner).
+- Snippe webhook URL `https://api.dcard.danfordchris.dev/api/webhooks/snippe` registered in the Snippe dashboard (owner).
+- Guest upload from the D-Card app (scope C, optional) moved to backlog; the card link is the primary upload path.
 
 ## Linked Tasks
 
-- None yet.
+- docs/implementation/tasks/t05-01-billing-core-snippe.md
+- docs/implementation/tasks/t05-02-web-checkout.md
+- docs/implementation/tasks/t05-03-mobile-checkout.md
+- docs/implementation/tasks/t05-04-drive-core.md
+- docs/implementation/tasks/t05-05-web-host-media.md
+- docs/implementation/tasks/t05-06-guest-gallery.md

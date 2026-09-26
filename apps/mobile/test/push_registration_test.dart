@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dcard_api/api.dart';
 import 'package:dcard_mobile/app.dart';
+import 'package:dcard_mobile/data/repositories/billing_repository.dart';
 import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
@@ -122,6 +123,8 @@ void main() {
           contributions: ContributionsRepository(api),
           walkIns: WalkInsRepository(api),
           walkInAlerts: WalkInAlertsRepository(FakePushMessageSource()),
+          billing: BillingRepository(api),
+          links: FakeLinkOpener(),
           locale: const Locale('en'),
         ),
       );

@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import QRCode from "qrcode";
 import { ApiDownloadButton } from "../../../components/api-download-button";
 import { LocaleSwitcher } from "../../../components/layout/locale-switcher";
+import { GuestMediaSections } from "../../../features/card-page/guest-media";
 import { RsvpForm } from "../../../features/card-page/rsvp-form";
 import { designFor, formatEventDate, formatLocalPhone } from "../../../lib/card-design";
 import { getDb } from "../../../server/db";
@@ -170,6 +171,8 @@ export default async function CardPage({ params }: Params) {
         </div>
         {contact}
       </section>
+
+      <GuestMediaSections token={token} />
       <p className="mt-6 text-center text-xs text-gray-400">{t("poweredBy")}</p>
     </Shell>
   );

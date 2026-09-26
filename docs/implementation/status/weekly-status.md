@@ -33,3 +33,8 @@
 - Phase 04 planned and started: T04-01…T04-07 (check-in core, offline sync API, confirmations + headcount, door app online, door app offline, walk-ins, live dashboard + backup list). Split: lead T04-01/02/06 backend, JetBrains assistant T04-03, subagents for the door app, approver screens and dashboard.
 - Phase 04 done and reviewed (`docs/implementation/reviews/2026-09-26-phase-04-review.md`): online and offline door check-in with CRDT sync and over-use alerts, lockout, walk-ins with push approvals, WhatsApp first-answer confirmations with replies, manual confirmations and expected headcount, live dashboard and printable backup list, D-Card Door app (online + encrypted offline cache).
 - UI direction recorded: reference projects analysed (`docs/research/ui-reference-projects.md`), design-system proposal (`docs/changes/proposed/ui-design-system.md`) and backlog items; owner decisions pending (colours, starter pack, dark mode, prototype).
+
+## 2026-09-27
+
+- Phase 05 tasks T05-01…T05-06 done and reviewed (`docs/implementation/reviews/2026-09-27-phase-05-review.md`): Snippe checkout (mobile money + hosted) with exactly-once unlock, pricing rules and launch offer, payment gate on cards and guest messages; Google Drive connect, folders, sharing modes, direct uploads, private streaming, quota and missing files; web checkout, host media and slideshow, guest gallery; mobile checkout. Phase stays `in-progress` until one real Snippe payment and a live Drive check (owner setup).
+- Worker and Redis moved to Railway (europe-west4, pinned TLS for Vercel); `WHATSAPP_LIVE` / `SNIPPE_LIVE` switches.

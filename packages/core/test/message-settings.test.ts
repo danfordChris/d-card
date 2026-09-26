@@ -2,8 +2,8 @@ import { eventRole, outbox, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
-  createEvent,
   DEFAULT_SMS,
   ForbiddenError,
   getMessageSettings,
@@ -20,7 +20,7 @@ let committeeId: string;
 let n = 0;
 
 const newEvent = (planKey: "msingi" | "kawaida" | "premium") =>
-  createEvent(handle.db, hostId, { planKey, eventTypeKey: "wedding", title: `E${++n}`, startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" });
+  createPaidEvent(handle.db, hostId, { planKey, eventTypeKey: "wedding", title: `E${++n}`, startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" });
 
 async function current(eventId: string) {
   return (await getMessageSettings(handle.db, hostId, eventId)).settings;

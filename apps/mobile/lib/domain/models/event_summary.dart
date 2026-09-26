@@ -18,6 +18,8 @@ class EventSummary {
     this.canRecordPayments = false,
     this.canViewWalkIns = false,
     this.canDecideWalkIns = false,
+    this.isHost = false,
+    this.planPaid = false,
     this.venueName,
     this.venueAddress,
     this.contact2Name,
@@ -52,6 +54,12 @@ class EventSummary {
 
   /// Host and walk-in approvers approve/refuse and review offline walk-ins; committee is read-only.
   final bool canDecideWalkIns;
+
+  /// Only the host pays for the event (T05-03).
+  final bool isHost;
+
+  /// Guest cards have been paid for at least once.
+  final bool planPaid;
 
   String typeName(String languageCode) => languageCode == 'sw' ? typeNameSw : typeNameEn;
 }

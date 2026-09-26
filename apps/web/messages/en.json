@@ -424,7 +424,74 @@
       "closed": "Answers are closed for this event."
     },
     "poweredBy": "D-Card digital invitation",
-    "download": "Download card image"
+    "download": "Download card image",
+    "story": {
+      "title": "Our story"
+    },
+    "gallery": {
+      "title": "Event gallery",
+      "photo": "Photo",
+      "video": "Video",
+      "empty": "No photos or videos yet. Be the first to share one.",
+      "emptyClosed": "No photos or videos yet.",
+      "add": "Add photos/videos",
+      "left": "{count, plural, =0{No uploads left.} =1{You can add 1 more.} other{You can add # more.}}",
+      "hint": "Photos are made smaller before upload to save data. Videos up to {seconds} seconds.",
+      "closesAt": "Uploads close on {date}.",
+      "limitUsed": "You have used all {limit} of your uploads. Thank you for sharing.",
+      "pageClosed": "The gallery for this event has closed. The photos and videos stay with the host.",
+      "loadError": "Could not load the photos and videos. Check your connection.",
+      "retryLoad": "Try again",
+      "closed": {
+        "not_started": "Uploads are not open yet. Please come back later.",
+        "window_closed": "The time for uploading photos and videos has ended.",
+        "drive_full": "The host's storage is full, so uploads are paused.",
+        "gallery_closed": "This gallery has closed.",
+        "not_available": "Guest uploads are not available for this event."
+      },
+      "queueTitle": "Your uploads",
+      "clearDone": "Clear finished",
+      "retry": "Retry",
+      "status": {
+        "waiting": "Waiting",
+        "preparing": "Preparing…",
+        "uploading": "Uploading {percent}%",
+        "finishing": "Finishing…",
+        "done": "Uploaded",
+        "failed": "Not uploaded"
+      },
+      "errors": {
+        "type": "This file type is not supported. Choose a photo or a video.",
+        "tooLarge": "This file is too large (maximum {mb} MB).",
+        "tooLong": "This video is too long (maximum {seconds} seconds).",
+        "duration": "Could not read this video. Try another file.",
+        "limitReached": "You have reached your upload limit.",
+        "uploadsClosed": "Uploads are closed.",
+        "driveFull": "The host's storage is full, so uploads are paused.",
+        "rateLimited": "Too many uploads at once. Wait a moment, then retry.",
+        "invalidFile": "This file was not accepted. Check its type, size and length.",
+        "network": "Connection lost. Check your network, then retry.",
+        "sessionExpired": "The upload expired. Retry to start again.",
+        "generic": "Upload failed. Please retry."
+      },
+      "viewer": {
+        "position": "{index} of {total}",
+        "close": "Close",
+        "previous": "Previous",
+        "next": "Next",
+        "loading": "Loading…",
+        "loadFailed": "Could not load this item.",
+        "by": "Shared by {name}",
+        "byYou": "Shared by you",
+        "delete": "Delete",
+        "deleteConfirm": "Delete your upload? This cannot be undone.",
+        "report": "Report",
+        "reportConfirm": "Report this item to the host?",
+        "reported": "Thank you. The host has been told.",
+        "cancel": "Cancel",
+        "actionFailed": "That did not work. Please try again."
+      }
+    }
   },
   "contributions": {
     "title": "Contributions",
@@ -830,5 +897,328 @@
     "errors": {
       "generic": "Could not save the confirmation. Please try again."
     }
+  },
+  "billing": {
+    "title": "Plan and payments",
+    "back": "Back to event",
+    "loading": "Loading…",
+    "loadError": "Could not load plan and payments. Please try again.",
+    "retry": "Try again",
+    "banner": {
+      "text": "Guest cards for this event are not paid for yet. Pay before sending cards.",
+      "link": "Pay for cards"
+    },
+    "summary": {
+      "plan": "{name} plan",
+      "pricePerGuest": "{amount} per guest card",
+      "paid": "Paid",
+      "unpaidBadge": "Not paid",
+      "cardsPaid": "Cards paid",
+      "cardsIssued": "Cards issued",
+      "guests": "Guests added",
+      "amountPaid": "Amount paid",
+      "unpaid": "Pay for your guest cards before sending them. You can add more cards later in blocks of 10.",
+      "overLimit": "You have {guests} guests but {paid} cards paid. Add more cards to invite everyone.",
+      "launchOffer": "Launch offer: {percent}% off your first event."
+    },
+    "actions": {
+      "buy": "Buy cards",
+      "addBlock": "Add 10 more",
+      "upgrade": "Upgrade plan"
+    },
+    "pending": {
+      "title": "A payment is waiting",
+      "body": "{amount}, started {date}.",
+      "resume": "Check status"
+    },
+    "history": {
+      "title": "Receipts",
+      "empty": "No payments yet."
+    },
+    "receipt": {
+      "reference": "Reference",
+      "amount": "Amount",
+      "discount": "Launch offer",
+      "cards": "Guest cards",
+      "cardsValue": "{count, plural, one {# card} other {# cards}}",
+      "plan": "Plan",
+      "date": "Date"
+    },
+    "checkout": {
+      "titles": {
+        "buy": "Buy guest cards",
+        "add": "Add more cards",
+        "upgrade": "Upgrade plan",
+        "resume": "Payment"
+      },
+      "intro": "Choose how many cards you need. The price below comes from D-Card and updates as you change it.",
+      "plan": "Plan",
+      "planOption": "{name} · {price} per card",
+      "planCurrent": "{name} · {price} per card (current)",
+      "cards": "Guest cards",
+      "decrease": "{size} fewer cards",
+      "increase": "{size} more cards",
+      "blockHint": "You have {paid} cards paid. Extra cards come in blocks of {size}.",
+      "suggestHint": "Suggested: one card for each of your {count} guests.",
+      "calculating": "Calculating the price…",
+      "minimumNote": "The minimum charge per event is {amount}.",
+      "nothingToPay": "Nothing to pay: these cards are already paid for.",
+      "lines": {
+        "new_cards": "{quantity} cards × {unitPrice}",
+        "extra_cards": "{quantity} extra cards × {unitPrice}",
+        "upgrade": "Upgrade {quantity} cards (+{unitPrice} each)",
+        "minimum_top_up": "Top-up to the minimum charge",
+        "other": "Other ({quantity})"
+      },
+      "subtotal": "Subtotal",
+      "launchOffer": "Launch offer ({percent}% off)",
+      "total": "Total",
+      "continue": "Review",
+      "cancel": "Cancel",
+      "back": "Back",
+      "review": {
+        "title": "Review and pay",
+        "intro": "{plan} plan, {count, plural, one {# guest card} other {# guest cards}} in total.",
+        "method": "How do you want to pay?",
+        "methods": {
+          "mobile": "Mobile money",
+          "mobileHint": "M-Pesa, Airtel Money, Mixx by Yas or HaloPesa. You confirm with your PIN.",
+          "session": "Card or other",
+          "sessionHint": "Opens a secure payment page in a new tab."
+        },
+        "phone": "Mobile money number",
+        "phoneHint": "For example 0754 123 456",
+        "secure": "Secure payment through Snippe.",
+        "pay": "Pay {amount}",
+        "paying": "Starting payment…"
+      },
+      "waiting": {
+        "mobileTitle": "Check your phone and enter your PIN",
+        "mobileBody": "We sent a request for {amount} to {phone}. Enter your mobile money PIN to pay.",
+        "sessionTitle": "Finish paying in the new tab",
+        "sessionBody": "Pay {amount} on the payment page. This page updates when the payment is done.",
+        "openPage": "Open the payment page",
+        "polling": "Waiting for confirmation…",
+        "later": "Close and check later"
+      },
+      "success": {
+        "title": "Payment received",
+        "next": "You can now send cards to up to {count} guests.",
+        "done": "Done"
+      },
+      "failure": {
+        "title": "The payment did not go through",
+        "expiredTitle": "The payment request expired",
+        "body": "No money was taken. You can try again.",
+        "retry": "Try again"
+      },
+      "errors": {
+        "phoneRequired": "Enter the mobile money number to pay from.",
+        "phoneInvalid": "Enter a Tanzanian number, for example 0754 123 456.",
+        "quote_changed": "The price changed. Check the new total and confirm again.",
+        "nothing_to_pay": "There is nothing to pay for these cards.",
+        "payment_in_progress": "Another payment for this event is still waiting. Check its status first.",
+        "provider": "The payment service is not available right now. Please try again shortly.",
+        "validation": "Check the details and try again.",
+        "forbidden": "Only the host can pay for this event.",
+        "generic": "Could not start the payment. Please try again.",
+        "quote": "Could not get the price. Please try again.",
+        "quoteInvalid": "Choose at least {min} cards and a plan the same or higher than the current one."
+      }
+    },
+    "admin": {
+      "title": "Billing settings",
+      "pageIntro": "Offers that apply to hosts' payments.",
+      "launchOffer": "Launch offer",
+      "intro": "A discount on a host's first event. Switch it off or change the percent at any time; payments already made are not affected.",
+      "enabled": "Launch offer is on",
+      "percent": "Discount (%)",
+      "percentHint": "0 to 90",
+      "percentError": "Enter a whole number from 0 to 90.",
+      "statusOn": "Hosts now get {percent}% off their first event.",
+      "statusOff": "No launch offer at the moment.",
+      "saved": "Saved.",
+      "error": "Could not save. Please try again.",
+      "loadError": "Could not load the settings.",
+      "loading": "Loading…",
+      "save": "Save",
+      "saving": "Saving…"
+    },
+    "nav": "Plan and payments"
+  },
+  "media": {
+    "nav": "Photos & videos",
+    "back": "Back to event",
+    "title": "Photos and videos",
+    "intro": "Photos and videos are kept in your own Google Drive. D-Card saves only the file references, never the files.",
+    "loading": "Loading photos and videos…",
+    "loadError": "Could not load the media settings.",
+    "retry": "Try again",
+    "readOnly": "Only the host can change photos, videos and the gallery. You can view them here.",
+    "msingi": "The Msingi plan has no photos or videos on the card. You can still share a Google Photos album link with your guests.",
+    "drive": {
+      "title": "Google Drive",
+      "intro": "Photos and videos go straight to a “D-Card – event name” folder in your Google Drive.",
+      "notConnected": "Google Drive is not connected yet. Connect it to add card photos, the story page and the guest gallery.",
+      "connect": "Connect Google Drive",
+      "hostOnly": "Only the host can connect Google Drive.",
+      "scopeNote": "D-Card can only see files it creates in that folder, never your other Drive files.",
+      "connected": "Google Drive is connected.",
+      "connectedAs": "Connected as {email}",
+      "openFolder": "Open folder in Drive",
+      "downloadHint": "To download everything, open the folder in Google Drive and use Drive's own download.",
+      "disconnect": "Disconnect",
+      "disconnected": "Google Drive has been disconnected. Your files stay in your Drive.",
+      "needsReconnect": "D-Card can no longer reach some files in your Google Drive. Reconnect so guests can see the photos and videos again.",
+      "reconnect": "Reconnect Google Drive",
+      "cancel": "Cancel",
+      "disconnectConfirm": {
+        "title": "Disconnect Google Drive?",
+        "body": "Guests will stop seeing the card photos, story and gallery until you connect again. Nothing is deleted: the files stay in your Drive."
+      },
+      "quota": {
+        "title": "Drive storage",
+        "used": "{used} of {limit} used",
+        "usedNoLimit": "{used} used",
+        "free": "{free} free",
+        "warning": "Your Drive may be too small for the photos and videos guests are expected to upload. Free up space or buy more Google storage before the event. Guest uploads pause when the Drive is full."
+      },
+      "sharing": {
+        "title": "Who can open the files",
+        "intro": "You can change this at any time.",
+        "default": "Recommended",
+        "private": {
+          "title": "Private",
+          "body": "Only you can open the folder in Drive. Guests see photos and videos only through D-Card with a valid card link, and access ends when the gallery page closes."
+        },
+        "link": {
+          "title": "Anyone with the link",
+          "body": "Simpler: guests load files straight from Drive. But anyone who gets a forwarded link can open them, until you change this setting."
+        },
+        "save": "Save sharing choice",
+        "connectFirst": "Connect Google Drive first."
+      },
+      "modeSaved": "Sharing choice saved.",
+      "errors": {
+        "notConnected": "Connect Google Drive before choosing how files are shared.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "photosLink": {
+      "title": "Google Photos album",
+      "intro": "Optional: paste a shared Google Photos album link to show on the card. D-Card stores nothing from it.",
+      "introMsingi": "Paste a shared Google Photos album link and guests will see it on the card. D-Card stores nothing from it.",
+      "label": "Album link",
+      "hint": "In Google Photos, open the album, tap Share and copy the link. Leave empty to remove it.",
+      "save": "Save link",
+      "saved": "Album link saved.",
+      "cleared": "Album link removed.",
+      "invalid": "Paste a full link that starts with https://",
+      "error": "Could not save the link. Please try again."
+    },
+    "editor": {
+      "card": {
+        "title": "Card photos and video",
+        "intro": "Shown on the invitation card as a slideshow, with a short video."
+      },
+      "story": {
+        "title": "Story page",
+        "intro": "Your photos and videos on the card link, for guests to enjoy before the event."
+      },
+      "counts": "Photos {photos}/{maxPhotos} · Videos {videos}/{maxVideos}",
+      "rules": "Photos are made smaller before upload. Videos up to {seconds} seconds.",
+      "limitReached": "You have used all the photos and videos your plan allows here.",
+      "connectFirst": "Connect Google Drive above to add photos and videos.",
+      "addPhotos": "Add photos",
+      "addVideo": "Add video",
+      "empty": "No photos or videos yet.",
+      "loadError": "Could not load the photos and videos.",
+      "retry": "Try again",
+      "dismiss": "Remove from list",
+      "photoAlt": "Photo",
+      "videoAlt": "Video",
+      "delete": "Delete",
+      "deleteError": "Could not delete. Please try again.",
+      "cancel": "Cancel",
+      "deleteConfirm": {
+        "title": "Delete this item?",
+        "body": "It will be removed from the card and deleted from the D-Card folder in your Drive."
+      },
+      "status": {
+        "hidden": "Hidden",
+        "missing": "Missing"
+      },
+      "stage": {
+        "checking": "Checking…",
+        "resizing": "Making the photo smaller…",
+        "uploading": "Uploading… {pct}%",
+        "finishing": "Finishing…"
+      },
+      "errors": {
+        "type": "This file type is not supported. Use JPG, PNG, WebP or HEIC photos, or MP4, MOV or WebM videos.",
+        "tooBig": "This file is larger than your plan allows.",
+        "tooLong": "This video is longer than {seconds} seconds. Trim it and try again.",
+        "duration": "Could not read the video length. Try another file.",
+        "photoLimit": "You have reached the photo limit for your plan.",
+        "videoLimit": "You have reached the video limit for your plan.",
+        "plan_limit": "Your plan does not allow more here.",
+        "drive_full": "Your Google Drive is full. Free up space and try again.",
+        "drive_not_connected": "Google Drive is not connected.",
+        "validation": "This file cannot be uploaded.",
+        "drive": "The upload to Google Drive failed.",
+        "network": "The connection dropped during the upload."
+      }
+    },
+    "gallery": {
+      "title": "Guest gallery",
+      "intro": "Photos and videos your guests upload from their card link. Hide anything you don't want shown; reported items come first.",
+      "refresh": "Refresh",
+      "loading": "Loading the gallery…",
+      "loadError": "Could not load the gallery.",
+      "error": "Could not save the change. Please try again.",
+      "empty": "No guest uploads yet.",
+      "reportedCount": "{count, plural, one {# item was reported by a guest.} other {# items were reported by guests.}}",
+      "host": "Host",
+      "photoAlt": "Photo from {name}",
+      "videoAlt": "Video from {name}",
+      "show": "Show",
+      "keep": "Keep showing",
+      "hide": "Hide",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "deleteConfirm": {
+        "title": "Delete the upload from {name}?",
+        "body": "It will be removed from the gallery and deleted from the D-Card folder in your Drive. This cannot be undone."
+      },
+      "status": {
+        "uploading": "Uploading",
+        "visible": "Shown",
+        "hidden": "Hidden",
+        "reported": "Reported",
+        "deleted": "Deleted",
+        "missing": "Missing"
+      }
+    },
+    "slideshow": {
+      "title": "Live slideshow",
+      "intro": "Show guest photos on the venue screen as they arrive. Open it on the computer connected to the screen.",
+      "open": "Open slideshow"
+    },
+    "slideshowPage": {
+      "notAvailable": "The live slideshow is part of the Premium plan.",
+      "back": "Back to photos and videos",
+      "waiting": "Waiting for guests' photos…",
+      "photoBy": "Photo from {name}",
+      "host": "the host",
+      "fullscreen": "Full screen",
+      "exit": "Exit"
+    }
+  },
+  "adminNav": {
+    "label": "Admin sections",
+    "eventTypes": "Event types",
+    "templates": "WhatsApp templates",
+    "rates": "Provider rates",
+    "billing": "Billing"
   }
 }
