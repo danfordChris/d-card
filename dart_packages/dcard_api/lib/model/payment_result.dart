@@ -55,7 +55,6 @@ class PaymentResult {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "PaymentResult[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "PaymentResult[$key]" has a null value in JSON.');
         });
         return true;
       }());

@@ -37,7 +37,80 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome, {email}"
+    "welcome": "Welcome, {email}",
+    "back": "Back to event",
+    "live": "Live",
+    "connecting": "Connecting…",
+    "reconnecting": "Reconnecting…",
+    "loading": "Loading…",
+    "loadFailed": "Could not load the dashboard. Retrying…",
+    "admitted": {
+      "title": "Admitted vs expected",
+      "arrived": "Arrived",
+      "split": "Cards {cards} · Walk-ins {walkIns} · Online {online} · Offline {offline}",
+      "expected": "Expected {expected} (non-responders at {pct}%)"
+    },
+    "cards": {
+      "title": "Cards checked in",
+      "notArrived": "{count, plural, =0 {Everyone has arrived} one {# card not yet arrived} other {# cards not yet arrived}}"
+    },
+    "confirmations": {
+      "title": "Confirmations",
+      "yes": "Coming",
+      "none": "No answer",
+      "no": "Not coming"
+    },
+    "walkIns": {
+      "title": "Walk-ins",
+      "pending": "{count, plural, =0 {No walk-ins waiting} one {# walk-in waiting for approval} other {# walk-ins waiting for approval}}",
+      "review": "{count, plural, =0 {No offline walk-ins to review} one {# offline walk-in to review} other {# offline walk-ins to review}}",
+      "open": "Open walk-ins"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "empty": "No alerts.",
+      "overUsedLabel": "Card over-used:",
+      "overUsed": "{name} ({card}) · {used} of {total} entries used",
+      "lockoutLabel": "Card numbers locked:",
+      "lockout": "{device} · {staff}",
+      "offline": "offline"
+    },
+    "devices": {
+      "title": "Door devices",
+      "empty": "No door devices yet.",
+      "device": "Device",
+      "staff": "Staff",
+      "lastSeen": "Last seen",
+      "lastSync": "Last sync",
+      "pending": "Waiting to sync",
+      "state": "Status",
+      "never": "Never",
+      "unnamed": "Unnamed device",
+      "synced": "Synced",
+      "waiting": "Syncing",
+      "stale": "Not synced",
+      "revoked": "Revoked",
+      "revoke": "Revoke",
+      "revokeYes": "Yes, revoke",
+      "cancel": "Cancel",
+      "revokeFailed": "Could not revoke the device. Please try again."
+    },
+    "backup": {
+      "link": "Backup list",
+      "title": "Backup guest list",
+      "back": "Back to dashboard",
+      "print": "Print",
+      "count": "{count, plural, one {# card} other {# cards}}",
+      "printedAt": "Printed {date}",
+      "empty": "No issued cards yet.",
+      "name": "Name",
+      "cardNumber": "Card number",
+      "type": "Type",
+      "entries": "Entries used",
+      "tick": "✓",
+      "single": "Single",
+      "double": "Double"
+    }
   },
   "events": {
     "title": "Events",
@@ -126,7 +199,10 @@
       "guests": "Guests",
       "team": "Team",
       "contributions": "Contributions",
-      "messages": "Messages"
+      "messages": "Messages",
+      "walkIns": "Walk-ins",
+      "dashboard": "Dashboard",
+      "backupList": "Backup list"
     }
   },
   "guests": {
@@ -664,6 +740,95 @@
       "intro": "These guests replied STOP. They get SMS only for this event.",
       "empty": "No guest has stopped WhatsApp messages.",
       "since": "Since {date}"
+    }
+  },
+  "walkIns": {
+    "title": "Walk-ins",
+    "back": "Back to event",
+    "loading": "Loading…",
+    "error": "Could not load walk-ins. Please try again.",
+    "readOnly": "View only. The host and walk-in approvers decide.",
+    "forbidden": "You can't decide walk-ins for this event.",
+    "decisionError": "Could not save the decision. Please try again.",
+    "alreadyDecided": "Already decided by {name} ({status}).",
+    "alreadyDecidedNoName": "Already decided ({status}).",
+    "linkedGuest": "Invitation: {name}",
+    "people": "{count, plural, one {# person} other {# people}}",
+    "requestedBy": "Requested by {name}",
+    "device": "Device: {name}",
+    "pending": {
+      "title": "Waiting for approval",
+      "intro": "Door staff asked to let these guests in. The first answer decides.",
+      "empty": "No walk-in is waiting."
+    },
+    "review": {
+      "title": "Needs review",
+      "intro": "Admitted at the door while offline. Check the reason, then accept or flag.",
+      "empty": "Nothing needs review.",
+      "reason": "Reason"
+    },
+    "history": {
+      "title": "History",
+      "empty": "No decisions yet.",
+      "decided": "Decided by {name} · {date}",
+      "someone": "someone",
+      "undecided": "Not decided yet"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "refused": "Refused",
+      "admitted_offline": "Admitted offline",
+      "accepted": "Accepted",
+      "flagged": "Flagged"
+    },
+    "actions": {
+      "approve": "Approve",
+      "refuse": "Refuse",
+      "accept": "Accept",
+      "flag": "Flag"
+    }
+  },
+  "confirmations": {
+    "nav": "Confirmations",
+    "title": "Attendance confirmations",
+    "intro": "Record phone responses, override an answer when needed, and review the expected event headcount.",
+    "back": "Back to event",
+    "save": "Save",
+    "saved": "Saved",
+    "notRecorded": "Not recorded",
+    "empty": "No guests match this confirmation state.",
+    "summary": {
+      "expected": "Expected headcount",
+      "totalEntries": "All invited places",
+      "assumption": "No response counts at {pct}%"
+    },
+    "filters": {
+      "label": "Filter confirmations",
+      "all": "All",
+      "yes": "Coming",
+      "none": "No response",
+      "no": "Not coming"
+    },
+    "status": {
+      "yes": "Coming",
+      "none": "No response",
+      "no": "Not coming"
+    },
+    "card": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "columns": {
+      "guest": "Guest",
+      "phone": "Phone",
+      "card": "Card",
+      "current": "Current answer",
+      "recorded": "Recorded",
+      "action": "Record or override"
+    },
+    "errors": {
+      "generic": "Could not save the confirmation. Please try again."
     }
   }
 }

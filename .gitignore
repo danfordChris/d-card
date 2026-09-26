@@ -21,3 +21,4 @@ apps/*/lib/l10n/app_localizations*.dart
 http/http-client.private.env.json
 # Astro (apps/site)
 .astro/
+.vercel

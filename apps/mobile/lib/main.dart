@@ -11,11 +11,14 @@ import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
 import 'data/repositories/push_registration_repository.dart';
 import 'data/repositories/session_repository.dart';
+import 'data/repositories/walk_in_alerts_repository.dart';
+import 'data/repositories/walk_ins_repository.dart';
 import 'data/services/api_factory.dart';
 import 'data/services/auth_service.dart';
 import 'data/services/contacts_source.dart';
 import 'data/services/dev_auth_service.dart';
 import 'data/services/firebase_auth_service.dart';
+import 'data/services/push_message_source.dart';
 import 'data/services/push_token_source.dart';
 
 Future<void> main() async {
@@ -23,12 +26,14 @@ Future<void> main() async {
   final config = AppConfig.fromEnvironment();
   final AuthService auth;
   PushTokenSource pushTokens = const NoPushTokenSource();
+  PushMessageSource pushMessages = const NoPushMessageSource();
   if (config.useFakeAuth) {
     auth = DevAuthService();
   } else if (config.firebaseOptions != null) {
     await Firebase.initializeApp(options: config.firebaseOptions);
     auth = FirebaseAuthService(FirebaseAuth.instance);
     pushTokens = FirebasePushTokenSource(FirebaseMessaging.instance);
+    pushMessages = FirebasePushMessageSource(FirebaseMessaging.instance);
   } else {
     runApp(const _MissingConfigApp());
     return;
@@ -48,6 +53,8 @@ Future<void> main() async {
       guests: GuestsRepository(api),
       contacts: DeviceContactsSource(),
       contributions: ContributionsRepository(api),
+      walkIns: WalkInsRepository(api),
+      walkInAlerts: WalkInAlertsRepository(pushMessages),
     ),
   );
 }

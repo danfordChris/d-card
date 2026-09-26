@@ -2,7 +2,7 @@ import { AdminWhatsappTemplateInput } from "@dcard/api-contract";
 import {
   createWhatsappTemplate,
   listWhatsappTemplates,
-} from "../../../../../../../../packages/core/dist/admin/messaging/messaging.js";
+} from "@dcard/core";
 import { requireUser } from "../../../../../server/current-user";
 import { getDb } from "../../../../../server/db";
 import { parseBody, toErrorResponse } from "../../../../../server/http";

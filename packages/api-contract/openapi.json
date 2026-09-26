@@ -384,6 +384,19 @@
               "walkin_approver"
             ]
           },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "host",
+                "treasurer",
+                "committee",
+                "door_staff",
+                "walkin_approver"
+              ]
+            }
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -420,6 +433,7 @@
           "reminderFrequencyDays",
           "photoAlbumUrl",
           "access",
+          "roles",
           "createdAt",
           "updatedAt"
         ]
@@ -2434,6 +2448,922 @@
           "counts",
           "optOuts"
         ]
+      },
+      "DoorEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "venueName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "host",
+              "committee",
+              "door_staff"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "startsAt",
+          "endsAt",
+          "timeZone",
+          "venueName",
+          "role"
+        ]
+      },
+      "DoorDevice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "staffName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastSyncAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revokedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "name",
+          "staffName",
+          "createdAt",
+          "lastSyncAt",
+          "revokedAt"
+        ]
+      },
+      "DoorDeviceRegisterInput": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "eventId",
+          "deviceId"
+        ],
+        "additionalProperties": false
+      },
+      "DoorLookupResult": {
+        "type": "object",
+        "properties": {
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoorCard"
+            }
+          }
+        },
+        "required": [
+          "cards"
+        ]
+      },
+      "DoorCard": {
+        "type": "object",
+        "properties": {
+          "invitationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "guestName": {
+            "type": "string"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardNumber": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardType": {
+            "type": "string",
+            "enum": [
+              "single",
+              "double"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "issued",
+              "cancelled"
+            ]
+          },
+          "totalEntries": {
+            "type": "integer"
+          },
+          "entriesUsed": {
+            "type": "integer"
+          },
+          "entriesLeft": {
+            "type": "integer"
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "overUsed": {
+            "type": "boolean"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoorEntry"
+            }
+          }
+        },
+        "required": [
+          "invitationId",
+          "guestName",
+          "partnerName",
+          "cardNumber",
+          "cardType",
+          "status",
+          "totalEntries",
+          "entriesUsed",
+          "entriesLeft",
+          "table",
+          "overUsed",
+          "entries"
+        ]
+      },
+      "DoorEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "admittedCount": {
+            "type": "integer"
+          },
+          "method": {
+            "$ref": "#/components/schemas/CheckInMethod"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deviceName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "staffName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "admittedCount",
+          "method",
+          "occurredAt",
+          "deviceName",
+          "staffName"
+        ]
+      },
+      "CheckInMethod": {
+        "type": "string",
+        "enum": [
+          "qr",
+          "card_number",
+          "name"
+        ]
+      },
+      "DoorRefusal": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          },
+          "card": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DoorCard"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "lockedUntil": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "error",
+          "card",
+          "lockedUntil"
+        ]
+      },
+      "DoorLookupInput": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qrToken": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "cardNumber": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 2,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "deviceId"
+        ],
+        "additionalProperties": false
+      },
+      "DoorSyncSnapshot": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full": {
+            "type": "boolean"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoorSyncCard"
+            }
+          },
+          "approvers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "userId",
+                "name"
+              ]
+            }
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "wipeAfter": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "eventId",
+          "full",
+          "cards",
+          "approvers",
+          "cursor",
+          "wipeAfter"
+        ]
+      },
+      "DoorSyncCard": {
+        "type": "object",
+        "properties": {
+          "invitationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "guestName": {
+            "type": "string"
+          },
+          "partnerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardNumber": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "qrTokenDigest": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardType": {
+            "type": "string",
+            "enum": [
+              "single",
+              "double"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "issued",
+              "cancelled"
+            ]
+          },
+          "totalEntries": {
+            "type": "integer"
+          },
+          "entriesUsed": {
+            "type": "integer"
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "overUsed": {
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "invitationId",
+          "guestName",
+          "partnerName",
+          "cardNumber",
+          "qrTokenDigest",
+          "cardType",
+          "status",
+          "totalEntries",
+          "entriesUsed",
+          "table",
+          "overUsed",
+          "updatedAt"
+        ]
+      },
+      "DoorSyncResult": {
+        "type": "object",
+        "properties": {
+          "entriesAccepted": {
+            "type": "integer"
+          },
+          "entriesDuplicate": {
+            "type": "integer"
+          },
+          "entriesRejected": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "attemptsAccepted": {
+            "type": "integer"
+          },
+          "walkInsAccepted": {
+            "type": "integer"
+          },
+          "overUsed": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "entriesAccepted",
+          "entriesDuplicate",
+          "entriesRejected",
+          "attemptsAccepted",
+          "walkInsAccepted",
+          "overUsed"
+        ]
+      },
+      "DoorSyncUpload": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoorSyncEntryInput"
+            },
+            "maxItems": 2000
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoorSyncAttemptInput"
+            },
+            "maxItems": 2000
+          },
+          "walkIns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfflineWalkInInput"
+            },
+            "maxItems": 500
+          },
+          "pending": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "deviceId",
+          "entries",
+          "attempts",
+          "pending"
+        ],
+        "additionalProperties": false
+      },
+      "DoorSyncEntryInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invitationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "admittedCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "method": {
+            "$ref": "#/components/schemas/CheckInMethod"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "invitationId",
+          "admittedCount",
+          "method",
+          "occurredAt"
+        ],
+        "additionalProperties": false
+      },
+      "DoorSyncAttemptInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invitationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "method": {
+            "$ref": "#/components/schemas/CheckInMethod"
+          },
+          "query": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "fully_used",
+              "cancelled",
+              "not_issued",
+              "too_many",
+              "not_found",
+              "locked"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "outcome",
+          "occurredAt"
+        ],
+        "additionalProperties": false
+      },
+      "OfflineWalkInInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 200
+          },
+          "invitationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "admittedCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "offlineReason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 200
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "admittedCount",
+          "offlineReason",
+          "occurredAt"
+        ],
+        "additionalProperties": false
+      },
+      "WalkIn": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WalkInStatus"
+          },
+          "description": {
+            "type": "string"
+          },
+          "invitationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "guestName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "admittedCount": {
+            "type": "integer"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "online",
+              "offline"
+            ]
+          },
+          "offlineReason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requestedBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deviceName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decidedBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decidedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "status",
+          "description",
+          "invitationId",
+          "guestName",
+          "admittedCount",
+          "source",
+          "offlineReason",
+          "requestedBy",
+          "deviceName",
+          "decidedBy",
+          "decidedAt",
+          "occurredAt"
+        ]
+      },
+      "WalkInStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "approved",
+          "refused",
+          "admitted_offline",
+          "accepted",
+          "flagged"
+        ]
+      },
+      "WalkInCreateInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 200
+          },
+          "invitationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "admittedCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          }
+        },
+        "required": [
+          "id",
+          "deviceId",
+          "description",
+          "admittedCount"
+        ],
+        "additionalProperties": false
+      },
+      "WalkInConflict": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          },
+          "walkIn": {
+            "$ref": "#/components/schemas/WalkIn"
+          }
+        },
+        "required": [
+          "error",
+          "walkIn"
+        ]
+      },
+      "WalkInDecisionInput": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "refuse",
+              "accept",
+              "flag"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "additionalProperties": false
+      },
+      "DoorEntryResult": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "$ref": "#/components/schemas/DoorEntry"
+          },
+          "card": {
+            "$ref": "#/components/schemas/DoorCard"
+          }
+        },
+        "required": [
+          "entry",
+          "card"
+        ]
+      },
+      "DoorEntryInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invitationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "admittedCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "method": {
+            "$ref": "#/components/schemas/CheckInMethod"
+          }
+        },
+        "required": [
+          "id",
+          "deviceId",
+          "invitationId",
+          "admittedCount",
+          "method"
+        ],
+        "additionalProperties": false
       }
     },
     "parameters": {}
@@ -6310,6 +7240,765 @@
           },
           "422": {
             "description": "Invalid filters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/events": {
+      "get": {
+        "operationId": "listDoorEvents",
+        "summary": "Events the signed-in user can check guests in for (host, committee, door staff)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DoorEvent"
+                      }
+                    }
+                  },
+                  "required": [
+                    "events"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/devices": {
+      "post": {
+        "operationId": "registerDoorDevice",
+        "summary": "Register this device for one event (idempotent per deviceId)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoorDeviceRegisterInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Already registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorDevice"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorDevice"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access or device revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "plan_limit (door staff)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/door-devices": {
+      "get": {
+        "operationId": "listDoorDevices",
+        "summary": "Door devices of an event with last sync (host, committee)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "devices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DoorDevice"
+                      }
+                    }
+                  },
+                  "required": [
+                    "devices"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/door-devices/{deviceId}": {
+      "delete": {
+        "operationId": "revokeDoorDevice",
+        "summary": "Revoke a door device (host); its next door call gets 403",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "deviceId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Revoked"
+          },
+          "403": {
+            "description": "Host only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/lookup": {
+      "post": {
+        "operationId": "doorLookup",
+        "summary": "Find a card by QR token, card number or name",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoorLookupInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Matching cards (name search may return several; QR/number at most one)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorLookupResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access or device revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found (a wrong card number counts toward the lockout)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorRefusal"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "423": {
+            "description": "locked: card-number entry locked for this staff account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorRefusal"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/sync": {
+      "get": {
+        "operationId": "doorSyncDownload",
+        "summary": "Event cache for offline check-in: full without `since`, changes only with it",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "deviceId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "required": false,
+            "name": "since",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100000
+            },
+            "required": false,
+            "name": "pending",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot or delta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorSyncSnapshot"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access or device revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "doorSyncUpload",
+        "summary": "Upload offline entries and attempts (idempotent; merges in any order)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoorSyncUpload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Merged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorSyncResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access or device revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/walk-ins": {
+      "post": {
+        "operationId": "doorRequestWalkIn",
+        "summary": "Request approval for a walk-in; pushes to the host and walk-in approvers",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalkInCreateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Already requested (same id)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalkIn"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Requested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalkIn"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access or device revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/walk-ins/{walkInId}": {
+      "get": {
+        "operationId": "doorGetWalkIn",
+        "summary": "The door polls its request for the decision",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "walkInId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "deviceId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Walk-in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalkIn"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown walk-in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/walk-ins": {
+      "get": {
+        "operationId": "listWalkIns",
+        "summary": "Walk-ins of an event (host, committee, walk-in approvers)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/WalkInStatus"
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Walk-ins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "walkIns": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WalkIn"
+                      }
+                    }
+                  },
+                  "required": [
+                    "walkIns"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/walk-ins/{walkInId}/decision": {
+      "post": {
+        "operationId": "decideWalkIn",
+        "summary": "Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "walkInId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalkInDecisionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Decided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalkIn"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Host or walk-in approver only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown walk-in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Already decided (shows who)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalkInConflict"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/door/entries": {
+      "post": {
+        "operationId": "doorAdmit",
+        "summary": "Admit 1 or 2 on a card, atomically (idempotent per entry id)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoorEntryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entry already recorded (same id)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorEntryResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Admitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorEntryResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No door access or device revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorRefusal"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "fully_used, cancelled, not_issued or too_many (more than entries left)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorRefusal"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
             "content": {
               "application/json": {
                 "schema": {

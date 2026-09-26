@@ -26,6 +26,13 @@ Method | HTTP request | Description
 [**confirmGuestImport**](DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
 [**createEvent**](DefaultApi.md#createevent) | **POST** /api/v1/events | Create a draft event (caller becomes host)
 [**createInvite**](DefaultApi.md#createinvite) | **POST** /api/v1/events/{id}/team/invites | Create a 7-day, single-use invite link; emails it when an email is given (host only)
+[**decideWalkIn**](DefaultApi.md#decidewalkin) | **POST** /api/v1/events/{id}/walk-ins/{walkInId}/decision | Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+[**doorAdmit**](DefaultApi.md#dooradmit) | **POST** /api/v1/door/entries | Admit 1 or 2 on a card, atomically (idempotent per entry id)
+[**doorGetWalkIn**](DefaultApi.md#doorgetwalkin) | **GET** /api/v1/door/walk-ins/{walkInId} | The door polls its request for the decision
+[**doorLookup**](DefaultApi.md#doorlookup) | **POST** /api/v1/door/lookup | Find a card by QR token, card number or name
+[**doorRequestWalkIn**](DefaultApi.md#doorrequestwalkin) | **POST** /api/v1/door/walk-ins | Request approval for a walk-in; pushes to the host and walk-in approvers
+[**doorSyncDownload**](DefaultApi.md#doorsyncdownload) | **GET** /api/v1/door/sync | Event cache for offline check-in: full without `since`, changes only with it
+[**doorSyncUpload**](DefaultApi.md#doorsyncupload) | **POST** /api/v1/door/sync | Upload offline entries and attempts (idempotent; merges in any order)
 [**getCardCalendar**](DefaultApi.md#getcardcalendar) | **GET** /api/v1/cards/{token}/calendar.ics | Calendar entry (text/calendar)
 [**getCardLink**](DefaultApi.md#getcardlink) | **GET** /api/v1/events/{id}/guests/{guestId}/card | Card number and link (host, committee)
 [**getContributions**](DefaultApi.md#getcontributions) | **GET** /api/v1/events/{id}/contributions | Totals and contributors (host, committee, treasurer)
@@ -38,19 +45,24 @@ Method | HTTP request | Description
 [**getPublicCard**](DefaultApi.md#getpubliccard) | **GET** /api/v1/cards/{token} | Guest card by link token (public, no login)
 [**getTeam**](DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
 [**issueCard**](DefaultApi.md#issuecard) | **POST** /api/v1/events/{id}/guests/{guestId}/issue | Issue the card directly (host). Pending only.
+[**listDoorDevices**](DefaultApi.md#listdoordevices) | **GET** /api/v1/events/{id}/door-devices | Door devices of an event with last sync (host, committee)
+[**listDoorEvents**](DefaultApi.md#listdoorevents) | **GET** /api/v1/door/events | Events the signed-in user can check guests in for (host, committee, door staff)
 [**listEventTypes**](DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
 [**listEvents**](DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
 [**listGuests**](DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
 [**listMessageLog**](DefaultApi.md#listmessagelog) | **GET** /api/v1/events/{id}/messages/log | Event message log (no costs) and WhatsApp opt-outs (host, committee)
 [**listPlans**](DefaultApi.md#listplans) | **GET** /api/v1/plans | Active plans with price per guest and entitlements
+[**listWalkIns**](DefaultApi.md#listwalkins) | **GET** /api/v1/events/{id}/walk-ins | Walk-ins of an event (host, committee, walk-in approvers)
 [**previewCopyGuests**](DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
 [**previewGuestImport**](DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 [**provisionMe**](DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
 [**recordPayment**](DefaultApi.md#recordpayment) | **POST** /api/v1/events/{id}/pledges/{pledgeId}/payments | Record a payment or refund (host, treasurer). Final payment issues the card.
 [**registerDevice**](DefaultApi.md#registerdevice) | **POST** /api/v1/me/devices | Register (upsert) this device's push token for the signed-in user
+[**registerDoorDevice**](DefaultApi.md#registerdoordevice) | **POST** /api/v1/door/devices | Register this device for one event (idempotent per deviceId)
 [**reinstateCard**](DefaultApi.md#reinstatecard) | **POST** /api/v1/events/{id}/guests/{guestId}/reinstate | Reinstate a cancelled card (host): same number and tokens.
 [**removeGuest**](DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
 [**removeMember**](DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
+[**revokeDoorDevice**](DefaultApi.md#revokedoordevice) | **DELETE** /api/v1/events/{id}/door-devices/{deviceId} | Revoke a door device (host); its next door call gets 403
 [**revokeInvite**](DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
 [**sendManualMessage**](DefaultApi.md#sendmanualmessage) | **POST** /api/v1/events/{id}/messages/send | Send a message now to a guest group, or preview the recipient count (host)
 [**sendTestMessage**](DefaultApi.md#sendtestmessage) | **POST** /api/v1/events/{id}/messages/{type}/test | Send a message with sample values to the host's own phone (rate-limited)
@@ -936,6 +948,373 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **decideWalkIn**
+> WalkIn decideWalkIn(id, walkInId, walkInDecisionInput)
+
+Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final walkInId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final walkInDecisionInput = WalkInDecisionInput(); // WalkInDecisionInput | 
+
+try {
+    final result = api_instance.decideWalkIn(id, walkInId, walkInDecisionInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->decideWalkIn: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **walkInId** | **String**|  | 
+ **walkInDecisionInput** | [**WalkInDecisionInput**](WalkInDecisionInput.md)|  | [optional] 
+
+### Return type
+
+[**WalkIn**](WalkIn.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **doorAdmit**
+> DoorEntryResult doorAdmit(doorEntryInput)
+
+Admit 1 or 2 on a card, atomically (idempotent per entry id)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final doorEntryInput = DoorEntryInput(); // DoorEntryInput | 
+
+try {
+    final result = api_instance.doorAdmit(doorEntryInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->doorAdmit: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **doorEntryInput** | [**DoorEntryInput**](DoorEntryInput.md)|  | [optional] 
+
+### Return type
+
+[**DoorEntryResult**](DoorEntryResult.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **doorGetWalkIn**
+> WalkIn doorGetWalkIn(walkInId, deviceId)
+
+The door polls its request for the decision
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final walkInId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final deviceId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final result = api_instance.doorGetWalkIn(walkInId, deviceId);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->doorGetWalkIn: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **walkInId** | **String**|  | 
+ **deviceId** | **String**|  | 
+
+### Return type
+
+[**WalkIn**](WalkIn.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **doorLookup**
+> DoorLookupResult doorLookup(doorLookupInput)
+
+Find a card by QR token, card number or name
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final doorLookupInput = DoorLookupInput(); // DoorLookupInput | 
+
+try {
+    final result = api_instance.doorLookup(doorLookupInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->doorLookup: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **doorLookupInput** | [**DoorLookupInput**](DoorLookupInput.md)|  | [optional] 
+
+### Return type
+
+[**DoorLookupResult**](DoorLookupResult.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **doorRequestWalkIn**
+> WalkIn doorRequestWalkIn(walkInCreateInput)
+
+Request approval for a walk-in; pushes to the host and walk-in approvers
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final walkInCreateInput = WalkInCreateInput(); // WalkInCreateInput | 
+
+try {
+    final result = api_instance.doorRequestWalkIn(walkInCreateInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->doorRequestWalkIn: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **walkInCreateInput** | [**WalkInCreateInput**](WalkInCreateInput.md)|  | [optional] 
+
+### Return type
+
+[**WalkIn**](WalkIn.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **doorSyncDownload**
+> DoorSyncSnapshot doorSyncDownload(deviceId, since, pending)
+
+Event cache for offline check-in: full without `since`, changes only with it
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final deviceId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final since = since_example; // String | 
+final pending = 56; // int | 
+
+try {
+    final result = api_instance.doorSyncDownload(deviceId, since, pending);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->doorSyncDownload: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceId** | **String**|  | 
+ **since** | **String**|  | [optional] 
+ **pending** | **int**|  | [optional] 
+
+### Return type
+
+[**DoorSyncSnapshot**](DoorSyncSnapshot.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **doorSyncUpload**
+> DoorSyncResult doorSyncUpload(doorSyncUpload)
+
+Upload offline entries and attempts (idempotent; merges in any order)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final doorSyncUpload = DoorSyncUpload(); // DoorSyncUpload | 
+
+try {
+    final result = api_instance.doorSyncUpload(doorSyncUpload);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->doorSyncUpload: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **doorSyncUpload** | [**DoorSyncUpload**](DoorSyncUpload.md)|  | [optional] 
+
+### Return type
+
+[**DoorSyncResult**](DoorSyncResult.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getCardCalendar**
 > String getCardCalendar(token)
 
@@ -1522,6 +1901,104 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **listDoorDevices**
+> ListDoorDevices200Response listDoorDevices(id)
+
+Door devices of an event with last sync (host, committee)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final result = api_instance.listDoorDevices(id);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listDoorDevices: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**ListDoorDevices200Response**](ListDoorDevices200Response.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listDoorEvents**
+> ListDoorEvents200Response listDoorEvents()
+
+Events the signed-in user can check guests in for (host, committee, door staff)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.listDoorEvents();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listDoorEvents: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**ListDoorEvents200Response**](ListDoorEvents200Response.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **listEventTypes**
 > EventTypeList listEventTypes()
 
@@ -1763,6 +2240,59 @@ This endpoint does not need any parameter.
 ### Authorization
 
 [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listWalkIns**
+> ListWalkIns200Response listWalkIns(id, status)
+
+Walk-ins of an event (host, committee, walk-in approvers)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final status = ; // WalkInStatus | 
+
+try {
+    final result = api_instance.listWalkIns(id, status);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listWalkIns: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **status** | [**WalkInStatus**](.md)|  | [optional] 
+
+### Return type
+
+[**ListWalkIns200Response**](ListWalkIns200Response.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
 
 ### HTTP request headers
 
@@ -2026,6 +2556,57 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **registerDoorDevice**
+> DoorDevice registerDoorDevice(doorDeviceRegisterInput)
+
+Register this device for one event (idempotent per deviceId)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final doorDeviceRegisterInput = DoorDeviceRegisterInput(); // DoorDeviceRegisterInput | 
+
+try {
+    final result = api_instance.registerDoorDevice(doorDeviceRegisterInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->registerDoorDevice: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **doorDeviceRegisterInput** | [**DoorDeviceRegisterInput**](DoorDeviceRegisterInput.md)|  | [optional] 
+
+### Return type
+
+[**DoorDevice**](DoorDevice.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **reinstateCard**
 > Card reinstateCard(id, guestId)
 
@@ -2169,6 +2750,58 @@ Name | Type | Description  | Notes
  **id** | **String**|  | 
  **userId** | **String**|  | 
  **role** | [**TeamRole**](.md)|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **revokeDoorDevice**
+> revokeDoorDevice(id, deviceId)
+
+Revoke a door device (host); its next door call gets 403
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final deviceId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    api_instance.revokeDoorDevice(id, deviceId);
+} catch (e) {
+    print('Exception when calling DefaultApi->revokeDoorDevice: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **deviceId** | **String**|  | 
 
 ### Return type
 

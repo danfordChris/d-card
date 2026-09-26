@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:dcard_api/api.dart';
 import 'package:dcard_mobile/data/services/auth_service.dart';
 import 'package:dcard_mobile/data/services/contacts_source.dart';
+import 'package:dcard_mobile/data/services/push_message_source.dart';
 import 'package:dcard_mobile/domain/models/app_failure.dart';
 
 class FakeAuthService implements AuthService {
@@ -128,6 +132,74 @@ class FakeApi extends DefaultApi {
   }
 
   @override
+  Future<Event?> getEvent(String id) async {
+    final match = events.where((e) => e.id == id);
+    if (match.isEmpty) throw ApiException(404, '{"error":{"code":"not_found","message":"Event not found."}}');
+    return match.first;
+  }
+
+  /// Walk-ins by id, as the server holds them.
+  List<WalkIn> walkIns = [];
+  int walkInListCalls = 0;
+  final decisions = <(String, WalkInDecisionInputDecisionEnum)>[];
+
+  /// Walk-ins another approver already decided: the next decision gets 409 with this state.
+  final decidedElsewhere = <String, WalkIn>{};
+
+  /// Status code to fail decisions with (e.g. 403 for committee).
+  int? decideErrorCode;
+
+  @override
+  Future<ListWalkIns200Response?> listWalkIns(String id, {WalkInStatus? status}) async {
+    walkInListCalls++;
+    return ListWalkIns200Response(
+      walkIns: [
+        for (final w in walkIns)
+          if (w.eventId == id) w,
+      ],
+    );
+  }
+
+  @override
+  Future<WalkIn?> decideWalkIn(String id, String walkInId, {WalkInDecisionInput? walkInDecisionInput}) async {
+    final decision = walkInDecisionInput!.decision;
+    decisions.add((walkInId, decision));
+    if (decideErrorCode != null) {
+      throw ApiException(decideErrorCode!, '{"error":{"code":"forbidden","message":"Not allowed."}}');
+    }
+    final other = decidedElsewhere.remove(walkInId);
+    if (other != null) {
+      _put(other);
+      throw ApiException(
+        409,
+        jsonEncode({
+          'error': {'code': 'already_decided', 'message': 'Already decided.'},
+          'walkIn': other.toJson(),
+        }),
+      );
+    }
+    final w = walkIns.firstWhere((x) => x.id == walkInId);
+    final next = fakeWalkIn(
+      id: w.id,
+      description: w.description,
+      admittedCount: w.admittedCount,
+      offlineReason: w.offlineReason,
+      guestName: w.guestName,
+      status: switch (decision) {
+        WalkInDecisionInputDecisionEnum.approve => WalkInStatus.approved,
+        WalkInDecisionInputDecisionEnum.refuse => WalkInStatus.refused,
+        WalkInDecisionInputDecisionEnum.accept => WalkInStatus.accepted,
+        _ => WalkInStatus.flagged,
+      },
+      decidedBy: 'host@example.com',
+    );
+    _put(next);
+    return next;
+  }
+
+  void _put(WalkIn w) => walkIns = [for (final x in walkIns) x.id == w.id ? w : x];
+
+  @override
   Future<EventList?> listEvents() async {
     listCalls++;
     if (listError != null) throw listError!;
@@ -232,3 +304,49 @@ Pledge fakePledge({
   invitationStatus: cardNumber == null ? PledgeInvitationStatusEnum.pending : PledgeInvitationStatusEnum.issued,
   cardNumber: cardNumber,
 );
+
+WalkIn fakeWalkIn({
+  required String id,
+  String eventId = 'e1',
+  String description = 'Mjomba wa bibi harusi',
+  WalkInStatus? status,
+  int admittedCount = 1,
+  String? guestName,
+  String? offlineReason,
+  String? decidedBy,
+}) {
+  final s = status ?? (offlineReason != null ? WalkInStatus.admittedOffline : WalkInStatus.pending);
+  final offline = offlineReason != null;
+  return WalkIn(
+    id: id,
+    eventId: eventId,
+    status: s,
+    description: description,
+    invitationId: guestName == null ? null : 'inv-$id',
+    guestName: guestName,
+    admittedCount: admittedCount,
+    source_: offline ? WalkInSource_Enum.offline : WalkInSource_Enum.online,
+    offlineReason: offlineReason,
+    requestedBy: 'door@example.com',
+    deviceName: 'Lango kuu',
+    decidedBy: decidedBy,
+    decidedAt: decidedBy == null ? null : DateTime.utc(2026, 12, 12, 14, 5),
+    occurredAt: DateTime.utc(2026, 12, 12, 14), // 17:00 in Dar es Salaam
+  );
+}
+
+/// Push messages the tests inject.
+class FakePushMessageSource implements PushMessageSource {
+  final foregroundController = StreamController<Map<String, Object?>>.broadcast();
+  final openedController = StreamController<Map<String, Object?>>.broadcast();
+  Map<String, Object?>? initialMessage;
+
+  @override
+  Stream<Map<String, Object?>> get foreground => foregroundController.stream;
+
+  @override
+  Stream<Map<String, Object?>> get opened => openedController.stream;
+
+  @override
+  Future<Map<String, Object?>?> initial() async => initialMessage;
+}

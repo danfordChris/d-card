@@ -60,7 +60,7 @@ in-progress
 
 ### P04
 
-- [ ] Confirmations and check-in — `docs/implementation/phases/phase-04-confirmation-check-in.md`
+- [x] Confirmations and check-in — `docs/implementation/phases/phase-04-confirmation-check-in.md`
 
 ### P05
 
@@ -84,3 +84,15 @@ Raised after reviewing the web app. Each needs a design decision (order, scope, 
 - [ ] **Google Drive folders created automatically.** When the host connects Google, create the event folders (card, story, gallery) with the private/link sharing choice (`docs/design/integrations/google-drive.md`). Planned in P05; owner expects it earlier.
 - [ ] **Events I'm invited to.** Needs guest sign-in with Google/Apple linked to the Person (AUTH-3, GST-16 event history).
 - [x] **"Host can only create one event"** — checked 2026-09-25: two events created back to back in the web wizard both appear on the dashboard. The reported block came from the broken sign-in (`/events/new` redirected to `/login`) and the missing navigation (covered above).
+
+### Owner direction (2026-09-26) — UI/UX and cost
+
+Proposal: `docs/changes/proposed/ui-design-system.md`; sources: `docs/research/ui-reference-projects.md`. Refinement work, scheduled after the owner answers the proposal's open questions (colours, starter pack, dark mode, prototype).
+
+- [ ] **Design tokens, font and icons** — Plus Jakarta Sans, Hugeicons only (replace emoji/Material icons), colour/spacing/radius/type tokens in `dcard_ui` and web `@theme`; lint against hex literals and emoji icons; no decorative gradients/glows/shadows.
+- [ ] **Shared component set** — mobile (from Notify): button, input family, search + filter sheet + active chips, card, status badge, detail rows, bottom sheet, confirm sheet, toast, empty/success views, layout shell, haptics. Web (from Solomon web): Button, inputs, Badge, Card, TableSection + typed table + pagination, Modal, SlideOver, ConfirmProvider, Toast, EmptyState, Skeleton, Tabs.
+- [ ] **Clickable prototype for approval** — host app dashboard + event screen, web shell with side navigation (merges the 2026-09-25 "App navigation" request).
+- [ ] **Roll out** — web shell and lists/forms, mobile shell and dashboard, door result screens, admin area; four states (loading/empty/no results/error) on every async surface.
+- [ ] **Money flows** — review → confirm → receipt pattern for payments and plan checkout (P05), one currency formatter.
+- [ ] **Worker hosting at lowest cost** — choose and set up the worker host (Railway or cheaper equivalent) with `NEXTSMS_LIVE`/`WHATSAPP_LIVE` only there; record monthly cost.
+- [ ] **Service boundaries** — keep bounded contexts separable in `packages/core` (events, guests, contributions, cards, messaging, check-in, confirmations, admin); document which could split first when scaling.

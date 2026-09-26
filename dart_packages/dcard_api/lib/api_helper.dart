@@ -61,6 +61,9 @@ String parameterToString(dynamic value) {
   if (value is CardType) {
     return CardTypeTypeTransformer().encode(value).toString();
   }
+  if (value is CheckInMethod) {
+    return CheckInMethodTypeTransformer().encode(value).toString();
+  }
   if (value is DeviceApp) {
     return DeviceAppTypeTransformer().encode(value).toString();
   }
@@ -75,6 +78,9 @@ String parameterToString(dynamic value) {
   }
   if (value is TeamRole) {
     return TeamRoleTypeTransformer().encode(value).toString();
+  }
+  if (value is WalkInStatus) {
+    return WalkInStatusTypeTransformer().encode(value).toString();
   }
   return value.toString();
 }

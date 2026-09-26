@@ -61,7 +61,6 @@ class SendManualMessage202Response {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "SendManualMessage202Response[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "SendManualMessage202Response[$key]" has a null value in JSON.');
         });
         return true;
       }());

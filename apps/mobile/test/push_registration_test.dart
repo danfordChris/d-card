@@ -7,6 +7,8 @@ import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
 import 'package:dcard_mobile/data/repositories/push_registration_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
+import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
+import 'package:dcard_mobile/data/repositories/walk_ins_repository.dart';
 import 'package:dcard_mobile/data/services/push_token_source.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -118,6 +120,8 @@ void main() {
           guests: GuestsRepository(api),
           contacts: FakeContactsSource(),
           contributions: ContributionsRepository(api),
+          walkIns: WalkInsRepository(api),
+          walkInAlerts: WalkInAlertsRepository(FakePushMessageSource()),
           locale: const Locale('en'),
         ),
       );

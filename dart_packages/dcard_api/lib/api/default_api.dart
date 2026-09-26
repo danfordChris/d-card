@@ -899,6 +899,403 @@ class DefaultApi {
     return null;
   }
 
+  /// Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] walkInId (required):
+  ///
+  /// * [WalkInDecisionInput] walkInDecisionInput:
+  Future<Response> decideWalkInWithHttpInfo(String id, String walkInId, { WalkInDecisionInput? walkInDecisionInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/walk-ins/{walkInId}/decision'
+      .replaceAll('{id}', id)
+      .replaceAll('{walkInId}', walkInId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = walkInDecisionInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] walkInId (required):
+  ///
+  /// * [WalkInDecisionInput] walkInDecisionInput:
+  Future<WalkIn?> decideWalkIn(String id, String walkInId, { WalkInDecisionInput? walkInDecisionInput, }) async {
+    final response = await decideWalkInWithHttpInfo(id, walkInId,  walkInDecisionInput: walkInDecisionInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'WalkIn',) as WalkIn;
+    
+    }
+    return null;
+  }
+
+  /// Admit 1 or 2 on a card, atomically (idempotent per entry id)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorEntryInput] doorEntryInput:
+  Future<Response> doorAdmitWithHttpInfo({ DoorEntryInput? doorEntryInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/entries';
+
+    // ignore: prefer_final_locals
+    Object? postBody = doorEntryInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Admit 1 or 2 on a card, atomically (idempotent per entry id)
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorEntryInput] doorEntryInput:
+  Future<DoorEntryResult?> doorAdmit({ DoorEntryInput? doorEntryInput, }) async {
+    final response = await doorAdmitWithHttpInfo( doorEntryInput: doorEntryInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'DoorEntryResult',) as DoorEntryResult;
+    
+    }
+    return null;
+  }
+
+  /// The door polls its request for the decision
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] walkInId (required):
+  ///
+  /// * [String] deviceId (required):
+  Future<Response> doorGetWalkInWithHttpInfo(String walkInId, String deviceId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/walk-ins/{walkInId}'
+      .replaceAll('{walkInId}', walkInId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'deviceId', deviceId));
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// The door polls its request for the decision
+  ///
+  /// Parameters:
+  ///
+  /// * [String] walkInId (required):
+  ///
+  /// * [String] deviceId (required):
+  Future<WalkIn?> doorGetWalkIn(String walkInId, String deviceId,) async {
+    final response = await doorGetWalkInWithHttpInfo(walkInId, deviceId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'WalkIn',) as WalkIn;
+    
+    }
+    return null;
+  }
+
+  /// Find a card by QR token, card number or name
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorLookupInput] doorLookupInput:
+  Future<Response> doorLookupWithHttpInfo({ DoorLookupInput? doorLookupInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/lookup';
+
+    // ignore: prefer_final_locals
+    Object? postBody = doorLookupInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Find a card by QR token, card number or name
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorLookupInput] doorLookupInput:
+  Future<DoorLookupResult?> doorLookup({ DoorLookupInput? doorLookupInput, }) async {
+    final response = await doorLookupWithHttpInfo( doorLookupInput: doorLookupInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'DoorLookupResult',) as DoorLookupResult;
+    
+    }
+    return null;
+  }
+
+  /// Request approval for a walk-in; pushes to the host and walk-in approvers
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [WalkInCreateInput] walkInCreateInput:
+  Future<Response> doorRequestWalkInWithHttpInfo({ WalkInCreateInput? walkInCreateInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/walk-ins';
+
+    // ignore: prefer_final_locals
+    Object? postBody = walkInCreateInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Request approval for a walk-in; pushes to the host and walk-in approvers
+  ///
+  /// Parameters:
+  ///
+  /// * [WalkInCreateInput] walkInCreateInput:
+  Future<WalkIn?> doorRequestWalkIn({ WalkInCreateInput? walkInCreateInput, }) async {
+    final response = await doorRequestWalkInWithHttpInfo( walkInCreateInput: walkInCreateInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'WalkIn',) as WalkIn;
+    
+    }
+    return null;
+  }
+
+  /// Event cache for offline check-in: full without `since`, changes only with it
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] deviceId (required):
+  ///
+  /// * [String] since:
+  ///
+  /// * [int] pending:
+  Future<Response> doorSyncDownloadWithHttpInfo(String deviceId, { String? since, int? pending, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/sync';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'deviceId', deviceId));
+    if (since != null) {
+      queryParams.addAll(_queryParams('', 'since', since));
+    }
+    if (pending != null) {
+      queryParams.addAll(_queryParams('', 'pending', pending));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Event cache for offline check-in: full without `since`, changes only with it
+  ///
+  /// Parameters:
+  ///
+  /// * [String] deviceId (required):
+  ///
+  /// * [String] since:
+  ///
+  /// * [int] pending:
+  Future<DoorSyncSnapshot?> doorSyncDownload(String deviceId, { String? since, int? pending, }) async {
+    final response = await doorSyncDownloadWithHttpInfo(deviceId,  since: since, pending: pending, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'DoorSyncSnapshot',) as DoorSyncSnapshot;
+    
+    }
+    return null;
+  }
+
+  /// Upload offline entries and attempts (idempotent; merges in any order)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorSyncUpload] doorSyncUpload:
+  Future<Response> doorSyncUploadWithHttpInfo({ DoorSyncUpload? doorSyncUpload, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/sync';
+
+    // ignore: prefer_final_locals
+    Object? postBody = doorSyncUpload;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Upload offline entries and attempts (idempotent; merges in any order)
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorSyncUpload] doorSyncUpload:
+  Future<DoorSyncResult?> doorSyncUpload({ DoorSyncUpload? doorSyncUpload, }) async {
+    final response = await doorSyncUploadWithHttpInfo( doorSyncUpload: doorSyncUpload, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'DoorSyncResult',) as DoorSyncResult;
+    
+    }
+    return null;
+  }
+
   /// Calendar entry (text/calendar)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1537,6 +1934,103 @@ class DefaultApi {
     return null;
   }
 
+  /// Door devices of an event with last sync (host, committee)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> listDoorDevicesWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/door-devices'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Door devices of an event with last sync (host, committee)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ListDoorDevices200Response?> listDoorDevices(String id,) async {
+    final response = await listDoorDevicesWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListDoorDevices200Response',) as ListDoorDevices200Response;
+    
+    }
+    return null;
+  }
+
+  /// Events the signed-in user can check guests in for (host, committee, door staff)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> listDoorEventsWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/events';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Events the signed-in user can check guests in for (host, committee, door staff)
+  Future<ListDoorEvents200Response?> listDoorEvents() async {
+    final response = await listDoorEventsWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListDoorEvents200Response',) as ListDoorEvents200Response;
+    
+    }
+    return null;
+  }
+
   /// Active event types
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1840,6 +2334,67 @@ class DefaultApi {
     return null;
   }
 
+  /// Walk-ins of an event (host, committee, walk-in approvers)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [WalkInStatus] status:
+  Future<Response> listWalkInsWithHttpInfo(String id, { WalkInStatus? status, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/walk-ins'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (status != null) {
+      queryParams.addAll(_queryParams('', 'status', status));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Walk-ins of an event (host, committee, walk-in approvers)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [WalkInStatus] status:
+  Future<ListWalkIns200Response?> listWalkIns(String id, { WalkInStatus? status, }) async {
+    final response = await listWalkInsWithHttpInfo(id,  status: status, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListWalkIns200Response',) as ListWalkIns200Response;
+    
+    }
+    return null;
+  }
+
   /// Preview copying people from the caller's past event
   ///
   /// Note: This method returns the HTTP [Response].
@@ -2122,6 +2677,58 @@ class DefaultApi {
     return null;
   }
 
+  /// Register this device for one event (idempotent per deviceId)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorDeviceRegisterInput] doorDeviceRegisterInput:
+  Future<Response> registerDoorDeviceWithHttpInfo({ DoorDeviceRegisterInput? doorDeviceRegisterInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/door/devices';
+
+    // ignore: prefer_final_locals
+    Object? postBody = doorDeviceRegisterInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Register this device for one event (idempotent per deviceId)
+  ///
+  /// Parameters:
+  ///
+  /// * [DoorDeviceRegisterInput] doorDeviceRegisterInput:
+  Future<DoorDevice?> registerDoorDevice({ DoorDeviceRegisterInput? doorDeviceRegisterInput, }) async {
+    final response = await registerDoorDeviceWithHttpInfo( doorDeviceRegisterInput: doorDeviceRegisterInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'DoorDevice',) as DoorDevice;
+    
+    }
+    return null;
+  }
+
   /// Reinstate a cancelled card (host): same number and tokens.
   ///
   /// Note: This method returns the HTTP [Response].
@@ -2271,6 +2878,56 @@ class DefaultApi {
   /// * [TeamRole] role (required):
   Future<void> removeMember(String id, String userId, TeamRole role,) async {
     final response = await removeMemberWithHttpInfo(id, userId, role,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Revoke a door device (host); its next door call gets 403
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] deviceId (required):
+  Future<Response> revokeDoorDeviceWithHttpInfo(String id, String deviceId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/door-devices/{deviceId}'
+      .replaceAll('{id}', id)
+      .replaceAll('{deviceId}', deviceId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Revoke a door device (host); its next door call gets 403
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] deviceId (required):
+  Future<void> revokeDoorDevice(String id, String deviceId,) async {
+    final response = await revokeDoorDeviceWithHttpInfo(id, deviceId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

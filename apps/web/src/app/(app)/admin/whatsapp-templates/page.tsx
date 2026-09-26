@@ -1,4 +1,4 @@
-import { listWhatsappTemplates } from "../../../../../../../packages/core/dist/admin/messaging/messaging.js";
+import { listWhatsappTemplates } from "@dcard/core";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { WhatsappTemplatesAdmin } from "../../../../features/admin/whatsapp-templates-admin";

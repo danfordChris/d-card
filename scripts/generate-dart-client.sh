@@ -29,5 +29,16 @@ if "resolution: workspace" not in s:
     s = s.replace("environment:", "resolution: workspace\npublish_to: none\n\nenvironment:", 1)
 open(p, "w").write(s)
 open("analysis_options.yaml", "w").write("analyzer:\n  exclude:\n    - '**'\n")
+
+# The generator asserts (debug builds only) that every required key is non-null, even for
+# fields the contract marks nullable (OpenAPI 3.1 `type: [x, "null"]`, typed `T?` in Dart).
+# That crashes debug builds on valid responses, so drop the null assertion; the presence
+# check stays.
+import glob
+for f in glob.glob("lib/model/*.dart"):
+    src = open(f).read()
+    out = re.sub(r"\n[ \t]*assert\(json\[key\] != null, 'Required key \"[^\"]+\" has a null value in JSON\.'\);", "", src)
+    if out != src:
+        open(f, "w").write(out)
 PY
 echo "dcard_api generated in $OUT"

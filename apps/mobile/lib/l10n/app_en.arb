@@ -318,5 +318,164 @@
         "type": "String"
       }
     }
+  },
+  "walkInsTitle": "Walk-ins",
+  "@walkInsTitle": {
+    "description": "Walk-ins screen title and event button."
+  },
+  "walkInsPending": "Waiting for approval",
+  "@walkInsPending": {
+    "description": "Section: pending walk-in requests."
+  },
+  "walkInsPendingEmpty": "No one is waiting at the door.",
+  "@walkInsPendingEmpty": {
+    "description": "Empty pending section."
+  },
+  "walkInsNeedsReview": "Admitted offline – needs review",
+  "@walkInsNeedsReview": {
+    "description": "Section: offline walk-ins to review."
+  },
+  "walkInsHistory": "Decided",
+  "@walkInsHistory": {
+    "description": "Section: decided walk-ins."
+  },
+  "walkInsEmpty": "No walk-in requests yet.",
+  "@walkInsEmpty": {
+    "description": "No walk-ins at all."
+  },
+  "walkInsReadOnly": "Only the host and walk-in approvers can decide. You can follow requests here.",
+  "@walkInsReadOnly": {
+    "description": "Committee read-only note."
+  },
+  "walkInApprove": "Approve",
+  "@walkInApprove": {
+    "description": "Approve a pending walk-in."
+  },
+  "walkInRefuse": "Refuse",
+  "@walkInRefuse": {
+    "description": "Refuse a pending walk-in."
+  },
+  "walkInAccept": "Accept",
+  "@walkInAccept": {
+    "description": "Accept an offline walk-in."
+  },
+  "walkInFlag": "Flag",
+  "@walkInFlag": {
+    "description": "Flag an offline walk-in."
+  },
+  "walkInPeople": "{count, plural, =1{1 person} other{{count} people}}",
+  "@walkInPeople": {
+    "description": "People to admit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "walkInCard": "Card: {name}",
+  "@walkInCard": {
+    "description": "Linked invitation's guest.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInGate": "Gate: {device}",
+  "@walkInGate": {
+    "description": "Door device that sent the request.",
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInRequestedBy": "Requested by {who}",
+  "@walkInRequestedBy": {
+    "description": "Door staff who sent the request.",
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInReason": "Reason: {reason}",
+  "@walkInReason": {
+    "description": "Offline admission reason.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInAt": "At {time}",
+  "@walkInAt": {
+    "description": "When the walk-in happened.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInSomeone": "someone",
+  "@walkInSomeone": {
+    "description": "Fallback when the decider is unknown."
+  },
+  "walkInStatusLabel": "{status, select, pending{Waiting} approved{Approved} refused{Refused} admitted_offline{Needs review} accepted{Accepted} flagged{Flagged} other{Updated}}",
+  "@walkInStatusLabel": {
+    "description": "Walk-in status.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInDecidedBy": "{status} by {who} · {time}",
+  "@walkInDecidedBy": {
+    "description": "Who decided and when.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInAlreadyDecided": "{status, select, approved{Already approved by {who}.} refused{Already refused by {who}.} accepted{Already accepted by {who}.} flagged{Already flagged by {who}.} other{Already answered by {who}.}}",
+  "@walkInAlreadyDecided": {
+    "description": "Someone else answered first (409).",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInSaved": "{status, select, approved{Approved. Let them in.} refused{Refused.} accepted{Accepted.} flagged{Flagged.} other{Saved.}}",
+  "@walkInSaved": {
+    "description": "Decision saved.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInPushPending": "New walk-in request at the door",
+  "@walkInPushPending": {
+    "description": "Foreground push banner: pending."
+  },
+  "walkInPushReview": "An offline walk-in needs review",
+  "@walkInPushReview": {
+    "description": "Foreground push banner: offline."
+  },
+  "walkInOpen": "Open",
+  "@walkInOpen": {
+    "description": "Open the walk-ins screen from the banner."
   }
 }

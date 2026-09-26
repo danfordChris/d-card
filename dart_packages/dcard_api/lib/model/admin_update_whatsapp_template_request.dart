@@ -175,7 +175,6 @@ class AdminUpdateWhatsappTemplateRequest {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "AdminUpdateWhatsappTemplateRequest[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "AdminUpdateWhatsappTemplateRequest[$key]" has a null value in JSON.');
         });
         return true;
       }());

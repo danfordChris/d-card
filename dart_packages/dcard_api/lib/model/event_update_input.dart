@@ -316,7 +316,6 @@ class EventUpdateInput {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "EventUpdateInput[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "EventUpdateInput[$key]" has a null value in JSON.');
         });
         return true;
       }());

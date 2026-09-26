@@ -1,4 +1,4 @@
-import { listProviderRates } from "../../../../../../../packages/core/dist/admin/messaging/messaging.js";
+import { listProviderRates } from "@dcard/core";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ProviderRatesAdmin } from "../../../../features/admin/provider-rates-admin";

@@ -214,6 +214,8 @@ class ApiClient {
           return CardLink.fromJson(value);
         case 'CardType':
           return CardTypeTypeTransformer().decode(value);
+        case 'CheckInMethod':
+          return CheckInMethodTypeTransformer().decode(value);
         case 'Contributions':
           return Contributions.fromJson(value);
         case 'ContributionsSummary':
@@ -232,6 +234,44 @@ class ApiClient {
           return DevicePlatformTypeTransformer().decode(value);
         case 'DeviceRegisterInput':
           return DeviceRegisterInput.fromJson(value);
+        case 'DoorCard':
+          return DoorCard.fromJson(value);
+        case 'DoorDevice':
+          return DoorDevice.fromJson(value);
+        case 'DoorDeviceRegisterInput':
+          return DoorDeviceRegisterInput.fromJson(value);
+        case 'DoorEntry':
+          return DoorEntry.fromJson(value);
+        case 'DoorEntryInput':
+          return DoorEntryInput.fromJson(value);
+        case 'DoorEntryResult':
+          return DoorEntryResult.fromJson(value);
+        case 'DoorEvent':
+          return DoorEvent.fromJson(value);
+        case 'DoorLookupInput':
+          return DoorLookupInput.fromJson(value);
+        case 'DoorLookupResult':
+          return DoorLookupResult.fromJson(value);
+        case 'DoorRefusal':
+          return DoorRefusal.fromJson(value);
+        case 'DoorRefusalCard':
+          return DoorRefusalCard.fromJson(value);
+        case 'DoorRefusalError':
+          return DoorRefusalError.fromJson(value);
+        case 'DoorSyncAttemptInput':
+          return DoorSyncAttemptInput.fromJson(value);
+        case 'DoorSyncCard':
+          return DoorSyncCard.fromJson(value);
+        case 'DoorSyncEntryInput':
+          return DoorSyncEntryInput.fromJson(value);
+        case 'DoorSyncResult':
+          return DoorSyncResult.fromJson(value);
+        case 'DoorSyncSnapshot':
+          return DoorSyncSnapshot.fromJson(value);
+        case 'DoorSyncSnapshotApproversInner':
+          return DoorSyncSnapshotApproversInner.fromJson(value);
+        case 'DoorSyncUpload':
+          return DoorSyncUpload.fromJson(value);
         case 'ErrorResponse':
           return ErrorResponse.fromJson(value);
         case 'ErrorResponseError':
@@ -298,6 +338,12 @@ class ApiClient {
           return InviteCreateResponse.fromJson(value);
         case 'InviteInfo':
           return InviteInfo.fromJson(value);
+        case 'ListDoorDevices200Response':
+          return ListDoorDevices200Response.fromJson(value);
+        case 'ListDoorEvents200Response':
+          return ListDoorEvents200Response.fromJson(value);
+        case 'ListWalkIns200Response':
+          return ListWalkIns200Response.fromJson(value);
         case 'MessageLog':
           return MessageLog.fromJson(value);
         case 'MessageLogItemsInner':
@@ -314,6 +360,8 @@ class ApiClient {
           return MessageSettingsTemplatesInner.fromJson(value);
         case 'MessageSettingsUsage':
           return MessageSettingsUsage.fromJson(value);
+        case 'OfflineWalkInInput':
+          return OfflineWalkInInput.fromJson(value);
         case 'Payment':
           return Payment.fromJson(value);
         case 'PaymentCreateInput':
@@ -366,6 +414,16 @@ class ApiClient {
           return UpdateMessageSettingsRequestSettingsInner.fromJson(value);
         case 'UpdateMessageSettingsRequestSettingsInnerSchedule':
           return UpdateMessageSettingsRequestSettingsInnerSchedule.fromJson(value);
+        case 'WalkIn':
+          return WalkIn.fromJson(value);
+        case 'WalkInConflict':
+          return WalkInConflict.fromJson(value);
+        case 'WalkInCreateInput':
+          return WalkInCreateInput.fromJson(value);
+        case 'WalkInDecisionInput':
+          return WalkInDecisionInput.fromJson(value);
+        case 'WalkInStatus':
+          return WalkInStatusTypeTransformer().decode(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

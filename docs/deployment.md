@@ -7,8 +7,9 @@
 
 | Component | Target | Trigger |
 |-----------|--------|---------|
-| `apps/web` — web dashboard + REST API + webhooks | Vercel, region `cpt1` (Cape Town) | `deploy.yml` |
-| Database | Neon Postgres | Migrated by `deploy.yml` before each deploy |
+| `apps/web` — web dashboard + REST API + webhooks | Vercel project `dcard-web` (https://api.dcard.danfordchris.dev; also dcard-web.vercel.app), functions in `fra1` (Frankfurt, next to the database) | `deploy.yml`, or `vercel deploy --prod` from the repo root |
+| Database | Neon Postgres `dcard` (Vercel Marketplace, `aws-eu-central-1`), connected to `dcard-web` (sets `DATABASE_URL`, `DATABASE_URL_UNPOOLED`) | Migrated by `deploy.yml` before each deploy |
+| Redis | Upstash Redis `dcard-redis` (Vercel Marketplace, `fra1`, free, auto-upgrade off) | — |
 | `apps/worker` | Railway (planned, not automated yet) | — |
 | `apps/mobile`, `apps/door` | Play Store / App Store | Manual by the owner |
 
@@ -44,7 +45,7 @@
    - `APP_URL`, `AUTH_VERIFIER=firebase`, `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY`, `REDIS_URL`
    - `API_KEYS` (one `client:key` pair per client: `web`, `mobile`, `door`, `tools`) and `NEXT_PUBLIC_DCARD_API_KEY` (the `web` key). Use different keys per environment; build the mobile and door apps with their key (`--dart-define=API_KEY=…`).
    - Firebase, WhatsApp, NextSMS, Google Drive and Snippe keys
-   - `NEXTSMS_LIVE=true` on the production worker only (anywhere else SMS go to the NextSMS test endpoint and reach no phone)
+   - `NEXTSMS_LIVE=true` and `WHATSAPP_LIVE=true` on the production worker only (anywhere else SMS go to the NextSMS test endpoint and WhatsApp messages are held; nothing reaches a phone)
    - Never set `AUTH_VERIFIER=fake` or `dev` on Vercel (the server refuses both in production).
 
 ### 3. GitHub (Settings → Secrets and variables → Actions)
@@ -62,6 +63,17 @@
 | `NEON_ROLE` | Variable (optional) | Role, default `neondb_owner` |
 
 Also create the GitHub environment **`production`** (Settings → Environments).
+
+## Current production (2026-09-25)
+
+- Created from the CLI: `vercel project add dcard-web`, `vercel link` at the repo root (Root Directory `apps/web`, build `cd ../.. && pnpm turbo run build --filter=@dcard/web...`, Node 24, Vercel Authentication on previews only so Meta can reach the webhooks).
+- `.vercelignore` at the repo root keeps `.env*`, build output and the Flutter apps out of CLI uploads (`next.config.ts` would otherwise load a root `.env` on the build machine).
+- Production variables on this account are **sensitive** (write-only). The generated values (API keys per client, token/encryption secrets, webhook verify tokens) are kept by the owner outside the repo; rotate by writing new values with `vercel env add <NAME> production --force` and redeploying.
+- Redis connected (`REDIS_URL` from Upstash; rate limit verified live: 21st request → 429).
+- WhatsApp keys set (access token, phone number ID, business account ID, App Secret); signed webhook POSTs verified live (valid signature → 200, tampered → 401).
+- Still to add: Resend/NextSMS/Snippe/Google keys; the worker host (Railway) is not set up yet, so queued messages and emails are not sent from production.
+- Domains (DNS at Cloudflare): `dcard.danfordchris.dev` → `dcard-site` (marketing site; `dcard-site.vercel.app` redirects to it); `api.dcard.danfordchris.dev` → `dcard-web` (API, webhooks and dashboard). The API host is two levels deep, which Cloudflare's free Universal SSL does not cover, so its record is a **DNS-only** (grey cloud) `CNAME api.dcard → cname.vercel-dns.com` and Vercel issues the certificate.
+- Meta webhook: callback `https://api.dcard.danfordchris.dev/api/webhooks/whatsapp`, verify token = production `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.
 
 ## Operations
 

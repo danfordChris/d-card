@@ -6,6 +6,8 @@ import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
+import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
+import 'package:dcard_mobile/data/repositories/walk_ins_repository.dart';
 import 'package:dcard_mobile/domain/models/app_failure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,6 +21,7 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
   FakeAuthService? auth,
   FakeApi? api,
   FakeContactsSource? contacts,
+  FakePushMessageSource? push,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
@@ -31,6 +34,8 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
       guests: GuestsRepository(p),
       contacts: contacts ?? FakeContactsSource(),
       contributions: ContributionsRepository(p),
+      walkIns: WalkInsRepository(p),
+      walkInAlerts: WalkInAlertsRepository(push ?? FakePushMessageSource()),
       locale: Locale(locale),
     ),
   );

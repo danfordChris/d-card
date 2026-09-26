@@ -18,3 +18,8 @@ export * from "./messaging/index.js";
 
 // T03-08 push device tokens.
 export * from "./devices/devices.js";
+export * from "./checkin/index.js";
+
+// T03-07 admin WhatsApp templates and provider rates; T04-03 confirmations.
+export * from "./admin/messaging/messaging.js";
+export * from "./confirmations/confirmations.js";

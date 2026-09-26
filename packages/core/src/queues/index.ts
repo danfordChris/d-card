@@ -6,6 +6,7 @@ export const QUEUES = {
   email: "email",
   sms: "sms",
   whatsapp: "whatsapp",
+  push: "push",
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];
@@ -20,8 +21,8 @@ export const SYSTEM_JOBS = {
   pollSmsDelivery: "poll-sms-delivery",
 } as const;
 
-/** Queues `sms` and `whatsapp`, job `send`; job id = message_log id. */
-export const MESSAGE_JOBS = { send: "send" } as const;
+/** Queues `sms` and `whatsapp`, job `send`; job id = message_log id. Queue `whatsapp`, job `reply`: free-form reply in the 24 h window, job id = `reply-<inbound wamid>`. */
+export const MESSAGE_JOBS = { send: "send", reply: "reply" } as const;
 export type SendMessageJob = { logId: string };
 
 export type PingJobData = { sentAt: string };
@@ -39,4 +40,14 @@ export type TeamInviteEmailJob = {
   role: "treasurer" | "committee" | "door_staff" | "walkin_approver";
   link: string;
   language: "sw" | "en";
+};
+
+/** Queue `push`, job `notify`: FCM push to every device of each user (T03-08 sender, T04-06). */
+export const PUSH_JOBS = { notify: "notify" } as const;
+export type PushNotifyJob = {
+  userIds: string[];
+  title: string;
+  body: string;
+  /** String values only (FCM data payload), e.g. { type: "walk_in", eventId, walkInId }. */
+  data?: Record<string, string>;
 };

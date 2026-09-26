@@ -2,7 +2,7 @@ import { AdminProviderRateInput } from "@dcard/api-contract";
 import {
   createProviderRate,
   listProviderRates,
-} from "../../../../../../../../packages/core/dist/admin/messaging/messaging.js";
+} from "@dcard/core";
 import { requireUser } from "../../../../../server/current-user";
 import { getDb } from "../../../../../server/db";
 import { parseBody, toErrorResponse } from "../../../../../server/http";

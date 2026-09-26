@@ -2,8 +2,8 @@
 
 ## Status
 
-- `pending`
-- Last updated: 2026-09-24
+- `done`
+- Last updated: 2026-09-26
 
 ## Objective
 
@@ -35,19 +35,26 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [x] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
 - [ ] Carried from T03-08: wire the door app's real FCM token source and `PushRegistrationRepository` into door sign-in, and add the first `sendToUser` caller (walk-in push to host/approvers).
 
 ## Acceptance Criteria
 
-- [ ] a simulated event with 2 offline gates and double cards syncs correctly. Over-use is flagged and audited.
-- [ ] Every linked task is `done` with verification evidence.
-- [ ] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
+- [x] a simulated event with 2 offline gates and double cards syncs correctly. Over-use is flagged and audited.
+- [x] Every linked task is `done` with verification evidence.
+- [x] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
 
 ## Blockers
 
-- Previous phase not done.
+- Phase 03 stays open only for live WhatsApp sends (T00-10); it does not block phase 04.
+- Door app sign-in needs Firebase Email/Password enabled and `api.dcard.danfordchris.dev` in Firebase authorized domains.
 
 ## Linked Tasks
 
-- None yet.
+- docs/implementation/tasks/t04-01-check-in-core.md
+- docs/implementation/tasks/t04-02-offline-sync-api.md
+- docs/implementation/tasks/t04-03-confirmations-headcount.md
+- docs/implementation/tasks/t04-04-door-app-online.md
+- docs/implementation/tasks/t04-05-door-app-offline.md
+- docs/implementation/tasks/t04-06-walk-ins.md
+- docs/implementation/tasks/t04-07-live-dashboard-backup.md

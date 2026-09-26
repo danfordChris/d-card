@@ -9,7 +9,7 @@
 
 - **SMS (outbound only): NextSMS.** Internet SMS with a registered sender ID. Base URL `https://messaging-service.co.tz`. API docs: https://documenter.getpostman.com/view/4680389/SW7dX7JL.
   - Auth: `Authorization: Basic <Base64 username:password>`; `Content-Type` and `Accept: application/json`.
-  - Send: `POST /api/sms/v1/text/single` with `from`, `to`, `text` and **`reference` = our message_log id**; the response has a status per recipient (`PENDING` or `REJECTED…`) and `smsCount` (segments) but **no message id**. Test endpoint: `POST /api/sms/v1/test/text/single` (validates, no delivery); the worker uses it unless `NEXTSMS_LIVE=true`, which only production sets.
+  - Send: `POST /api/sms/v1/text/single` with `from`, `to`, `text` and **`reference` = our message_log id**; the response has a status per recipient (`PENDING` or `REJECTED…`) and `smsCount` (segments) but **no message id**. Test endpoint: `POST /api/sms/v1/test/text/single` (validates, no delivery); the worker uses it unless `NEXTSMS_LIVE=true`, which only production sets. WhatsApp has no test endpoint: unless `WHATSAPP_LIVE=true` (production only) the worker holds WhatsApp messages without calling Meta.
   - Delivery status: **poll** `GET /api/sms/v1/logs?reference=<id>` (returns NextSMS `messageId`, status group `PENDING`/`DELIVERED`/`UNDELIVERABLE`/`EXPIRED`/`REJECTED`…). A delivery callback is not in the public docs; the webhook route stays as an optional fast path.
   - Limits: a number receives at most 20 different / 6 identical messages per hour (anti-flooding).
   - Price: TZS 10.5–16 per 160-character segment by volume.

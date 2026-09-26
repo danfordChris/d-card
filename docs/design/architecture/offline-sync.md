@@ -7,6 +7,7 @@
 ## Offline Check-in and Sync
 ### 9.1 Local cache
 - When online, the app downloads and keeps updated, for its event: invitations (name(s), card number, **hash** of the QR token, card type, total and used entries, status, table) and the list of walk-in approvers.
+- The QR hash sent to devices is a plain **SHA-256 of the token**, so the app can hash a scanned code and compare offline. The server's own lookup hash stays keyed (HMAC with a server secret) and never leaves the server; tokens are 32 random bytes, so a plain digest cannot be reversed or guessed.
 - The cache is stored in **encrypted SQLite (`sqflite_sqlcipher`)**, with the key in the device keystore (`flutter_secure_storage`). Small settings use `shared_preferences`.
 - The cache is **encrypted on the device** and **wiped automatically** after the event (e.g. 24 h after the event ends) or when the host revokes the device.
 - The app pulls changes regularly while online (a delta sync using an `updated_since` cursor), so offline decisions use recent data.

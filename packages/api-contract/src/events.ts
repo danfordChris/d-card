@@ -88,6 +88,8 @@ export const EventSchema = z
     reminderFrequencyDays: z.number().int().nullable(),
     photoAlbumUrl: z.string().nullable(),
     access: z.enum(["host", "treasurer", "committee", "door_staff", "walkin_approver"]),
+    /** All roles the caller holds for this event (use for permissions; `access` is only the first). */
+    roles: z.array(z.enum(["host", "treasurer", "committee", "door_staff", "walkin_approver"])),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
   })

@@ -65,7 +65,6 @@ class MessageLogOptOutsInner {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "MessageLogOptOutsInner[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "MessageLogOptOutsInner[$key]" has a null value in JSON.');
         });
         return true;
       }());

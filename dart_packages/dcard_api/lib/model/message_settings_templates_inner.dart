@@ -61,7 +61,6 @@ class MessageSettingsTemplatesInner {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "MessageSettingsTemplatesInner[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "MessageSettingsTemplatesInner[$key]" has a null value in JSON.');
         });
         return true;
       }());

@@ -4,10 +4,12 @@ import { Queue, Worker, type Job } from "bullmq";
 import type { Redis } from "ioredis";
 import { ResendEmailSender, type EmailSender } from "./email/sender.js";
 import { runDispatch } from "./messaging/dispatcher.js";
-import { createSendProcessor, type SendDeps } from "./messaging/processor.js";
+import { createSendProcessor, createWhatsAppProcessor, type SendDeps } from "./messaging/processor.js";
 import type { SmsDeliveryLookup, SmsSender, WhatsAppSender } from "./messaging/senders.js";
 import { createEmailProcessor } from "./processors/email.js";
 import { processSystemJob } from "./processors/system.js";
+import { createPushProcessor } from "./push/processor.js";
+import type { PushSender } from "./push/push.js";
 
 export type RunningWorkers = {
   workers: Worker[];
@@ -26,7 +28,7 @@ export type MessagingDeps = Omit<SendDeps, "db" | "sms" | "whatsapp" | "log"> & 
 export async function startWorkers(
   connection: Redis,
   log: (msg: string) => void = console.log,
-  deps: { emailSender?: EmailSender; prefix?: string; messaging?: MessagingDeps } = {},
+  deps: { emailSender?: EmailSender; prefix?: string; messaging?: MessagingDeps; push?: { db: Database; sender: PushSender } } = {},
 ): Promise<RunningWorkers> {
   const prefix = deps.prefix ?? process.env.QUEUE_PREFIX ?? "dcard";
   const queues: Queue[] = [];
@@ -77,10 +79,16 @@ export async function startWorkers(
   email.on("failed", (job, err) => log(`job:failed ${QUEUES.email}/${job?.name} ${err.message}`));
   workers.push(email);
 
+  if (deps.push) {
+    const push = new Worker(QUEUES.push, createPushProcessor(deps.push.db, deps.push.sender, log), { connection, concurrency: 5, prefix });
+    push.on("failed", (job, err) => log(`job:failed ${QUEUES.push}/${job?.name} ${err.message}`));
+    workers.push(push);
+  }
+
   if (m) {
-    const processor = createSendProcessor({ ...m, log });
-    for (const name of [QUEUES.sms, QUEUES.whatsapp]) {
-      const w = new Worker(name, processor, { connection, concurrency: 10, prefix });
+    const processors = { [QUEUES.sms]: createSendProcessor({ ...m, log }), [QUEUES.whatsapp]: createWhatsAppProcessor({ ...m, log }) };
+    for (const name of [QUEUES.sms, QUEUES.whatsapp] as const) {
+      const w = new Worker(name, processors[name], { connection, concurrency: 10, prefix });
       w.on("failed", (job, err) => log(`job:failed ${name}/${job?.id} ${err.message}`));
       workers.push(w);
     }

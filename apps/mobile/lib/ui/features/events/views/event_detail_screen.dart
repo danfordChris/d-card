@@ -8,6 +8,7 @@ import '../../contacts/view_models/contacts_picker_view_model.dart';
 import '../../contacts/views/contacts_picker_screen.dart';
 import '../../contributions/view_models/contributions_view_model.dart';
 import '../../contributions/views/contributions_screen.dart';
+import '../../walk_ins/views/walk_ins_screen.dart';
 import 'event_format.dart';
 
 /// Read-only event summary: type, date, venue, contact.
@@ -86,6 +87,17 @@ class EventDetailScreen extends StatelessWidget {
                     ),
                   );
                 },
+              ),
+            ),
+          if (event.canViewWalkIns)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: OutlinedButton.icon(
+                key: const Key('event.walkIns'),
+                icon: const Icon(Icons.how_to_reg_outlined),
+                label: Text(l10n.walkInsTitle),
+                onPressed: () =>
+                    openWalkIns(context, eventId: event.id, eventTitle: event.title, canDecide: event.canDecideWalkIns),
               ),
             ),
         ],

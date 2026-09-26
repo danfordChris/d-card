@@ -61,3 +61,7 @@ export type AdminProviderRateInput = adminMessagingZ.infer<typeof AdminProviderR
 
 // T03-08 push device tokens.
 export * from "./devices.js";
+export * from "./checkin.js";
+
+// T04-03 confirmation recording.
+export * from "./confirmations.js";

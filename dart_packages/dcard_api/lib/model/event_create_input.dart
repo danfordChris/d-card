@@ -288,7 +288,6 @@ class EventCreateInput {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "EventCreateInput[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "EventCreateInput[$key]" has a null value in JSON.');
         });
         return true;
       }());

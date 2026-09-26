@@ -75,7 +75,6 @@ class Rsvp {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Rsvp[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Rsvp[$key]" has a null value in JSON.');
         });
         return true;
       }());

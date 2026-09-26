@@ -86,6 +86,13 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**confirmGuestImport**](doc//DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
 *DefaultApi* | [**createEvent**](doc//DefaultApi.md#createevent) | **POST** /api/v1/events | Create a draft event (caller becomes host)
 *DefaultApi* | [**createInvite**](doc//DefaultApi.md#createinvite) | **POST** /api/v1/events/{id}/team/invites | Create a 7-day, single-use invite link; emails it when an email is given (host only)
+*DefaultApi* | [**decideWalkIn**](doc//DefaultApi.md#decidewalkin) | **POST** /api/v1/events/{id}/walk-ins/{walkInId}/decision | Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+*DefaultApi* | [**doorAdmit**](doc//DefaultApi.md#dooradmit) | **POST** /api/v1/door/entries | Admit 1 or 2 on a card, atomically (idempotent per entry id)
+*DefaultApi* | [**doorGetWalkIn**](doc//DefaultApi.md#doorgetwalkin) | **GET** /api/v1/door/walk-ins/{walkInId} | The door polls its request for the decision
+*DefaultApi* | [**doorLookup**](doc//DefaultApi.md#doorlookup) | **POST** /api/v1/door/lookup | Find a card by QR token, card number or name
+*DefaultApi* | [**doorRequestWalkIn**](doc//DefaultApi.md#doorrequestwalkin) | **POST** /api/v1/door/walk-ins | Request approval for a walk-in; pushes to the host and walk-in approvers
+*DefaultApi* | [**doorSyncDownload**](doc//DefaultApi.md#doorsyncdownload) | **GET** /api/v1/door/sync | Event cache for offline check-in: full without `since`, changes only with it
+*DefaultApi* | [**doorSyncUpload**](doc//DefaultApi.md#doorsyncupload) | **POST** /api/v1/door/sync | Upload offline entries and attempts (idempotent; merges in any order)
 *DefaultApi* | [**getCardCalendar**](doc//DefaultApi.md#getcardcalendar) | **GET** /api/v1/cards/{token}/calendar.ics | Calendar entry (text/calendar)
 *DefaultApi* | [**getCardLink**](doc//DefaultApi.md#getcardlink) | **GET** /api/v1/events/{id}/guests/{guestId}/card | Card number and link (host, committee)
 *DefaultApi* | [**getContributions**](doc//DefaultApi.md#getcontributions) | **GET** /api/v1/events/{id}/contributions | Totals and contributors (host, committee, treasurer)
@@ -98,19 +105,24 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**getPublicCard**](doc//DefaultApi.md#getpubliccard) | **GET** /api/v1/cards/{token} | Guest card by link token (public, no login)
 *DefaultApi* | [**getTeam**](doc//DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
 *DefaultApi* | [**issueCard**](doc//DefaultApi.md#issuecard) | **POST** /api/v1/events/{id}/guests/{guestId}/issue | Issue the card directly (host). Pending only.
+*DefaultApi* | [**listDoorDevices**](doc//DefaultApi.md#listdoordevices) | **GET** /api/v1/events/{id}/door-devices | Door devices of an event with last sync (host, committee)
+*DefaultApi* | [**listDoorEvents**](doc//DefaultApi.md#listdoorevents) | **GET** /api/v1/door/events | Events the signed-in user can check guests in for (host, committee, door staff)
 *DefaultApi* | [**listEventTypes**](doc//DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
 *DefaultApi* | [**listEvents**](doc//DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
 *DefaultApi* | [**listGuests**](doc//DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
 *DefaultApi* | [**listMessageLog**](doc//DefaultApi.md#listmessagelog) | **GET** /api/v1/events/{id}/messages/log | Event message log (no costs) and WhatsApp opt-outs (host, committee)
 *DefaultApi* | [**listPlans**](doc//DefaultApi.md#listplans) | **GET** /api/v1/plans | Active plans with price per guest and entitlements
+*DefaultApi* | [**listWalkIns**](doc//DefaultApi.md#listwalkins) | **GET** /api/v1/events/{id}/walk-ins | Walk-ins of an event (host, committee, walk-in approvers)
 *DefaultApi* | [**previewCopyGuests**](doc//DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
 *DefaultApi* | [**previewGuestImport**](doc//DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 *DefaultApi* | [**provisionMe**](doc//DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
 *DefaultApi* | [**recordPayment**](doc//DefaultApi.md#recordpayment) | **POST** /api/v1/events/{id}/pledges/{pledgeId}/payments | Record a payment or refund (host, treasurer). Final payment issues the card.
 *DefaultApi* | [**registerDevice**](doc//DefaultApi.md#registerdevice) | **POST** /api/v1/me/devices | Register (upsert) this device's push token for the signed-in user
+*DefaultApi* | [**registerDoorDevice**](doc//DefaultApi.md#registerdoordevice) | **POST** /api/v1/door/devices | Register this device for one event (idempotent per deviceId)
 *DefaultApi* | [**reinstateCard**](doc//DefaultApi.md#reinstatecard) | **POST** /api/v1/events/{id}/guests/{guestId}/reinstate | Reinstate a cancelled card (host): same number and tokens.
 *DefaultApi* | [**removeGuest**](doc//DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
 *DefaultApi* | [**removeMember**](doc//DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
+*DefaultApi* | [**revokeDoorDevice**](doc//DefaultApi.md#revokedoordevice) | **DELETE** /api/v1/events/{id}/door-devices/{deviceId} | Revoke a door device (host); its next door call gets 403
 *DefaultApi* | [**revokeInvite**](doc//DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
 *DefaultApi* | [**sendManualMessage**](doc//DefaultApi.md#sendmanualmessage) | **POST** /api/v1/events/{id}/messages/send | Send a message now to a guest group, or preview the recipient count (host)
 *DefaultApi* | [**sendTestMessage**](doc//DefaultApi.md#sendtestmessage) | **POST** /api/v1/events/{id}/messages/{type}/test | Send a message with sample values to the host's own phone (rate-limited)
@@ -141,6 +153,7 @@ Class | Method | HTTP request | Description
  - [Card](doc//Card.md)
  - [CardLink](doc//CardLink.md)
  - [CardType](doc//CardType.md)
+ - [CheckInMethod](doc//CheckInMethod.md)
  - [Contributions](doc//Contributions.md)
  - [ContributionsSummary](doc//ContributionsSummary.md)
  - [ContributionsSummaryCounts](doc//ContributionsSummaryCounts.md)
@@ -150,6 +163,25 @@ Class | Method | HTTP request | Description
  - [DeviceApp](doc//DeviceApp.md)
  - [DevicePlatform](doc//DevicePlatform.md)
  - [DeviceRegisterInput](doc//DeviceRegisterInput.md)
+ - [DoorCard](doc//DoorCard.md)
+ - [DoorDevice](doc//DoorDevice.md)
+ - [DoorDeviceRegisterInput](doc//DoorDeviceRegisterInput.md)
+ - [DoorEntry](doc//DoorEntry.md)
+ - [DoorEntryInput](doc//DoorEntryInput.md)
+ - [DoorEntryResult](doc//DoorEntryResult.md)
+ - [DoorEvent](doc//DoorEvent.md)
+ - [DoorLookupInput](doc//DoorLookupInput.md)
+ - [DoorLookupResult](doc//DoorLookupResult.md)
+ - [DoorRefusal](doc//DoorRefusal.md)
+ - [DoorRefusalCard](doc//DoorRefusalCard.md)
+ - [DoorRefusalError](doc//DoorRefusalError.md)
+ - [DoorSyncAttemptInput](doc//DoorSyncAttemptInput.md)
+ - [DoorSyncCard](doc//DoorSyncCard.md)
+ - [DoorSyncEntryInput](doc//DoorSyncEntryInput.md)
+ - [DoorSyncResult](doc//DoorSyncResult.md)
+ - [DoorSyncSnapshot](doc//DoorSyncSnapshot.md)
+ - [DoorSyncSnapshotApproversInner](doc//DoorSyncSnapshotApproversInner.md)
+ - [DoorSyncUpload](doc//DoorSyncUpload.md)
  - [ErrorResponse](doc//ErrorResponse.md)
  - [ErrorResponseError](doc//ErrorResponseError.md)
  - [ErrorResponseErrorIssuesInner](doc//ErrorResponseErrorIssuesInner.md)
@@ -183,6 +215,9 @@ Class | Method | HTTP request | Description
  - [InviteCreateInput](doc//InviteCreateInput.md)
  - [InviteCreateResponse](doc//InviteCreateResponse.md)
  - [InviteInfo](doc//InviteInfo.md)
+ - [ListDoorDevices200Response](doc//ListDoorDevices200Response.md)
+ - [ListDoorEvents200Response](doc//ListDoorEvents200Response.md)
+ - [ListWalkIns200Response](doc//ListWalkIns200Response.md)
  - [MessageLog](doc//MessageLog.md)
  - [MessageLogItemsInner](doc//MessageLogItemsInner.md)
  - [MessageLogOptOutsInner](doc//MessageLogOptOutsInner.md)
@@ -191,6 +226,7 @@ Class | Method | HTTP request | Description
  - [MessageSettingsSettingsInner](doc//MessageSettingsSettingsInner.md)
  - [MessageSettingsTemplatesInner](doc//MessageSettingsTemplatesInner.md)
  - [MessageSettingsUsage](doc//MessageSettingsUsage.md)
+ - [OfflineWalkInInput](doc//OfflineWalkInInput.md)
  - [Payment](doc//Payment.md)
  - [PaymentCreateInput](doc//PaymentCreateInput.md)
  - [PaymentMethod](doc//PaymentMethod.md)
@@ -217,6 +253,11 @@ Class | Method | HTTP request | Description
  - [UpdateMessageSettingsRequest](doc//UpdateMessageSettingsRequest.md)
  - [UpdateMessageSettingsRequestSettingsInner](doc//UpdateMessageSettingsRequestSettingsInner.md)
  - [UpdateMessageSettingsRequestSettingsInnerSchedule](doc//UpdateMessageSettingsRequestSettingsInnerSchedule.md)
+ - [WalkIn](doc//WalkIn.md)
+ - [WalkInConflict](doc//WalkInConflict.md)
+ - [WalkInCreateInput](doc//WalkInCreateInput.md)
+ - [WalkInDecisionInput](doc//WalkInDecisionInput.md)
+ - [WalkInStatus](doc//WalkInStatus.md)
 
 
 ## Documentation For Authorization

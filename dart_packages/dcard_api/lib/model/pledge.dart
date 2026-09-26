@@ -139,7 +139,6 @@ class Pledge {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Pledge[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Pledge[$key]" has a null value in JSON.');
         });
         return true;
       }());

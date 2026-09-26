@@ -1,5 +1,6 @@
 import { handleWhatsAppWebhook } from "@dcard/core";
 import { getDb } from "../../../../server/db";
+import { enqueueWhatsAppReplies } from "../../../../server/queue";
 import { validMetaSignature } from "../../../../server/webhook-auth";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +28,9 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ ok: true, ignored: "not json" });
   }
   try {
-    return Response.json({ ok: true, ...(await handleWhatsAppWebhook(getDb(), body)) });
+    const { replies, ...result } = await handleWhatsAppWebhook(getDb(), body);
+    await enqueueWhatsAppReplies(replies);
+    return Response.json({ ok: true, ...result, replies: replies.length });
   } catch (err) {
     // Answer 500 so Meta retries later; handlers are idempotent.
     console.error("whatsapp webhook failed", err);

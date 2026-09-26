@@ -85,6 +85,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("WHATSAPP_BUSINESS_ACCOUNT_ID", "WhatsApp Business Account ID", /^\d+$/),
       req("WHATSAPP_APP_SECRET", "App secret used to verify X-Hub-Signature-256 on webhooks"),
       req("WHATSAPP_WEBHOOK_VERIFY_TOKEN", "Token you choose; entered in the Meta webhook setup"),
+      opt("WHATSAPP_LIVE", "true = send real WhatsApp messages; anything else holds them without calling Meta. Set true in production only.", /^(true|false)$/),
       req("WHATSAPP_API_VERSION", "Graph API version, e.g. v23.0", /^v\d+\.\d+$/),
     ],
   },

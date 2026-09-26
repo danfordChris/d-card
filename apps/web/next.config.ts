@@ -27,6 +27,8 @@ const publicEnv = Object.fromEntries(
 
 const nextConfig: NextConfig = {
   env: publicEnv,
+  // `next build` type-checks without the dev server's .next/dev/types (see tsconfig.build.json).
+  typescript: { tsconfigPath: process.env.NODE_ENV === "production" ? "tsconfig.build.json" : "tsconfig.json" },
   serverExternalPackages: ["firebase-admin", "bullmq", "ioredis"],
 };
 

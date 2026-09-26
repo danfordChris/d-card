@@ -9,7 +9,7 @@ import { loadEventOr404, requireAccount } from "../../../../server/events-page-d
 export default async function EventSummaryPage({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
   const event = await loadEventOr404(account.id, (await params).id);
-  const [t, locale] = await Promise.all([getTranslations("events"), getLocale()]);
+  const [t, tc, locale] = await Promise.all([getTranslations("events"), getTranslations("confirmations"), getLocale()]);
   const editable = event.access === "host" && (event.status === "draft" || event.status === "published");
   const row = (label: string, value: string) => (
     <div className="grid grid-cols-3 gap-2 py-2 text-sm">
@@ -28,7 +28,7 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
             <span className="text-sm text-gray-500">{t(`access.${event.access}`)}</span>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {["host", "committee", "treasurer"].includes(event.access) && (
             <Link
               href={`/events/${event.id}/guests`}
@@ -52,6 +52,38 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
             >
               {t("summary.messages")}
             </Link>
+          )}
+          {["host", "committee"].includes(event.access) && (
+            <Link
+              href={`/events/${event.id}/confirmations`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {tc("nav")}
+            </Link>
+          )}
+          {["host", "committee", "walkin_approver"].includes(event.access) && (
+            <Link
+              href={`/events/${event.id}/walk-ins`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {t("summary.walkIns")}
+            </Link>
+          )}
+          {["host", "committee"].includes(event.access) && (
+            <>
+              <Link
+                href={`/events/${event.id}/dashboard`}
+                className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+              >
+                {t("summary.dashboard")}
+              </Link>
+              <Link
+                href={`/events/${event.id}/backup-list`}
+                className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+              >
+                {t("summary.backupList")}
+              </Link>
+            </>
           )}
         {editable && (
           <>

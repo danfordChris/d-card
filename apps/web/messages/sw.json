@@ -37,7 +37,80 @@
   },
   "dashboard": {
     "title": "Dashibodi",
-    "welcome": "Karibu, {email}"
+    "welcome": "Karibu, {email}",
+    "back": "Rudi kwenye tukio",
+    "live": "Moja kwa moja",
+    "connecting": "Inaunganisha…",
+    "reconnecting": "Inaunganisha upya…",
+    "loading": "Inapakia…",
+    "loadFailed": "Imeshindwa kupakia dashibodi. Inajaribu tena…",
+    "admitted": {
+      "title": "Walioingia dhidi ya wanaotarajiwa",
+      "arrived": "Wamefika",
+      "split": "Kadi {cards} · Wa mlangoni {walkIns} · Mtandaoni {online} · Bila mtandao {offline}",
+      "expected": "Wanatarajiwa {expected} (wasiojibu kwa {pct}%)"
+    },
+    "cards": {
+      "title": "Kadi zilizoingia",
+      "notArrived": "{count, plural, =0 {Wote wamefika} one {Kadi # bado haijafika} other {Kadi # bado hazijafika}}"
+    },
+    "confirmations": {
+      "title": "Uthibitisho",
+      "yes": "Watakuja",
+      "none": "Hawajajibu",
+      "no": "Hawatakuja"
+    },
+    "walkIns": {
+      "title": "Wageni wa mlangoni",
+      "pending": "{count, plural, =0 {Hakuna anayesubiri} one {Mgeni # anasubiri idhini} other {Wageni # wanasubiri idhini}}",
+      "review": "{count, plural, =0 {Hakuna wa kukagua (bila mtandao)} one {Mgeni # wa bila mtandao wa kukagua} other {Wageni # wa bila mtandao wa kukagua}}",
+      "open": "Fungua wageni wa mlangoni"
+    },
+    "alerts": {
+      "title": "Tahadhari",
+      "empty": "Hakuna tahadhari.",
+      "overUsedLabel": "Kadi imetumika zaidi:",
+      "overUsed": "{name} ({card}) · {used} kati ya {total} zimetumika",
+      "lockoutLabel": "Namba za kadi zimefungwa:",
+      "lockout": "{device} · {staff}",
+      "offline": "bila mtandao"
+    },
+    "devices": {
+      "title": "Vifaa vya mlangoni",
+      "empty": "Bado hakuna kifaa cha mlangoni.",
+      "device": "Kifaa",
+      "staff": "Mhudumu",
+      "lastSeen": "Mara ya mwisho kuonekana",
+      "lastSync": "Usawazishaji wa mwisho",
+      "pending": "Zinasubiri kusawazishwa",
+      "state": "Hali",
+      "never": "Bado",
+      "unnamed": "Kifaa bila jina",
+      "synced": "Kimesawazishwa",
+      "waiting": "Kinasawazisha",
+      "stale": "Hakijasawazishwa",
+      "revoked": "Kimefutiwa ruhusa",
+      "revoke": "Futa ruhusa",
+      "revokeYes": "Ndiyo, futa ruhusa",
+      "cancel": "Ghairi",
+      "revokeFailed": "Imeshindwa kufuta ruhusa ya kifaa. Jaribu tena."
+    },
+    "backup": {
+      "link": "Orodha ya akiba",
+      "title": "Orodha ya akiba ya wageni",
+      "back": "Rudi kwenye dashibodi",
+      "print": "Chapisha",
+      "count": "{count, plural, one {Kadi #} other {Kadi #}}",
+      "printedAt": "Imechapishwa {date}",
+      "empty": "Bado hakuna kadi zilizotolewa.",
+      "name": "Jina",
+      "cardNumber": "Namba ya kadi",
+      "type": "Aina",
+      "entries": "Zilizotumika",
+      "tick": "✓",
+      "single": "Single",
+      "double": "Double"
+    }
   },
   "events": {
     "title": "Matukio",
@@ -126,7 +199,10 @@
       "guests": "Wageni",
       "team": "Timu",
       "contributions": "Michango",
-      "messages": "Ujumbe"
+      "messages": "Ujumbe",
+      "walkIns": "Wageni wa mlangoni",
+      "dashboard": "Dashibodi",
+      "backupList": "Orodha ya akiba"
     }
   },
   "guests": {
@@ -664,6 +740,95 @@
       "intro": "Wageni hawa walijibu STOP. Watapokea SMS pekee kwa tukio hili.",
       "empty": "Hakuna mgeni aliyesitisha ujumbe wa WhatsApp.",
       "since": "Tangu {date}"
+    }
+  },
+  "walkIns": {
+    "title": "Wageni wa mlangoni",
+    "back": "Rudi kwenye tukio",
+    "loading": "Inapakia…",
+    "error": "Imeshindikana kupakia wageni wa mlangoni. Jaribu tena.",
+    "readOnly": "Unaweza kuona tu. Mwenyeji na walioteuliwa kuidhinisha ndio wanaoamua.",
+    "forbidden": "Huna ruhusa ya kuamua maombi ya wageni wa mlangoni kwa tukio hili.",
+    "decisionError": "Imeshindikana kuhifadhi uamuzi. Jaribu tena.",
+    "alreadyDecided": "Ombi hili limeshaamuliwa na {name} ({status}).",
+    "alreadyDecidedNoName": "Ombi hili limeshaamuliwa ({status}).",
+    "linkedGuest": "Mwaliko: {name}",
+    "people": "{count, plural, one {mtu #} other {watu #}}",
+    "requestedBy": "Aliyeomba: {name}",
+    "device": "Kifaa: {name}",
+    "pending": {
+      "title": "Wanaosubiri idhini",
+      "intro": "Mhudumu wa mlangoni ameomba kuwaruhusu wageni hawa. Jibu la kwanza ndilo linaloamua.",
+      "empty": "Hakuna ombi linalosubiri."
+    },
+    "review": {
+      "title": "Wanahitaji kukaguliwa",
+      "intro": "Waliruhusiwa kuingia mlangoni bila mtandao. Kagua sababu, kisha kubali au weka alama.",
+      "empty": "Hakuna anayehitaji kukaguliwa.",
+      "reason": "Sababu"
+    },
+    "history": {
+      "title": "Historia",
+      "empty": "Bado hakuna uamuzi.",
+      "decided": "Imeamuliwa na {name} · {date}",
+      "someone": "mtu mwingine",
+      "undecided": "Bado haijaamuliwa"
+    },
+    "statuses": {
+      "pending": "Inasubiri",
+      "approved": "Imeidhinishwa",
+      "refused": "Imekataliwa",
+      "admitted_offline": "Aliingia bila mtandao",
+      "accepted": "Imekubaliwa",
+      "flagged": "Imewekewa alama"
+    },
+    "actions": {
+      "approve": "Idhinisha",
+      "refuse": "Kataa",
+      "accept": "Kubali",
+      "flag": "Weka alama"
+    }
+  },
+  "confirmations": {
+    "nav": "Uthibitisho",
+    "title": "Uthibitisho wa kuhudhuria",
+    "intro": "Rekodi majibu ya simu, badilisha jibu inapohitajika, na uone idadi inayotarajiwa kuhudhuria.",
+    "back": "Rudi kwenye tukio",
+    "save": "Hifadhi",
+    "saved": "Imehifadhiwa",
+    "notRecorded": "Haijarekodiwa",
+    "empty": "Hakuna mgeni katika hali hii ya uthibitisho.",
+    "summary": {
+      "expected": "Idadi inayotarajiwa",
+      "totalEntries": "Nafasi zote za walioalikwa",
+      "assumption": "Asiyejibu anahesabiwa kwa {pct}%"
+    },
+    "filters": {
+      "label": "Chuja uthibitisho",
+      "all": "Wote",
+      "yes": "Atahudhuria",
+      "none": "Hajajibu",
+      "no": "Hatahudhuria"
+    },
+    "status": {
+      "yes": "Atahudhuria",
+      "none": "Hajajibu",
+      "no": "Hatahudhuria"
+    },
+    "card": {
+      "single": "Mmoja",
+      "double": "Wawili"
+    },
+    "columns": {
+      "guest": "Mgeni",
+      "phone": "Simu",
+      "card": "Kadi",
+      "current": "Jibu la sasa",
+      "recorded": "Ilirekodiwa",
+      "action": "Rekodi au badilisha"
+    },
+    "errors": {
+      "generic": "Imeshindikana kuhifadhi uthibitisho. Tafadhali jaribu tena."
     }
   }
 }
