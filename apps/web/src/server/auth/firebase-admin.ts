@@ -38,3 +38,21 @@ export function deleteFirebaseUser(uid: string): Promise<void> {
 export function setFirebaseUserDeleter(fn: (uid: string) => Promise<void>): void {
   userDeleter = fn;
 }
+
+let sessionRevoker = async (uid: string): Promise<void> => {
+  await getFirebaseAuth()
+    .revokeRefreshTokens(uid)
+    .catch((e: { code?: string }) => {
+      if (e.code !== "auth/user-not-found") throw e;
+    });
+};
+
+/** Ends every session of a Firebase user (session cookies are verified with checkRevoked). */
+export function revokeFirebaseSessions(uid: string): Promise<void> {
+  return sessionRevoker(uid);
+}
+
+/** Tests replace the Firebase call. */
+export function setFirebaseSessionRevoker(fn: (uid: string) => Promise<void>): void {
+  sessionRevoker = fn;
+}

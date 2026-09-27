@@ -1,12 +1,11 @@
 import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
 import { BillingSettingsAdmin } from "../../../../features/billing/billing-settings-admin";
-import { requireAccount } from "../../../../server/events-page-data";
+import { requireVerifiedAdminPage } from "../../../../server/admin-page";
 
 // T05-02: launch offer setting (admin can change or switch it off).
 export default async function AdminBillingPage() {
-  const account = await requireAccount();
-  if (!account.isAdmin) notFound();
+  const account = await requireVerifiedAdminPage();
+  if (!account) return null;
   const t = await getTranslations("billing.admin");
   return (
     <section className="space-y-6">

@@ -3,7 +3,7 @@
 
 const RULES: [RegExp, string][] = [
   [/(Bearer\s+)[A-Za-z0-9._~+/=-]+/gi, "$1[token]"],
-  [/((?:\/c|\/cards|\/confirm)\/)[A-Za-z0-9_-]{20,100}/g, "$1[token]"],
+  [/((?:\/c|\/cards|\/confirm|\/invite|\/invites)\/)[A-Za-z0-9_-]{20,100}/g, "$1[token]"],
   [/\b(?:\+?255|0)[67]\d{8}\b/g, "[phone]"],
   [/\bsnp_[A-Za-z0-9_-]+/g, "[key]"],
   [/\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g, "[email]"],

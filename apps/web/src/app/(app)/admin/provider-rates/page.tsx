@@ -1,13 +1,12 @@
 import { listProviderRates } from "@dcard/core";
 import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
 import { ProviderRatesAdmin } from "../../../../features/admin/provider-rates-admin";
 import { getDb } from "../../../../server/db";
-import { requireAccount } from "../../../../server/events-page-data";
+import { requireVerifiedAdminPage } from "../../../../server/admin-page";
 
 export default async function AdminProviderRatesPage() {
-  const account = await requireAccount();
-  if (!account.isAdmin) notFound();
+  const account = await requireVerifiedAdminPage();
+  if (!account) return null;
   const [rates, t] = await Promise.all([listProviderRates(getDb(), account.id), getTranslations("adminMessaging")]);
   return (
     <section className="space-y-6">

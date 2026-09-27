@@ -38,7 +38,8 @@ const detailFields = {
   timeZone: z.string().max(64).optional(),
   venueName: nullableText(200),
   venueAddress: nullableText(500),
-  venueMapUrl: z.url().max(500).nullable().optional(),
+  // SEC-08: web links only; other schemes (javascript:, intent:, file:) are refused.
+  venueMapUrl: z.url({ protocol: /^https?$/ }).max(500).nullable().optional(),
   contactName: z.string().trim().min(1).max(120),
   contactPhone: z.string().min(9).max(20).openapi({ example: "0754 123 456" }),
   contact2Name: nullableText(120),

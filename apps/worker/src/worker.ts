@@ -19,6 +19,21 @@ import type { PushSender } from "./push/push.js";
  */
 export const WORKER_REDIS_OPTIONS = { drainDelay: 60, stalledInterval: 300_000 } as const;
 
+/**
+ * Send rate caps (T07-02). WhatsApp: Meta allows 80 messages/second per number by default, counting
+ * inbound too, so outbound stays at 60/s unless WHATSAPP_MAX_PER_SECOND says otherwise. SMS: 20/s
+ * unless SMS_MAX_PER_SECOND is set. The cap is shared by every worker process (BullMQ limiter in Redis).
+ */
+export function sendLimiter(queue: string, env: Record<string, string | undefined> = process.env): { max: number; duration: number } {
+  const raw = queue === QUEUES.whatsapp ? env.WHATSAPP_MAX_PER_SECOND : env.SMS_MAX_PER_SECOND;
+  const fallback = queue === QUEUES.whatsapp ? 60 : 20;
+  const n = Number(raw);
+  const perSecond = Number.isInteger(n) && n > 0 && n <= 1000 ? n : fallback;
+  // BullMQ counts in fixed windows, so any one-second span can hold up to one extra window.
+  // Quarter-second windows keep that burst to 1.25x (60/s → at most 75 in any second, under Meta's 80).
+  return { max: Math.max(1, Math.ceil(perSecond / 4)), duration: 250 };
+}
+
 /** Outbox dispatch cadence in production (ms). Guests never need sub-15 s delivery. */
 export const DEFAULT_DISPATCH_EVERY_MS = 15_000;
 
@@ -139,7 +154,7 @@ export async function startWorkers(
   if (m) {
     const processors = { [QUEUES.sms]: createSendProcessor({ ...m, log }), [QUEUES.whatsapp]: createWhatsAppProcessor({ ...m, log }) };
     for (const name of [QUEUES.sms, QUEUES.whatsapp] as const) {
-      const w = new Worker(name, processors[name], { connection, concurrency: 10, prefix, ...WORKER_REDIS_OPTIONS });
+      const w = new Worker(name, processors[name], { connection, concurrency: 10, prefix, limiter: sendLimiter(name), ...WORKER_REDIS_OPTIONS });
       w.on("failed", (job, err) => {
     log(`job:failed ${name}/${job?.id} ${err.message}`);
     deps.onJobFailed?.(err, name, job?.name);

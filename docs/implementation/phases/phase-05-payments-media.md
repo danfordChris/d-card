@@ -7,7 +7,7 @@
 
 ## Objective
 
-- a host pays via Snippe (fake gateway in tests; one real Tsh 500 payment in production — Snippe has no sandbox), cards unlock, and guests upload to the host's Drive (both sharing modes).
+- a host pays via Snippe (fake gateway in tests; one real payment in production, the first pilot's plan checkout — Snippe has no sandbox), cards unlock, and guests upload to the host's Drive (both sharing modes).
 
 ## Scope
 

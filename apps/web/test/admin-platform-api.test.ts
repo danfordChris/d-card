@@ -21,6 +21,7 @@ let resetDb: () => Promise<void>;
 const ADMIN = "fake:ap-admin:ap-admin@example.com";
 const HOST = "fake:ap-host:ap-host@example.com";
 let cookie = "";
+const revoked: string[] = [];
 const r = (path: string, token: string, init: { method?: string; body?: unknown; cookie?: string } = {}) =>
   new Request(`http://localhost${path}`, {
     method: init.method ?? "GET",
@@ -44,6 +45,8 @@ beforeAll(async () => {
   auditExport = await import("../src/app/api/v1/admin/audit/export/route");
   cost = await import("../src/app/api/v1/admin/cost-report/route");
   ({ resetDb } = await import("../src/server/db"));
+  const { setFirebaseSessionRevoker } = await import("../src/server/auth/firebase-admin");
+  setFirebaseSessionRevoker(async (uid) => void revoked.push(uid));
   for (const t of [ADMIN, HOST]) await me.POST(r("/api/v1/me", t, { method: "POST" }));
   await handle.db.update(userAccount).set({ isAdmin: true }).where(eq(userAccount.firebaseUid, "ap-admin"));
 });
@@ -81,6 +84,7 @@ describe("admin two-step sign-in", () => {
     expect(list.items).toHaveLength(1);
     const hostId = list.items[0].id;
     expect((await user.PATCH(r(`/api/v1/admin/users/${hostId}`, ADMIN, { method: "PATCH", body: { disabled: true }, cookie }), { params: Promise.resolve({ userId: hostId }) })).status).toBe(204);
+    expect(revoked).toEqual(["ap-host"]); // SEC-02: sessions end now
     const refused = await users.GET(r("/api/v1/admin/users", HOST));
     expect((await refused.json()).error.code).toBe("account_disabled");
     await user.PATCH(r(`/api/v1/admin/users/${hostId}`, ADMIN, { method: "PATCH", body: { disabled: false }, cookie }), { params: Promise.resolve({ userId: hostId }) });
@@ -94,5 +98,13 @@ describe("admin two-step sign-in", () => {
     const report = await cost.GET(r("/api/v1/admin/cost-report?from=2026-01-01T00:00:00Z&to=2027-01-01T00:00:00Z&feePercent=2", ADMIN, { cookie }));
     expect(await report.json()).toMatchObject({ feePercent: 2, events: [], total: { revenue: 0 } });
     expect((await cost.GET(r("/api/v1/admin/cost-report?from=bad", ADMIN, { cookie }))).status).toBe(422);
+  });
+
+  it("SEC-15: the cookie stops working once two-step sign-in is turned off", async () => {
+    const { adminTotp } = await import("@dcard/db");
+    const [admin] = await handle.db.select().from(userAccount).where(eq(userAccount.firebaseUid, "ap-admin"));
+    await handle.db.delete(adminTotp).where(eq(adminTotp.userId, admin!.id));
+    const res = await users.GET(r("/api/v1/admin/users", ADMIN, { cookie }));
+    expect((await res.json()).error.code).toBe("second_factor_required");
   });
 });

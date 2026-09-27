@@ -193,6 +193,7 @@ export function verifySnippeSignature(
   if (!Number.isFinite(ts) || Math.abs(now / 1000 - ts) > 300) return false;
   const expected = createHmac("sha256", secret).update(`${headers.timestamp}.${rawBody}`).digest("hex");
   const given = headers.signature.trim().toLowerCase();
-  if (given.length !== expected.length) return false;
+  // SEC-12: non-hex input would make Buffer lengths differ and timingSafeEqual throw.
+  if (given.length !== expected.length || !/^[0-9a-f]+$/.test(given)) return false;
   return timingSafeEqual(Buffer.from(given, "hex"), Buffer.from(expected, "hex"));
 }

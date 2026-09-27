@@ -1,5 +1,5 @@
 import { checkInAttempt, doorDevice, entry, event, eventRole, invitation, userAccount } from "@dcard/db";
-import { and, eq, gt, inArray, isNull, or, sql } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, isNull, or, sql } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { recordAudit } from "../audit/audit.js";
 import { decryptSecret } from "../crypto/secrets.js";
@@ -135,6 +135,13 @@ export async function doorSyncUpload(db: DbExecutor, userId: string, upload: Syn
   const merged = await inTransaction(db, async (tx) => {
     const rejected = upload.entries.filter((e) => !known.has(e.invitationId)).map((e) => e.id);
     const valid = upload.entries.filter((e) => known.has(e.invitationId));
+    // Two gates uploading entries for the same card at once must see each other's entries when
+    // checking over-use: lock the cards first (sorted, so concurrent uploads cannot deadlock),
+    // like online admits do. Found by the T07-02 load test.
+    const lockIds = [...new Set(valid.map((e) => e.invitationId))].sort();
+    if (lockIds.length) {
+      await tx.select({ id: invitation.id }).from(invitation).where(inArray(invitation.id, lockIds)).orderBy(asc(invitation.id)).for("update");
+    }
     let accepted = 0;
     const touched = new Set<string>();
     for (const e of valid) {
