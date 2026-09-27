@@ -28,6 +28,6 @@
 | [`worker-runtime`](./worker-runtime.md) | Long-lived Node worker consuming BullMQ queues on Redis. | Done | `P00` (`docs/implementation/phases/phase-00-foundations.md`), `T00-05` |
 | [`dart-core-package`](./dart-core-package.md) | Pure Dart package with shared models and phone normalisation. | Done | `P00` (`docs/implementation/phases/phase-00-foundations.md`), `T00-06` |
 | [`flutter-workspace`](./flutter-workspace.md) | Melos workspace with the D-Card and D-Card Door app shells. | Done | `P00` (`docs/implementation/phases/phase-00-foundations.md`), `T00-07` |
-| [`observability`](./observability.md) | Logs, error tracking, queue dashboards and alerts. | Pending | `P06` (`docs/implementation/phases/phase-06-completion.md`) |
+| [`observability`](./observability.md) | Logs, error tracking, queue dashboards and alerts. | Done | `P06` (`docs/implementation/phases/phase-06-completion.md`) |
 | [`environment-config`](./environment-config.md) | Typed, documented environment keys for every provider, with dummy detection and a handover README. | In Progress | `P00` (`docs/implementation/phases/phase-00-foundations.md`), `T00-08`, `T00-10` |
 | [`deployment-pipeline`](./deployment-pipeline.md) | GitHub Actions deploying the web app and API to Vercel with Neon branches per pull request. | Done | `P00` (`docs/implementation/phases/phase-00-foundations.md`), `T00-09` |

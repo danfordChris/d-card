@@ -86,6 +86,22 @@ Also create the GitHub environment **`production`** (Settings → Environments).
 - Rotate Redis TLS: generate a CA + server cert with OpenSSL 3 (named curve P-256, SHA-256), set both `*_B64` variables, redeploy redis (`serviceInstanceDeployV2`), update `REDIS_TLS_CA_B64` on Vercel and redeploy web.
 - Checks (2026-09-26): unauthenticated and non-TLS access refused; web rate limit hits Redis (21st request → 429); a `system/ping` job queued through the proxy was processed by the Railway worker in ~0.6 s.
 
+## Observability (T06-06, 2026-09-27)
+
+Free tiers only.
+
+- **Error tracking:** Sentry's free Developer plan (5k errors a month, one user). Create one Node project and set `SENTRY_DSN` on Vercel (production) and on the Railway `worker` service. Without it nothing is sent. The Flutter apps report crashes only when built with `--dart-define=SENTRY_DSN=...` (a separate Flutter project, or the same DSN).
+- **No personal data:** Sentry's user info, cookie, header and body collection is off. Messages and exceptions are scrubbed (`packages/core/src/observability/scrub.ts`): phone numbers, card and link tokens, bearer tokens, API keys and email addresses are replaced.
+- **Logs:** the worker and API errors write one JSON line per entry (`createLogger`). Vercel and Railway show them in their log views. Every API response carries `x-request-id`, and API error logs include it.
+- **Queue dashboard:** Admin → Queues shows waiting, active, delayed, failed and completed jobs per queue, and can retry failed jobs.
+- **Alerts:** every 5 minutes the worker checks for:
+  - more than 100 waiting jobs in any queue;
+  - more than 10 failed jobs in the last hour;
+  - host payments still pending after 1 hour.
+
+  Each condition sends at most one email per hour to `ALERT_EMAIL` (Railway worker), through Resend. That needs `RESEND_API_KEY` and a verified `EMAIL_FROM` domain. Without `ALERT_EMAIL`, alerts are only logged.
+- **Sentry alert rules** (in the Sentry UI): "a new issue is created", sent by email.
+
 ## Operations
 
 | Need | Command |

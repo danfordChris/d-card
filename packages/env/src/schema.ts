@@ -133,6 +133,15 @@ export const ENV_GROUPS: ProviderGroup[] = [
     ],
   },
   {
+    id: "observability",
+    name: "Observability (Sentry, alerts)",
+    source: "sentry.io → free Developer plan → create a Node project → Client Keys (DSN). Alerts go by email through Resend.",
+    keys: [
+      opt("SENTRY_DSN", "Sentry DSN for the web API and worker; unset = no error reporting", /^https:\/\/\S+$/),
+      opt("ALERT_EMAIL", "Where the worker emails queue/payment alerts; unset = alerts only logged", /^\S+@\S+$/),
+    ],
+  },
+  {
     id: "spikes",
     name: "Integration spikes (local only)",
     source: "Your own test phone and resources; only used by spikes/*.ts.",

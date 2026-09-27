@@ -1,13 +1,15 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../../data/repositories/session_repository.dart';
+import '../../../../data/services/auth_service.dart';
 import '../../../../domain/models/app_failure.dart';
 
 enum LoginFieldError { emailRequired, emailInvalid, passwordRequired }
 
 final _email = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
 
-/// Validates the sign-in form and signs in through [SessionRepository].
+/// Validates the sign-in form and signs in through [SessionRepository]
+/// (email/password for hosts, Google/Apple for guests).
 class LoginViewModel extends ChangeNotifier {
   LoginViewModel(this._session);
 
@@ -17,6 +19,29 @@ class LoginViewModel extends ChangeNotifier {
   LoginFieldError? passwordError;
   AppFailure? failure;
   bool busy = false;
+
+  /// The Google/Apple sign-in in progress, if any.
+  SocialProvider? socialBusy;
+
+  bool get anyBusy => busy || socialBusy != null;
+
+  Future<void> signInWith(SocialProvider provider) async {
+    if (anyBusy) return;
+    failure = null;
+    socialBusy = provider;
+    notifyListeners();
+    try {
+      await _session.signInWithProvider(provider);
+    } on AppException catch (e) {
+      // Closing the Google/Apple sheet is not an error.
+      if (e.failure != AppFailure.cancelled) failure = e.failure;
+    } catch (_) {
+      failure = AppFailure.unknown;
+    } finally {
+      socialBusy = null;
+      notifyListeners();
+    }
+  }
 
   Future<void> signIn(String email, String password) async {
     emailError = email.trim().isEmpty

@@ -1,4 +1,5 @@
-import { eventPlan, userAccount } from "@dcard/db";
+import { adminProofHeader, makeVerifiedAdmin } from "./admin-proof";
+import { eventPlan } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { createHmac } from "node:crypto";
 import { eq } from "drizzle-orm";
@@ -25,7 +26,7 @@ const SECRET = "whsec_test_billing";
 function req(method: string, token: string, body?: unknown): Request {
   return new Request("http://localhost/x", {
     method,
-    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+    headers: { ...adminProofHeader(token), authorization: `Bearer ${token}`, "content-type": "application/json" },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   });
 }
@@ -56,7 +57,7 @@ beforeAll(async () => {
   webhook = await import("../src/app/api/webhooks/snippe/route");
   ({ resetDb } = await import("../src/server/db"));
   for (const t of [HOST, OTHER, ADMIN]) await me.POST(req("POST", t));
-  await handle.db.update(userAccount).set({ isAdmin: true }).where(eq(userAccount.firebaseUid, "b-admin"));
+  await makeVerifiedAdmin(handle.db, ADMIN);
   const created = await events.POST(
     req("POST", HOST, { planKey: "msingi", eventTypeKey: "wedding", title: "Harusi", startsAt: "2026-12-12T15:00:00+03:00", contactName: "Asha", contactPhone: "0754123456" }),
   );

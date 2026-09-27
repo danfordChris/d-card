@@ -3737,6 +3737,787 @@
         ],
         "additionalProperties": false
       },
+      "LinkCardResult": {
+        "type": "object",
+        "properties": {
+          "linked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "linked"
+        ]
+      },
+      "LinkCardInput": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "MyCardList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MyCard"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "MyCard": {
+        "type": "object",
+        "properties": {
+          "eventTitle": {
+            "type": "string"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "venueName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "guestName": {
+            "type": "string"
+          },
+          "cardType": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "cardNumber": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "issued",
+              "cancelled"
+            ]
+          },
+          "rsvpStatus": {
+            "type": "string",
+            "enum": [
+              "none",
+              "yes",
+              "no"
+            ]
+          },
+          "linkToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "eventTitle",
+          "startsAt",
+          "endsAt",
+          "timeZone",
+          "venueName",
+          "guestName",
+          "cardType",
+          "cardNumber",
+          "status",
+          "rsvpStatus",
+          "linkToken"
+        ]
+      },
+      "TotpStatus": {
+        "type": "object",
+        "properties": {
+          "enrolled": {
+            "type": "boolean"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "recoveryCodesLeft": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enrolled",
+          "verified",
+          "recoveryCodesLeft"
+        ]
+      },
+      "TotpEnrolment": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string"
+          },
+          "otpauthUri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "secret",
+          "otpauthUri"
+        ]
+      },
+      "TotpRecoveryCodes": {
+        "type": "object",
+        "properties": {
+          "recoveryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recoveryCodes"
+        ]
+      },
+      "TotpCodeInput": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 20
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "AdminUserPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminUser"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "hasMore"
+        ]
+      },
+      "AdminUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authProvider": {
+            "type": "string",
+            "enum": [
+              "password",
+              "google",
+              "apple"
+            ]
+          },
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "disabledAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "eventsHosted": {
+            "type": "integer"
+          },
+          "teamRoles": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "phone",
+          "name",
+          "authProvider",
+          "isAdmin",
+          "disabledAt",
+          "deletedAt",
+          "createdAt",
+          "eventsHosted",
+          "teamRoles"
+        ]
+      },
+      "AdminUserUpdateInput": {
+        "type": "object",
+        "properties": {
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "disabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AdminEventPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminEvent"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "hasMore"
+        ]
+      },
+      "AdminEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "hostEmail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "planKey": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "guestLimit": {
+            "type": "integer"
+          },
+          "amountPaid": {
+            "type": "integer"
+          },
+          "guests": {
+            "type": "integer"
+          },
+          "cardsIssued": {
+            "type": "integer"
+          },
+          "messagesSent": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "hostEmail",
+          "startsAt",
+          "status",
+          "planKey",
+          "guestLimit",
+          "amountPaid",
+          "guests",
+          "cardsIssued",
+          "messagesSent",
+          "createdAt"
+        ]
+      },
+      "AdminAuditPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAuditEntry"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "hasMore"
+        ]
+      },
+      "AdminAuditEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actorType": {
+            "type": "string",
+            "enum": [
+              "user",
+              "system"
+            ]
+          },
+          "actorUserId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "actorEmail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "eventId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "action": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "oldValue": {},
+          "newValue": {},
+          "ip": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "actorType",
+          "actorUserId",
+          "actorEmail",
+          "eventId",
+          "action",
+          "targetType",
+          "targetId",
+          "ip"
+        ]
+      },
+      "QueueStatsList": {
+        "type": "object",
+        "properties": {
+          "queues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueStats"
+            }
+          }
+        },
+        "required": [
+          "queues"
+        ]
+      },
+      "QueueStats": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "waiting": {
+            "type": "integer"
+          },
+          "active": {
+            "type": "integer"
+          },
+          "delayed": {
+            "type": "integer"
+          },
+          "failed": {
+            "type": "integer"
+          },
+          "completed": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "waiting",
+          "active",
+          "delayed",
+          "failed",
+          "completed"
+        ]
+      },
+      "CostReport": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "feePercent": {
+            "type": "number"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CostReportEvent"
+            }
+          },
+          "byPlan": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CostReportPlan"
+            }
+          },
+          "byMonth": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CostReportMonth"
+            }
+          },
+          "total": {
+            "$ref": "#/components/schemas/CostLine"
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "feePercent",
+          "events",
+          "byPlan",
+          "byMonth",
+          "total"
+        ]
+      },
+      "CostReportEvent": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "planKey": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cardsPaid": {
+            "type": "integer"
+          },
+          "revenue": {
+            "type": "number"
+          },
+          "whatsappMessages": {
+            "type": "integer"
+          },
+          "whatsappCost": {
+            "type": "number"
+          },
+          "smsMessages": {
+            "type": "integer"
+          },
+          "smsCost": {
+            "type": "number"
+          },
+          "uncostedMessages": {
+            "type": "integer"
+          },
+          "paymentFee": {
+            "type": "number"
+          },
+          "margin": {
+            "type": "number"
+          },
+          "marginPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "eventId",
+          "title",
+          "startsAt",
+          "planKey",
+          "cardsPaid",
+          "revenue",
+          "whatsappMessages",
+          "whatsappCost",
+          "smsMessages",
+          "smsCost",
+          "uncostedMessages",
+          "paymentFee",
+          "margin",
+          "marginPct"
+        ]
+      },
+      "CostReportPlan": {
+        "type": "object",
+        "properties": {
+          "planKey": {
+            "type": "string"
+          },
+          "revenue": {
+            "type": "number"
+          },
+          "whatsappMessages": {
+            "type": "integer"
+          },
+          "whatsappCost": {
+            "type": "number"
+          },
+          "smsMessages": {
+            "type": "integer"
+          },
+          "smsCost": {
+            "type": "number"
+          },
+          "uncostedMessages": {
+            "type": "integer"
+          },
+          "paymentFee": {
+            "type": "number"
+          },
+          "margin": {
+            "type": "number"
+          },
+          "marginPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "planKey",
+          "revenue",
+          "whatsappMessages",
+          "whatsappCost",
+          "smsMessages",
+          "smsCost",
+          "uncostedMessages",
+          "paymentFee",
+          "margin",
+          "marginPct"
+        ]
+      },
+      "CostReportMonth": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "revenue": {
+            "type": "number"
+          },
+          "whatsappMessages": {
+            "type": "integer"
+          },
+          "whatsappCost": {
+            "type": "number"
+          },
+          "smsMessages": {
+            "type": "integer"
+          },
+          "smsCost": {
+            "type": "number"
+          },
+          "uncostedMessages": {
+            "type": "integer"
+          },
+          "paymentFee": {
+            "type": "number"
+          },
+          "margin": {
+            "type": "number"
+          },
+          "marginPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "month",
+          "revenue",
+          "whatsappMessages",
+          "whatsappCost",
+          "smsMessages",
+          "smsCost",
+          "uncostedMessages",
+          "paymentFee",
+          "margin",
+          "marginPct"
+        ]
+      },
+      "CostLine": {
+        "type": "object",
+        "properties": {
+          "revenue": {
+            "type": "number"
+          },
+          "whatsappMessages": {
+            "type": "integer"
+          },
+          "whatsappCost": {
+            "type": "number"
+          },
+          "smsMessages": {
+            "type": "integer"
+          },
+          "smsCost": {
+            "type": "number"
+          },
+          "uncostedMessages": {
+            "type": "integer"
+          },
+          "paymentFee": {
+            "type": "number"
+          },
+          "margin": {
+            "type": "number"
+          },
+          "marginPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "revenue",
+          "whatsappMessages",
+          "whatsappCost",
+          "smsMessages",
+          "smsCost",
+          "uncostedMessages",
+          "paymentFee",
+          "margin",
+          "marginPct"
+        ]
+      },
       "MediaSettings": {
         "type": "object",
         "properties": {
@@ -4154,6 +4935,114 @@
           "myUploadsLeft",
           "limits"
         ]
+      },
+      "EventAuditPage": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventAuditEntry"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "entries",
+          "nextCursor"
+        ]
+      },
+      "EventAuditEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action": {
+            "type": "string"
+          },
+          "actorType": {
+            "type": "string",
+            "enum": [
+              "user",
+              "system"
+            ]
+          },
+          "actorName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditChange"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "action",
+          "actorType",
+          "actorName",
+          "targetType",
+          "targetId",
+          "changes"
+        ]
+      },
+      "AuditChange": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "field",
+          "from",
+          "to"
+        ]
+      },
+      "ExportKind": {
+        "type": "string",
+        "enum": [
+          "guests",
+          "contributions",
+          "attendance"
+        ]
       }
     },
     "parameters": {}
@@ -4254,6 +5143,74 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMe",
+        "summary": "Delete my account (registered guests; hosts must delete their events first)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The account still hosts events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/export": {
+      "get": {
+        "operationId": "exportMyData",
+        "summary": "Download my data (JSON file)",
+        "security": [
+          {
+            "firebaseIdToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account, person, invitations, contributions and uploaded media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
                 }
               }
             }
@@ -9460,6 +10417,876 @@
         }
       }
     },
+    "/api/v1/me/cards/link": {
+      "post": {
+        "operationId": "linkMyCard",
+        "summary": "Link a card (by its link token) to the signed-in guest account",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkCardInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Linked (or already linked)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkCardResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Card not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "person_linked: the guest has another account; account_linked: this account belongs to another guest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/cards": {
+      "get": {
+        "operationId": "listMyCards",
+        "summary": "The signed-in guest's cards across events",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyCardList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/2fa": {
+      "get": {
+        "operationId": "getAdminTotp",
+        "summary": "Two-step sign-in status for this admin",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotpStatus"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/2fa/enrol": {
+      "post": {
+        "operationId": "startAdminTotp",
+        "summary": "Start authenticator-app setup (secret + otpauth URI for a QR code)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Setup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotpEnrolment"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Already on",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/2fa/confirm": {
+      "post": {
+        "operationId": "confirmAdminTotp",
+        "summary": "Confirm setup with a first code; returns 10 one-time recovery codes and sets the admin session cookie",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TotpCodeInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recovery codes (shown once)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotpRecoveryCodes"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "second_factor_invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "second_factor_locked (15 minutes)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/2fa/verify": {
+      "post": {
+        "operationId": "verifyAdminTotp",
+        "summary": "Verify a code or recovery code; sets the admin session cookie (12 h)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TotpCodeInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verified"
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "second_factor_invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "second_factor_locked (15 minutes)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/2fa/disable": {
+      "post": {
+        "operationId": "disableAdminTotp",
+        "summary": "Turn two-step sign-in off (needs a code)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TotpCodeInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Turned off"
+          },
+          "403": {
+            "description": "Admins only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "second_factor_invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "second_factor_locked (15 minutes)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "operationId": "searchAdminUsers",
+        "summary": "Search accounts by email, name or phone",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserPage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{userId}": {
+      "patch": {
+        "operationId": "updateAdminUser",
+        "summary": "Grant/revoke admin, disable/enable an account (not yourself)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "userId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUserUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Updated"
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Your own account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events": {
+      "get": {
+        "operationId": "searchAdminEvents",
+        "summary": "Search events by title or host email and date",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminEventPage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit": {
+      "get": {
+        "operationId": "searchAdminAudit",
+        "summary": "Search the audit log",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "eventId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "actorUserId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "required": false,
+            "name": "action",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminAuditPage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit/export": {
+      "get": {
+        "operationId": "exportAdminAudit",
+        "summary": "Audit search as CSV (up to 10,000 rows)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "eventId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "actorUserId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "required": false,
+            "name": "action",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/queues": {
+      "get": {
+        "operationId": "getAdminQueues",
+        "summary": "Job counts per queue",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Queues",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueStatsList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/queues/{name}/retry": {
+      "post": {
+        "operationId": "retryAdminQueue",
+        "summary": "Retry the failed jobs of a queue",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retried",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "retried": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "retried"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown queue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/cost-report": {
+      "get": {
+        "operationId": "getCostReport",
+        "summary": "Revenue, message cost, payment fee and margin per event, plan and month",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 50
+            },
+            "required": false,
+            "name": "feePercent",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CostReport"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admins only, or second_factor_required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/media/google/connect": {
       "get": {
         "operationId": "connectGoogleDrive",
@@ -10408,6 +12235,175 @@
           },
           "410": {
             "description": "Gallery closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/audit": {
+      "get": {
+        "operationId": "listEventAudit",
+        "summary": "Event audit trail, newest first (host or treasurer)",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 80,
+              "description": "Dotted prefix: \"payment\" matches payment.*; \"card.issued\" matches exactly."
+            },
+            "required": false,
+            "description": "Dotted prefix: \"payment\" matches payment.*; \"card.issued\" matches exactly.",
+            "name": "action",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventAuditPage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid filter or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{id}/exports/{kind}": {
+      "get": {
+        "operationId": "downloadEventExport",
+        "summary": "CSV export (UTF-8 with BOM): guests and attendance for the host, contributions for host or treasurer; audited",
+        "security": [
+          {
+            "firebaseIdToken": [],
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ExportKind"
+            },
+            "required": true,
+            "name": "kind",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sw",
+                "en"
+              ]
+            },
+            "required": false,
+            "name": "lang",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV file (Content-Disposition: attachment)",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event or export not found",
             "content": {
               "application/json": {
                 "schema": {

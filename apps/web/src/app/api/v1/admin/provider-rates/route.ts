@@ -3,7 +3,7 @@ import {
   createProviderRate,
   listProviderRates,
 } from "@dcard/core";
-import { requireUser } from "../../../../../server/current-user";
+import { requireAdminUser } from "../../../../../server/admin-auth";
 import { getDb } from "../../../../../server/db";
 import { parseBody, toErrorResponse } from "../../../../../server/http";
 
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request): Promise<Response> {
   try {
-    const user = await requireUser(request);
+    const user = await requireAdminUser(request);
     return Response.json({ rates: await listProviderRates(getDb(), user.id) });
   } catch (err) {
     return toErrorResponse(err);
@@ -20,7 +20,7 @@ export async function GET(request: Request): Promise<Response> {
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const user = await requireUser(request);
+    const user = await requireAdminUser(request);
     const input = await parseBody(request, AdminProviderRateInput);
     return Response.json(
       await createProviderRate(getDb(), user.id, { ...input, effectiveFrom: new Date(input.effectiveFrom) }),

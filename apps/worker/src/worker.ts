@@ -1,4 +1,4 @@
-import { applySmsDelivery, gatewayFromEnv, pollPendingPayments, QUEUES, scheduleDueMessages, smsAwaitingDelivery, SYSTEM_JOBS, type PaymentGateway } from "@dcard/core";
+import { applySmsDelivery, gatewayFromEnv, pollPendingPayments, QUEUES, runRetention, scheduleDueMessages, smsAwaitingDelivery, SYSTEM_JOBS, type PaymentGateway } from "@dcard/core";
 import type { Database } from "@dcard/db";
 import { Queue, Worker, type Job } from "bullmq";
 import type { Redis } from "ioredis";
@@ -6,6 +6,7 @@ import { ResendEmailSender, type EmailSender } from "./email/sender.js";
 import { runDispatch } from "./messaging/dispatcher.js";
 import { createSendProcessor, createWhatsAppProcessor, type SendDeps } from "./messaging/processor.js";
 import type { SmsDeliveryLookup, SmsSender, WhatsAppSender } from "./messaging/senders.js";
+import { findAlerts, sendAlerts } from "./health/alerts.js";
 import { createEmailProcessor } from "./processors/email.js";
 import { processSystemJob } from "./processors/system.js";
 import { createPushProcessor } from "./push/processor.js";
@@ -38,7 +39,16 @@ export type MessagingDeps = Omit<SendDeps, "db" | "sms" | "whatsapp" | "log"> & 
 export async function startWorkers(
   connection: Redis,
   log: (msg: string) => void = console.log,
-  deps: { emailSender?: EmailSender; prefix?: string; messaging?: MessagingDeps; push?: { db: Database; sender: PushSender }; payments?: PaymentGateway } = {},
+  deps: {
+    emailSender?: EmailSender;
+    prefix?: string;
+    messaging?: MessagingDeps;
+    push?: { db: Database; sender: PushSender };
+    payments?: PaymentGateway;
+    /** Error tracking hook (Sentry in production). */
+    onJobFailed?: (err: Error, queue: string, job: string | undefined) => void;
+    alertEmail?: string;
+  } = {},
 ): Promise<RunningWorkers> {
   const prefix = deps.prefix ?? process.env.QUEUE_PREFIX ?? "dcard";
   const queues: Queue[] = [];
@@ -74,6 +84,23 @@ export async function startWorkers(
         if (!m) return { checked: 0, changed: 0 };
         return pollPendingPayments(m.db, deps.payments ?? gatewayFromEnv());
       }
+      if (job.name === SYSTEM_JOBS.checkHealth) {
+        if (!m) return { alerts: 0 };
+        const all = Object.values(QUEUES).map((name) => new Queue(name, { connection, prefix }));
+        try {
+          const alerts = await findAlerts(m.db, all);
+          const sent = await sendAlerts(alerts, { redis: connection, sender: deps.emailSender ?? new ResendEmailSender(), to: deps.alertEmail, prefix, log: (msg, f) => log(`${msg} ${JSON.stringify(f ?? {})}`) });
+          return { alerts: alerts.length, sent };
+        } finally {
+          await Promise.all(all.map((q) => q.close()));
+        }
+      }
+      if (job.name === SYSTEM_JOBS.runRetention) {
+        if (!m) return { events: 0 };
+        const result = await runRetention(m.db);
+        log(`retention ${JSON.stringify(result)}`);
+        return result;
+      }
       if (job.name === SYSTEM_JOBS.scheduleMessages) {
         if (!m) throw new Error("messaging is not configured");
         return scheduleDueMessages(m.db);
@@ -82,7 +109,10 @@ export async function startWorkers(
     },
     { connection, concurrency: 5, prefix, ...WORKER_REDIS_OPTIONS },
   );
-  system.on("failed", (job, err) => log(`job:failed ${QUEUES.system}/${job?.name} ${err.message}`));
+  system.on("failed", (job, err) => {
+    log(`job:failed ${QUEUES.system}/${job?.name} ${err.message}`);
+    deps.onJobFailed?.(err, QUEUES.system, job?.name);
+  });
   workers.push(system);
 
   const email = new Worker(QUEUES.email, createEmailProcessor(deps.emailSender ?? new ResendEmailSender(), log), {
@@ -91,12 +121,18 @@ export async function startWorkers(
     concurrency: 5,
     prefix,
   });
-  email.on("failed", (job, err) => log(`job:failed ${QUEUES.email}/${job?.name} ${err.message}`));
+  email.on("failed", (job, err) => {
+    log(`job:failed ${QUEUES.email}/${job?.name} ${err.message}`);
+    deps.onJobFailed?.(err, QUEUES.email, job?.name);
+  });
   workers.push(email);
 
   if (deps.push) {
     const push = new Worker(QUEUES.push, createPushProcessor(deps.push.db, deps.push.sender, log), { connection, concurrency: 5, prefix, ...WORKER_REDIS_OPTIONS });
-    push.on("failed", (job, err) => log(`job:failed ${QUEUES.push}/${job?.name} ${err.message}`));
+    push.on("failed", (job, err) => {
+    log(`job:failed ${QUEUES.push}/${job?.name} ${err.message}`);
+    deps.onJobFailed?.(err, QUEUES.push, job?.name);
+  });
     workers.push(push);
   }
 
@@ -104,7 +140,10 @@ export async function startWorkers(
     const processors = { [QUEUES.sms]: createSendProcessor({ ...m, log }), [QUEUES.whatsapp]: createWhatsAppProcessor({ ...m, log }) };
     for (const name of [QUEUES.sms, QUEUES.whatsapp] as const) {
       const w = new Worker(name, processors[name], { connection, concurrency: 10, prefix, ...WORKER_REDIS_OPTIONS });
-      w.on("failed", (job, err) => log(`job:failed ${name}/${job?.id} ${err.message}`));
+      w.on("failed", (job, err) => {
+    log(`job:failed ${name}/${job?.id} ${err.message}`);
+    deps.onJobFailed?.(err, name, job?.name);
+  });
       workers.push(w);
     }
     if ((m.dispatchEveryMs ?? DEFAULT_DISPATCH_EVERY_MS) > 0) {
@@ -114,6 +153,9 @@ export async function startWorkers(
       await systemQueue.upsertJobScheduler("schedule-messages", { every: 5 * 60_000 }, { name: SYSTEM_JOBS.scheduleMessages });
       await systemQueue.upsertJobScheduler("poll-sms-delivery", { every: 10 * 60_000 }, { name: SYSTEM_JOBS.pollSmsDelivery });
       await systemQueue.upsertJobScheduler("poll-payments", { every: 2 * 60_000 }, { name: SYSTEM_JOBS.pollPayments });
+      // 03:00 East Africa Time, when traffic is lowest.
+      await systemQueue.upsertJobScheduler("check-health", { every: 5 * 60_000 }, { name: SYSTEM_JOBS.checkHealth });
+      await systemQueue.upsertJobScheduler("run-retention", { pattern: "0 3 * * *", tz: "Africa/Dar_es_Salaam" }, { name: SYSTEM_JOBS.runRetention });
     }
   }
 

@@ -84,7 +84,7 @@ export function GuestMediaSections({ token }: { token: string }) {
         <h2 className="font-semibold">{t("title")}</h2>
         <p className="text-sm text-gray-600">{t("loadError")}</p>
         <Button variant="secondary" onClick={load}>
-          <HugeiconsIcon icon={RefreshIcon} size={18} />
+          <HugeiconsIcon icon={RefreshIcon} size={18} aria-hidden="true" />
           {t("retryLoad")}
         </Button>
       </section>
@@ -303,7 +303,7 @@ function GallerySection({ token, media, update }: { token: string; media: GuestM
           <div className="space-y-2">
             <input ref={input} type="file" multiple accept={ACCEPT} className="sr-only" data-testid="gallery-file-input" onChange={(e) => onPick(e.target.files)} tabIndex={-1} aria-hidden="true" />
             <Button onClick={() => input.current?.click()} disabled={slotsLeft === 0} className="w-full sm:w-auto">
-              <HugeiconsIcon icon={ImageAdd01Icon} size={18} />
+              <HugeiconsIcon icon={ImageAdd01Icon} size={18} aria-hidden="true" />
               {t("add")}
             </Button>
             <p className="text-xs text-gray-600">
@@ -336,12 +336,19 @@ function GallerySection({ token, media, update }: { token: string; media: GuestM
 function UploadQueue({ queue, onRetry, onClear }: { queue: QueueItem[]; onRetry: (key: number) => void; onClear: () => void }) {
   const t = useTranslations("cardPage.gallery");
   const finished = queue.some((q) => q.status === "done" || q.status === "failed");
+  const settled = queue.filter((q) => q.status === "done" || q.status === "failed");
+  const latest = settled[settled.length - 1];
   return (
     <div className="space-y-2">
+      <p role="status" aria-live="polite" className="sr-only">
+        {latest
+          ? `${latest.file.name}: ${t(`status.${latest.status}`)}${latest.status === "failed" && latest.error ? `. ${t(`errors.${latest.error.key}`, latest.error.values ?? {})}` : ""}`
+          : ""}
+      </p>
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">{t("queueTitle")}</h3>
         {finished && (
-          <button type="button" onClick={onClear} className="text-xs text-gray-600 underline">
+          <button type="button" onClick={onClear} className="text-xs text-gray-600 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
             {t("clearDone")}
           </button>
         )}
@@ -351,9 +358,9 @@ function UploadQueue({ queue, onRetry, onClear }: { queue: QueueItem[]; onRetry:
           <li key={q.key} className="space-y-1 px-3 py-2 text-sm" data-testid="upload-row">
             <div className="flex items-center gap-2">
               {q.status === "done" ? (
-                <HugeiconsIcon icon={Tick02Icon} size={18} className="shrink-0 text-green-700" />
+                <HugeiconsIcon icon={Tick02Icon} size={18} className="shrink-0 text-green-700" aria-hidden="true" />
               ) : q.status === "failed" ? (
-                <HugeiconsIcon icon={Alert02Icon} size={18} className="shrink-0 text-red-700" />
+                <HugeiconsIcon icon={Alert02Icon} size={18} className="shrink-0 text-red-700" aria-hidden="true" />
               ) : null}
               <span className="min-w-0 flex-1 truncate">{q.file.name}</span>
               <span className="shrink-0 text-xs text-gray-600">
@@ -361,7 +368,7 @@ function UploadQueue({ queue, onRetry, onClear }: { queue: QueueItem[]; onRetry:
               </span>
             </div>
             {(q.status === "uploading" || q.status === "finishing") && (
-              <div className="h-1.5 overflow-hidden rounded-full bg-gray-100" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(q.progress * 100)}>
+              <div className="h-1.5 overflow-hidden rounded-full bg-gray-100" role="progressbar" aria-label={q.file.name} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(q.progress * 100)}>
                 <div className="h-full bg-brand-600 transition-[width]" style={{ width: `${Math.round(q.progress * 100)}%` }} />
               </div>
             )}
@@ -369,8 +376,8 @@ function UploadQueue({ queue, onRetry, onClear }: { queue: QueueItem[]; onRetry:
               <div className="flex items-center gap-3">
                 <p className="flex-1 text-xs text-red-700">{t(`errors.${q.error.key}`, q.error.values ?? {})}</p>
                 {q.error.retryable && (
-                  <button type="button" onClick={() => onRetry(q.key)} className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
-                    <HugeiconsIcon icon={RefreshIcon} size={14} />
+                  <button type="button" onClick={() => onRetry(q.key)} className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
+                    <HugeiconsIcon icon={RefreshIcon} size={14} aria-hidden="true" />
                     {t("retry")}
                   </button>
                 )}
@@ -401,12 +408,12 @@ function Thumb({ item, onOpen }: { item: GuestMediaItem; onOpen: () => void }) {
   const { src } = useMediaSrc(item.thumbnailUrl, near);
   const label = item.type === "video" ? t("video") : t("photo");
   return (
-    <button ref={ref} type="button" onClick={onOpen} aria-label={label} className="relative block aspect-square w-full overflow-hidden rounded-md bg-gray-100 focus-visible:outline-2 focus-visible:outline-brand-600">
-      {src && <img src={src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />}
+    <button ref={ref} type="button" onClick={onOpen} aria-label={label} className="relative block aspect-square w-full overflow-hidden rounded-md bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
+      {src && <img src={src} alt="" width={160} height={160} loading="lazy" decoding="async" className="h-full w-full object-cover" />}
       {item.type === "video" && (
         <span className="absolute inset-0 flex items-center justify-center">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white">
-            <HugeiconsIcon icon={PlayIcon} size={18} />
+            <HugeiconsIcon icon={PlayIcon} size={18} aria-hidden="true" />
           </span>
         </span>
       )}

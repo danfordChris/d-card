@@ -990,5 +990,240 @@
   "checkoutQuoteError": "Could not get the price. Please try again.",
   "@checkoutQuoteError": {
     "description": "Billing/checkout: checkoutQuoteError."
+  },
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": {
+    "description": "Guest sign-in button."
+  },
+  "continueWithApple": "Continue with Apple",
+  "@continueWithApple": {
+    "description": "Guest sign-in button (iOS)."
+  },
+  "loginOr": "or",
+  "@loginOr": {
+    "description": "Divider between guest and host sign-in."
+  },
+  "loginGuestHint": "Invited to an event? Sign in with Google or Apple to keep all your cards in one place.",
+  "@loginGuestHint": {
+    "description": "Sign-in: guest hint."
+  },
+  "loginHostHint": "Hosts and committee: sign in with email",
+  "@loginHostHint": {
+    "description": "Sign-in: host section."
+  },
+  "errorOtherSignInMethod": "This email already signs in another way. Use that method instead.",
+  "@errorOtherSignInMethod": {
+    "description": "Sign-in error."
+  },
+  "navEvents": "Events",
+  "@navEvents": {
+    "description": "Bottom navigation."
+  },
+  "navMyCards": "My cards",
+  "@navMyCards": {
+    "description": "Bottom navigation."
+  },
+  "navAccount": "Account",
+  "@navAccount": {
+    "description": "Bottom navigation."
+  },
+  "myCardsTitle": "My cards",
+  "@myCardsTitle": {
+    "description": "My cards: title."
+  },
+  "myCardsEmptyTitle": "No cards yet",
+  "@myCardsEmptyTitle": {
+    "description": "My cards: empty state title."
+  },
+  "myCardsEmptyBody": "When a host invites you, D-Card sends your card link by SMS or WhatsApp. Tap \"Link a card\" and paste that link to keep the card here.",
+  "@myCardsEmptyBody": {
+    "description": "My cards: empty state explanation."
+  },
+  "linkCard": "Link a card",
+  "@linkCard": {
+    "description": "My cards: link action and sheet title."
+  },
+  "linkCardHint": "Paste the card link you received by SMS or WhatsApp.",
+  "@linkCardHint": {
+    "description": "Link sheet: hint."
+  },
+  "linkCardField": "Card link",
+  "@linkCardField": {
+    "description": "Link sheet: field label."
+  },
+  "linkCardPaste": "Paste",
+  "@linkCardPaste": {
+    "description": "Link sheet: paste from clipboard."
+  },
+  "linkCardSubmit": "Link card",
+  "@linkCardSubmit": {
+    "description": "Link sheet: submit."
+  },
+  "linkCardDone": "Card linked.",
+  "@linkCardDone": {
+    "description": "Link: success."
+  },
+  "linkErrorInvalid": "This is not a D-Card card link. Check it and try again.",
+  "@linkErrorInvalid": {
+    "description": "Link error."
+  },
+  "linkErrorNotFound": "We could not find this card. Check the link and try again.",
+  "@linkErrorNotFound": {
+    "description": "Link error: 404."
+  },
+  "linkErrorPersonLinked": "This card's guest already uses another D-Card account. Sign in with that account to see it.",
+  "@linkErrorPersonLinked": {
+    "description": "Link error: 409 person_linked."
+  },
+  "linkErrorAccountLinked": "This account already belongs to another guest, so this card cannot be added here.",
+  "@linkErrorAccountLinked": {
+    "description": "Link error: 409 account_linked."
+  },
+  "cardStatusIssued": "Active",
+  "@cardStatusIssued": {
+    "description": "Card status badge."
+  },
+  "cardStatusCancelled": "Cancelled",
+  "@cardStatusCancelled": {
+    "description": "Card status badge."
+  },
+  "rsvpBadgeYes": "Attending",
+  "@rsvpBadgeYes": {
+    "description": "RSVP badge."
+  },
+  "rsvpBadgeNo": "Not attending",
+  "@rsvpBadgeNo": {
+    "description": "RSVP badge."
+  },
+  "rsvpBadgeNone": "No reply yet",
+  "@rsvpBadgeNone": {
+    "description": "RSVP badge."
+  },
+  "cardTypeSingle": "Single",
+  "@cardTypeSingle": {
+    "description": "Card type."
+  },
+  "cardTypeDouble": "Double",
+  "@cardTypeDouble": {
+    "description": "Card type."
+  },
+  "cardNumberLabel": "Card number",
+  "@cardNumberLabel": {
+    "description": "Card view."
+  },
+  "cardGuestLabel": "Guest",
+  "@cardGuestLabel": {
+    "description": "Card view."
+  },
+  "cardShowQr": "Show this QR code at the entrance.",
+  "@cardShowQr": {
+    "description": "Card view: QR hint."
+  },
+  "cardQrLabel": "QR code for card {number}",
+  "@cardQrLabel": {
+    "description": "Card view: QR accessibility label.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "cardCancelledNotice": "This card has been cancelled.",
+  "@cardCancelledNotice": {
+    "description": "Card view."
+  },
+  "cardEventCancelledNotice": "This event has been cancelled.",
+  "@cardEventCancelledNotice": {
+    "description": "Card view."
+  },
+  "rsvpTitle": "Will you attend?",
+  "@rsvpTitle": {
+    "description": "Card view: RSVP."
+  },
+  "rsvpYes": "Yes, I will attend",
+  "@rsvpYes": {
+    "description": "RSVP button."
+  },
+  "rsvpNo": "No, I can't",
+  "@rsvpNo": {
+    "description": "RSVP button."
+  },
+  "rsvpClosed": "Replies are closed for this event.",
+  "@rsvpClosed": {
+    "description": "RSVP closed."
+  },
+  "rsvpSaved": "Thank you, your answer is saved.",
+  "@rsvpSaved": {
+    "description": "RSVP saved."
+  },
+  "openMap": "Open map",
+  "@openMap": {
+    "description": "Card view: venue map."
+  },
+  "accountTitle": "Account",
+  "@accountTitle": {
+    "description": "Account: title."
+  },
+  "accountSignedInWith": "Signed in with {method}",
+  "@accountSignedInWith": {
+    "description": "Account: sign-in method.",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "accountMethodPassword": "email and password",
+  "@accountMethodPassword": {
+    "description": "Account: method name."
+  },
+  "accountYourData": "Your data",
+  "@accountYourData": {
+    "description": "Account: section."
+  },
+  "downloadMyData": "Download my data",
+  "@downloadMyData": {
+    "description": "Account: export."
+  },
+  "downloadMyDataHint": "A JSON file with your account, cards and activity.",
+  "@downloadMyDataHint": {
+    "description": "Account: export hint."
+  },
+  "downloadMyDataSaved": "Saved to {path}",
+  "@downloadMyDataSaved": {
+    "description": "Account: export saved.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteMyAccount": "Delete my account",
+  "@deleteMyAccount": {
+    "description": "Account: delete."
+  },
+  "deleteMyAccountHint": "Removes your sign-in and personal details from D-Card.",
+  "@deleteMyAccountHint": {
+    "description": "Account: delete hint."
+  },
+  "deleteAccountConfirmTitle": "Delete your account?",
+  "@deleteAccountConfirmTitle": {
+    "description": "Delete sheet: title."
+  },
+  "deleteAccountConfirmBody": "You will be signed out and your D-Card account will be deleted. This cannot be undone.",
+  "@deleteAccountConfirmBody": {
+    "description": "Delete sheet: body."
+  },
+  "deleteAccountConfirm": "Delete account",
+  "@deleteAccountConfirm": {
+    "description": "Delete sheet: confirm."
+  },
+  "deleteAccountBlocked": "You still host events. Delete your events before deleting your account.",
+  "@deleteAccountBlocked": {
+    "description": "Delete refused: 409."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel."
   }
 }

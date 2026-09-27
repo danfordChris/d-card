@@ -236,5 +236,71 @@
       }
     }
   },
-  "continueOfflineBody": "This event is saved on this phone."
+  "continueOfflineBody": "This event is saved on this phone.",
+  "revokedTitle": "This phone was removed",
+  "revokedBody": "This phone can no longer check guests in for {title}. The host removed this phone or your door access. Scanning has stopped and the guest list saved on this phone was deleted.",
+  "@revokedBody": {
+    "description": "Full-screen state after the server refused this device (revoked, AUTH-9).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "revokedWorking": "Stopping and deleting the guest list on this phone…",
+  "revokedLost": "{count, plural, =1{1 entry saved offline could not be sent and was deleted. Tell the host.} other{{count} entries saved offline could not be sent and were deleted. Tell the host.}}",
+  "@revokedLost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "revokedNothingLost": "Nothing saved offline was lost.",
+  "chooseAnotherEvent": "Choose another event",
+  "eventNotStartedTitle": "Event has not started",
+  "eventNotStartedBody": "{title} starts {time}. Check the date, or continue if the doors are already open.",
+  "@eventNotStartedBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventEndedTitle": "Event has ended",
+  "eventEndedBody": "{title} ended {time}. Guests are not expected now.",
+  "@eventEndedBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "checkInAnyway": "Check in anyway",
+  "cacheExpiredTitle": "Event is over",
+  "cacheExpiredBody": "The guest list saved on this phone was deleted 24 hours after the event ended.",
+  "noNetworkNoCacheTitle": "No network",
+  "noNetworkNoCacheBody": "This phone has no internet and no saved guest list for this event yet, so cards cannot be checked. Connect to Wi-Fi or mobile data and try again.",
+  "eventsOfflineTitle": "No network",
+  "eventsOfflineBody": "Connect to the internet to load your events. No event is saved on this phone for offline check-in yet.",
+  "clockSkewWarning": "This phone's clock is {minutes} min off. Turn on automatic date and time in Settings, or entry times will be wrong.",
+  "@clockSkewWarning": {
+    "description": "Shown when the phone's clock differs from the server's.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelledDetail": "The host cancelled this card. Do not admit. If the guest disagrees, send a walk-in request.",
+  "overUsedTitle": "Card over-used",
+  "overUsedDetail": "More people entered on this card than it allows (gates admitted it while offline). The host has been alerted. Do not admit again.",
+  "lockedPadTitle": "Card-number entry is locked",
+  "lockedPadBody": "Scan the QR code or search by name while you wait."
 }

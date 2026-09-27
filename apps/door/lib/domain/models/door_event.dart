@@ -27,3 +27,23 @@ class DoorSession {
   final String deviceId;
   final String? deviceName;
 }
+
+/// Where [DoorEvent] stands against the phone's clock, for the door's "not started" and
+/// "ended" screens. The server does not refuse check-in by time, so these only warn.
+enum EventTiming { upcoming, open, ended }
+
+extension DoorEventTiming on DoorEvent {
+  /// Doors usually open before the start time; earlier than this the door warns.
+  static const earlyWindow = Duration(hours: 3);
+
+  /// Without an end time the event counts as running this long (the server's default).
+  static const defaultLength = Duration(hours: 12);
+
+  DateTime get effectiveEndsAt => endsAt ?? startsAt.add(defaultLength);
+
+  EventTiming timingAt(DateTime now) {
+    if (now.isBefore(startsAt.subtract(earlyWindow))) return EventTiming.upcoming;
+    if (now.isAfter(effectiveEndsAt)) return EventTiming.ended;
+    return EventTiming.open;
+  }
+}

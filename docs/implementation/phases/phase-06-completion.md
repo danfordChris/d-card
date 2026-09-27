@@ -2,8 +2,8 @@
 
 ## Status
 
-- `pending`
-- Last updated: 2026-09-24
+- `in-progress`
+- Last updated: 2026-09-27
 
 ## Objective
 
@@ -31,18 +31,29 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [x] Break the scope into task files (vertical slices, per `task-spec.md`).
+- [x] All linked tasks done with evidence.
+- [x] Phase review written (`docs/implementation/reviews/2026-09-27-phase-06-review.md`).
+- [ ] Deploy to staging with migrations 0013–0017 and owner setup (Firebase Google/Apple, Sentry, `ALERT_EMAIL`).
 
 ## Acceptance Criteria
 
 - [ ] feature-complete MVP on staging.
-- [ ] Every linked task is `done` with verification evidence.
+- [x] Every linked task is `done` with verification evidence.
 - [ ] `python3 .agents/workflows/workflow-contract/scripts/validate_workflow.py` prints `WORKFLOW:ok`.
 
 ## Blockers
 
-- Previous phase not done.
+- Phase 05 waits only on the owner's live Snippe payment and Google Drive check; phase 06 work does not depend on them.
 
 ## Linked Tasks
 
-- None yet.
+- `docs/implementation/tasks/t06-01-retention-privacy.md`
+- `docs/implementation/tasks/t06-02-guest-sign-in.md`
+- `docs/implementation/tasks/t06-03-admin-panel.md`
+- `docs/implementation/tasks/t06-04-host-audit-exports.md`
+- `docs/implementation/tasks/t06-05-cost-margin-report.md`
+- `docs/implementation/tasks/t06-06-observability.md`
+- `docs/implementation/tasks/t06-07-card-page-a11y-perf.md`
+- `docs/implementation/tasks/t06-08-door-app-polish.md`
+- `docs/implementation/tasks/t06-09-store-listings.md`

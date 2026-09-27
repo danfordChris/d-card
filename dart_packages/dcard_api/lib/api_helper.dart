@@ -70,6 +70,9 @@ String parameterToString(dynamic value) {
   if (value is DevicePlatform) {
     return DevicePlatformTypeTransformer().encode(value).toString();
   }
+  if (value is ExportKind) {
+    return ExportKindTypeTransformer().encode(value).toString();
+  }
   if (value is HostPaymentMethod) {
     return HostPaymentMethodTypeTransformer().encode(value).toString();
   }

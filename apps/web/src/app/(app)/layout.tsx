@@ -21,7 +21,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           </Link>
           <div className="flex items-center gap-4">
             {account.isAdmin && (
-              <Link href="/admin/event-types" className="text-sm font-medium text-gray-700 hover:text-brand-600">
+              <Link href="/admin/users" className="text-sm font-medium text-gray-700 hover:text-brand-600">
                 {t("admin")}
               </Link>
             )}

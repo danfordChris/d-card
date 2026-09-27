@@ -211,15 +211,18 @@ void main() {
     expect(tester.widget<FilledButton>(find.byKey(const Key('pad.1'))).onPressed, isNotNull);
   });
 
-  testWidgets('a revoked device returns to sign-in with a message', (tester) async {
+  testWidgets('a revoked device stops scanning and explains; sign-out from there', (tester) async {
     final (auth, api) = await pumpApp(tester);
     await openEvent(tester);
     api.revoked = true;
     await tester.tap(find.byKey(const Key('scan.qr-inv-1')));
     await tester.pumpAndSettle();
+    expect(find.byKey(const Key('revoked.screen')), findsOneWidget);
+    expect(find.byKey(const Key('scan.qr-inv-1')), findsNothing);
+    await tester.tap(find.byKey(const Key('revoked.signOut')));
+    await tester.pumpAndSettle();
     expect(auth.currentUser, isNull);
     expect(find.byKey(const Key('login.email')), findsOneWidget);
-    expect(find.text('This phone can no longer check guests in for this event. Ask the host.'), findsOneWidget);
     expect(api.pushUnregistered, ['door-token-1']);
   });
 

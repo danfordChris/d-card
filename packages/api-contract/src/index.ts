@@ -66,4 +66,9 @@ export * from "./checkin.js";
 // T04-03 confirmation recording.
 export * from "./confirmations.js";
 export * from "./billing.js";
+export * from "./me.js";
+export * from "./admin-platform.js";
 export * from "./media.js";
+
+// T06-04 host audit view and exports.
+export * from "./audit.js";

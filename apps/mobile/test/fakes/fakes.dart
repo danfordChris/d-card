@@ -5,6 +5,7 @@ import 'package:dcard_api/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:dcard_mobile/data/services/auth_service.dart';
 import 'package:dcard_mobile/data/services/contacts_source.dart';
+import 'package:dcard_mobile/data/services/file_saver.dart';
 import 'package:dcard_mobile/data/services/link_opener.dart';
 import 'package:dcard_mobile/data/services/push_message_source.dart';
 import 'package:dcard_mobile/domain/models/app_failure.dart';
@@ -26,12 +27,87 @@ class FakeAuthService implements AuthService {
     return _user = AuthUser(uid: 'uid-$email', email: email);
   }
 
+  /// Failure for the next Google/Apple sign-ins (e.g. `AppFailure.cancelled`).
+  AppFailure? socialFailure;
+  final socialSignIns = <SocialProvider>[];
+
+  @override
+  Future<AuthUser> signInWithProvider(SocialProvider provider) async {
+    socialSignIns.add(provider);
+    if (socialFailure != null) throw AppException(socialFailure!);
+    return _user = AuthUser(uid: 'uid-${provider.name}', email: 'guest@gmail.com', provider: provider.name);
+  }
+
   @override
   Future<void> signOut() async => _user = null;
 
   @override
   Future<String?> idToken() async => _user == null ? null : 'token';
 }
+
+class FakeFileSaver implements FileSaver {
+  final saved = <String, List<int>>{};
+
+  @override
+  Future<String> save(String fileName, List<int> bytes) async {
+    saved[fileName] = bytes;
+    return '/docs/$fileName';
+  }
+}
+
+/// A `GET /api/v1/me/cards` item.
+Map<String, Object?> fakeMyCard({
+  String token = 'tok_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1',
+  String title = 'Harusi ya Asha',
+  String startsAt = '2026-12-12T12:00:00.000Z',
+  String cardNumber = '007-1234',
+  String status = 'issued',
+  String rsvp = 'none',
+  String? venue = 'Diamond Jubilee',
+}) => {
+  'eventTitle': title,
+  'startsAt': startsAt,
+  'endsAt': null,
+  'timeZone': 'Africa/Dar_es_Salaam',
+  'venueName': venue,
+  'guestName': 'Juma Hamisi',
+  'cardType': 'single',
+  'cardNumber': cardNumber,
+  'status': status,
+  'rsvpStatus': rsvp,
+  'linkToken': token,
+};
+
+/// A `GET /api/v1/cards/{token}` body.
+Map<String, Object?> fakePublicCard({
+  String status = 'issued',
+  String rsvp = 'none',
+  bool open = true,
+  String cardNumber = '007-1234',
+}) => {
+  'status': status,
+  'guestName': 'Juma Hamisi',
+  'partnerName': null,
+  'cardType': 'single',
+  'cardNumber': cardNumber,
+  'qrToken': status == 'issued' ? 'qr-token-1' : null,
+  'rsvp': {'status': rsvp, 'dietaryNotes': null, 'at': null, 'open': open},
+  'event': {
+    'title': 'Harusi ya Asha',
+    'typeKey': 'wedding',
+    'typeNameSw': 'Harusi',
+    'typeNameEn': 'Wedding',
+    'startsAt': '2026-12-12T12:00:00.000Z',
+    'endsAt': null,
+    'timeZone': 'Africa/Dar_es_Salaam',
+    'venueName': 'Diamond Jubilee',
+    'venueAddress': 'Upanga, Dar es Salaam',
+    'venueMapUrl': null,
+    'contactName': 'Asha',
+    'contactPhone': '255754123456',
+    'status': 'published',
+  },
+};
 
 class FakeApi extends DefaultApi {
   FakeApi({this.events = const [], this.listError});
@@ -348,6 +424,76 @@ class FakeApi extends DefaultApi {
       base['completedAt'] = '2026-10-01T09:01:00.000Z';
     }
     return _json(base);
+  }
+
+  // ---- Guest cards (T06-02) ----
+
+  List<Map<String, Object?>> myCards = [];
+  int myCardsCalls = 0;
+  final linkRequests = <String>[];
+
+  /// Status and error code for the next link (e.g. `(409, 'person_linked')`); null links it.
+  (int, String)? linkError;
+
+  /// Cards linked by token when a link succeeds.
+  Map<String, Map<String, Object?>> linkable = {};
+  Map<String, Map<String, Object?>> publicCards = {};
+  final rsvps = <(String, RsvpInputAnswerEnum)>[];
+  int? rsvpErrorStatus;
+
+  int? deleteMeStatus;
+  int deleteMeCalls = 0;
+  int exportCalls = 0;
+
+  @override
+  Future<http.Response> listMyCardsWithHttpInfo() async {
+    myCardsCalls++;
+    return _json({'items': myCards});
+  }
+
+  @override
+  Future<http.Response> linkMyCardWithHttpInfo({LinkCardInput? linkCardInput}) async {
+    final token = linkCardInput!.token;
+    linkRequests.add(token);
+    if (linkError != null) return _error(linkError!.$1, linkError!.$2);
+    final card = linkable[token];
+    if (card == null) return _error(404, 'not_found');
+    if (!myCards.contains(card)) myCards = [...myCards, card];
+    return _json({'linked': true});
+  }
+
+  @override
+  Future<http.Response> getPublicCardWithHttpInfo(String token) async {
+    final card = publicCards[token];
+    return card == null ? _error(404, 'not_found') : _json(card);
+  }
+
+  @override
+  Future<http.Response> submitRsvpWithHttpInfo(String token, {RsvpInput? rsvpInput}) async {
+    rsvps.add((token, rsvpInput!.answer));
+    if (rsvpErrorStatus != null) return _error(rsvpErrorStatus!, rsvpErrorStatus == 409 ? 'conflict' : 'rate_limited');
+    final rsvp = {'status': rsvpInput.answer.value, 'dietaryNotes': null, 'at': '2026-10-01T09:00:00.000Z', 'open': true};
+    final card = publicCards[token];
+    if (card != null) publicCards[token] = {...card, 'rsvp': rsvp};
+    return _json(rsvp);
+  }
+
+  @override
+  Future<http.Response> exportMyDataWithHttpInfo() async {
+    exportCalls++;
+    return http.Response.bytes(
+      utf8.encode(jsonEncode({'exportedAt': '2026-10-01T09:00:00.000Z', 'account': {}})),
+      200,
+      headers: {'content-type': 'application/json', 'content-disposition': 'attachment; filename="dcard-my-data-2026-10-01.json"'},
+    );
+  }
+
+  @override
+  Future<void> deleteMe() async {
+    deleteMeCalls++;
+    if (deleteMeStatus != null) {
+      throw ApiException(deleteMeStatus!, '{"error":{"code":"conflict","message":"Delete your events first."}}');
+    }
   }
 
   @override

@@ -17,17 +17,20 @@ type Props = {
   onReport?: (item: GuestMediaItem) => Promise<boolean>;
 };
 
-const iconButton = "inline-flex h-11 w-11 items-center justify-center rounded-full text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white";
+const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+const iconButton = `inline-flex h-11 w-11 items-center justify-center rounded-full text-white hover:bg-white/10 ${focusRing}`;
 
 /** Full-screen viewer: tap arrows, swipe or use the arrow keys; Escape closes. Only the open item loads. */
 export function MediaViewer({ items, index, onIndex, onClose, onDelete, onReport }: Props) {
   const t = useTranslations("cardPage.gallery.viewer");
+  const tg = useTranslations("cardPage.gallery");
   const item = items[index];
   const [confirming, setConfirming] = useState<"delete" | "report" | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const touchX = useRef<number | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const hasPrev = index > 0;
   const hasNext = index < items.length - 1;
@@ -45,7 +48,21 @@ export function MediaViewer({ items, index, onIndex, onClose, onDelete, onReport
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Tab") {
+        // Keep keyboard focus inside the modal viewer.
+        const focusable = dialogRef.current?.querySelectorAll<HTMLElement>("button:not([disabled]), video[controls], [href]");
+        if (!focusable || focusable.length === 0) return;
+        const first = focusable[0]!;
+        const last = focusable[focusable.length - 1]!;
+        const inside = dialogRef.current?.contains(document.activeElement);
+        if (e.shiftKey && (document.activeElement === first || !inside)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (document.activeElement === last || !inside)) {
+          e.preventDefault();
+          first.focus();
+        }
+      } else if (e.key === "Escape") onClose();
       else if (e.key === "ArrowLeft" && hasPrev) onIndex(index - 1);
       else if (e.key === "ArrowRight" && hasNext) onIndex(index + 1);
     };
@@ -72,6 +89,7 @@ export function MediaViewer({ items, index, onIndex, onClose, onDelete, onReport
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={t("position", { index: index + 1, total: items.length })}
@@ -89,51 +107,49 @@ export function MediaViewer({ items, index, onIndex, onClose, onDelete, onReport
       }}
     >
       <div className="flex items-center justify-between px-2 py-2">
-        <span className="px-2 text-sm text-white/80">{t("position", { index: index + 1, total: items.length })}</span>
+        <span className="px-2 text-sm text-white/80" aria-live="polite">{t("position", { index: index + 1, total: items.length })}</span>
         <button ref={closeRef} type="button" className={iconButton} onClick={onClose} aria-label={t("close")}>
-          <HugeiconsIcon icon={Cancel01Icon} size={24} />
+          <HugeiconsIcon icon={Cancel01Icon} size={24} aria-hidden="true" />
         </button>
       </div>
 
       <div className="relative flex min-h-0 flex-1 items-center justify-center">
-        <FullMedia key={item.id} item={item} loadingLabel={t("loading")} failedLabel={t("loadFailed")} />
+        <FullMedia key={item.id} item={item} loadingLabel={t("loading")} failedLabel={t("loadFailed")} alt={tg("photo")} />
         {hasPrev && (
           <button type="button" className={`${iconButton} absolute left-2 bg-black/40`} onClick={() => go(index - 1)} aria-label={t("previous")}>
-            <HugeiconsIcon icon={ArrowLeft01Icon} size={24} />
+            <HugeiconsIcon icon={ArrowLeft01Icon} size={24} aria-hidden="true" />
           </button>
         )}
         {hasNext && (
           <button type="button" className={`${iconButton} absolute right-2 bg-black/40`} onClick={() => go(index + 1)} aria-label={t("next")}>
-            <HugeiconsIcon icon={ArrowRight01Icon} size={24} />
+            <HugeiconsIcon icon={ArrowRight01Icon} size={24} aria-hidden="true" />
           </button>
         )}
       </div>
 
       <div className="min-h-16 space-y-2 px-4 py-3 text-sm">
         {item.uploadedBy && <p className="text-white/80">{item.mine ? t("byYou") : t("by", { name: item.uploadedBy })}</p>}
-        {notice && (
-          <p role="status" className="text-white">
-            {notice}
-          </p>
-        )}
+        <p role="status" aria-live="polite" className="text-white empty:hidden">
+          {notice}
+        </p>
         {confirming ? (
           <div className="flex flex-wrap items-center gap-3">
             <p className="flex-1">{confirming === "delete" ? t("deleteConfirm") : t("reportConfirm")}</p>
-            <button type="button" disabled={busy} onClick={act} className="rounded-lg bg-white px-4 py-2 font-semibold text-gray-900 disabled:opacity-60">
+            <button type="button" disabled={busy} onClick={act} className={`rounded-lg bg-white px-4 py-2 font-semibold text-gray-900 disabled:opacity-60 ${focusRing}`}>
               {confirming === "delete" ? t("delete") : t("report")}
             </button>
-            <button type="button" disabled={busy} onClick={() => setConfirming(null)} className="rounded-lg px-4 py-2 ring-1 ring-white/40">
+            <button type="button" disabled={busy} onClick={() => setConfirming(null)} className={`rounded-lg px-4 py-2 ring-1 ring-white/40 ${focusRing}`}>
               {t("cancel")}
             </button>
           </div>
         ) : item.mine && onDelete ? (
-          <button type="button" onClick={() => setConfirming("delete")} className="inline-flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-white/40">
-            <HugeiconsIcon icon={Delete02Icon} size={18} />
+          <button type="button" onClick={() => setConfirming("delete")} className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-white/40 ${focusRing}`}>
+            <HugeiconsIcon icon={Delete02Icon} size={18} aria-hidden="true" />
             {t("delete")}
           </button>
         ) : !item.mine && onReport ? (
-          <button type="button" onClick={() => setConfirming("report")} className="inline-flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-white/40">
-            <HugeiconsIcon icon={Flag01Icon} size={18} />
+          <button type="button" onClick={() => setConfirming("report")} className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-white/40 ${focusRing}`}>
+            <HugeiconsIcon icon={Flag01Icon} size={18} aria-hidden="true" />
             {t("report")}
           </button>
         ) : null}
@@ -142,12 +158,12 @@ export function MediaViewer({ items, index, onIndex, onClose, onDelete, onReport
   );
 }
 
-function FullMedia({ item, loadingLabel, failedLabel }: { item: GuestMediaItem; loadingLabel: string; failedLabel: string }) {
+function FullMedia({ item, loadingLabel, failedLabel, alt }: { item: GuestMediaItem; loadingLabel: string; failedLabel: string; alt: string }) {
   const { src, failed } = useMediaSrc(item.url, true);
   if (failed) return <p className="text-sm text-white/80">{failedLabel}</p>;
-  if (!src) return <p className="text-sm text-white/70">{loadingLabel}</p>;
+  if (!src) return <p className="text-sm text-white/80">{loadingLabel}</p>;
   if (item.type === "video") {
     return <video src={src} controls playsInline preload="metadata" className="max-h-full max-w-full" data-testid="viewer-video" />;
   }
-  return <img src={src} alt="" className="max-h-full max-w-full object-contain" data-testid="viewer-image" />;
+  return <img src={src} alt={alt} decoding="async" className="max-h-full max-w-full object-contain" data-testid="viewer-image" />;
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
+import '../../../../domain/models/app_failure.dart';
 import '../../../../domain/models/door_event.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/door_format.dart';
@@ -9,11 +11,20 @@ import '../view_models/event_select_view_model.dart';
 
 /// Pick the event to check guests in for; registering the phone for it (AUTH-9).
 class EventSelectScreen extends StatefulWidget {
-  const EventSelectScreen({super.key, required this.viewModel, required this.onOpened, required this.onSignOut});
+  const EventSelectScreen({
+    super.key,
+    required this.viewModel,
+    required this.onOpened,
+    required this.onSignOut,
+    this.onRefused,
+  });
 
   final EventSelectViewModel viewModel;
   final ValueChanged<DoorSession> onOpened;
   final VoidCallback onSignOut;
+
+  /// The server refused this phone for the event (403: revoked, or no door access).
+  final ValueChanged<DoorEvent>? onRefused;
 
   @override
   State<EventSelectScreen> createState() => _EventSelectScreenState();
@@ -37,7 +48,12 @@ class _EventSelectScreenState extends State<EventSelectScreen> {
   Future<void> _open(DoorEvent event) async {
     await widget.viewModel.setDeviceName(_deviceName.text);
     final session = await widget.viewModel.open(event);
-    if (session != null && mounted) widget.onOpened(session);
+    if (!mounted) return;
+    if (session != null) {
+      widget.onOpened(session);
+    } else if (widget.viewModel.notice == AppFailure.doorAccessDenied && widget.onRefused != null) {
+      widget.onRefused!(event);
+    }
   }
 
   @override
@@ -81,6 +97,30 @@ class _EventSelectScreenState extends State<EventSelectScreen> {
                   ),
                 if (vm.loading && vm.events.isEmpty)
                   const Padding(padding: EdgeInsets.all(32), child: Center(child: CircularProgressIndicator()))
+                else if (vm.failure == AppFailure.network && vm.offlineSession == null && vm.events.isEmpty)
+                  Card(
+                    key: const Key('events.noNetwork'),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    elevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          HugeIcon(
+                            icon: HugeIcons.strokeRoundedWifiDisconnected02,
+                            size: 48,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(l10n.eventsOfflineTitle, style: Theme.of(context).textTheme.titleLarge),
+                          const SizedBox(height: 8),
+                          Text(l10n.eventsOfflineBody, textAlign: TextAlign.center),
+                          const SizedBox(height: 16),
+                          FilledButton(key: const Key('events.retry'), onPressed: vm.load, child: Text(l10n.retry)),
+                        ],
+                      ),
+                    ),
+                  )
                 else if (vm.failure != null)
                   MessageCard(
                     text: l10n.failure(vm.failure!),

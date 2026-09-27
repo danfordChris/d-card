@@ -12,6 +12,7 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
   const [t, tc, locale] = await Promise.all([getTranslations("events"), getTranslations("confirmations"), getLocale()]);
   const tb = await getTranslations("billing");
   const tm = await getTranslations("media");
+  const ta = await getTranslations("audit");
   const editable = event.access === "host" && (event.status === "draft" || event.status === "published");
   const row = (label: string, value: string) => (
     <div className="grid grid-cols-3 gap-2 py-2 text-sm">
@@ -102,6 +103,14 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
                 {t("summary.backupList")}
               </Link>
             </>
+          )}
+          {["host", "treasurer"].includes(event.access) && (
+            <Link
+              href={`/events/${event.id}/audit`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {ta("nav")}
+            </Link>
           )}
         {editable && (
           <>
