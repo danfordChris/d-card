@@ -28,4 +28,9 @@ export function setMediaStore(s: MediaStore | null, o: GoogleOAuth | null = null
 
 /** Origin Google allows to PUT to upload sessions (the web app itself). */
 export const appOrigin = () => new URL(process.env.APP_URL ?? "http://localhost:3000").origin;
-export const oauthStateSecret = () => process.env.TOKEN_HASH_SECRET ?? "";
+/** SEC-11: never sign OAuth state with an empty or short secret. */
+export const oauthStateSecret = () => {
+  const secret = process.env.TOKEN_HASH_SECRET ?? "";
+  if (secret.length < 32) throw new Error("TOKEN_HASH_SECRET is missing or shorter than 32 characters");
+  return secret;
+};

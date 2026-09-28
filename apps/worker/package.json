@@ -8,8 +8,9 @@
     "start": "tsx src/main.ts",
     "start:prod": "node dist/main.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint src test",
-    "test": "vitest run"
+    "lint": "eslint src test load",
+    "test": "vitest run",
+    "load": "tsx load/run.ts"
   },
   "dependencies": {
     "@dcard/core": "workspace:*",

@@ -48,6 +48,18 @@ async function readError(res: Response): Promise<string> {
 const isPermanent = (status: number) => status >= 400 && status < 500 && status !== 408 && status !== 429;
 
 /**
+ * Meta returns throughput limits as HTTP 400 with an error code: 130429 (number throughput),
+ * 131056 (too many messages to one recipient), 80007 (account rate limit), 4 (app rate limit).
+ * These are retried with backoff, never marked failed.
+ */
+export const META_RETRYABLE_CODES = [130429, 131056, 80007, 4];
+export function isMetaPermanent(status: number, message: string): boolean {
+  const code = /"code"\s*:\s*(\d+)/.exec(message)?.[1];
+  if (code && META_RETRYABLE_CODES.includes(Number(code))) return false;
+  return isPermanent(status);
+}
+
+/**
  * NextSMS (https://documenter.getpostman.com/view/4680389/SW7dX7JL): Basic auth with Base64
  * `username:password`; send `POST /api/sms/v1/text/single` with `reference`; status by
  * `GET /api/sms/v1/logs?reference=`.
@@ -132,7 +144,7 @@ export class MetaWhatsAppSender implements WhatsAppSender {
     });
     if (!res.ok) {
       const message = await readError(res);
-      throw isPermanent(res.status) ? new PermanentSendError(message) : new Error(message);
+      throw isMetaPermanent(res.status, message) ? new PermanentSendError(message) : new Error(message);
     }
     const body = (await res.json()) as { messages?: { id?: string }[] };
     const id = body.messages?.[0]?.id;
@@ -148,7 +160,7 @@ export class MetaWhatsAppSender implements WhatsAppSender {
     });
     if (!res.ok) {
       const message = await readError(res);
-      throw isPermanent(res.status) ? new PermanentSendError(message) : new Error(message);
+      throw isMetaPermanent(res.status, message) ? new PermanentSendError(message) : new Error(message);
     }
     const json = (await res.json()) as { messages?: { id?: string }[] };
     const id = json.messages?.[0]?.id;

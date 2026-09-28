@@ -1,6 +1,7 @@
 import { completeGoogleConnect, verifyOAuthState } from "@dcard/core";
 import { getDb } from "../../../../../../server/db";
 import { appOrigin, googleOAuth, mediaStore, oauthStateSecret } from "../../../../../../server/media";
+import { requireUser } from "../../../../../../server/current-user";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,10 @@ export async function GET(request: Request): Promise<Response> {
   const state = verifyOAuthState(url.searchParams.get("state") ?? "", oauthStateSecret());
   if (!state) return Response.redirect(`${appOrigin()}/dashboard?drive=expired`, 302);
   const back = `${appOrigin()}/events/${state.eventId}/media`;
+  // SEC-13: the browser finishing the flow must be signed in as the user who started it
+  // (the session cookie is SameSite=Lax, so it comes with Google's redirect).
+  const account = await requireUser(request).catch(() => null);
+  if (!account || account.id !== state.userId) return Response.redirect(`${back}?drive=failed`, 302);
   const code = url.searchParams.get("code");
   if (!code) return Response.redirect(`${back}?drive=cancelled`, 302);
   try {

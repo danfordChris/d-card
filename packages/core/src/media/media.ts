@@ -538,6 +538,13 @@ async function streamItem(db: DbExecutor, store: MediaStore, eventId: string, em
     const v = res.headers.get(h);
     if (v) headers.set(h, v);
   }
+  // SEC-10: only images and video are served inline; anything else downloads as bytes.
+  const type = (headers.get("content-type") ?? "").split(";")[0]!.trim().toLowerCase();
+  if (!/^(image\/(jpeg|png|webp|gif|heic|heif)|video\/(mp4|quicktime|webm))$/.test(type)) {
+    headers.set("content-type", "application/octet-stream");
+    headers.set("content-disposition", "attachment");
+  }
+  headers.set("x-content-type-options", "nosniff");
   headers.set("cache-control", "private, max-age=3600");
   return new Response(res.body, { status: res.status, headers });
 }

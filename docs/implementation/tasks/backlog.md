@@ -71,12 +71,15 @@ in-progress
 - [ ] Completion — `docs/implementation/phases/phase-06-completion.md` (T06-01…T06-09 done 2026-09-27; waits for staging deploy and owner setup)
 - [ ] Store the rate category on `message_log` so the cost report can re-cost messages sent before a rate existed (T06-05 follow-up).
 - [ ] Guest deep links: open `/c/<token>` in the D-Card app and link the card (T06-02 follow-up).
+- [ ] Script-src CSP with per-request nonces (SEC-04 follow-up, `docs/security/2026-09-security-review.md`).
+- [ ] Separate keys per purpose for token hashing, OAuth state and admin proofs, with a rotation plan (SEC-19).
+- [ ] Decide a per-guest limit on media reports so one guest cannot hide a whole gallery (SEC-17).
 - [ ] Pass only the needed message namespaces to `NextIntlClientProvider` on the card page (~12.7 kB gz, T06-07 follow-up).
 
 ### P07
 
 - [ ] T07-01 Marketing site (started early, owner request 2026-09-25)
-- [ ] Hardening and pilot — `docs/implementation/phases/phase-07-hardening-pilot.md`
+- [ ] Hardening and pilot — `docs/implementation/phases/phase-07-hardening-pilot.md` (in progress; T07-02…T07-05)
 
 ### Owner requests (2026-09-25) — to design and schedule
 

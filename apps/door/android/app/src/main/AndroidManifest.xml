@@ -2,6 +2,8 @@
     <!-- Needed in release: the debug/profile manifests add it only for development. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:label="D-Card Door"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

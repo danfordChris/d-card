@@ -95,7 +95,11 @@ describe("media API", () => {
     expect(google.hostname).toBe("accounts.google.com");
     expect(google.searchParams.get("scope")).toContain("drive.file");
     expect((await connect.GET(req("GET", OTHER, undefined, `http://localhost/x?eventId=${eventId}`))).status).toBe(403);
-    const back = await callback.GET(new Request(`http://localhost/x?code=abc&state=${encodeURIComponent(google.searchParams.get("state")!)}`));
+    const stateUrl = `http://localhost/x?code=abc&state=${encodeURIComponent(google.searchParams.get("state")!)}`;
+    // SEC-13: the callback must come from the same signed-in user who started the flow.
+    expect((await callback.GET(new Request(stateUrl))).headers.get("location")).toContain("drive=failed");
+    expect((await callback.GET(new Request(stateUrl, { headers: { cookie: `dcard_session=${OTHER}` } }))).headers.get("location")).toContain("drive=failed");
+    const back = await callback.GET(new Request(stateUrl, { headers: { cookie: `dcard_session=${HOST}` } }));
     expect(back.headers.get("location")).toBe(`https://api.dcard.test/events/${eventId}/media?drive=connected`);
     expect((await callback.GET(new Request("http://localhost/x?code=abc&state=forged.sig"))).headers.get("location")).toContain("drive=expired");
     expect(await (await settings.GET(req("GET", HOST), p())).json()).toMatchObject({ connected: true, googleEmail: "host@gmail.com", sharingMode: "private" });

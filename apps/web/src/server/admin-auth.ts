@@ -1,11 +1,16 @@
-import { DomainError, ForbiddenError, signAdminProof, verifyAdminProof, ADMIN_PROOF_TTL_MS } from "@dcard/core";
+import { DomainError, ForbiddenError, getTotpStatus, signAdminProof, verifyAdminProof, ADMIN_PROOF_TTL_MS } from "@dcard/core";
+import { getDb } from "./db";
 import { requireUser } from "./current-user";
 
 // AUTH-7: admin API routes need the account's admin flag and a second-factor proof cookie,
 // set after a TOTP or recovery code (docs/design/features/auth.md).
 
 export const ADMIN_2FA_COOKIE = "dcard_admin_2fa";
-const secret = () => process.env.TOKEN_HASH_SECRET ?? "";
+const secret = () => {
+  const value = process.env.TOKEN_HASH_SECRET ?? "";
+  if (value.length < 32) throw new Error("TOKEN_HASH_SECRET is missing or shorter than 32 characters");
+  return value;
+};
 
 export class SecondFactorRequiredError extends DomainError {
   constructor() {
@@ -32,6 +37,8 @@ export async function requireAdminAccount(request: Request) {
 export async function requireAdminUser(request: Request) {
   const user = await requireAdminAccount(request);
   if (!verifyAdminProof(readCookie(request, ADMIN_2FA_COOKIE), user.id, secret())) throw new SecondFactorRequiredError();
+  // SEC-15: a proof stops working once the second factor is turned off.
+  if (!(await getTotpStatus(getDb(), user.id)).enrolled) throw new SecondFactorRequiredError();
   return user;
 }
 
