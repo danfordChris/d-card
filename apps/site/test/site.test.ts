@@ -58,6 +58,8 @@ describe("marketing site", () => {
   it("links sign-up to the app and hides contact buttons until configured", () => {
     const sw = readFileSync(join(plain, "index.html"), "utf8");
     expect(sw).toContain('href="https://app.example/signup"');
+    expect(sw).toContain('href="https://app.example/privacy?lang=sw"');
+    expect(readFileSync(join(plain, "en", "index.html"), "utf8")).toContain('href="https://app.example/privacy?lang=en"');
     expect(sw).not.toContain('data-contact="whatsapp"');
     expect(sw).not.toContain('data-contact="phone"');
     const configured = readFileSync(join(withContact, "index.html"), "utf8");
@@ -82,6 +84,7 @@ describe("marketing site", () => {
     const noApp = build({ SITE_APP_URL: "" });
     const html = readFileSync(join(noApp, "index.html"), "utf8");
     expect(html).not.toContain("/signup");
+    expect(html).not.toContain("/privacy");
     expect(html).toContain('href="#contact"');
   });
 

@@ -14,6 +14,9 @@ class EventsRepository {
     return list.events.map(_toSummary).toList();
   }
 
+  /// One event (`GET /api/v1/events/{id}`), e.g. when a push opens it.
+  Future<EventSummary> getEvent(String id) async => _toSummary(await guardApi(() => _api.getEvent(id)));
+
   static EventSummary _toSummary(Event e) => EventSummary(
     id: e.id,
     title: e.title,
@@ -37,5 +40,18 @@ class EventsRepository {
       EventAccessEnum.treasurer,
     ].contains(e.access),
     canRecordPayments: e.access == EventAccessEnum.host || e.access == EventAccessEnum.treasurer,
+    // `roles` lists every role held here (e.g. committee + walk-in approver); `access` is only one.
+    canViewWalkIns: e.roles.any((r) => const [
+          EventRolesEnum.host,
+          EventRolesEnum.committee,
+          EventRolesEnum.walkinApprover,
+        ].contains(r)) ||
+        const [EventAccessEnum.host, EventAccessEnum.committee, EventAccessEnum.walkinApprover].contains(e.access),
+    isHost: e.access == EventAccessEnum.host || e.roles.contains(EventRolesEnum.host),
+    planPaid: e.plan.paid,
+    canDecideWalkIns: e.roles.contains(EventRolesEnum.host) ||
+        e.roles.contains(EventRolesEnum.walkinApprover) ||
+        e.access == EventAccessEnum.host ||
+        e.access == EventAccessEnum.walkinApprover,
   );
 }

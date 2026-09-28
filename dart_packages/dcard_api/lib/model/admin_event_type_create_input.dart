@@ -61,7 +61,6 @@ class AdminEventTypeCreateInput {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "AdminEventTypeCreateInput[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "AdminEventTypeCreateInput[$key]" has a null value in JSON.');
         });
         return true;
       }());

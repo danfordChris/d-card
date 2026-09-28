@@ -52,7 +52,7 @@ export async function GET(request: Request, { params }: Params): Promise<Respons
     const stamp = new Date().toISOString().slice(0, 10);
     if (format === "csv") {
       // BOM so Excel opens UTF-8 names correctly.
-      return new Response(`\uFEFF${Papa.unparse([header, ...rows])}`, {
+      return new Response(`\uFEFF${Papa.unparse([header, ...rows], { escapeFormulae: true })}`, {
         headers: {
           "content-type": "text/csv; charset=utf-8",
           "content-disposition": `attachment; filename="michango-${stamp}.csv"`,

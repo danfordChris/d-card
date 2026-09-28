@@ -8,10 +8,9 @@ import 'event_detail_screen.dart';
 import 'event_format.dart';
 
 class EventsScreen extends StatefulWidget {
-  const EventsScreen({super.key, required this.viewModel, required this.onSignOut});
+  const EventsScreen({super.key, required this.viewModel});
 
   final EventsViewModel viewModel;
-  final VoidCallback onSignOut;
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
@@ -28,10 +27,7 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.eventsTitle),
-        actions: [IconButton(tooltip: l10n.signOut, icon: const Icon(Icons.logout), onPressed: widget.onSignOut)],
-      ),
+      appBar: AppBar(title: Text(l10n.eventsTitle)),
       body: ListenableBuilder(
         listenable: widget.viewModel,
         builder: (context, _) {

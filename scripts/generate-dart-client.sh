@@ -7,13 +7,17 @@ OUT="dart_packages/dcard_api"
 GENERATOR_IMAGE="openapitools/openapi-generator-cli:v7.16.0"
 
 pnpm --dir "$ROOT" --filter @dcard/api-contract openapi
-rm -rf "$ROOT/$OUT"
+# Generate into a temp folder first so a failed run (e.g. Docker down) never deletes the client.
+TMP_OUT=".dcard_api.tmp"
+rm -rf "$ROOT/$TMP_OUT"
 docker run --rm -u "$(id -u):$(id -g)" -v "$ROOT:/local" "$GENERATOR_IMAGE" generate \
   -i /local/packages/api-contract/openapi.json \
   -g dart \
-  -o "/local/$OUT" \
+  -o "/local/$TMP_OUT" \
   --additional-properties=pubName=dcard_api,pubDescription="Generated D-Card API client (do not edit)",pubVersion=0.0.1,pubLibrary=dcard_api \
   --skip-validate-spec >/dev/null
+rm -rf "$ROOT/$OUT"
+mv "$ROOT/$TMP_OUT" "$ROOT/$OUT"
 
 # Make the generated package a member of the Dart pub workspace.
 cd "$ROOT/$OUT"
@@ -29,5 +33,16 @@ if "resolution: workspace" not in s:
     s = s.replace("environment:", "resolution: workspace\npublish_to: none\n\nenvironment:", 1)
 open(p, "w").write(s)
 open("analysis_options.yaml", "w").write("analyzer:\n  exclude:\n    - '**'\n")
+
+# The generator asserts (debug builds only) that every required key is non-null, even for
+# fields the contract marks nullable (OpenAPI 3.1 `type: [x, "null"]`, typed `T?` in Dart).
+# That crashes debug builds on valid responses, so drop the null assertion; the presence
+# check stays.
+import glob
+for f in glob.glob("lib/model/*.dart"):
+    src = open(f).read()
+    out = re.sub(r"\n[ \t]*assert\(json\[key\] != null, 'Required key \"[^\"]+\" has a null value in JSON\.'\);", "", src)
+    if out != src:
+        open(f, "w").write(out)
 PY
 echo "dcard_api generated in $OUT"

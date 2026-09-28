@@ -49,7 +49,6 @@ class MessageSettingsUsage {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "MessageSettingsUsage[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "MessageSettingsUsage[$key]" has a null value in JSON.');
         });
         return true;
       }());

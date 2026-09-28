@@ -2,6 +2,7 @@ import { event, eventPlan, invitation, payment, plan, pledge } from "@dcard/db";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { recordAudit } from "../audit/audit.js";
 import { requireEventRole } from "../auth/roles.js";
+import { BillingError } from "../billing/gate.js";
 import { issueInvitationInTx } from "../cards/cards.js";
 import { inTransaction, type DbExecutor } from "../db-types.js";
 import { ConflictError, NotFoundError, ValidationError } from "../errors.js";
@@ -167,7 +168,12 @@ async function settle(tx: DbExecutor, actorId: string, eventId: string, pledgeId
     })
     .where(eq(pledge.id, p.id));
   if (inv.status === "pending" && paid >= amountPledged) {
-    await issueInvitationInTx(tx, { actorId, eventId, guestId: inv.id, reason: "fully_paid" });
+    try {
+      await issueInvitationInTx(tx, { actorId, eventId, guestId: inv.id, reason: "fully_paid" });
+    } catch (err) {
+      // Unpaid event or all paid cards used: the card waits and is issued when the host pays.
+      if (!(err instanceof BillingError)) throw err;
+    }
   }
   return loadPledgeView(tx, eventId, p.id);
 }

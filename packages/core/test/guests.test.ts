@@ -2,13 +2,13 @@ import { auditLog, eventRole, guestConsent, invitation, person, userAccount } fr
 import { createTestDatabase } from "@dcard/db/testing";
 import { and, count, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addGuest,
   addGuestsBulk,
   cancelEvent,
   ConflictError,
   ConsentRequiredError,
-  createEvent,
   ForbiddenError,
   InvalidPhoneError,
   listGuests,
@@ -38,8 +38,8 @@ beforeAll(async () => {
     contactName: "Asha",
     contactPhone: "0754123456",
   };
-  eventA = await createEvent(handle.db, hostId, { ...base, title: "Event A" });
-  eventB = await createEvent(handle.db, hostId, { ...base, title: "Event B" });
+  eventA = await createPaidEvent(handle.db, hostId, { ...base, title: "Event A" });
+  eventB = await createPaidEvent(handle.db, hostId, { ...base, title: "Event B" });
   await handle.db.insert(eventRole).values([
     { eventId: eventA, userId: committeeId, role: "committee" },
     { eventId: eventA, userId: treasurerId, role: "treasurer" },

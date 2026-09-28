@@ -53,7 +53,6 @@ class SendTestMessageRequest {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "SendTestMessageRequest[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "SendTestMessageRequest[$key]" has a null value in JSON.');
         });
         return true;
       }());

@@ -14,6 +14,7 @@ import {
   type PushResult,
   type PushSender,
 } from "../src/push/push.js";
+import { createPushProcessor } from "../src/push/processor.js";
 
 // No network: FCM is replaced by fakes (a fake PushSender, or a fake Messaging for FcmPushSender).
 
@@ -141,5 +142,17 @@ describe("sendToUser", () => {
     const sender = new FakePushSender();
     expect(await sendToUser(handle.db, sender, otherId, NOTE)).toEqual({ status: "sent", tokens: 0, sent: 0, failed: 0, removed: 0 });
     expect(sender.calls).toHaveLength(0);
+  });
+
+  it("processes a notify job for each user (walk-in push to host + approvers), deduplicating users", async () => {
+    const sender = new FakePushSender();
+    const process = createPushProcessor(handle.db, sender, () => {});
+    const job = { data: { userIds: [hostId, otherId, hostId], title: "Mgeni", body: "Asha · 1", data: { type: "walk_in", walkInId: "w1" } } };
+    const result = await process(job as never);
+    expect(result).toMatchObject({ users: 3, sent: 5, notConfigured: false });
+    expect(sender.calls.map((c) => c.tokens.length).sort()).toEqual([1, 4]);
+    expect(sender.calls[0]!.notification.data).toEqual({ type: "walk_in", walkInId: "w1" });
+    const skipped = await createPushProcessor(handle.db, new UnconfiguredPushSender(), () => {})(job as never);
+    expect(skipped.notConfigured).toBe(true);
   });
 });

@@ -51,7 +51,30 @@ type WaChange = {
   };
 };
 
-export type WhatsAppWebhookResult = { statuses: number; confirmations: number; optOuts: number; templates: number };
+/**
+ * A free-form WhatsApp reply inside the 24 h window the guest's tap opened (CNF-2): the
+ * acknowledgement after the first answer, or "already recorded" for later taps. The route
+ * queues these (job id = the inbound message id, so Meta retries never reply twice).
+ */
+export type WhatsAppReply = {
+  inboundId: string;
+  eventId: string;
+  invitationId: string;
+  to: string;
+  kind: "confirmation_ack" | "confirmation_repeat";
+  language: "sw" | "en";
+  text: string;
+};
+
+export type WhatsAppWebhookResult = { statuses: number; confirmations: number; optOuts: number; templates: number; replies: WhatsAppReply[] };
+
+const REPLY_TEXT: Record<WhatsAppReply["kind"], Record<"sw" | "en", string>> = {
+  confirmation_ack: { sw: "Asante, tumepokea jibu lako.", en: "Thank you, we have received your answer." },
+  confirmation_repeat: {
+    sw: "Jibu lako lilishapokelewa. Kwa mabadiliko, wasiliana na mwenyeji.",
+    en: "Your answer was already recorded. To change it, please contact the host.",
+  },
+};
 
 const at = (ts?: string) => (ts && /^\d+$/.test(ts) ? new Date(Number(ts) * 1000) : new Date());
 const lang = (code?: string) => (code?.startsWith("en") ? "en" : "sw") as "sw" | "en";
@@ -84,35 +107,49 @@ async function optOut(db: DbExecutor, m: WaMessage): Promise<boolean> {
   return Boolean(created);
 }
 
-async function confirm(db: DbExecutor, payload: string, when: Date): Promise<boolean> {
-  const m = /^cnf:([^:]+):(yes|no)$/.exec(payload);
-  const id = m ? verifyConfirmationToken(m[1]!) : null;
-  if (!m || !id) return false;
-  const answer = m[2] as "yes" | "no";
-  const [row] = await db.select().from(invitation).where(eq(invitation.id, id));
-  if (!row || row.status === "cancelled") return false;
-  if (row.confirmationStatus === answer && row.confirmationSource === "whatsapp") return true;
-  await db
-    .update(invitation)
-    .set({ confirmationStatus: answer, confirmationAt: when, confirmationSource: "whatsapp" })
+/** CNF-2: the first answer counts (either channel); later taps change nothing and get a short reply. */
+async function confirm(db: DbExecutor, payload: string, m: WaMessage): Promise<{ recorded: boolean; reply: WhatsAppReply | null }> {
+  const match = /^cnf:([^:]+):(yes|no)$/.exec(payload);
+  const id = match ? verifyConfirmationToken(match[1]!) : null;
+  if (!match || !id) return { recorded: false, reply: null };
+  const answer = match[2] as "yes" | "no";
+  const [row] = await db
+    .select({ i: invitation, language: person.language })
+    .from(invitation)
+    .leftJoin(person, eq(person.id, invitation.personId))
     .where(eq(invitation.id, id));
+  if (!row || row.i.status === "cancelled") return { recorded: false, reply: null };
+  const language = (row.language ?? "sw") as "sw" | "en";
+  const reply = (kind: WhatsAppReply["kind"]): WhatsAppReply | null =>
+    m.id && m.from ? { inboundId: m.id, eventId: row.i.eventId, invitationId: id, to: m.from, kind, language, text: REPLY_TEXT[kind][language] } : null;
+
+  // Conditional update: two taps processed at once still record only the first.
+  const [updated] = await db
+    .update(invitation)
+    .set({ confirmationStatus: answer, confirmationAt: at(m.timestamp), confirmationSource: "whatsapp" })
+    .where(and(eq(invitation.id, id), eq(invitation.confirmationStatus, "none")))
+    .returning({ id: invitation.id });
+  if (!updated) return { recorded: false, reply: reply("confirmation_repeat") };
   await recordAudit(db, {
     actorUserId: null,
-    eventId: row.eventId,
+    eventId: row.i.eventId,
     action: "confirmation.recorded",
     targetType: "invitation",
     targetId: id,
-    oldValue: { confirmation: row.confirmationStatus },
+    oldValue: { confirmation: "none" },
     newValue: { confirmation: answer, source: "whatsapp" },
   });
-  return true;
+  return { recorded: true, reply: reply("confirmation_ack") };
 }
 
-async function logInbound(db: DbExecutor, m: WaMessage, body: string): Promise<void> {
+/** Logs an inbound message once; returns false when Meta re-delivers one already seen. */
+async function logInbound(db: DbExecutor, m: WaMessage, body: string): Promise<boolean> {
+  if (m.id) {
+    const [exists] = await db.select({ id: messageLog.id }).from(messageLog).where(eq(messageLog.providerMessageId, m.id));
+    if (exists) return false;
+  }
   const target = await eventForInbound(db, m);
-  if (!target || !m.id) return;
-  const [exists] = await db.select({ id: messageLog.id }).from(messageLog).where(eq(messageLog.providerMessageId, m.id));
-  if (exists) return;
+  if (!target || !m.id) return true;
   await db.insert(messageLog).values({
     eventId: target.eventId,
     invitationId: target.invitationId,
@@ -124,6 +161,7 @@ async function logInbound(db: DbExecutor, m: WaMessage, body: string): Promise<v
     status: "delivered",
     deliveredAt: at(m.timestamp),
   });
+  return true;
 }
 
 async function templateUpdate(db: DbExecutor, change: WaChange): Promise<boolean> {
@@ -165,7 +203,7 @@ async function templateUpdate(db: DbExecutor, change: WaChange): Promise<boolean
 }
 
 export async function handleWhatsAppWebhook(db: DbExecutor, body: unknown): Promise<WhatsAppWebhookResult> {
-  const result: WhatsAppWebhookResult = { statuses: 0, confirmations: 0, optOuts: 0, templates: 0 };
+  const result: WhatsAppWebhookResult = { statuses: 0, confirmations: 0, optOuts: 0, templates: 0, replies: [] };
   const entries = (body as { entry?: { changes?: WaChange[] }[] })?.entry ?? [];
   for (const change of entries.flatMap((e) => e.changes ?? [])) {
     const v = change.value ?? {};
@@ -177,9 +215,13 @@ export async function handleWhatsAppWebhook(db: DbExecutor, body: unknown): Prom
     for (const m of v.messages ?? []) {
       const payload = m.button?.payload ?? m.interactive?.button_reply?.id ?? "";
       const text = (m.text?.body ?? m.button?.text ?? m.interactive?.button_reply?.title ?? "").trim();
-      await logInbound(db, m, payload || text);
-      if (payload.startsWith("cnf:") && (await confirm(db, payload, at(m.timestamp)))) result.confirmations++;
-      else if (payload === "stop" || STOP_WORDS.has(text.toUpperCase())) {
+      const fresh = await logInbound(db, m, payload || text);
+      if (payload.startsWith("cnf:")) {
+        if (!fresh) continue;
+        const { recorded, reply } = await confirm(db, payload, m);
+        if (recorded) result.confirmations++;
+        if (reply) result.replies.push(reply);
+      } else if (payload === "stop" || STOP_WORDS.has(text.toUpperCase())) {
         if (await optOut(db, m)) result.optOuts++;
       }
     }

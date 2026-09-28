@@ -131,7 +131,6 @@ class UpdateMessageSettingsRequestSettingsInnerSchedule {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "UpdateMessageSettingsRequestSettingsInnerSchedule[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "UpdateMessageSettingsRequestSettingsInnerSchedule[$key]" has a null value in JSON.');
         });
         return true;
       }());

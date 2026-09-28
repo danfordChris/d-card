@@ -32,6 +32,8 @@ export type WhatsAppTemplateMessage = {
 
 export interface WhatsAppSender {
   sendTemplate(message: WhatsAppTemplateMessage): Promise<SentResult>;
+  /** Free-form text; Meta only delivers it inside the 24 h customer-service window. */
+  sendText(to: string, body: string): Promise<SentResult>;
   uploadImage(png: Uint8Array, fileName: string): Promise<string>;
 }
 
@@ -44,6 +46,18 @@ async function readError(res: Response): Promise<string> {
 
 /** 4xx other than 408/429 will not succeed on retry. */
 const isPermanent = (status: number) => status >= 400 && status < 500 && status !== 408 && status !== 429;
+
+/**
+ * Meta returns throughput limits as HTTP 400 with an error code: 130429 (number throughput),
+ * 131056 (too many messages to one recipient), 80007 (account rate limit), 4 (app rate limit).
+ * These are retried with backoff, never marked failed.
+ */
+export const META_RETRYABLE_CODES = [130429, 131056, 80007, 4];
+export function isMetaPermanent(status: number, message: string): boolean {
+  const code = /"code"\s*:\s*(\d+)/.exec(message)?.[1];
+  if (code && META_RETRYABLE_CODES.includes(Number(code))) return false;
+  return isPermanent(status);
+}
 
 /**
  * NextSMS (https://documenter.getpostman.com/view/4680389/SW7dX7JL): Basic auth with Base64
@@ -130,11 +144,27 @@ export class MetaWhatsAppSender implements WhatsAppSender {
     });
     if (!res.ok) {
       const message = await readError(res);
-      throw isPermanent(res.status) ? new PermanentSendError(message) : new Error(message);
+      throw isMetaPermanent(res.status, message) ? new PermanentSendError(message) : new Error(message);
     }
     const body = (await res.json()) as { messages?: { id?: string }[] };
     const id = body.messages?.[0]?.id;
     if (!id) throw new Error(`Meta response without message id: ${JSON.stringify(body).slice(0, 200)}`);
+    return { providerMessageId: id };
+  }
+
+  async sendText(to: string, body: string): Promise<SentResult> {
+    const res = await this.fetchImpl(this.url("messages"), {
+      method: "POST",
+      headers: { authorization: `Bearer ${this.opts.token}`, "content-type": "application/json" },
+      body: JSON.stringify({ messaging_product: "whatsapp", to, type: "text", text: { preview_url: false, body } }),
+    });
+    if (!res.ok) {
+      const message = await readError(res);
+      throw isMetaPermanent(res.status, message) ? new PermanentSendError(message) : new Error(message);
+    }
+    const json = (await res.json()) as { messages?: { id?: string }[] };
+    const id = json.messages?.[0]?.id;
+    if (!id) throw new Error(`Meta response without message id: ${JSON.stringify(json).slice(0, 200)}`);
     return { providerMessageId: id };
   }
 
@@ -163,13 +193,20 @@ export class UnconfiguredSmsSender implements SmsSender, SmsDeliveryLookup {
 }
 
 export class UnconfiguredWhatsAppSender implements WhatsAppSender {
+  constructor(private readonly reason = "WhatsApp is not configured (placeholder keys)") {}
   sendTemplate(): Promise<SentResult> {
-    return Promise.reject(notConfigured("WhatsApp"));
+    return Promise.reject(new ProviderNotConfiguredError(this.reason));
+  }
+  sendText(): Promise<SentResult> {
+    return Promise.reject(new ProviderNotConfiguredError(this.reason));
   }
   uploadImage(): Promise<string> {
-    return Promise.reject(notConfigured("WhatsApp"));
+    return Promise.reject(new ProviderNotConfiguredError(this.reason));
   }
 }
+
+/** Real keys but WHATSAPP_LIVE is not "true": nothing reaches Meta; messages are held with this reason. */
+export const WHATSAPP_NOT_LIVE = "WhatsApp live sending is off (set WHATSAPP_LIVE=true in production only)";
 
 const isPlaceholder = (v: string | undefined) => !v || v.startsWith("dummy_");
 
@@ -184,9 +221,12 @@ export function sendersFromEnv(env: NodeJS.ProcessEnv = process.env): { sms: Sms
           senderId: env.NEXTSMS_SENDER_ID ?? "DCARD",
           live: env.NEXTSMS_LIVE === "true",
         });
+  // Meta has no test endpoint, so without WHATSAPP_LIVE=true nothing is sent (messages are held).
   const whatsapp =
     isPlaceholder(env.WHATSAPP_ACCESS_TOKEN) || isPlaceholder(env.WHATSAPP_PHONE_NUMBER_ID)
       ? new UnconfiguredWhatsAppSender()
-      : new MetaWhatsAppSender({ apiVersion: env.WHATSAPP_API_VERSION ?? "v23.0", phoneNumberId: env.WHATSAPP_PHONE_NUMBER_ID!, token: env.WHATSAPP_ACCESS_TOKEN! });
+      : env.WHATSAPP_LIVE !== "true"
+        ? new UnconfiguredWhatsAppSender(WHATSAPP_NOT_LIVE)
+        : new MetaWhatsAppSender({ apiVersion: env.WHATSAPP_API_VERSION ?? "v23.0", phoneNumberId: env.WHATSAPP_PHONE_NUMBER_ID!, token: env.WHATSAPP_ACCESS_TOKEN! });
   return { sms, whatsapp };
 }

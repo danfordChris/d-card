@@ -85,7 +85,6 @@ class GuestUpdateInput {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "GuestUpdateInput[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "GuestUpdateInput[$key]" has a null value in JSON.');
         });
         return true;
       }());

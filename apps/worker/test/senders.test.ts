@@ -1,6 +1,14 @@
 import { createServer, type IncomingMessage, type Server } from "node:http";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { MetaWhatsAppSender, NextSmsSender, PermanentSendError, sendersFromEnv, UnconfiguredSmsSender } from "../src/messaging/senders.js";
+import {
+  MetaWhatsAppSender,
+  NextSmsSender,
+  PermanentSendError,
+  sendersFromEnv,
+  UnconfiguredSmsSender,
+  UnconfiguredWhatsAppSender,
+  WHATSAPP_NOT_LIVE,
+} from "../src/messaging/senders.js";
 
 type Seen = { method: string; url: string; headers: IncomingMessage["headers"]; body: string };
 let server: Server;
@@ -75,6 +83,12 @@ describe("NextSmsSender", () => {
 describe("MetaWhatsAppSender", () => {
   const wa = () => new MetaWhatsAppSender({ apiVersion: "v23.0", phoneNumberId: "123", token: "meta", baseUrl: base });
 
+  it("sends free-form text (24 h window replies)", async () => {
+    reply = () => ({ status: 200, body: { messages: [{ id: "wamid.T" }] } });
+    expect(await wa().sendText("255713000001", "Asante, tumepokea jibu lako.")).toEqual({ providerMessageId: "wamid.T" });
+    expect(JSON.parse(seen.at(-1)!.body)).toEqual({ messaging_product: "whatsapp", to: "255713000001", type: "text", text: { preview_url: false, body: "Asante, tumepokea jibu lako." } });
+  });
+
   it("sends a template with image header, body params and quick-reply payloads", async () => {
     reply = () => ({ status: 200, body: { messages: [{ id: "wamid.X" }] } });
     const res = await wa().sendTemplate({
@@ -118,6 +132,15 @@ describe("MetaWhatsAppSender", () => {
 });
 
 describe("sendersFromEnv", () => {
+  it("sends WhatsApp only when WHATSAPP_LIVE=true; otherwise holds without calling Meta", async () => {
+    const keys = { WHATSAPP_ACCESS_TOKEN: "real-token", WHATSAPP_PHONE_NUMBER_ID: "123456789012345" };
+    const off = sendersFromEnv(keys).whatsapp;
+    expect(off).toBeInstanceOf(UnconfiguredWhatsAppSender);
+    await expect(off.uploadImage(new Uint8Array(), "card.png")).rejects.toThrow(WHATSAPP_NOT_LIVE);
+    expect(sendersFromEnv({ ...keys, WHATSAPP_LIVE: "false" }).whatsapp).toBeInstanceOf(UnconfiguredWhatsAppSender);
+    expect(sendersFromEnv({ ...keys, WHATSAPP_LIVE: "true" }).whatsapp).toBeInstanceOf(MetaWhatsAppSender);
+  });
+
   it("uses placeholder senders while keys are dummy", async () => {
     const s = sendersFromEnv({ NEXTSMS_API_TOKEN: "dummy_x", NEXTSMS_BASE_URL: "https://x", WHATSAPP_ACCESS_TOKEN: "dummy_y" });
     expect(s.sms).toBeInstanceOf(UnconfiguredSmsSender);
@@ -137,5 +160,23 @@ describe("fetchCardImage", () => {
     expect(Buffer.from(out)).toEqual(png);
     expect(seen.at(-1)).toMatchObject({ url: "https://dcard.test/api/v1/cards/tok/image?lang=en", headers: { "x-api-key": "dk_worker_x" } });
     await expect(fetchCardImage({ appUrl: "https://dcard.test", apiKey: "k" }, "bad", "sw", fakeFetch as typeof fetch)).rejects.toThrow(/not a PNG/);
+  });
+});
+
+describe("provider throughput limits (T07-02)", () => {
+  it("retries Meta throughput errors that arrive as HTTP 400", async () => {
+    const { isMetaPermanent } = await import("../src/messaging/senders.js");
+    expect(isMetaPermanent(400, 'HTTP 400 {"error":{"message":"(#130429) Rate limit hit","code":130429}}')).toBe(false);
+    expect(isMetaPermanent(400, 'HTTP 400 {"error":{"code":131056}}')).toBe(false);
+    expect(isMetaPermanent(400, 'HTTP 400 {"error":{"code":132001,"message":"template does not exist"}}')).toBe(true);
+    expect(isMetaPermanent(500, "HTTP 500")).toBe(false);
+  });
+
+  it("caps sends per second per queue, configurable", async () => {
+    const { sendLimiter } = await import("../src/worker.js");
+    expect(sendLimiter("whatsapp", {})).toEqual({ max: 15, duration: 250 });
+    expect(sendLimiter("sms", {})).toEqual({ max: 5, duration: 250 });
+    expect(sendLimiter("whatsapp", { WHATSAPP_MAX_PER_SECOND: "250" })).toEqual({ max: 63, duration: 250 });
+    expect(sendLimiter("sms", { SMS_MAX_PER_SECOND: "abc" })).toEqual({ max: 5, duration: 250 });
   });
 });

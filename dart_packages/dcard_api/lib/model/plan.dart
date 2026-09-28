@@ -67,7 +67,6 @@ class Plan {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Plan[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Plan[$key]" has a null value in JSON.');
         });
         return true;
       }());

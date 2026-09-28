@@ -18,7 +18,8 @@
 | **payment** | id, pledge_id, kind (payment/refund), amount (signed; refunds negative), method (mpesa/mixx_by_yas/airtel_money/halopesa/bank/cash/other), reference, paid_on, recorded_by, recorded_at |
 | **reply_window** *(backlog)* | id, phone, invitation_id, status, opened_at, expires_at |
 | **entry** | **id (UUID from device)**, event_id, invitation_id (nullable), walkin_request_id (nullable), staff_user_id, device_id, admitted_count, method, **occurred_at**, received_at, source (online/offline) |
-| **door_device** | id, event_id, staff_user_id, last_sync_at, revoked_at |
+| **door_device** | **id (UUID from the app)**, event_id, staff_user_id, name, last_seen_at, last_sync_at, revoked_at, revoked_by |
+| **check_in_attempt** | id, event_id, invitation_id (nullable), entry_id (nullable), device_id, staff_user_id, method, query (typed card number or name; never a QR token), outcome (admitted / fully_used / cancelled / not_issued / too_many / not_found / locked), source (online/offline), occurred_at |
 | **walkin_request** | id (UUID from device), event_id, staff_user_id, device_id, invitation_id, description, source (online/offline), offline_reason, status (pending/approved/refused/admitted_offline/accepted/flagged), decided_by, decided_at, occurred_at |
 | **message_log** | id, event_id, invitation_id, outbox_id, channel, direction, type, to_phone, language, body/detail, provider_message_id, status (queued/sent/delivered/read/failed/held), segments, cost, attempts, created_at, sent_at, delivered_at |
 | **outbox** | id, key (idempotency), event_id, invitation_id, message_type, payload, channels/to_phone (manual and test sends), created_at, dispatched_at (ADR 0003) |

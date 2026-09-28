@@ -2,16 +2,22 @@ import 'dart:async';
 
 import 'package:dcard_api/api.dart';
 import 'package:dcard_mobile/app.dart';
+import 'package:dcard_mobile/data/repositories/account_repository.dart';
+import 'package:dcard_mobile/data/repositories/billing_repository.dart';
 import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
+import 'package:dcard_mobile/data/repositories/my_cards_repository.dart';
 import 'package:dcard_mobile/data/repositories/push_registration_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
+import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
+import 'package:dcard_mobile/data/repositories/walk_ins_repository.dart';
 import 'package:dcard_mobile/data/services/push_token_source.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'app_test.dart' show signOut, tapSignIn;
 import 'fakes/fakes.dart';
 
 class FakePushTokenSource implements PushTokenSource {
@@ -118,6 +124,12 @@ void main() {
           guests: GuestsRepository(api),
           contacts: FakeContactsSource(),
           contributions: ContributionsRepository(api),
+          walkIns: WalkInsRepository(api),
+          walkInAlerts: WalkInAlertsRepository(FakePushMessageSource()),
+          billing: BillingRepository(api),
+          myCards: MyCardsRepository(api),
+          account: AccountRepository(api, FakeFileSaver()),
+          links: FakeLinkOpener(),
           locale: const Locale('en'),
         ),
       );
@@ -126,13 +138,11 @@ void main() {
 
       await tester.enterText(find.byKey(const Key('login.email')), 'host@example.com');
       await tester.enterText(find.byKey(const Key('login.password')), 'secret1');
-      await tester.tap(find.byType(FilledButton));
-      await tester.pumpAndSettle();
+      await tapSignIn(tester);
 
       expect(api.registered.single.token, 'fcm-token-1');
 
-      await tester.tap(find.byTooltip('Sign out'));
-      await tester.pumpAndSettle();
+      await signOut(tester);
       expect(api.unregistered, ['fcm-token-1']);
       expect(auth.currentUser, isNull);
     });

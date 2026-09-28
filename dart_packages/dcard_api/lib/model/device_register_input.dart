@@ -61,7 +61,6 @@ class DeviceRegisterInput {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "DeviceRegisterInput[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "DeviceRegisterInput[$key]" has a null value in JSON.');
         });
         return true;
       }());

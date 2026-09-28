@@ -49,7 +49,6 @@ class EventList {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "EventList[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "EventList[$key]" has a null value in JSON.');
         });
         return true;
       }());

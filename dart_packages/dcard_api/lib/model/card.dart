@@ -91,7 +91,6 @@ class Card {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Card[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Card[$key]" has a null value in JSON.');
         });
         return true;
       }());

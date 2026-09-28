@@ -1,9 +1,306 @@
 {
   "@@locale": "en",
   "appTitle": "D-Card Door",
-  "@appTitle": { "description": "Application name shown in the app bar and task switcher." },
-  "homeTitle": "Door check-in",
-  "@homeTitle": { "description": "Heading on the placeholder home screen." },
-  "homeSubtitle": "Scan cards to admit guests",
-  "@homeSubtitle": { "description": "Short description under the home heading." }
+  "@appTitle": {
+    "description": "Application name shown in the app bar and task switcher."
+  },
+  "loginTitle": "D-Card Door",
+  "@loginTitle": {
+    "description": "Heading on the sign-in screen."
+  },
+  "loginSubtitle": "Sign in to check guests in at the door",
+  "@loginSubtitle": {
+    "description": "Sub-heading on the sign-in screen."
+  },
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "retry": "Try again",
+  "errorEmailRequired": "Enter your email.",
+  "errorEmailInvalid": "Enter a valid email address.",
+  "errorPasswordRequired": "Enter your password.",
+  "errorInvalidCredentials": "Wrong email or password.",
+  "errorTooManyRequests": "Too many attempts. Wait a moment and try again.",
+  "errorNetwork": "No connection. Check your internet and try again.",
+  "errorUnauthorized": "Your session has ended. Please sign in again.",
+  "errorDoorAccessDenied": "This phone can no longer check guests in for this event. Ask the host.",
+  "@errorDoorAccessDenied": {
+    "description": "Shown when the host revoked this device or removed the account's door access."
+  },
+  "errorDoorPlanLimit": "This event already has as many door staff as its plan allows.",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "eventsTitle": "Choose event",
+  "@eventsTitle": {
+    "description": "Title of the event selection screen."
+  },
+  "eventsEmpty": "No events to check in for. Ask the host to add you as door staff.",
+  "deviceNameLabel": "Gate name (optional)",
+  "@deviceNameLabel": {
+    "description": "Optional name for this phone, shown to the host and in entry history."
+  },
+  "deviceNameHint": "e.g. Gate 1",
+  "roleHost": "Host",
+  "roleCommittee": "Committee",
+  "roleDoorStaff": "Door staff",
+  "changeEvent": "Change event",
+  "modeScan": "Scan QR",
+  "@modeScan": {
+    "description": "Check-in method tab: scan the QR code."
+  },
+  "modeNumber": "Card number",
+  "@modeNumber": {
+    "description": "Check-in method tab: type the card number."
+  },
+  "modeName": "Name",
+  "@modeName": {
+    "description": "Check-in method tab: search by guest name."
+  },
+  "scanHint": "Point the camera at the QR code on the card",
+  "cameraUnavailable": "Camera unavailable. Use the card number or the name.",
+  "cardNumberHint": "Enter the 7-digit card number",
+  "find": "Find",
+  "clear": "Clear",
+  "nameSearchLabel": "Guest name",
+  "nameTooShort": "Type at least 2 letters.",
+  "nameNoMatches": "No guest with that name.",
+  "lockedTitle": "Card-number entry locked",
+  "lockedBody": "Too many wrong card numbers. Try again in {time}, or scan the QR code or search by name.",
+  "@lockedBody": {
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "4:59"
+      }
+    }
+  },
+  "resultValid": "Valid card",
+  "resultAdmitted": "{count, plural, =1{1 guest admitted} other{{count} guests admitted}}",
+  "@resultAdmitted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardSingle": "Single",
+  "cardDouble": "Double",
+  "entriesLeft": "{left} of {total} left",
+  "@entriesLeft": {
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tableLabel": "Table {table}",
+  "@tableLabel": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "noTable": "No table",
+  "cardNumberLabel": "Card {number}",
+  "@cardNumberLabel": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "statusIssued": "Issued",
+  "statusPending": "Not issued",
+  "statusCancelled": "Cancelled",
+  "overUsedWarning": "Over-used: more people entered than the card allows",
+  "admitOne": "Admit 1",
+  "admitTwo": "Admit 2",
+  "nextGuest": "Next guest",
+  "refusedFullyUsed": "Card fully used",
+  "refusedCancelled": "Card cancelled",
+  "refusedNotFound": "Card not found",
+  "refusedNotIssued": "Card not issued",
+  "refusedTooMany": "Not enough entries left",
+  "previousEntries": "Earlier entries",
+  "entryLine": "{time} · {count} in",
+  "@entryLine": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineBadge": "Offline",
+  "onlineBadge": "Online",
+  "syncWaiting": "{count, plural, =0{All synced} =1{1 waiting to sync} other{{count} waiting to sync}}",
+  "@syncWaiting": {
+    "description": "Entries and walk-ins saved on the phone that have not uploaded yet.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastSync": "Last sync {time}",
+  "@lastSync": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "neverSynced": "Not synced yet",
+  "syncNow": "Sync now",
+  "offlineUnavailable": "No offline copy of this event on this phone yet.",
+  "offlineDecision": "Checked offline: saved on this phone, syncs later",
+  "@offlineDecision": {
+    "description": "Shown on a result decided from the phone's cache."
+  },
+  "walkInAction": "Walk-in request",
+  "@walkInAction": {
+    "description": "Opens the walk-in request for a guest without a valid card."
+  },
+  "walkInTitle": "Walk-in",
+  "walkInDescriptionLabel": "Who is at the door?",
+  "walkInDescriptionHint": "e.g. Bride's uncle, has no card",
+  "walkInDescriptionError": "Describe the guest (2 to 200 characters).",
+  "walkInPeople": "People",
+  "walkInLinkedCard": "Card: {names}",
+  "@walkInLinkedCard": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInSend": "Ask the host",
+  "walkInWaiting": "Waiting for the host or an approver…",
+  "walkInWaitingBody": "Ask the guest to wait. This screen updates by itself.",
+  "walkInApproved": "Approved: let them in",
+  "walkInApprovedBy": "Approved by {name}",
+  "@walkInApprovedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInRefused": "Refused: do not let them in",
+  "walkInRefusedBy": "Refused by {name}",
+  "@walkInRefusedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInOfflineSwitch": "Admit without network",
+  "walkInOfflineHint": "No network. If the host approved another way (e.g. a phone call), admit with a reason.",
+  "walkInReasonLabel": "Reason (required)",
+  "walkInReasonHint": "e.g. host approved by phone call",
+  "walkInReasonError": "Give a reason (at least 3 characters).",
+  "walkInAdmitOffline": "Admit offline",
+  "walkInAdmittedOffline": "{count, plural, =1{1 guest admitted offline} other{{count} guests admitted offline}}",
+  "@walkInAdmittedOffline": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "walkInAdmittedOfflineBody": "Saved on this phone. The host reviews it after sync.",
+  "walkInDone": "Done",
+  "signOutPendingTitle": "Not synced yet",
+  "signOutPendingBody": "{count} entries are still only on this phone. Signing out deletes them. Connect to the internet first if you can.",
+  "@signOutPendingBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "signOutAnyway": "Sign out anyway",
+  "cancel": "Cancel",
+  "continueOffline": "Continue offline: {title}",
+  "@continueOffline": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "continueOfflineBody": "This event is saved on this phone.",
+  "revokedTitle": "This phone was removed",
+  "revokedBody": "This phone can no longer check guests in for {title}. The host removed this phone or your door access. Scanning has stopped and the guest list saved on this phone was deleted.",
+  "@revokedBody": {
+    "description": "Full-screen state after the server refused this device (revoked, AUTH-9).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "revokedWorking": "Stopping and deleting the guest list on this phone…",
+  "revokedLost": "{count, plural, =1{1 entry saved offline could not be sent and was deleted. Tell the host.} other{{count} entries saved offline could not be sent and were deleted. Tell the host.}}",
+  "@revokedLost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "revokedNothingLost": "Nothing saved offline was lost.",
+  "chooseAnotherEvent": "Choose another event",
+  "eventNotStartedTitle": "Event has not started",
+  "eventNotStartedBody": "{title} starts {time}. Check the date, or continue if the doors are already open.",
+  "@eventNotStartedBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventEndedTitle": "Event has ended",
+  "eventEndedBody": "{title} ended {time}. Guests are not expected now.",
+  "@eventEndedBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "checkInAnyway": "Check in anyway",
+  "cacheExpiredTitle": "Event is over",
+  "cacheExpiredBody": "The guest list saved on this phone was deleted 24 hours after the event ended.",
+  "noNetworkNoCacheTitle": "No network",
+  "noNetworkNoCacheBody": "This phone has no internet and no saved guest list for this event yet, so cards cannot be checked. Connect to Wi-Fi or mobile data and try again.",
+  "eventsOfflineTitle": "No network",
+  "eventsOfflineBody": "Connect to the internet to load your events. No event is saved on this phone for offline check-in yet.",
+  "clockSkewWarning": "This phone's clock is {minutes} min off. Turn on automatic date and time in Settings, or entry times will be wrong.",
+  "@clockSkewWarning": {
+    "description": "Shown when the phone's clock differs from the server's.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelledDetail": "The host cancelled this card. Do not admit. If the guest disagrees, send a walk-in request.",
+  "overUsedTitle": "Card over-used",
+  "overUsedDetail": "More people entered on this card than it allows (gates admitted it while offline). The host has been alerted. Do not admit again.",
+  "lockedPadTitle": "Card-number entry is locked",
+  "lockedPadBody": "Scan the QR code or search by name while you wait."
 }

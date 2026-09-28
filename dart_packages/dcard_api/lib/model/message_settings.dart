@@ -19,7 +19,7 @@ class MessageSettings {
     required this.usage,
   });
 
-  List<MessageSettingsSettingsInner> settings;
+  List<UpdateMessageSettingsRequestSettingsInner> settings;
 
   MessagePlanLimits limits;
 
@@ -67,13 +67,12 @@ class MessageSettings {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "MessageSettings[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "MessageSettings[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
       return MessageSettings(
-        settings: MessageSettingsSettingsInner.listFromJson(json[r'settings']),
+        settings: UpdateMessageSettingsRequestSettingsInner.listFromJson(json[r'settings']),
         limits: MessagePlanLimits.fromJson(json[r'limits'])!,
         templates: MessageSettingsTemplatesInner.listFromJson(json[r'templates']),
         usage: MessageSettingsUsage.fromJson(json[r'usage'])!,

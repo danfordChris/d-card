@@ -1,12 +1,12 @@
 import { enqueueMessage, MESSAGE_JOBS, QUEUES, type SendMessageJob } from "@dcard/core";
-import { event, invitation, messageLog, person, userAccount } from "@dcard/db";
+import { event, eventPlan, invitation, messageLog, person, plan, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import type { Job } from "bullmq";
 import { Queue } from "bullmq";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { runDispatch, sendJobOptions } from "../src/messaging/dispatcher.js";
-import { createSendProcessor, SEND_ATTEMPTS } from "../src/messaging/processor.js";
+import { createReplyProcessor, createSendProcessor, SEND_ATTEMPTS } from "../src/messaging/processor.js";
 import { UnconfiguredWhatsAppSender, type SmsSender, type WhatsAppSender } from "../src/messaging/senders.js";
 import { createRedis } from "../src/redis.js";
 import { startWorkers, type RunningWorkers } from "../src/worker.js";
@@ -56,6 +56,9 @@ beforeAll(async () => {
     .values({ hostUserId: u!.id, eventTypeId: types!.id, title: "Harusi ya Juma", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "255754123456" })
     .returning();
   eventId = ev!.id;
+  // Guest messages are dispatched for paid events only (T05-01).
+  const [pl] = await handle.db.select().from(plan).limit(1);
+  await handle.db.insert(eventPlan).values({ eventId, planId: pl!.id, pricePerGuest: pl!.pricePerGuest, guestLimit: 100 });
   const [p] = await handle.db.insert(person).values({ phone: "255713900001", name: "Juma" }).returning();
   const [inv] = await handle.db.insert(invitation).values({ eventId, personId: p!.id, guestName: "Juma", guestPhone: "255713900001" }).returning();
   invitationId = inv!.id;
@@ -84,6 +87,7 @@ describe("WhatsApp card header", () => {
     const sentTemplates: { headerImageId?: string; templateName: string; bodyParams: string[] }[] = [];
     const images: string[] = [];
     const wa: WhatsAppSender = {
+      sendText: async () => ({ providerMessageId: "wamid.text" }),
       uploadImage: async () => "media-42",
       sendTemplate: async (m) => {
         sentTemplates.push(m);
@@ -108,6 +112,28 @@ describe("WhatsApp card header", () => {
     expect(sentTemplates[0]!.bodyParams[0]).toBe("Neema");
     expect(sentTemplates[0]!.bodyParams[6]).toMatch(/^https:\/\/dcard\.test\/c\/[\w-]{43}$/);
     await handle.db.update(whatsappTemplate).set({ status: "pending" });
+  });
+});
+
+describe("confirmation replies", () => {
+  it("sends the reply as text and logs it; holds it while WhatsApp is not live", async () => {
+    const texts: string[] = [];
+    const wa: WhatsAppSender = {
+      sendText: async (_to, body) => {
+        texts.push(body);
+        return { providerMessageId: "wamid.reply1" };
+      },
+      sendTemplate: async () => ({ providerMessageId: "x" }),
+      uploadImage: async () => "x",
+    };
+    const data = { inboundId: "wamid.in1", eventId, invitationId, to: "255713900001", kind: "confirmation_ack" as const, language: "sw" as const, text: "Asante, tumepokea jibu lako." };
+    const job = (d: typeof data) => ({ data: d, attemptsMade: 0, opts: { attempts: 5 } }) as never;
+    expect(await createReplyProcessor({ db: handle.db, whatsapp: wa })(job(data))).toBe("sent");
+    expect(texts).toEqual(["Asante, tumepokea jibu lako."]);
+    const [sent] = await handle.db.select().from(messageLog).where(eq(messageLog.providerMessageId, "wamid.reply1"));
+    expect(sent).toMatchObject({ status: "sent", direction: "outbound", messageType: null, body: "Asante, tumepokea jibu lako.", detail: { kind: "confirmation_ack", inboundId: "wamid.in1" } });
+    const held = await createReplyProcessor({ db: handle.db, whatsapp: new UnconfiguredWhatsAppSender() })(job({ ...data, inboundId: "wamid.in2" }));
+    expect(held).toBe("held");
   });
 });
 

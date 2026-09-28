@@ -1,5 +1,5 @@
 import { confirmationToken, dispatchOutbox, enqueueMessage, recordSendOutcome } from "@dcard/core";
-import { auditLog, event, eventType, invitation, messageLog, person, userAccount, whatsappOptout, whatsappTemplate } from "@dcard/db";
+import { auditLog, event, eventPlan, eventType, invitation, messageLog, person, plan, userAccount, whatsappOptout, whatsappTemplate } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { NextRequest } from "next/server";
 import { createHmac } from "node:crypto";
@@ -50,6 +50,8 @@ beforeAll(async () => {
     .values({ hostUserId: u!.id, eventTypeId: t!.id, title: "Harusi", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "255754123456" })
     .returning();
   eventId = ev!.id;
+  const [pl] = await handle.db.select().from(plan).limit(1);
+  await handle.db.insert(eventPlan).values({ eventId, planId: pl!.id, pricePerGuest: pl!.pricePerGuest, guestLimit: 100 }); // paid event
   const [p] = await handle.db.insert(person).values({ phone: PHONE, name: "Juma" }).returning();
   personId = p!.id;
   const [inv] = await handle.db.insert(invitation).values({ eventId, personId, guestName: "Juma", guestPhone: PHONE }).returning();
@@ -85,19 +87,24 @@ describe("WhatsApp webhook", () => {
     expect((await statusOf(logId)).deliveredAt).not.toBeNull();
   });
 
-  it("records a confirmation button reply for exactly that invitation; forged tokens are ignored", async () => {
+  it("records the first confirmation, replies once per tap, and ignores forged tokens and re-deliveries", async () => {
     const token = confirmationToken(invitationId);
     const reply = (payload: string, id: string) =>
       change({ messages: [{ from: PHONE, id, timestamp: "1790000100", type: "button", button: { payload, text: "Ndiyo" } }] });
-    expect(await (await wa.POST(metaPost(reply(`cnf:${token}:yes`, "wamid.IN1")))).json()).toMatchObject({ confirmations: 1 });
+    const first = await (await wa.POST(metaPost(reply(`cnf:${token}:yes`, "wamid.IN1")))).json();
+    expect(first).toMatchObject({ confirmations: 1, replies: 1 });
     const [inv] = await handle.db.select().from(invitation).where(eq(invitation.id, invitationId));
     expect(inv).toMatchObject({ confirmationStatus: "yes", confirmationSource: "whatsapp" });
+    // Meta re-delivers the same message: nothing new, no second reply.
+    expect(await (await wa.POST(metaPost(reply(`cnf:${token}:yes`, "wamid.IN1")))).json()).toMatchObject({ confirmations: 0, replies: 0 });
+    // A later tap never changes the first answer; it gets "already recorded".
+    expect(await (await wa.POST(metaPost(reply(`cnf:${token}:no`, "wamid.IN1b")))).json()).toMatchObject({ confirmations: 0, replies: 1 });
+    expect((await handle.db.select().from(invitation).where(eq(invitation.id, invitationId)))[0]!.confirmationStatus).toBe("yes");
     // Flip the last signature character so the forgery always differs from the real token.
     const forged = `cnf:${token.slice(0, -1)}${token.endsWith("0") ? "1" : "0"}:no`;
-    expect(await (await wa.POST(metaPost(reply(forged, "wamid.IN2")))).json()).toMatchObject({ confirmations: 0 });
-    expect((await handle.db.select().from(invitation).where(eq(invitation.id, invitationId)))[0]!.confirmationStatus).toBe("yes");
+    expect(await (await wa.POST(metaPost(reply(forged, "wamid.IN2")))).json()).toMatchObject({ confirmations: 0, replies: 0 });
     const inbound = await handle.db.select().from(messageLog).where(and(eq(messageLog.direction, "inbound"), eq(messageLog.eventId, eventId)));
-    expect(inbound.map((l) => l.providerMessageId).sort()).toEqual(["wamid.IN1", "wamid.IN2"]);
+    expect(inbound.map((l) => l.providerMessageId).sort()).toEqual(["wamid.IN1", "wamid.IN1b", "wamid.IN2"]);
   });
 
   it("STOP opts the guest out for the event they were messaged about (once)", async () => {

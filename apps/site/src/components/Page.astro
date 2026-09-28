@@ -11,6 +11,8 @@ const { lang } = Astro.props;
 const t = content[lang];
 const other = lang === "sw" ? "/en/" : "/";
 const signup = site.appUrl ? `${site.appUrl}/signup` : "#contact";
+// The privacy notice lives in the web app (one source of truth); hidden until the app URL is set.
+const privacy = site.appUrl ? `${site.appUrl}/privacy?lang=${lang}` : "";
 const samples = ["wedding", "send_off", "kitchen_party", "graduation"] as const;
 const waText = encodeURIComponent(lang === "sw" ? "Habari D-Card, nina tukio linakuja." : "Hello D-Card, I have an event coming up.");
 ---
@@ -216,7 +218,10 @@ const waText = encodeURIComponent(lang === "sw" ? "Habari D-Card, nina tukio lin
   <footer class="border-t border-gray-200">
     <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-gray-600 md:flex-row md:items-center md:justify-between">
       <p><strong class="text-brand-700">D-Card</strong> — {t.footer.tagline}</p>
-      <p>© {new Date().getFullYear()} D-Card. {t.footer.rights}</p>
+      <p>
+        © {new Date().getFullYear()} D-Card. {t.footer.rights}
+        {privacy && <a href={privacy} class="ml-2 underline hover:text-brand-600">{t.footer.privacy}</a>}
+      </p>
     </div>
   </footer>
 </Base>

@@ -55,7 +55,6 @@ class ImportPreview {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "ImportPreview[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ImportPreview[$key]" has a null value in JSON.');
         });
         return true;
       }());

@@ -49,7 +49,6 @@ class AdminListProviderRates200Response {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "AdminListProviderRates200Response[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "AdminListProviderRates200Response[$key]" has a null value in JSON.');
         });
         return true;
       }());

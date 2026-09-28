@@ -24,6 +24,12 @@ import {
   PledgeUpdateInput,
 } from "./contributions.js";
 import { AdminEventTypeCreateInput, AdminEventTypeListResponse, AdminEventTypeSchema, AdminEventTypeUpdateInput } from "./admin.js";
+import { registerBillingPaths } from "./billing.js";
+import { registerMePaths } from "./me.js";
+import { registerAdminPlatformPaths } from "./admin-platform.js";
+import { registerCheckinPaths } from "./checkin.js";
+import { registerMediaPaths } from "./media.js";
+import { registerAuditPaths } from "./audit.js";
 import { registerDevicePaths } from "./devices.js";
 import { registerMessagePaths } from "./messages.js";
 import { z } from "zod";
@@ -84,6 +90,31 @@ export function buildOpenApiDocument(): OpenApiDocument {
     responses: {
       200: { description: "Account already existed", content: { "application/json": { schema: Account } } },
       201: { description: "Account created", content: { "application/json": { schema: Account } } },
+      401: error("Missing or invalid token"),
+    },
+  });
+
+  registry.registerPath({
+    method: "delete",
+    path: "/api/v1/me",
+    operationId: "deleteMe",
+    summary: "Delete my account (registered guests; hosts must delete their events first)",
+    security: [{ [bearer.name]: [] }],
+    responses: {
+      204: { description: "Deleted" },
+      401: error("Missing or invalid token"),
+      409: error("The account still hosts events"),
+    },
+  });
+
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/me/export",
+    operationId: "exportMyData",
+    summary: "Download my data (JSON file)",
+    security: [{ [bearer.name]: [] }],
+    responses: {
+      200: { description: "Account, person, invitations, contributions and uploaded media", content: { "application/json": { schema: z.record(z.string(), z.unknown()) } } },
       401: error("Missing or invalid token"),
     },
   });
@@ -510,8 +541,54 @@ export function buildOpenApiDocument(): OpenApiDocument {
     responses: { 201: json(providerRateSchema, "Created"), 403: error("Admins only"), 422: error("Validation error") },
   });
 
+  // T04-03 append-only confirmation contract.
+  const confirmationStatus = z.enum(["none", "yes", "no"]);
+  const confirmationGuest = z.object({
+    id: z.uuid(),
+    name: z.string(),
+    phone: z.string(),
+    partnerName: z.string().nullable(),
+    cardType: z.enum(["single", "double"]),
+    totalEntries: z.number().int(),
+    confirmationStatus,
+    confirmationAt: z.iso.datetime().nullable(),
+    confirmationSource: z.string().nullable(),
+  });
+  const confirmationList = z.object({
+    guests: z.array(confirmationGuest),
+    counts: z.object({ total: z.number().int(), yes: z.number().int(), no: z.number().int(), none: z.number().int() }),
+    totalEntries: z.number().int(),
+    expectedHeadcount: z.number(),
+    headcountPct: z.number().int(),
+  });
+  const confirmationIds = z.object({ id: z.uuid(), guestId: z.uuid() });
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/events/{id}/confirmations",
+    operationId: "listConfirmations",
+    summary: "Confirmation states and expected headcount (host or committee)",
+    security: secured,
+    request: { params: eventId },
+    responses: { 200: json(confirmationList, "Confirmations"), 403: error("No access"), 404: error("Event not found") },
+  });
+  registry.registerPath({
+    method: "put",
+    path: "/api/v1/events/{id}/confirmations/{guestId}",
+    operationId: "setConfirmation",
+    summary: "Record or override a guest confirmation (host or committee)",
+    security: secured,
+    request: { params: confirmationIds, body: { content: { "application/json": { schema: z.object({ status: confirmationStatus }) } } } },
+    responses: { 200: json(confirmationGuest, "Updated"), 403: error("No access"), 404: error("Guest not found"), 422: error("Validation error") },
+  });
+
   registerDevicePaths(registry, secured);
   registerMessagePaths(registry, secured);
+  registerCheckinPaths(registry, secured);
+  registerBillingPaths(registry, secured);
+  registerMePaths(registry, secured);
+  registerAdminPlatformPaths(registry, secured);
+  registerMediaPaths(registry, secured);
+  registerAuditPaths(registry, secured);
 
   return new OpenApiGeneratorV31(registry.definitions).generateDocument({
     openapi: "3.1.0",

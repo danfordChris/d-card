@@ -4,7 +4,8 @@
     "tagline": "Kadi za mwaliko za kidigitali",
     "language": "Lugha",
     "signOut": "Toka",
-    "admin": "Utawala"
+    "admin": "Utawala",
+    "privacy": "Taarifa ya faragha"
   },
   "auth": {
     "email": "Barua pepe",
@@ -37,7 +38,80 @@
   },
   "dashboard": {
     "title": "Dashibodi",
-    "welcome": "Karibu, {email}"
+    "welcome": "Karibu, {email}",
+    "back": "Rudi kwenye tukio",
+    "live": "Moja kwa moja",
+    "connecting": "Inaunganisha…",
+    "reconnecting": "Inaunganisha upya…",
+    "loading": "Inapakia…",
+    "loadFailed": "Imeshindwa kupakia dashibodi. Inajaribu tena…",
+    "admitted": {
+      "title": "Walioingia dhidi ya wanaotarajiwa",
+      "arrived": "Wamefika",
+      "split": "Kadi {cards} · Wa mlangoni {walkIns} · Mtandaoni {online} · Bila mtandao {offline}",
+      "expected": "Wanatarajiwa {expected} (wasiojibu kwa {pct}%)"
+    },
+    "cards": {
+      "title": "Kadi zilizoingia",
+      "notArrived": "{count, plural, =0 {Wote wamefika} one {Kadi # bado haijafika} other {Kadi # bado hazijafika}}"
+    },
+    "confirmations": {
+      "title": "Uthibitisho",
+      "yes": "Watakuja",
+      "none": "Hawajajibu",
+      "no": "Hawatakuja"
+    },
+    "walkIns": {
+      "title": "Wageni wa mlangoni",
+      "pending": "{count, plural, =0 {Hakuna anayesubiri} one {Mgeni # anasubiri idhini} other {Wageni # wanasubiri idhini}}",
+      "review": "{count, plural, =0 {Hakuna wa kukagua (bila mtandao)} one {Mgeni # wa bila mtandao wa kukagua} other {Wageni # wa bila mtandao wa kukagua}}",
+      "open": "Fungua wageni wa mlangoni"
+    },
+    "alerts": {
+      "title": "Tahadhari",
+      "empty": "Hakuna tahadhari.",
+      "overUsedLabel": "Kadi imetumika zaidi:",
+      "overUsed": "{name} ({card}) · {used} kati ya {total} zimetumika",
+      "lockoutLabel": "Namba za kadi zimefungwa:",
+      "lockout": "{device} · {staff}",
+      "offline": "bila mtandao"
+    },
+    "devices": {
+      "title": "Vifaa vya mlangoni",
+      "empty": "Bado hakuna kifaa cha mlangoni.",
+      "device": "Kifaa",
+      "staff": "Mhudumu",
+      "lastSeen": "Mara ya mwisho kuonekana",
+      "lastSync": "Usawazishaji wa mwisho",
+      "pending": "Zinasubiri kusawazishwa",
+      "state": "Hali",
+      "never": "Bado",
+      "unnamed": "Kifaa bila jina",
+      "synced": "Kimesawazishwa",
+      "waiting": "Kinasawazisha",
+      "stale": "Hakijasawazishwa",
+      "revoked": "Kimefutiwa ruhusa",
+      "revoke": "Futa ruhusa",
+      "revokeYes": "Ndiyo, futa ruhusa",
+      "cancel": "Ghairi",
+      "revokeFailed": "Imeshindwa kufuta ruhusa ya kifaa. Jaribu tena."
+    },
+    "backup": {
+      "link": "Orodha ya akiba",
+      "title": "Orodha ya akiba ya wageni",
+      "back": "Rudi kwenye dashibodi",
+      "print": "Chapisha",
+      "count": "{count, plural, one {Kadi #} other {Kadi #}}",
+      "printedAt": "Imechapishwa {date}",
+      "empty": "Bado hakuna kadi zilizotolewa.",
+      "name": "Jina",
+      "cardNumber": "Namba ya kadi",
+      "type": "Aina",
+      "entries": "Zilizotumika",
+      "tick": "✓",
+      "single": "Single",
+      "double": "Double"
+    }
   },
   "events": {
     "title": "Matukio",
@@ -126,7 +200,10 @@
       "guests": "Wageni",
       "team": "Timu",
       "contributions": "Michango",
-      "messages": "Ujumbe"
+      "messages": "Ujumbe",
+      "walkIns": "Wageni wa mlangoni",
+      "dashboard": "Dashibodi",
+      "backupList": "Orodha ya akiba"
     }
   },
   "guests": {
@@ -322,6 +399,8 @@
     "map": "Fungua ramani",
     "cardNumber": "Namba ya kadi",
     "showQr": "Onyesha QR hii au namba ya kadi mlangoni.",
+    "qrLabel": "Msimbo wa QR wa kadi {number}",
+    "newTab": "(inafunguka kwenye kichupo kipya)",
     "contact": "Mawasiliano ya tukio",
     "calendar": "Weka kwenye kalenda",
     "calendarApple": "Faili la kalenda (.ics)",
@@ -348,7 +427,74 @@
       "closed": "Majibu yamefungwa kwa tukio hili."
     },
     "poweredBy": "Kadi ya mwaliko ya D-Card",
-    "download": "Pakua picha ya kadi"
+    "download": "Pakua picha ya kadi",
+    "story": {
+      "title": "Hadithi yetu"
+    },
+    "gallery": {
+      "title": "Picha na video za tukio",
+      "photo": "Picha",
+      "video": "Video",
+      "empty": "Bado hakuna picha wala video. Kuwa wa kwanza kushiriki.",
+      "emptyClosed": "Bado hakuna picha wala video.",
+      "add": "Ongeza picha/video",
+      "left": "{count, plural, =0{Huwezi kuongeza zaidi.} =1{Unaweza kuongeza 1 zaidi.} other{Unaweza kuongeza # zaidi.}}",
+      "hint": "Picha hupunguzwa ukubwa kabla ya kupakiwa ili kuokoa bando. Video hadi sekunde {seconds}.",
+      "closesAt": "Upakiaji utafungwa {date}.",
+      "limitUsed": "Umetumia nafasi zako zote {limit} za kupakia. Asante kwa kushiriki.",
+      "pageClosed": "Ukurasa wa picha wa tukio hili umefungwa. Picha na video zinabaki kwa mwenyeji.",
+      "loadError": "Imeshindikana kupakua picha na video. Angalia mtandao wako.",
+      "retryLoad": "Jaribu tena",
+      "closed": {
+        "not_started": "Upakiaji bado haujafunguliwa. Tafadhali rudi baadaye.",
+        "window_closed": "Muda wa kupakia picha na video umekwisha.",
+        "drive_full": "Hifadhi ya mwenyeji imejaa, kwa hiyo upakiaji umesimamishwa.",
+        "gallery_closed": "Ukurasa huu wa picha umefungwa.",
+        "not_available": "Wageni hawawezi kupakia picha kwa tukio hili."
+      },
+      "queueTitle": "Upakiaji wako",
+      "clearDone": "Ondoa vilivyokamilika",
+      "retry": "Jaribu tena",
+      "status": {
+        "waiting": "Inasubiri",
+        "preparing": "Inaandaliwa…",
+        "uploading": "Inapakiwa {percent}%",
+        "finishing": "Inakamilishwa…",
+        "done": "Imepakiwa",
+        "failed": "Haijapakiwa"
+      },
+      "errors": {
+        "type": "Aina hii ya faili haikubaliki. Chagua picha au video.",
+        "tooLarge": "Faili hili ni kubwa mno (mwisho MB {mb}).",
+        "tooLong": "Video hii ni ndefu mno (mwisho sekunde {seconds}).",
+        "duration": "Imeshindikana kusoma video hii. Jaribu faili jingine.",
+        "limitReached": "Umefikia kikomo chako cha kupakia.",
+        "uploadsClosed": "Upakiaji umefungwa.",
+        "driveFull": "Hifadhi ya mwenyeji imejaa, kwa hiyo upakiaji umesimamishwa.",
+        "rateLimited": "Unapakia vingi kwa wakati mmoja. Subiri kidogo, kisha jaribu tena.",
+        "invalidFile": "Faili hili halikukubaliwa. Angalia aina, ukubwa na urefu wake.",
+        "network": "Mtandao umekatika. Angalia mtandao wako, kisha jaribu tena.",
+        "sessionExpired": "Muda wa kupakia umeisha. Jaribu tena kuanza upya.",
+        "generic": "Imeshindikana kupakia. Tafadhali jaribu tena."
+      },
+      "viewer": {
+        "position": "{index} kati ya {total}",
+        "close": "Funga",
+        "previous": "Iliyotangulia",
+        "next": "Inayofuata",
+        "loading": "Inapakua…",
+        "loadFailed": "Imeshindikana kufungua hiki.",
+        "by": "Imeshirikiwa na {name}",
+        "byYou": "Umeshiriki wewe",
+        "delete": "Futa",
+        "deleteConfirm": "Ufute ulichopakia? Hutaweza kukirudisha.",
+        "report": "Ripoti",
+        "reportConfirm": "Ripoti hiki kwa mwenyeji?",
+        "reported": "Asante. Mwenyeji amearifiwa.",
+        "cancel": "Ghairi",
+        "actionFailed": "Imeshindikana. Tafadhali jaribu tena."
+      }
+    }
   },
   "contributions": {
     "title": "Michango",
@@ -664,6 +810,907 @@
       "intro": "Wageni hawa walijibu STOP. Watapokea SMS pekee kwa tukio hili.",
       "empty": "Hakuna mgeni aliyesitisha ujumbe wa WhatsApp.",
       "since": "Tangu {date}"
+    }
+  },
+  "walkIns": {
+    "title": "Wageni wa mlangoni",
+    "back": "Rudi kwenye tukio",
+    "loading": "Inapakia…",
+    "error": "Imeshindikana kupakia wageni wa mlangoni. Jaribu tena.",
+    "readOnly": "Unaweza kuona tu. Mwenyeji na walioteuliwa kuidhinisha ndio wanaoamua.",
+    "forbidden": "Huna ruhusa ya kuamua maombi ya wageni wa mlangoni kwa tukio hili.",
+    "decisionError": "Imeshindikana kuhifadhi uamuzi. Jaribu tena.",
+    "alreadyDecided": "Ombi hili limeshaamuliwa na {name} ({status}).",
+    "alreadyDecidedNoName": "Ombi hili limeshaamuliwa ({status}).",
+    "linkedGuest": "Mwaliko: {name}",
+    "people": "{count, plural, one {mtu #} other {watu #}}",
+    "requestedBy": "Aliyeomba: {name}",
+    "device": "Kifaa: {name}",
+    "pending": {
+      "title": "Wanaosubiri idhini",
+      "intro": "Mhudumu wa mlangoni ameomba kuwaruhusu wageni hawa. Jibu la kwanza ndilo linaloamua.",
+      "empty": "Hakuna ombi linalosubiri."
+    },
+    "review": {
+      "title": "Wanahitaji kukaguliwa",
+      "intro": "Waliruhusiwa kuingia mlangoni bila mtandao. Kagua sababu, kisha kubali au weka alama.",
+      "empty": "Hakuna anayehitaji kukaguliwa.",
+      "reason": "Sababu"
+    },
+    "history": {
+      "title": "Historia",
+      "empty": "Bado hakuna uamuzi.",
+      "decided": "Imeamuliwa na {name} · {date}",
+      "someone": "mtu mwingine",
+      "undecided": "Bado haijaamuliwa"
+    },
+    "statuses": {
+      "pending": "Inasubiri",
+      "approved": "Imeidhinishwa",
+      "refused": "Imekataliwa",
+      "admitted_offline": "Aliingia bila mtandao",
+      "accepted": "Imekubaliwa",
+      "flagged": "Imewekewa alama"
+    },
+    "actions": {
+      "approve": "Idhinisha",
+      "refuse": "Kataa",
+      "accept": "Kubali",
+      "flag": "Weka alama"
+    }
+  },
+  "confirmations": {
+    "nav": "Uthibitisho",
+    "title": "Uthibitisho wa kuhudhuria",
+    "intro": "Rekodi majibu ya simu, badilisha jibu inapohitajika, na uone idadi inayotarajiwa kuhudhuria.",
+    "back": "Rudi kwenye tukio",
+    "save": "Hifadhi",
+    "saved": "Imehifadhiwa",
+    "notRecorded": "Haijarekodiwa",
+    "empty": "Hakuna mgeni katika hali hii ya uthibitisho.",
+    "summary": {
+      "expected": "Idadi inayotarajiwa",
+      "totalEntries": "Nafasi zote za walioalikwa",
+      "assumption": "Asiyejibu anahesabiwa kwa {pct}%"
+    },
+    "filters": {
+      "label": "Chuja uthibitisho",
+      "all": "Wote",
+      "yes": "Atahudhuria",
+      "none": "Hajajibu",
+      "no": "Hatahudhuria"
+    },
+    "status": {
+      "yes": "Atahudhuria",
+      "none": "Hajajibu",
+      "no": "Hatahudhuria"
+    },
+    "card": {
+      "single": "Mmoja",
+      "double": "Wawili"
+    },
+    "columns": {
+      "guest": "Mgeni",
+      "phone": "Simu",
+      "card": "Kadi",
+      "current": "Jibu la sasa",
+      "recorded": "Ilirekodiwa",
+      "action": "Rekodi au badilisha"
+    },
+    "errors": {
+      "generic": "Imeshindikana kuhifadhi uthibitisho. Tafadhali jaribu tena."
+    }
+  },
+  "billing": {
+    "title": "Kifurushi na malipo",
+    "back": "Rudi kwenye tukio",
+    "loading": "Inapakia…",
+    "loadError": "Imeshindikana kupakia kifurushi na malipo. Tafadhali jaribu tena.",
+    "retry": "Jaribu tena",
+    "banner": {
+      "text": "Kadi za wageni wa tukio hili bado hazijalipiwa. Lipia kabla ya kutuma kadi.",
+      "link": "Lipia kadi"
+    },
+    "summary": {
+      "plan": "Kifurushi cha {name}",
+      "pricePerGuest": "{amount} kwa kadi ya mgeni",
+      "paid": "Imelipiwa",
+      "unpaidBadge": "Haijalipiwa",
+      "cardsPaid": "Kadi zilizolipiwa",
+      "cardsIssued": "Kadi zilizotolewa",
+      "guests": "Wageni walioongezwa",
+      "amountPaid": "Kiasi kilicholipwa",
+      "unpaid": "Lipia kadi za wageni kabla ya kuzituma. Unaweza kuongeza kadi baadaye kwa vifungu vya 10.",
+      "overLimit": "Una wageni {guests} lakini kadi {paid} tu zimelipiwa. Ongeza kadi ili uwaalike wote.",
+      "launchOffer": "Ofa ya uzinduzi: punguzo la {percent}% kwa tukio lako la kwanza."
+    },
+    "actions": {
+      "buy": "Nunua kadi",
+      "addBlock": "Ongeza kadi 10",
+      "upgrade": "Pandisha kifurushi"
+    },
+    "pending": {
+      "title": "Kuna malipo yanayosubiri",
+      "body": "{amount}, yalianzishwa {date}.",
+      "resume": "Angalia hali"
+    },
+    "history": {
+      "title": "Risiti",
+      "empty": "Bado hakuna malipo."
+    },
+    "receipt": {
+      "reference": "Kumbukumbu",
+      "amount": "Kiasi",
+      "discount": "Ofa ya uzinduzi",
+      "cards": "Kadi za wageni",
+      "cardsValue": "{count, plural, one {kadi #} other {kadi #}}",
+      "plan": "Kifurushi",
+      "date": "Tarehe"
+    },
+    "checkout": {
+      "titles": {
+        "buy": "Nunua kadi za wageni",
+        "add": "Ongeza kadi",
+        "upgrade": "Pandisha kifurushi",
+        "resume": "Malipo"
+      },
+      "intro": "Chagua idadi ya kadi unazohitaji. Bei hapa chini inatoka D-Card na inabadilika unapobadilisha.",
+      "plan": "Kifurushi",
+      "planOption": "{name} · {price} kwa kadi",
+      "planCurrent": "{name} · {price} kwa kadi (cha sasa)",
+      "cards": "Kadi za wageni",
+      "decrease": "Punguza kadi {size}",
+      "increase": "Ongeza kadi {size}",
+      "blockHint": "Umelipia kadi {paid}. Kadi za ziada zinanunuliwa kwa vifungu vya {size}.",
+      "suggestHint": "Tunapendekeza kadi moja kwa kila mmoja wa wageni wako {count}.",
+      "calculating": "Tunakokotoa bei…",
+      "minimumNote": "Malipo ya chini kwa kila tukio ni {amount}.",
+      "nothingToPay": "Hakuna cha kulipa: kadi hizi zimeshalipiwa.",
+      "lines": {
+        "new_cards": "Kadi {quantity} × {unitPrice}",
+        "extra_cards": "Kadi za ziada {quantity} × {unitPrice}",
+        "upgrade": "Kupandisha kadi {quantity} (+{unitPrice} kila moja)",
+        "minimum_top_up": "Nyongeza hadi malipo ya chini",
+        "other": "Mengineyo ({quantity})"
+      },
+      "subtotal": "Jumla ndogo",
+      "launchOffer": "Ofa ya uzinduzi (punguzo la {percent}%)",
+      "total": "Jumla",
+      "continue": "Kagua",
+      "cancel": "Ghairi",
+      "back": "Rudi",
+      "review": {
+        "title": "Kagua na ulipe",
+        "intro": "Kifurushi cha {plan}, jumla ya {count, plural, one {kadi # ya mgeni} other {kadi # za wageni}}.",
+        "method": "Ungependa kulipa vipi?",
+        "methods": {
+          "mobile": "Pesa kwa simu",
+          "mobileHint": "M-Pesa, Airtel Money, Mixx by Yas au HaloPesa. Utathibitisha kwa PIN yako.",
+          "session": "Kadi au njia nyingine",
+          "sessionHint": "Inafungua ukurasa salama wa malipo kwenye kichupo kipya."
+        },
+        "phone": "Namba ya pesa kwa simu",
+        "phoneHint": "Kwa mfano 0754 123 456",
+        "secure": "Malipo salama kupitia Snippe.",
+        "pay": "Lipa {amount}",
+        "paying": "Tunaanzisha malipo…"
+      },
+      "waiting": {
+        "mobileTitle": "Angalia simu yako na uweke PIN",
+        "mobileBody": "Tumetuma ombi la {amount} kwenda {phone}. Weka PIN yako ya pesa kwa simu ili kulipa.",
+        "sessionTitle": "Maliza kulipa kwenye kichupo kipya",
+        "sessionBody": "Lipa {amount} kwenye ukurasa wa malipo. Ukurasa huu utabadilika malipo yakikamilika.",
+        "openPage": "Fungua ukurasa wa malipo",
+        "polling": "Tunasubiri uthibitisho…",
+        "later": "Funga na uangalie baadaye"
+      },
+      "success": {
+        "title": "Malipo yamepokelewa",
+        "next": "Sasa unaweza kutuma kadi kwa wageni hadi {count}.",
+        "done": "Maliza"
+      },
+      "failure": {
+        "title": "Malipo hayakufanikiwa",
+        "expiredTitle": "Muda wa ombi la malipo umeisha",
+        "body": "Hakuna pesa iliyokatwa. Unaweza kujaribu tena.",
+        "retry": "Jaribu tena"
+      },
+      "errors": {
+        "phoneRequired": "Weka namba ya pesa kwa simu utakayolipia.",
+        "phoneInvalid": "Weka namba ya Tanzania, kwa mfano 0754 123 456.",
+        "quote_changed": "Bei imebadilika. Angalia jumla mpya kisha uthibitishe tena.",
+        "nothing_to_pay": "Hakuna cha kulipa kwa kadi hizi.",
+        "payment_in_progress": "Kuna malipo mengine ya tukio hili yanayosubiri. Angalia hali yake kwanza.",
+        "provider": "Huduma ya malipo haipatikani kwa sasa. Tafadhali jaribu tena baada ya muda mfupi.",
+        "validation": "Kagua taarifa kisha ujaribu tena.",
+        "forbidden": "Mwenyeji pekee ndiye anaweza kulipia tukio hili.",
+        "generic": "Imeshindikana kuanzisha malipo. Tafadhali jaribu tena.",
+        "quote": "Imeshindikana kupata bei. Tafadhali jaribu tena.",
+        "quoteInvalid": "Chagua angalau kadi {min} na kifurushi sawa au cha juu kuliko cha sasa."
+      }
+    },
+    "admin": {
+      "title": "Mipangilio ya malipo",
+      "pageIntro": "Ofa zinazohusu malipo ya wenyeji.",
+      "launchOffer": "Ofa ya uzinduzi",
+      "intro": "Punguzo kwa tukio la kwanza la mwenyeji. Unaweza kuizima au kubadilisha asilimia wakati wowote; malipo yaliyokwisha fanyika hayaathiriki.",
+      "enabled": "Ofa ya uzinduzi imewashwa",
+      "percent": "Punguzo (%)",
+      "percentHint": "0 hadi 90",
+      "percentError": "Weka namba kamili kuanzia 0 hadi 90.",
+      "statusOn": "Wenyeji sasa wanapata punguzo la {percent}% kwa tukio lao la kwanza.",
+      "statusOff": "Hakuna ofa ya uzinduzi kwa sasa.",
+      "saved": "Imehifadhiwa.",
+      "error": "Imeshindikana kuhifadhi. Tafadhali jaribu tena.",
+      "loadError": "Imeshindikana kupakia mipangilio.",
+      "loading": "Inapakia…",
+      "save": "Hifadhi",
+      "saving": "Inahifadhi…"
+    },
+    "nav": "Mpango na malipo"
+  },
+  "media": {
+    "nav": "Picha na video",
+    "back": "Rudi kwenye tukio",
+    "title": "Picha na video",
+    "intro": "Picha na video zinahifadhiwa kwenye Google Drive yako mwenyewe. D-Card huhifadhi kumbukumbu za faili tu, si faili zenyewe.",
+    "loading": "Inapakia picha na video…",
+    "loadError": "Imeshindikana kupakia mipangilio ya picha na video.",
+    "retry": "Jaribu tena",
+    "readOnly": "Mwenyeji pekee ndiye anaweza kubadilisha picha, video na albamu ya wageni. Wewe unaweza kuziona hapa.",
+    "msingi": "Kifurushi cha Msingi hakina picha wala video kwenye kadi. Bado unaweza kuwashirikisha wageni kiungo cha albamu ya Google Photos.",
+    "drive": {
+      "title": "Google Drive",
+      "intro": "Picha na video zinakwenda moja kwa moja kwenye folda ya “D-Card – jina la tukio” ndani ya Google Drive yako.",
+      "notConnected": "Google Drive bado haijaunganishwa. Iunganishe ili kuweka picha za kadi, ukurasa wa hadithi na albamu ya wageni.",
+      "connect": "Unganisha Google Drive",
+      "hostOnly": "Mwenyeji pekee ndiye anaweza kuunganisha Google Drive.",
+      "scopeNote": "D-Card inaona tu faili inazounda kwenye folda hiyo, kamwe si faili zako nyingine za Drive.",
+      "connected": "Google Drive imeunganishwa.",
+      "connectedAs": "Imeunganishwa kama {email}",
+      "openFolder": "Fungua folda kwenye Drive",
+      "downloadHint": "Kupakua zote, fungua folda kwenye Google Drive na utumie upakuaji wa Drive yenyewe.",
+      "disconnect": "Tenganisha",
+      "disconnected": "Google Drive imetenganishwa. Faili zako zinabaki kwenye Drive yako.",
+      "needsReconnect": "D-Card haiwezi tena kufikia baadhi ya faili kwenye Google Drive yako. Unganisha upya ili wageni waone picha na video tena.",
+      "reconnect": "Unganisha Google Drive upya",
+      "cancel": "Ghairi",
+      "disconnectConfirm": {
+        "title": "Tenganisha Google Drive?",
+        "body": "Wageni hawataona picha za kadi, hadithi na albamu mpaka uunganishe tena. Hakuna kinachofutwa: faili zinabaki kwenye Drive yako."
+      },
+      "quota": {
+        "title": "Nafasi ya Drive",
+        "used": "Umetumia {used} kati ya {limit}",
+        "usedNoLimit": "Umetumia {used}",
+        "free": "Nafasi iliyobaki: {free}",
+        "warning": "Drive yako huenda ikawa ndogo kwa picha na video wageni wanazotarajiwa kupakia. Futa baadhi ya vitu au nunua nafasi zaidi ya Google kabla ya tukio. Upakiaji wa wageni husimama Drive ikijaa."
+      },
+      "sharing": {
+        "title": "Nani anaweza kufungua faili",
+        "intro": "Unaweza kubadilisha hili wakati wowote.",
+        "default": "Inapendekezwa",
+        "private": {
+          "title": "Binafsi",
+          "body": "Wewe pekee ndiye unaweza kufungua folda kwenye Drive. Wageni wanaona picha na video kupitia D-Card tu kwa kiungo halali cha kadi, na ruhusa inaisha ukurasa wa albamu ukifungwa."
+        },
+        "link": {
+          "title": "Yeyote mwenye kiungo",
+          "body": "Rahisi zaidi: wageni wanafungua faili moja kwa moja kutoka Drive. Lakini yeyote atakayetumiwa kiungo anaweza kuzifungua, mpaka ubadilishe mpangilio huu."
+        },
+        "save": "Hifadhi chaguo",
+        "connectFirst": "Unganisha Google Drive kwanza."
+      },
+      "modeSaved": "Chaguo la kushirikisha limehifadhiwa.",
+      "errors": {
+        "notConnected": "Unganisha Google Drive kabla ya kuchagua jinsi faili zinavyoshirikishwa.",
+        "generic": "Kuna tatizo limetokea. Tafadhali jaribu tena."
+      }
+    },
+    "photosLink": {
+      "title": "Albamu ya Google Photos",
+      "intro": "Hiari: bandika kiungo cha albamu ya Google Photos iliyoshirikishwa ili ionekane kwenye kadi. D-Card haihifadhi chochote kutoka humo.",
+      "introMsingi": "Bandika kiungo cha albamu ya Google Photos iliyoshirikishwa na wageni wataiona kwenye kadi. D-Card haihifadhi chochote kutoka humo.",
+      "label": "Kiungo cha albamu",
+      "hint": "Kwenye Google Photos, fungua albamu, gusa Shiriki kisha nakili kiungo. Acha wazi ili kukiondoa.",
+      "save": "Hifadhi kiungo",
+      "saved": "Kiungo cha albamu kimehifadhiwa.",
+      "cleared": "Kiungo cha albamu kimeondolewa.",
+      "invalid": "Bandika kiungo kamili kinachoanza na https://",
+      "error": "Imeshindikana kuhifadhi kiungo. Tafadhali jaribu tena."
+    },
+    "editor": {
+      "card": {
+        "title": "Picha na video za kadi",
+        "intro": "Zinaonekana kwenye kadi ya mwaliko kama mfululizo wa picha, pamoja na video fupi."
+      },
+      "story": {
+        "title": "Ukurasa wa hadithi",
+        "intro": "Picha na video zenu kwenye kiungo cha kadi, wageni wazifurahie kabla ya tukio."
+      },
+      "counts": "Picha {photos}/{maxPhotos} · Video {videos}/{maxVideos}",
+      "rules": "Picha hupunguzwa ukubwa kabla ya kupakiwa. Video hadi sekunde {seconds}.",
+      "limitReached": "Umetumia picha na video zote ambazo kifurushi chako kinaruhusu hapa.",
+      "connectFirst": "Unganisha Google Drive hapo juu ili kuweka picha na video.",
+      "addPhotos": "Weka picha",
+      "addVideo": "Weka video",
+      "empty": "Bado hakuna picha wala video.",
+      "loadError": "Imeshindikana kupakia picha na video.",
+      "retry": "Jaribu tena",
+      "dismiss": "Ondoa kwenye orodha",
+      "photoAlt": "Picha",
+      "videoAlt": "Video",
+      "delete": "Futa",
+      "deleteError": "Imeshindikana kufuta. Tafadhali jaribu tena.",
+      "cancel": "Ghairi",
+      "deleteConfirm": {
+        "title": "Futa kipengele hiki?",
+        "body": "Kitaondolewa kwenye kadi na kufutwa kwenye folda ya D-Card ndani ya Drive yako."
+      },
+      "status": {
+        "hidden": "Imefichwa",
+        "missing": "Haipatikani"
+      },
+      "stage": {
+        "checking": "Inakagua…",
+        "resizing": "Inapunguza ukubwa wa picha…",
+        "uploading": "Inapakia… {pct}%",
+        "finishing": "Inamalizia…"
+      },
+      "errors": {
+        "type": "Aina hii ya faili haikubaliki. Tumia picha za JPG, PNG, WebP au HEIC, au video za MP4, MOV au WebM.",
+        "tooBig": "Faili hili ni kubwa kuliko kifurushi chako kinavyoruhusu.",
+        "tooLong": "Video hii ni ndefu kuliko sekunde {seconds}. Ifupishe kisha ujaribu tena.",
+        "duration": "Imeshindikana kusoma urefu wa video. Jaribu faili lingine.",
+        "photoLimit": "Umefikia kikomo cha picha cha kifurushi chako.",
+        "videoLimit": "Umefikia kikomo cha video cha kifurushi chako.",
+        "plan_limit": "Kifurushi chako hakiruhusu zaidi hapa.",
+        "drive_full": "Google Drive yako imejaa. Futa baadhi ya vitu kisha ujaribu tena.",
+        "drive_not_connected": "Google Drive haijaunganishwa.",
+        "validation": "Faili hili haliwezi kupakiwa.",
+        "drive": "Kupakia kwenye Google Drive kumeshindikana.",
+        "network": "Mtandao umekatika wakati wa kupakia."
+      }
+    },
+    "gallery": {
+      "title": "Albamu ya wageni",
+      "intro": "Picha na video ambazo wageni wanapakia kutoka kwenye kiungo cha kadi. Ficha chochote usichotaka kionekane; vilivyoripotiwa vinakuja kwanza.",
+      "refresh": "Onyesha upya",
+      "loading": "Inapakia albamu…",
+      "loadError": "Imeshindikana kupakia albamu.",
+      "error": "Imeshindikana kuhifadhi mabadiliko. Tafadhali jaribu tena.",
+      "empty": "Bado wageni hawajapakia chochote.",
+      "reportedCount": "{count, plural, one {Kipengele # kimeripotiwa na mgeni.} other {Vipengele # vimeripotiwa na wageni.}}",
+      "host": "Mwenyeji",
+      "photoAlt": "Picha kutoka kwa {name}",
+      "videoAlt": "Video kutoka kwa {name}",
+      "show": "Onyesha",
+      "keep": "Endelea kuonyesha",
+      "hide": "Ficha",
+      "delete": "Futa",
+      "cancel": "Ghairi",
+      "deleteConfirm": {
+        "title": "Futa kilichopakiwa na {name}?",
+        "body": "Kitaondolewa kwenye albamu na kufutwa kwenye folda ya D-Card ndani ya Drive yako. Hili haliwezi kutenduliwa."
+      },
+      "status": {
+        "uploading": "Inapakiwa",
+        "visible": "Kinaonekana",
+        "hidden": "Kimefichwa",
+        "reported": "Kimeripotiwa",
+        "deleted": "Kimefutwa",
+        "missing": "Hakipatikani"
+      }
+    },
+    "slideshow": {
+      "title": "Onyesho la picha mubashara",
+      "intro": "Onyesha picha za wageni kwenye skrini ya ukumbini zinapoingia. Ifungue kwenye kompyuta iliyounganishwa na skrini.",
+      "open": "Fungua onyesho"
+    },
+    "slideshowPage": {
+      "notAvailable": "Onyesho la picha mubashara ni sehemu ya kifurushi cha Premium.",
+      "back": "Rudi kwenye picha na video",
+      "waiting": "Tunasubiri picha za wageni…",
+      "photoBy": "Picha kutoka kwa {name}",
+      "host": "mwenyeji",
+      "fullscreen": "Skrini nzima",
+      "exit": "Toka"
+    }
+  },
+  "adminNav": {
+    "label": "Sehemu za usimamizi",
+    "eventTypes": "Aina za matukio",
+    "templates": "Violezo vya WhatsApp",
+    "rates": "Bei za watoa huduma",
+    "billing": "Malipo",
+    "users": "Watumiaji",
+    "events": "Matukio",
+    "audit": "Kumbukumbu",
+    "queues": "Foleni za kazi",
+    "costReport": "Ripoti ya gharama",
+    "security": "Usalama"
+  },
+  "audit": {
+    "nav": "Kumbukumbu za mabadiliko",
+    "title": "Kumbukumbu za mabadiliko",
+    "intro": "Kila badiliko kwenye tukio hili: nani alifanya, lini, na nini kilibadilika. Pakua kumbukumbu zako kama faili za CSV kwa Excel.",
+    "back": "Rudi kwenye tukio",
+    "exports": {
+      "title": "Pakua kumbukumbu (CSV)",
+      "guests": "Wageni",
+      "contributions": "Michango",
+      "attendance": "Mahudhurio",
+      "failed": "Upakuaji umeshindikana. Tafadhali jaribu tena."
+    },
+    "filter": {
+      "label": "Onyesha",
+      "all": "Vitendo vyote",
+      "groups": {
+        "event": "Mipangilio ya tukio",
+        "guest": "Wageni",
+        "card": "Kadi",
+        "pledge": "Ahadi",
+        "payment": "Malipo",
+        "refund": "Marejesho",
+        "confirmation": "Uthibitisho",
+        "door": "Kuingia mlangoni",
+        "walkin": "Wasio na kadi",
+        "team": "Timu",
+        "message": "Ujumbe",
+        "billing": "Malipo ya kifurushi",
+        "media": "Picha na video",
+        "export": "Upakuaji"
+      }
+    },
+    "columns": {
+      "time": "Muda",
+      "actor": "Na",
+      "action": "Kitendo",
+      "changes": "Mabadiliko"
+    },
+    "system": "D-Card (otomatiki)",
+    "unknownActor": "Akaunti iliyoondolewa",
+    "noChanges": "—",
+    "empty": "Hakuna kumbukumbu zinazolingana na uchujaji huu.",
+    "loadMore": "Onyesha zaidi",
+    "loading": "Inapakia…",
+    "error": "Imeshindikana kupakia kumbukumbu. Tafadhali jaribu tena.",
+    "actions": {
+      "event": {
+        "created": "Tukio limeundwa",
+        "updated": "Mipangilio ya tukio imebadilishwa",
+        "cancelled": "Tukio limefutwa"
+      },
+      "guest": {
+        "added": "Mgeni ameongezwa",
+        "updated": "Taarifa za mgeni zimehaririwa",
+        "removed": "Mgeni ameondolewa"
+      },
+      "guests": {
+        "imported": "Wageni wameingizwa",
+        "consent_confirmed": "Ridhaa ya wageni imethibitishwa"
+      },
+      "card": {
+        "issued": "Kadi imetolewa",
+        "cancelled": "Kadi imefutwa",
+        "reinstated": "Kadi imerejeshwa"
+      },
+      "pledge": {
+        "created": "Ahadi imeongezwa",
+        "updated": "Ahadi imehaririwa",
+        "auto_upgraded": "Kadi imepandishwa otomatiki"
+      },
+      "payment": {
+        "recorded": "Malipo yamerekodiwa",
+        "updated": "Malipo yamehaririwa"
+      },
+      "refund": {
+        "recorded": "Rejesho limerekodiwa"
+      },
+      "confirmation": {
+        "recorded": "Uthibitisho wa kuhudhuria umerekodiwa"
+      },
+      "rsvp": {
+        "submitted": "Jibu la RSVP limepokelewa"
+      },
+      "door": {
+        "admitted": "Mgeni ameingia",
+        "refused": "Kuingia kumekataliwa",
+        "over_used": "Kadi imetumika kupita kiasi",
+        "card_number_lockout": "Namba ya kadi imefungiwa",
+        "device_registered": "Kifaa cha mlangoni kimesajiliwa",
+        "device_revoked": "Kifaa cha mlangoni kimezuiwa",
+        "synced": "Walioingia bila mtandao wamesawazishwa"
+      },
+      "walkin": {
+        "requested": "Ombi la kuingia bila kadi",
+        "approved": "Kuingia bila kadi kumekubaliwa",
+        "refused": "Kuingia bila kadi kumekataliwa",
+        "admitted_offline": "Ameingia bila kadi (bila mtandao)",
+        "accepted": "Kuingia bila mtandao kumekubaliwa",
+        "flagged": "Kuingia bila mtandao kumewekewa alama"
+      },
+      "team": {
+        "invite_created": "Mwaliko wa timu umetumwa",
+        "invite_accepted": "Mwaliko wa timu umekubaliwa",
+        "invite_revoked": "Mwaliko wa timu umefutwa",
+        "member_removed": "Mwanatimu ameondolewa"
+      },
+      "message": {
+        "settings_updated": "Mipangilio ya ujumbe imebadilishwa",
+        "manual_send": "Ujumbe umetumwa kwa mkono"
+      },
+      "whatsapp": {
+        "opted_out": "Mgeni amejiondoa WhatsApp"
+      },
+      "billing": {
+        "checkout_started": "Malipo yameanzishwa",
+        "paid": "Kifurushi kimelipiwa",
+        "payment_failed": "Malipo ya kifurushi yameshindikana",
+        "payment_expired": "Malipo ya kifurushi yamepitwa na muda",
+        "settings_updated": "Mipangilio ya malipo imebadilishwa"
+      },
+      "media": {
+        "drive_connected": "Google Drive imeunganishwa",
+        "drive_disconnected": "Google Drive imetenganishwa",
+        "sharing_changed": "Mpangilio wa kushiriki picha umebadilishwa",
+        "deleted": "Picha au video imefutwa",
+        "deleted_by_guest": "Mgeni amefuta alichopakia",
+        "reported": "Picha au video imeripotiwa",
+        "shown": "Picha au video imeonyeshwa",
+        "hidden": "Picha au video imefichwa"
+      },
+      "export": {
+        "downloaded": "Kumbukumbu zimepakuliwa"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Taarifa ya faragha",
+    "lastUpdated": "Imesasishwa: 27 Septemba 2026",
+    "intro": "Taarifa hii inaeleza taarifa binafsi ambazo D-Card huhifadhi, kwa nini, tunawashirikisha nani, tunazihifadhi kwa muda gani na unachoweza kufanya. Inahusu programu ya wavuti ya D-Card, kurasa za kadi ambazo wageni hufungua, na programu za D-Card za simu na za mlangoni.",
+    "languages": "Lugha",
+    "sections": {
+      "who": {
+        "title": "Sisi ni nani",
+        "body": [
+          "D-Card ni huduma ya kadi za mwaliko za kidigitali kwa matukio nchini Tanzania. Wenyeji (watu wanaoandaa tukio) hutumia D-Card kuongeza wageni, kutuma kadi za mwaliko kwa WhatsApp au SMS, kurekodi michango na kupokea wageni mlangoni.",
+          "Mwenyeji anapokuongeza kama mgeni, mwenyeji ndiye huamua nani aalikwe na nini kirekodiwe kuhusu mwaliko. D-Card huhifadhi na kuchakata taarifa hizo ili kumpa mwenyeji huduma."
+        ]
+      },
+      "collect": {
+        "title": "Tunachokusanya",
+        "body": [
+          "Tunakusanya kile tu ambacho huduma inahitaji:"
+        ],
+        "items": [
+          "Wenyeji na wajumbe wa kamati: jina lako, barua pepe au namba ya simu unayoingia nayo, matukio unayoyaunda (jina, tarehe, ukumbi, muundo wa kadi), orodha zako za wageni, michango unayorekodi, ujumbe unaotuma, na malipo unayoilipa D-Card (kiasi, kumbukumbu ya malipo ya simu na hali yake). Hatuoni kamwe PIN yako ya pesa kwa simu.",
+          "Wageni: jina na namba ya simu ambayo mwenyeji ameongeza, mwaliko wako (namba ya kadi na idadi ya watu inaowaruhusu), jibu lako la kuhudhuria, ahadi na malipo yaliyorekodiwa na kamati ya mwenyeji, ujumbe uliotumiwa na kama ulifika, na kuingia kwako mlangoni. Ukiingia kwa Google au Apple, tunahifadhi pia jina na barua pepe ya akaunti yako.",
+          "Picha na video: ukipakia kwenye ukurasa wa picha wa tukio, tunahifadhi jina la faili, aliyelipakia na kitambulisho cha faili. Faili lenyewe linahifadhiwa kwenye Google Drive ya mwenyeji, si kwenye seva za D-Card.",
+          "Wahudumu wa mlango: jina au namba yako ya simu, kifaa kilichosajiliwa kupokea wageni, na kila mgeni unayempokea.",
+          "Taarifa za kiufundi: vipindi vya kuingia, taarifa za kifaa na programu zinazohitajika kwa kuingia na arifa, na kumbukumbu ya ukaguzi ya matendo muhimu (kwa mfano malipo yaliyohaririwa, mabadiliko ya majukumu na wageni waliopokelewa)."
+        ]
+      },
+      "use": {
+        "title": "Kwa nini tunazitumia",
+        "body": [
+          "Tunatumia taarifa hizi:"
+        ],
+        "items": [
+          "kutengeneza kadi za mwaliko na kutuma ujumbe wa tukio kwa WhatsApp au SMS;",
+          "kumwezesha mwenyeji kufuatilia majibu ya kuhudhuria, michango na mahudhurio;",
+          "kupokea wageni mlangoni na kuzuia kadi kutumika zaidi ya inavyoruhusiwa;",
+          "kupokea malipo ya kifurushi cha mwenyeji;",
+          "kuonyesha ukurasa wa picha wa tukio mwenyeji akiuwasha;",
+          "kulinda huduma, kuchunguza matatizo na kutunza kumbukumbu ya mabadiliko muhimu."
+        ],
+        "after": [
+          "Wenyeji wanapoongeza au kuingiza wageni, wanathibitisha kwamba wageni wamekubali kupokea ujumbe kuhusu tukio. Hatuuzi taarifa binafsi na hatuzitumii kwa matangazo."
+        ]
+      },
+      "share": {
+        "title": "Tunawashirikisha nani",
+        "body": [
+          "Mwenyeji wa tukio anaweza kuona taarifa za wageni wake. Pia tunatumia watoa huduma wafuatao kuendesha D-Card; kila mmoja hupata kile tu anachohitaji kwa sehemu yake ya huduma:"
+        ],
+        "items": [
+          "Firebase Authentication (Google): kuingia.",
+          "Meta WhatsApp Cloud API: kutuma ujumbe wa WhatsApp.",
+          "NextSMS: kutuma SMS.",
+          "Snippe: malipo ya pesa kwa simu kwenda D-Card.",
+          "Google Drive: Drive ya mwenyeji mwenyewe huhifadhi picha na video za tukio.",
+          "Resend: kutuma barua pepe.",
+          "Vercel: kuendesha programu ya wavuti na API (kanda ya Umoja wa Ulaya).",
+          "Railway: kazi za nyuma kama kutuma ujumbe (kanda ya Umoja wa Ulaya).",
+          "Neon: hifadhidata.",
+          "Sentry: ripoti za hitilafu, itakapowashwa."
+        ],
+        "after": [
+          "Baadhi ya watoa huduma hawa huchakata taarifa nje ya Tanzania, kwa mfano katika Umoja wa Ulaya au Marekani. Tunaweza pia kutoa taarifa pale sheria inapotutaka kufanya hivyo."
+        ]
+      },
+      "retention": {
+        "title": "Tunazihifadhi kwa muda gani",
+        "items": [
+          "Wageni wasio na akaunti ya D-Card: wiki mbili baada ya tukio kuisha, tunaondoa uhusiano kati ya mwaliko na kumbukumbu yako binafsi, tunazima kiungo cha kadi yako na QR, tunafuta kumbukumbu yako binafsi kama haitumiki mahali pengine, na tunaficha namba yako ya simu na maandishi ya ujumbe kwenye kumbukumbu zetu za ujumbe na za ukaguzi.",
+          "Mwenyeji hubaki na kumbukumbu zake za tukio (jina la kila mgeni, namba ya simu, ahadi, malipo na idadi ya watu) hadi afute tukio.",
+          "Wageni waliosajiliwa hubaki na historia ya matukio yao hadi wafute akaunti zao.",
+          "Akaunti za wenyeji huhifadhiwa zikiwa zinatumika. Mwenyeji anaweza kufuta akaunti yake akiwa hana matukio yanayoendelea.",
+          "Ukurasa wa picha hufungwa baada ya muda uliomo kwenye kifurushi cha mwenyeji. Faili hubaki kwenye Google Drive ya mwenyeji, ambayo mwenyeji anaisimamia."
+        ]
+      },
+      "rights": {
+        "title": "Chaguo na haki zako",
+        "items": [
+          "Ukiwa na akaunti ya D-Card, unaweza kupakua nakala ya taarifa zako na kufuta akaunti yako ndani ya D-Card.",
+          "Kama huna akaunti, mwombe mwenyeji wa tukio arekebishe au aondoe taarifa zako, au wasiliana nasi tutakusaidia.",
+          "Unaweza kutuuliza taarifa tulizonazo kukuhusu, kutuomba tuzirekebishe, au kupinga jinsi tunavyozitumia.",
+          "Ili kuacha kupokea ujumbe kuhusu tukio, mwombe mwenyeji au wasiliana nasi."
+        ]
+      },
+      "security": {
+        "title": "Tunavyozilinda",
+        "body": [
+          "Tunatumia miunganisho iliyosimbwa, tunawapa ruhusa watu wanaohitaji tu, na tunatunza kumbukumbu ya ukaguzi ya matendo muhimu. Hakuna mfumo ulio salama kabisa, hivyo tafadhali tujulishe mara moja ukiona tatizo."
+        ]
+      },
+      "children": {
+        "title": "Watoto",
+        "body": [
+          "D-Card ni kwa ajili ya watu wazima wanaoandaa na kuhudhuria matukio. Wenyeji wasiongeze watoto kama wageni kwa namba zao wenyewe za simu. Ukidhani tuna taarifa za mtoto, wasiliana nasi na tutaziondoa."
+        ]
+      },
+      "changes": {
+        "title": "Mabadiliko ya taarifa hii",
+        "body": [
+          "Tutasasisha taarifa hii huduma inapobadilika. Tarehe iliyo juu inaonyesha ilisasishwa lini mara ya mwisho. Mabadiliko yakiwa makubwa, tutawajulisha wenyeji ndani ya D-Card."
+        ]
+      },
+      "contact": {
+        "title": "Wasiliana nasi",
+        "body": [
+          "Kwa maswali au maombi kuhusu taarifa zako binafsi, tutumie barua pepe:"
+        ]
+      }
+    },
+    "email": "privacy@dcard.danfordchris.dev"
+  },
+  "adminPlatform": {
+    "list": {
+      "loading": "Inapakia…",
+      "errorTitle": "Imeshindikana kupakia orodha hii",
+      "errorBody": "Angalia mtandao wako kisha ujaribu tena.",
+      "retry": "Jaribu tena",
+      "noResultsTitle": "Hakuna matokeo",
+      "noResultsBody": "Hakuna kinacholingana na vichujio hivi. Vibadilishe au uvifute.",
+      "pagination": "Kurasa",
+      "previous": "Iliyotangulia",
+      "next": "Inayofuata",
+      "page": "Ukurasa {page}",
+      "cancel": "Ghairi"
+    },
+    "twoStep": {
+      "title": "Kuingia kwa hatua mbili",
+      "intro": {
+        "intro": "Sehemu ya usimamizi inahitaji namba ya siri kutoka programu ya uthibitishaji (Google Authenticator, Microsoft Authenticator, 1Password na nyinginezo) pamoja na nenosiri lako.",
+        "enrol": "Ongeza D-Card kwenye programu yako ya uthibitishaji, kisha andika namba ya tarakimu 6 inayoonyeshwa.",
+        "verify": "Andika namba ya tarakimu 6 kutoka programu yako ya uthibitishaji ili kufungua sehemu ya usimamizi.",
+        "codes": "Kuingia kwa hatua mbili kumewashwa. Hifadhi namba hizi za dharura sasa."
+      },
+      "setUp": "Weka kuingia kwa hatua mbili",
+      "stepApp": "Fungua programu yako ya uthibitishaji.",
+      "stepScan": "Skani msimbo huu wa QR, au andika ufunguo kwa mkono.",
+      "stepCode": "Andika namba ya tarakimu 6 inayoonyeshwa na programu.",
+      "qrAlt": "Msimbo wa QR wa kuongeza D-Card kwenye programu ya uthibitishaji",
+      "manualKey": "Huwezi kuskani? Andika ufunguo huu:",
+      "openInApp": "Fungua kwenye programu ya uthibitishaji",
+      "codeLabel": "Namba ya tarakimu 6",
+      "codeOrRecoveryLabel": "Namba au namba ya dharura",
+      "recoveryHint": "Umepoteza simu? Tumia moja ya namba zako za dharura. Kila moja inatumika mara moja.",
+      "confirm": "Washa",
+      "verify": "Endelea",
+      "codesLabel": "Namba za dharura",
+      "codesWarning": "Kila namba inatumika mara moja ukipoteza programu yako ya uthibitishaji. Hazitaonyeshwa tena: zinakili au uzipakue na uzihifadhi mahali salama.",
+      "copy": "Nakili namba",
+      "copied": "Zimenakiliwa",
+      "download": "Pakua (.txt)",
+      "fileHeading": "Namba za dharura za msimamizi wa D-Card (kila moja inatumika mara moja)",
+      "saved": "Nimezihifadhi",
+      "errors": {
+        "short": "Andika namba ya tarakimu 6.",
+        "invalid": "Namba hiyo si sahihi. Angalia saa ya simu yako kisha ujaribu tena.",
+        "locked": "Umekosea mara nyingi mno. Subiri dakika 15 kisha ujaribu tena.",
+        "generic": "Kuna tatizo limetokea. Tafadhali jaribu tena."
+      }
+    },
+    "users": {
+      "title": "Watumiaji",
+      "intro": "Tafuta akaunti kwa barua pepe, jina au simu. Mpe au mwondolee mtu ruhusa ya usimamizi, au zima akaunti. Kila badiliko linahifadhiwa kwenye kumbukumbu.",
+      "search": "Tafuta watumiaji",
+      "searchPlaceholder": "Barua pepe, jina au simu (255…)",
+      "searchButton": "Tafuta",
+      "empty": "Bado hakuna akaunti.",
+      "columns": {
+        "user": "Akaunti",
+        "phone": "Simu",
+        "roles": "Nafasi",
+        "events": "Matukio aliyoandaa",
+        "status": "Hali",
+        "joined": "Alijiunga"
+      },
+      "provider": {
+        "password": "Barua pepe na nenosiri",
+        "google": "Google",
+        "apple": "Apple"
+      },
+      "admin": "Msimamizi",
+      "teamRoles": "{count, plural, =0 {Hana nafasi kwenye timu} one {Nafasi # kwenye timu} other {Nafasi # kwenye timu}}",
+      "status": {
+        "active": "Hai",
+        "disabled": "Imezimwa",
+        "deleted": "Imefutwa"
+      },
+      "you": "Wewe",
+      "actions": {
+        "grantAdmin": "Mfanye msimamizi",
+        "revokeAdmin": "Ondoa usimamizi",
+        "disable": "Zima",
+        "enable": "Washa"
+      },
+      "confirm": {
+        "grantAdmin": {
+          "title": "Mfanye {name} msimamizi?",
+          "body": "Ataweza kuona kila tukio, kubadilisha bei na kusimamia akaunti baada ya kuweka kuingia kwa hatua mbili."
+        },
+        "revokeAdmin": {
+          "title": "Mwondolee {name} usimamizi?",
+          "body": "Atabaki na akaunti na matukio yake lakini hataweza kuingia sehemu ya usimamizi."
+        },
+        "disable": {
+          "title": "Zima akaunti ya {name}?",
+          "body": "Atatolewa na hataweza kuingia hadi uwashe akaunti tena. Matukio yake yatabaki kama yalivyo."
+        },
+        "enable": {
+          "title": "Washa akaunti ya {name}?",
+          "body": "Ataweza kuingia tena."
+        }
+      },
+      "done": {
+        "grantAdmin": "{name} sasa ni msimamizi.",
+        "revokeAdmin": "{name} si msimamizi tena.",
+        "disable": "Akaunti ya {name} imezimwa.",
+        "enable": "Akaunti ya {name} imewashwa."
+      },
+      "errors": {
+        "self": "Huwezi kubadilisha akaunti yako mwenyewe hapa.",
+        "generic": "Imeshindikana kuhifadhi badiliko. Tafadhali jaribu tena."
+      }
+    },
+    "events": {
+      "title": "Matukio",
+      "intro": "Tafuta kila tukio kwa jina, barua pepe ya mwandaaji na tarehe. Kusoma tu.",
+      "search": "Jina au barua pepe ya mwandaaji",
+      "searchPlaceholder": "mf. Harusi ya Juma",
+      "from": "Kuanzia",
+      "to": "Hadi",
+      "searchButton": "Tafuta",
+      "clear": "Futa vichujio",
+      "empty": "Bado hakuna matukio.",
+      "columns": {
+        "event": "Tukio",
+        "date": "Tarehe",
+        "status": "Hali",
+        "plan": "Kifurushi",
+        "guests": "Wageni / kikomo",
+        "cards": "Kadi",
+        "paid": "Imelipwa",
+        "messages": "Ujumbe"
+      },
+      "status": {
+        "draft": "Rasimu",
+        "published": "Limechapishwa",
+        "completed": "Limekamilika",
+        "cancelled": "Limefutwa"
+      },
+      "noPlan": "Hakuna kifurushi"
+    },
+    "audit": {
+      "title": "Kumbukumbu za mabadiliko",
+      "intro": "Kila badiliko lililohifadhiwa ndani ya D-Card. Chuja, kisha pakua matokeo hayo hayo kama CSV.",
+      "eventId": "Kitambulisho cha tukio",
+      "actorUserId": "Kitambulisho cha akaunti",
+      "action": "Kitendo",
+      "actionHint": "Kinaanza na, mf. admin. au guest.",
+      "from": "Kuanzia",
+      "to": "Hadi",
+      "searchButton": "Chuja",
+      "clear": "Futa vichujio",
+      "export": "Pakua CSV",
+      "exporting": "Inapakua…",
+      "exportFailed": "Upakuaji umeshindikana. Tafadhali jaribu tena.",
+      "empty": "Bado hakuna kumbukumbu.",
+      "columns": {
+        "time": "Muda",
+        "actor": "Na",
+        "action": "Kitendo",
+        "target": "Kilicholengwa",
+        "change": "Badiliko"
+      },
+      "system": "D-Card (otomatiki)",
+      "unknownActor": "Akaunti iliyoondolewa",
+      "eventRef": "Tukio {id}",
+      "errors": {
+        "id": "Bandika kitambulisho kizima (herufi 36)."
+      }
+    },
+    "queues": {
+      "title": "Foleni za kazi",
+      "intro": "Kazi za nyuma kwa kila foleni (ujumbe, kadi, uingizaji). Rudia kazi zilizoshindikana baada ya kurekebisha chanzo.",
+      "refresh": "Onyesha upya",
+      "empty": "Hakuna foleni zilizopatikana.",
+      "columns": {
+        "name": "Foleni",
+        "waiting": "Zinasubiri",
+        "active": "Zinaendelea",
+        "delayed": "Zimecheleweshwa",
+        "failed": "Zimeshindikana",
+        "completed": "Zimekamilika"
+      },
+      "retry": "Rudia zilizoshindikana",
+      "retryLabel": "Rudia kazi zilizoshindikana kwenye {name}",
+      "confirmTitle": "Rudia kazi zilizoshindikana kwenye {name}?",
+      "confirmBody": "{count, plural, one {Kazi # iliyoshindikana} other {Kazi # zilizoshindikana}} zitaendeshwa tena. Ujumbe unaweza kutumwa tena kama ulishindikana baada ya kutumwa.",
+      "retried": "{count, plural, =0 {Hakuna kazi za kurudia kwenye {name}.} one {Kazi # kwenye {name} itaendeshwa tena.} other {Kazi # kwenye {name} zitaendeshwa tena.}}",
+      "retryFailed": "Imeshindikana kurudia kazi. Tafadhali jaribu tena."
+    },
+    "costReport": {
+      "title": "Ripoti ya gharama",
+      "intro": "Kwa ndani tu: mapato ya vifurushi vilivyolipwa, makadirio ya gharama za WhatsApp na SMS, ada za malipo na faida, kwa matukio yanayoanza ndani ya kipindi.",
+      "from": "Kuanzia",
+      "to": "Hadi",
+      "feePercent": "Ada ya malipo (%)",
+      "feeHint": "Ada ya Snippe, 0 hadi 50",
+      "run": "Sasisha",
+      "summary": "{count, plural, one {Tukio #} other {Matukio #}} · ada ya malipo {fee}",
+      "totals": "Jumla",
+      "messageCost": "Gharama za ujumbe",
+      "messageSplit": "WhatsApp {whatsapp} · SMS {sms}",
+      "uncosted": "{count, plural, one {Ujumbe # uliotumwa hauna} other {Jumbe # zilizotumwa hazina}} gharama kwa sababu hapakuwa na bei ya mtoa huduma wakati wa kutuma. Ongeza bei iliyokosekana ili gharama zikamilike.",
+      "byPlan": "Kwa kifurushi",
+      "byMonth": "Kwa mwezi",
+      "byEvent": "Kwa tukio",
+      "empty": "Hakuna matukio katika kipindi hiki",
+      "emptyBody": "Chagua kipindi kingine.",
+      "noPlan": "Hakuna kifurushi",
+      "columns": {
+        "plan": "Kifurushi",
+        "month": "Mwezi",
+        "event": "Tukio",
+        "cardsPaid": "Kadi zilizolipiwa",
+        "revenue": "Mapato",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS",
+        "paymentFee": "Ada ya malipo",
+        "margin": "Faida",
+        "marginPct": "Faida %",
+        "count": "{count, plural, one {Ujumbe #} other {Jumbe #}}"
+      },
+      "errors": {
+        "range": "Chagua tarehe ya kuanzia iliyo kabla au sawa na tarehe ya mwisho.",
+        "fee": "Andika namba kuanzia 0 hadi 50."
+      }
+    },
+    "security": {
+      "title": "Usalama",
+      "intro": "Kuingia kwako kwa hatua mbili kwenye sehemu ya usimamizi.",
+      "statusTitle": "Kuingia kwa hatua mbili",
+      "on": "Kumewashwa. Sehemu ya usimamizi inaomba namba kutoka programu yako ya uthibitishaji kila baada ya saa 12.",
+      "off": "Kumezimwa.",
+      "recoveryLeft": "{count, plural, =0 {Hakuna namba za dharura zilizobaki.} one {Namba # ya dharura imebaki.} other {Namba # za dharura zimebaki.}}",
+      "disableTitle": "Zima kuingia kwa hatua mbili",
+      "disableBody": "Utahitaji kuweka tena kabla ya kutumia sehemu ya usimamizi.",
+      "codeLabel": "Namba au namba ya dharura",
+      "disable": "Zima"
     }
   }
 }
