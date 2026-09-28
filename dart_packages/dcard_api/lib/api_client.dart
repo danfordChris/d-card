@@ -184,6 +184,18 @@ class ApiClient {
           return value is DateTime ? value : DateTime.tryParse(value);
         case 'Account':
           return Account.fromJson(value);
+        case 'AdminAuditEntry':
+          return AdminAuditEntry.fromJson(value);
+        case 'AdminAuditPage':
+          return AdminAuditPage.fromJson(value);
+        case 'AdminCreateProviderRateRequest':
+          return AdminCreateProviderRateRequest.fromJson(value);
+        case 'AdminCreateWhatsappTemplateRequest':
+          return AdminCreateWhatsappTemplateRequest.fromJson(value);
+        case 'AdminEvent':
+          return AdminEvent.fromJson(value);
+        case 'AdminEventPage':
+          return AdminEventPage.fromJson(value);
         case 'AdminEventType':
           return AdminEventType.fromJson(value);
         case 'AdminEventTypeCreateInput':
@@ -192,14 +204,46 @@ class ApiClient {
           return AdminEventTypeList.fromJson(value);
         case 'AdminEventTypeUpdateInput':
           return AdminEventTypeUpdateInput.fromJson(value);
+        case 'AdminListProviderRates200Response':
+          return AdminListProviderRates200Response.fromJson(value);
+        case 'AdminListProviderRates200ResponseRatesInner':
+          return AdminListProviderRates200ResponseRatesInner.fromJson(value);
+        case 'AdminListWhatsappTemplates200Response':
+          return AdminListWhatsappTemplates200Response.fromJson(value);
+        case 'AdminListWhatsappTemplates200ResponseTemplatesInner':
+          return AdminListWhatsappTemplates200ResponseTemplatesInner.fromJson(value);
+        case 'AdminUpdateWhatsappTemplateRequest':
+          return AdminUpdateWhatsappTemplateRequest.fromJson(value);
+        case 'AdminUser':
+          return AdminUser.fromJson(value);
+        case 'AdminUserPage':
+          return AdminUserPage.fromJson(value);
+        case 'AdminUserUpdateInput':
+          return AdminUserUpdateInput.fromJson(value);
+        case 'AuditChange':
+          return AuditChange.fromJson(value);
         case 'AuthProvider':
           return AuthProviderTypeTransformer().decode(value);
+        case 'BillingQuote':
+          return BillingQuote.fromJson(value);
+        case 'BillingQuoteInput':
+          return BillingQuoteInput.fromJson(value);
+        case 'BillingQuoteLine':
+          return BillingQuoteLine.fromJson(value);
+        case 'BillingSettings':
+          return BillingSettings.fromJson(value);
+        case 'BillingSummary':
+          return BillingSummary.fromJson(value);
         case 'Card':
           return Card.fromJson(value);
         case 'CardLink':
           return CardLink.fromJson(value);
         case 'CardType':
           return CardTypeTypeTransformer().decode(value);
+        case 'CheckInMethod':
+          return CheckInMethodTypeTransformer().decode(value);
+        case 'CheckoutInput':
+          return CheckoutInput.fromJson(value);
         case 'Contributions':
           return Contributions.fromJson(value);
         case 'ContributionsSummary':
@@ -210,6 +254,62 @@ class ApiClient {
           return ContributorCreateInput.fromJson(value);
         case 'ContributorCreateResponse':
           return ContributorCreateResponse.fromJson(value);
+        case 'CostLine':
+          return CostLine.fromJson(value);
+        case 'CostReport':
+          return CostReport.fromJson(value);
+        case 'CostReportEvent':
+          return CostReportEvent.fromJson(value);
+        case 'CostReportMonth':
+          return CostReportMonth.fromJson(value);
+        case 'CostReportPlan':
+          return CostReportPlan.fromJson(value);
+        case 'Device':
+          return Device.fromJson(value);
+        case 'DeviceApp':
+          return DeviceAppTypeTransformer().decode(value);
+        case 'DevicePlatform':
+          return DevicePlatformTypeTransformer().decode(value);
+        case 'DeviceRegisterInput':
+          return DeviceRegisterInput.fromJson(value);
+        case 'DoorCard':
+          return DoorCard.fromJson(value);
+        case 'DoorDevice':
+          return DoorDevice.fromJson(value);
+        case 'DoorDeviceRegisterInput':
+          return DoorDeviceRegisterInput.fromJson(value);
+        case 'DoorEntry':
+          return DoorEntry.fromJson(value);
+        case 'DoorEntryInput':
+          return DoorEntryInput.fromJson(value);
+        case 'DoorEntryResult':
+          return DoorEntryResult.fromJson(value);
+        case 'DoorEvent':
+          return DoorEvent.fromJson(value);
+        case 'DoorLookupInput':
+          return DoorLookupInput.fromJson(value);
+        case 'DoorLookupResult':
+          return DoorLookupResult.fromJson(value);
+        case 'DoorRefusal':
+          return DoorRefusal.fromJson(value);
+        case 'DoorRefusalCard':
+          return DoorRefusalCard.fromJson(value);
+        case 'DoorRefusalError':
+          return DoorRefusalError.fromJson(value);
+        case 'DoorSyncAttemptInput':
+          return DoorSyncAttemptInput.fromJson(value);
+        case 'DoorSyncCard':
+          return DoorSyncCard.fromJson(value);
+        case 'DoorSyncEntryInput':
+          return DoorSyncEntryInput.fromJson(value);
+        case 'DoorSyncResult':
+          return DoorSyncResult.fromJson(value);
+        case 'DoorSyncSnapshot':
+          return DoorSyncSnapshot.fromJson(value);
+        case 'DoorSyncSnapshotApproversInner':
+          return DoorSyncSnapshotApproversInner.fromJson(value);
+        case 'DoorSyncUpload':
+          return DoorSyncUpload.fromJson(value);
         case 'ErrorResponse':
           return ErrorResponse.fromJson(value);
         case 'ErrorResponseError':
@@ -218,6 +318,10 @@ class ApiClient {
           return ErrorResponseErrorIssuesInner.fromJson(value);
         case 'Event':
           return Event.fromJson(value);
+        case 'EventAuditEntry':
+          return EventAuditEntry.fromJson(value);
+        case 'EventAuditPage':
+          return EventAuditPage.fromJson(value);
         case 'EventCreateInput':
           return EventCreateInput.fromJson(value);
         case 'EventList':
@@ -230,6 +334,8 @@ class ApiClient {
           return EventTypeList.fromJson(value);
         case 'EventUpdateInput':
           return EventUpdateInput.fromJson(value);
+        case 'ExportKind':
+          return ExportKindTypeTransformer().decode(value);
         case 'Guest':
           return Guest.fromJson(value);
         case 'GuestBulkInput':
@@ -244,12 +350,18 @@ class ApiClient {
           return GuestCreateInput.fromJson(value);
         case 'GuestCreateResponse':
           return GuestCreateResponse.fromJson(value);
+        case 'GuestMedia':
+          return GuestMedia.fromJson(value);
         case 'GuestPage':
           return GuestPage.fromJson(value);
         case 'GuestUpdateInput':
           return GuestUpdateInput.fromJson(value);
         case 'HealthResponse':
           return HealthResponse.fromJson(value);
+        case 'HostPayment':
+          return HostPayment.fromJson(value);
+        case 'HostPaymentMethod':
+          return HostPaymentMethodTypeTransformer().decode(value);
         case 'ImportConfirmInput':
           return ImportConfirmInput.fromJson(value);
         case 'ImportCopyInput':
@@ -276,18 +388,80 @@ class ApiClient {
           return InviteCreateResponse.fromJson(value);
         case 'InviteInfo':
           return InviteInfo.fromJson(value);
+        case 'LinkCardInput':
+          return LinkCardInput.fromJson(value);
+        case 'LinkCardResult':
+          return LinkCardResult.fromJson(value);
+        case 'ListConfirmations200Response':
+          return ListConfirmations200Response.fromJson(value);
+        case 'ListConfirmations200ResponseCounts':
+          return ListConfirmations200ResponseCounts.fromJson(value);
+        case 'ListConfirmations200ResponseGuestsInner':
+          return ListConfirmations200ResponseGuestsInner.fromJson(value);
+        case 'ListDoorDevices200Response':
+          return ListDoorDevices200Response.fromJson(value);
+        case 'ListDoorEvents200Response':
+          return ListDoorEvents200Response.fromJson(value);
+        case 'ListEventMedia200Response':
+          return ListEventMedia200Response.fromJson(value);
+        case 'ListWalkIns200Response':
+          return ListWalkIns200Response.fromJson(value);
+        case 'MediaItem':
+          return MediaItem.fromJson(value);
+        case 'MediaKind':
+          return MediaKindTypeTransformer().decode(value);
+        case 'MediaLimits':
+          return MediaLimits.fromJson(value);
+        case 'MediaSettings':
+          return MediaSettings.fromJson(value);
+        case 'MediaSettingsCounts':
+          return MediaSettingsCounts.fromJson(value);
+        case 'MediaSettingsInput':
+          return MediaSettingsInput.fromJson(value);
+        case 'MediaStatus':
+          return MediaStatusTypeTransformer().decode(value);
+        case 'MediaStatusInput':
+          return MediaStatusInput.fromJson(value);
+        case 'MediaType':
+          return MediaTypeTypeTransformer().decode(value);
+        case 'MessageLog':
+          return MessageLog.fromJson(value);
+        case 'MessageLogItemsInner':
+          return MessageLogItemsInner.fromJson(value);
+        case 'MessageLogOptOutsInner':
+          return MessageLogOptOutsInner.fromJson(value);
+        case 'MessagePlanLimits':
+          return MessagePlanLimits.fromJson(value);
+        case 'MessageSettings':
+          return MessageSettings.fromJson(value);
+        case 'MessageSettingsTemplatesInner':
+          return MessageSettingsTemplatesInner.fromJson(value);
+        case 'MessageSettingsUsage':
+          return MessageSettingsUsage.fromJson(value);
+        case 'MyCard':
+          return MyCard.fromJson(value);
+        case 'MyCardList':
+          return MyCardList.fromJson(value);
+        case 'OfflineWalkInInput':
+          return OfflineWalkInInput.fromJson(value);
         case 'Payment':
           return Payment.fromJson(value);
+        case 'PaymentAttempt':
+          return PaymentAttempt.fromJson(value);
         case 'PaymentCreateInput':
           return PaymentCreateInput.fromJson(value);
         case 'PaymentMethod':
           return PaymentMethodTypeTransformer().decode(value);
         case 'PaymentResult':
           return PaymentResult.fromJson(value);
+        case 'PaymentStatus':
+          return PaymentStatusTypeTransformer().decode(value);
         case 'PaymentUpdateInput':
           return PaymentUpdateInput.fromJson(value);
         case 'Plan':
           return Plan.fromJson(value);
+        case 'PlanKey':
+          return PlanKeyTypeTransformer().decode(value);
         case 'PlanList':
           return PlanList.fromJson(value);
         case 'Pledge':
@@ -302,16 +476,66 @@ class ApiClient {
           return PublicCard.fromJson(value);
         case 'PublicCardEvent':
           return PublicCardEvent.fromJson(value);
+        case 'QueueStats':
+          return QueueStats.fromJson(value);
+        case 'QueueStatsList':
+          return QueueStatsList.fromJson(value);
+        case 'RetryAdminQueue200Response':
+          return RetryAdminQueue200Response.fromJson(value);
         case 'Rsvp':
           return Rsvp.fromJson(value);
         case 'RsvpInput':
           return RsvpInput.fromJson(value);
+        case 'SendManualMessage200Response':
+          return SendManualMessage200Response.fromJson(value);
+        case 'SendManualMessage202Response':
+          return SendManualMessage202Response.fromJson(value);
+        case 'SendManualMessageRequest':
+          return SendManualMessageRequest.fromJson(value);
+        case 'SendTestMessage202Response':
+          return SendTestMessage202Response.fromJson(value);
+        case 'SendTestMessageRequest':
+          return SendTestMessageRequest.fromJson(value);
+        case 'SetConfirmationRequest':
+          return SetConfirmationRequest.fromJson(value);
+        case 'SharingMode':
+          return SharingModeTypeTransformer().decode(value);
         case 'Team':
           return Team.fromJson(value);
         case 'TeamMembersInner':
           return TeamMembersInner.fromJson(value);
         case 'TeamRole':
           return TeamRoleTypeTransformer().decode(value);
+        case 'TotpCodeInput':
+          return TotpCodeInput.fromJson(value);
+        case 'TotpEnrolment':
+          return TotpEnrolment.fromJson(value);
+        case 'TotpRecoveryCodes':
+          return TotpRecoveryCodes.fromJson(value);
+        case 'TotpStatus':
+          return TotpStatus.fromJson(value);
+        case 'UpdateMessageSettingsRequest':
+          return UpdateMessageSettingsRequest.fromJson(value);
+        case 'UpdateMessageSettingsRequestSettingsInner':
+          return UpdateMessageSettingsRequestSettingsInner.fromJson(value);
+        case 'UpdateMessageSettingsRequestSettingsInnerSchedule':
+          return UpdateMessageSettingsRequestSettingsInnerSchedule.fromJson(value);
+        case 'UploadCompleteInput':
+          return UploadCompleteInput.fromJson(value);
+        case 'UploadSession':
+          return UploadSession.fromJson(value);
+        case 'UploadSessionInput':
+          return UploadSessionInput.fromJson(value);
+        case 'WalkIn':
+          return WalkIn.fromJson(value);
+        case 'WalkInConflict':
+          return WalkInConflict.fromJson(value);
+        case 'WalkInCreateInput':
+          return WalkInCreateInput.fromJson(value);
+        case 'WalkInDecisionInput':
+          return WalkInDecisionInput.fromJson(value);
+        case 'WalkInStatus':
+          return WalkInStatusTypeTransformer().decode(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

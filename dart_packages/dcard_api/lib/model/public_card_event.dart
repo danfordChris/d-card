@@ -137,7 +137,6 @@ class PublicCardEvent {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "PublicCardEvent[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "PublicCardEvent[$key]" has a null value in JSON.');
         });
         return true;
       }());

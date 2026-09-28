@@ -137,7 +137,6 @@ class Guest {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Guest[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Guest[$key]" has a null value in JSON.');
         });
         return true;
       }());

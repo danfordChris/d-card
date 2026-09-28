@@ -74,69 +74,189 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**addGuest**](doc//DefaultApi.md#addguest) | **POST** /api/v1/events/{id}/guests | Add a guest (host, committee). Existing phone returns the existing invitation with 200.
 *DefaultApi* | [**addGuestsBulk**](doc//DefaultApi.md#addguestsbulk) | **POST** /api/v1/events/{id}/guests/bulk | Add up to 500 guests picked from phone contacts (host, committee). Invalid rows are reported, not fatal.
 *DefaultApi* | [**adminCreateEventType**](doc//DefaultApi.md#admincreateeventtype) | **POST** /api/v1/admin/event-types | 
+*DefaultApi* | [**adminCreateProviderRate**](doc//DefaultApi.md#admincreateproviderrate) | **POST** /api/v1/admin/provider-rates | 
+*DefaultApi* | [**adminCreateWhatsappTemplate**](doc//DefaultApi.md#admincreatewhatsapptemplate) | **POST** /api/v1/admin/whatsapp-templates | 
 *DefaultApi* | [**adminListEventTypes**](doc//DefaultApi.md#adminlisteventtypes) | **GET** /api/v1/admin/event-types | All event types, including inactive (admin)
+*DefaultApi* | [**adminListProviderRates**](doc//DefaultApi.md#adminlistproviderrates) | **GET** /api/v1/admin/provider-rates | List effective-dated messaging provider rates (admin)
+*DefaultApi* | [**adminListWhatsappTemplates**](doc//DefaultApi.md#adminlistwhatsapptemplates) | **GET** /api/v1/admin/whatsapp-templates | List all WhatsApp template variants (admin)
 *DefaultApi* | [**adminUpdateEventType**](doc//DefaultApi.md#adminupdateeventtype) | **PATCH** /api/v1/admin/event-types/{key} | Rename or activate/deactivate (existing events keep their type)
+*DefaultApi* | [**adminUpdateWhatsappTemplate**](doc//DefaultApi.md#adminupdatewhatsapptemplate) | **PATCH** /api/v1/admin/whatsapp-templates/{id} | Update registration, Meta status or host availability
 *DefaultApi* | [**cancelCard**](doc//DefaultApi.md#cancelcard) | **POST** /api/v1/events/{id}/guests/{guestId}/cancel | Cancel the card (host). Payments are kept.
 *DefaultApi* | [**cancelEvent**](doc//DefaultApi.md#cancelevent) | **POST** /api/v1/events/{id}/cancel | Cancel a draft or published event (host only)
+*DefaultApi* | [**completeGuestUpload**](doc//DefaultApi.md#completeguestupload) | **POST** /api/v1/cards/{token}/media/{itemId}/complete | Register the guest's Drive file after upload
+*DefaultApi* | [**completeHostUpload**](doc//DefaultApi.md#completehostupload) | **POST** /api/v1/events/{id}/media/{itemId}/complete | Register the Drive file after the upload finished
+*DefaultApi* | [**confirmAdminTotp**](doc//DefaultApi.md#confirmadmintotp) | **POST** /api/v1/admin/2fa/confirm | Confirm setup with a first code; returns 10 one-time recovery codes and sets the admin session cookie
 *DefaultApi* | [**confirmGuestImport**](doc//DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
+*DefaultApi* | [**connectGoogleDrive**](doc//DefaultApi.md#connectgoogledrive) | **GET** /api/v1/media/google/connect | Redirects the host to Google consent (drive.file) for an event
 *DefaultApi* | [**createEvent**](doc//DefaultApi.md#createevent) | **POST** /api/v1/events | Create a draft event (caller becomes host)
+*DefaultApi* | [**createGuestUploadSession**](doc//DefaultApi.md#createguestuploadsession) | **POST** /api/v1/cards/{token}/media/upload-sessions | Guest gallery upload from the card link: Drive resumable URL within window and per-guest limits
+*DefaultApi* | [**createHostUploadSession**](doc//DefaultApi.md#createhostuploadsession) | **POST** /api/v1/events/{id}/media/upload-sessions | Host upload (card or story): returns a Drive resumable URL within plan limits
 *DefaultApi* | [**createInvite**](doc//DefaultApi.md#createinvite) | **POST** /api/v1/events/{id}/team/invites | Create a 7-day, single-use invite link; emails it when an email is given (host only)
+*DefaultApi* | [**decideWalkIn**](doc//DefaultApi.md#decidewalkin) | **POST** /api/v1/events/{id}/walk-ins/{walkInId}/decision | Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+*DefaultApi* | [**deleteEventMedia**](doc//DefaultApi.md#deleteeventmedia) | **DELETE** /api/v1/events/{id}/media/{itemId} | Delete an item (also deletes the Drive file D-Card created)
+*DefaultApi* | [**deleteGuestMedia**](doc//DefaultApi.md#deleteguestmedia) | **DELETE** /api/v1/cards/{token}/media/{itemId} | Guest deletes their own upload
+*DefaultApi* | [**deleteMe**](doc//DefaultApi.md#deleteme) | **DELETE** /api/v1/me | Delete my account (registered guests; hosts must delete their events first)
+*DefaultApi* | [**disableAdminTotp**](doc//DefaultApi.md#disableadmintotp) | **POST** /api/v1/admin/2fa/disable | Turn two-step sign-in off (needs a code)
+*DefaultApi* | [**disconnectGoogleDrive**](doc//DefaultApi.md#disconnectgoogledrive) | **DELETE** /api/v1/media/google | Disconnect Google Drive (files stay in the host's Drive)
+*DefaultApi* | [**doorAdmit**](doc//DefaultApi.md#dooradmit) | **POST** /api/v1/door/entries | Admit 1 or 2 on a card, atomically (idempotent per entry id)
+*DefaultApi* | [**doorGetWalkIn**](doc//DefaultApi.md#doorgetwalkin) | **GET** /api/v1/door/walk-ins/{walkInId} | The door polls its request for the decision
+*DefaultApi* | [**doorLookup**](doc//DefaultApi.md#doorlookup) | **POST** /api/v1/door/lookup | Find a card by QR token, card number or name
+*DefaultApi* | [**doorRequestWalkIn**](doc//DefaultApi.md#doorrequestwalkin) | **POST** /api/v1/door/walk-ins | Request approval for a walk-in; pushes to the host and walk-in approvers
+*DefaultApi* | [**doorSyncDownload**](doc//DefaultApi.md#doorsyncdownload) | **GET** /api/v1/door/sync | Event cache for offline check-in: full without `since`, changes only with it
+*DefaultApi* | [**doorSyncUpload**](doc//DefaultApi.md#doorsyncupload) | **POST** /api/v1/door/sync | Upload offline entries and attempts (idempotent; merges in any order)
+*DefaultApi* | [**downloadEventExport**](doc//DefaultApi.md#downloadeventexport) | **GET** /api/v1/events/{id}/exports/{kind} | CSV export (UTF-8 with BOM): guests and attendance for the host, contributions for host or treasurer; audited
+*DefaultApi* | [**exportAdminAudit**](doc//DefaultApi.md#exportadminaudit) | **GET** /api/v1/admin/audit/export | Audit search as CSV (up to 10,000 rows)
+*DefaultApi* | [**exportMyData**](doc//DefaultApi.md#exportmydata) | **GET** /api/v1/me/export | Download my data (JSON file)
+*DefaultApi* | [**getAdminQueues**](doc//DefaultApi.md#getadminqueues) | **GET** /api/v1/admin/queues | Job counts per queue
+*DefaultApi* | [**getAdminTotp**](doc//DefaultApi.md#getadmintotp) | **GET** /api/v1/admin/2fa | Two-step sign-in status for this admin
+*DefaultApi* | [**getBilling**](doc//DefaultApi.md#getbilling) | **GET** /api/v1/events/{id}/billing | Plan, paid guest cards, payments and any pending payment (host)
+*DefaultApi* | [**getBillingSettings**](doc//DefaultApi.md#getbillingsettings) | **GET** /api/v1/admin/billing/settings | Launch offer setting (admin)
 *DefaultApi* | [**getCardCalendar**](doc//DefaultApi.md#getcardcalendar) | **GET** /api/v1/cards/{token}/calendar.ics | Calendar entry (text/calendar)
 *DefaultApi* | [**getCardLink**](doc//DefaultApi.md#getcardlink) | **GET** /api/v1/events/{id}/guests/{guestId}/card | Card number and link (host, committee)
+*DefaultApi* | [**getCheckout**](doc//DefaultApi.md#getcheckout) | **GET** /api/v1/events/{id}/checkout/{attemptId} | Payment status (poll while pending)
 *DefaultApi* | [**getContributions**](doc//DefaultApi.md#getcontributions) | **GET** /api/v1/events/{id}/contributions | Totals and contributors (host, committee, treasurer)
+*DefaultApi* | [**getCostReport**](doc//DefaultApi.md#getcostreport) | **GET** /api/v1/admin/cost-report | Revenue, message cost, payment fee and margin per event, plan and month
 *DefaultApi* | [**getEvent**](doc//DefaultApi.md#getevent) | **GET** /api/v1/events/{id} | 
+*DefaultApi* | [**getEventMediaContent**](doc//DefaultApi.md#geteventmediacontent) | **GET** /api/v1/events/{id}/media/{itemId}/content | Private mode: streams the thumbnail or file for the host (?size=thumb|full)
+*DefaultApi* | [**getGuestMedia**](doc//DefaultApi.md#getguestmedia) | **GET** /api/v1/cards/{token}/media | Story and gallery for a card link (no login); upload window and the guest's remaining uploads
+*DefaultApi* | [**getGuestMediaContent**](doc//DefaultApi.md#getguestmediacontent) | **GET** /api/v1/cards/{token}/media/{itemId}/content | Private mode: streams a visible item for a valid card link (?size=thumb|full)
 *DefaultApi* | [**getHealth**](doc//DefaultApi.md#gethealth) | **GET** /api/v1/health | Service health
 *DefaultApi* | [**getInvite**](doc//DefaultApi.md#getinvite) | **GET** /api/v1/invites/{token} | Public invite info for the accept page
 *DefaultApi* | [**getMe**](doc//DefaultApi.md#getme) | **GET** /api/v1/me | Current account
+*DefaultApi* | [**getMediaSettings**](doc//DefaultApi.md#getmediasettings) | **GET** /api/v1/events/{id}/media/settings | Drive connection, sharing mode, quota, plan limits and counts (host, committee)
+*DefaultApi* | [**getMessageSettings**](doc//DefaultApi.md#getmessagesettings) | **GET** /api/v1/events/{id}/messages | Message settings for NTF-1…8 with the plan's limits (host, committee)
 *DefaultApi* | [**getPledge**](doc//DefaultApi.md#getpledge) | **GET** /api/v1/events/{id}/pledges/{pledgeId} | 
 *DefaultApi* | [**getPublicCard**](doc//DefaultApi.md#getpubliccard) | **GET** /api/v1/cards/{token} | Guest card by link token (public, no login)
 *DefaultApi* | [**getTeam**](doc//DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
 *DefaultApi* | [**issueCard**](doc//DefaultApi.md#issuecard) | **POST** /api/v1/events/{id}/guests/{guestId}/issue | Issue the card directly (host). Pending only.
+*DefaultApi* | [**linkMyCard**](doc//DefaultApi.md#linkmycard) | **POST** /api/v1/me/cards/link | Link a card (by its link token) to the signed-in guest account
+*DefaultApi* | [**listConfirmations**](doc//DefaultApi.md#listconfirmations) | **GET** /api/v1/events/{id}/confirmations | Confirmation states and expected headcount (host or committee)
+*DefaultApi* | [**listDoorDevices**](doc//DefaultApi.md#listdoordevices) | **GET** /api/v1/events/{id}/door-devices | Door devices of an event with last sync (host, committee)
+*DefaultApi* | [**listDoorEvents**](doc//DefaultApi.md#listdoorevents) | **GET** /api/v1/door/events | Events the signed-in user can check guests in for (host, committee, door staff)
+*DefaultApi* | [**listEventAudit**](doc//DefaultApi.md#listeventaudit) | **GET** /api/v1/events/{id}/audit | Event audit trail, newest first (host or treasurer)
+*DefaultApi* | [**listEventMedia**](doc//DefaultApi.md#listeventmedia) | **GET** /api/v1/events/{id}/media | Media of an event for the host (all statuses except deleted)
 *DefaultApi* | [**listEventTypes**](doc//DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
 *DefaultApi* | [**listEvents**](doc//DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
 *DefaultApi* | [**listGuests**](doc//DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
+*DefaultApi* | [**listMessageLog**](doc//DefaultApi.md#listmessagelog) | **GET** /api/v1/events/{id}/messages/log | Event message log (no costs) and WhatsApp opt-outs (host, committee)
+*DefaultApi* | [**listMyCards**](doc//DefaultApi.md#listmycards) | **GET** /api/v1/me/cards | The signed-in guest's cards across events
 *DefaultApi* | [**listPlans**](doc//DefaultApi.md#listplans) | **GET** /api/v1/plans | Active plans with price per guest and entitlements
+*DefaultApi* | [**listWalkIns**](doc//DefaultApi.md#listwalkins) | **GET** /api/v1/events/{id}/walk-ins | Walk-ins of an event (host, committee, walk-in approvers)
 *DefaultApi* | [**previewCopyGuests**](doc//DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
 *DefaultApi* | [**previewGuestImport**](doc//DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 *DefaultApi* | [**provisionMe**](doc//DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
+*DefaultApi* | [**quoteBilling**](doc//DefaultApi.md#quotebilling) | **POST** /api/v1/events/{id}/billing/quote | Price for buying cards, adding blocks of 10 or upgrading (minimum charge, launch offer applied)
 *DefaultApi* | [**recordPayment**](doc//DefaultApi.md#recordpayment) | **POST** /api/v1/events/{id}/pledges/{pledgeId}/payments | Record a payment or refund (host, treasurer). Final payment issues the card.
+*DefaultApi* | [**registerDevice**](doc//DefaultApi.md#registerdevice) | **POST** /api/v1/me/devices | Register (upsert) this device's push token for the signed-in user
+*DefaultApi* | [**registerDoorDevice**](doc//DefaultApi.md#registerdoordevice) | **POST** /api/v1/door/devices | Register this device for one event (idempotent per deviceId)
 *DefaultApi* | [**reinstateCard**](doc//DefaultApi.md#reinstatecard) | **POST** /api/v1/events/{id}/guests/{guestId}/reinstate | Reinstate a cancelled card (host): same number and tokens.
 *DefaultApi* | [**removeGuest**](doc//DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
 *DefaultApi* | [**removeMember**](doc//DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
+*DefaultApi* | [**reportGuestMedia**](doc//DefaultApi.md#reportguestmedia) | **POST** /api/v1/cards/{token}/media/{itemId}/report | Report an item to the host
+*DefaultApi* | [**retryAdminQueue**](doc//DefaultApi.md#retryadminqueue) | **POST** /api/v1/admin/queues/{name}/retry | Retry the failed jobs of a queue
+*DefaultApi* | [**revokeDoorDevice**](doc//DefaultApi.md#revokedoordevice) | **DELETE** /api/v1/events/{id}/door-devices/{deviceId} | Revoke a door device (host); its next door call gets 403
 *DefaultApi* | [**revokeInvite**](doc//DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
+*DefaultApi* | [**searchAdminAudit**](doc//DefaultApi.md#searchadminaudit) | **GET** /api/v1/admin/audit | Search the audit log
+*DefaultApi* | [**searchAdminEvents**](doc//DefaultApi.md#searchadminevents) | **GET** /api/v1/admin/events | Search events by title or host email and date
+*DefaultApi* | [**searchAdminUsers**](doc//DefaultApi.md#searchadminusers) | **GET** /api/v1/admin/users | Search accounts by email, name or phone
+*DefaultApi* | [**sendManualMessage**](doc//DefaultApi.md#sendmanualmessage) | **POST** /api/v1/events/{id}/messages/send | Send a message now to a guest group, or preview the recipient count (host)
+*DefaultApi* | [**sendTestMessage**](doc//DefaultApi.md#sendtestmessage) | **POST** /api/v1/events/{id}/messages/{type}/test | Send a message with sample values to the host's own phone (rate-limited)
+*DefaultApi* | [**setConfirmation**](doc//DefaultApi.md#setconfirmation) | **PUT** /api/v1/events/{id}/confirmations/{guestId} | Record or override a guest confirmation (host or committee)
+*DefaultApi* | [**setMediaStatus**](doc//DefaultApi.md#setmediastatus) | **PATCH** /api/v1/events/{id}/media/{itemId} | Hide or show an item (host moderation, audited)
+*DefaultApi* | [**startAdminTotp**](doc//DefaultApi.md#startadmintotp) | **POST** /api/v1/admin/2fa/enrol | Start authenticator-app setup (secret + otpauth URI for a QR code)
+*DefaultApi* | [**startCheckout**](doc//DefaultApi.md#startcheckout) | **POST** /api/v1/events/{id}/checkout | Start a Snippe payment: mobile-money push or hosted checkout session
 *DefaultApi* | [**submitRsvp**](doc//DefaultApi.md#submitrsvp) | **POST** /api/v1/cards/{token}/rsvp | RSVP Yes/No with dietary note (public); editable until the event starts
+*DefaultApi* | [**unregisterDevice**](doc//DefaultApi.md#unregisterdevice) | **DELETE** /api/v1/me/devices/{token} | Remove a push token of the signed-in user (idempotent; call on sign-out)
+*DefaultApi* | [**updateAdminUser**](doc//DefaultApi.md#updateadminuser) | **PATCH** /api/v1/admin/users/{userId} | Grant/revoke admin, disable/enable an account (not yourself)
+*DefaultApi* | [**updateBillingSettings**](doc//DefaultApi.md#updatebillingsettings) | **PUT** /api/v1/admin/billing/settings | Change or switch off the launch offer (admin, audited)
 *DefaultApi* | [**updateEvent**](doc//DefaultApi.md#updateevent) | **PATCH** /api/v1/events/{id} | Edit details, contact and settings (host only)
 *DefaultApi* | [**updateGuest**](doc//DefaultApi.md#updateguest) | **PATCH** /api/v1/events/{id}/guests/{guestId} | 
+*DefaultApi* | [**updateMediaSettings**](doc//DefaultApi.md#updatemediasettings) | **PUT** /api/v1/events/{id}/media/settings | Change sharing mode or the Google Photos link (host, audited)
+*DefaultApi* | [**updateMessageSettings**](doc//DefaultApi.md#updatemessagesettings) | **PUT** /api/v1/events/{id}/messages | Save all 8 message settings (host)
 *DefaultApi* | [**updatePayment**](doc//DefaultApi.md#updatepayment) | **PATCH** /api/v1/events/{id}/payments/{paymentId} | Correct a payment record (host, treasurer); audited
 *DefaultApi* | [**updatePledge**](doc//DefaultApi.md#updatepledge) | **PATCH** /api/v1/events/{id}/pledges/{pledgeId} | Change amount/card type before issue (host, treasurer); issues if already covered
+*DefaultApi* | [**verifyAdminTotp**](doc//DefaultApi.md#verifyadmintotp) | **POST** /api/v1/admin/2fa/verify | Verify a code or recovery code; sets the admin session cookie (12 h)
 
 
 ## Documentation For Models
 
  - [Account](doc//Account.md)
+ - [AdminAuditEntry](doc//AdminAuditEntry.md)
+ - [AdminAuditPage](doc//AdminAuditPage.md)
+ - [AdminCreateProviderRateRequest](doc//AdminCreateProviderRateRequest.md)
+ - [AdminCreateWhatsappTemplateRequest](doc//AdminCreateWhatsappTemplateRequest.md)
+ - [AdminEvent](doc//AdminEvent.md)
+ - [AdminEventPage](doc//AdminEventPage.md)
  - [AdminEventType](doc//AdminEventType.md)
  - [AdminEventTypeCreateInput](doc//AdminEventTypeCreateInput.md)
  - [AdminEventTypeList](doc//AdminEventTypeList.md)
  - [AdminEventTypeUpdateInput](doc//AdminEventTypeUpdateInput.md)
+ - [AdminListProviderRates200Response](doc//AdminListProviderRates200Response.md)
+ - [AdminListProviderRates200ResponseRatesInner](doc//AdminListProviderRates200ResponseRatesInner.md)
+ - [AdminListWhatsappTemplates200Response](doc//AdminListWhatsappTemplates200Response.md)
+ - [AdminListWhatsappTemplates200ResponseTemplatesInner](doc//AdminListWhatsappTemplates200ResponseTemplatesInner.md)
+ - [AdminUpdateWhatsappTemplateRequest](doc//AdminUpdateWhatsappTemplateRequest.md)
+ - [AdminUser](doc//AdminUser.md)
+ - [AdminUserPage](doc//AdminUserPage.md)
+ - [AdminUserUpdateInput](doc//AdminUserUpdateInput.md)
+ - [AuditChange](doc//AuditChange.md)
  - [AuthProvider](doc//AuthProvider.md)
+ - [BillingQuote](doc//BillingQuote.md)
+ - [BillingQuoteInput](doc//BillingQuoteInput.md)
+ - [BillingQuoteLine](doc//BillingQuoteLine.md)
+ - [BillingSettings](doc//BillingSettings.md)
+ - [BillingSummary](doc//BillingSummary.md)
  - [Card](doc//Card.md)
  - [CardLink](doc//CardLink.md)
  - [CardType](doc//CardType.md)
+ - [CheckInMethod](doc//CheckInMethod.md)
+ - [CheckoutInput](doc//CheckoutInput.md)
  - [Contributions](doc//Contributions.md)
  - [ContributionsSummary](doc//ContributionsSummary.md)
  - [ContributionsSummaryCounts](doc//ContributionsSummaryCounts.md)
  - [ContributorCreateInput](doc//ContributorCreateInput.md)
  - [ContributorCreateResponse](doc//ContributorCreateResponse.md)
+ - [CostLine](doc//CostLine.md)
+ - [CostReport](doc//CostReport.md)
+ - [CostReportEvent](doc//CostReportEvent.md)
+ - [CostReportMonth](doc//CostReportMonth.md)
+ - [CostReportPlan](doc//CostReportPlan.md)
+ - [Device](doc//Device.md)
+ - [DeviceApp](doc//DeviceApp.md)
+ - [DevicePlatform](doc//DevicePlatform.md)
+ - [DeviceRegisterInput](doc//DeviceRegisterInput.md)
+ - [DoorCard](doc//DoorCard.md)
+ - [DoorDevice](doc//DoorDevice.md)
+ - [DoorDeviceRegisterInput](doc//DoorDeviceRegisterInput.md)
+ - [DoorEntry](doc//DoorEntry.md)
+ - [DoorEntryInput](doc//DoorEntryInput.md)
+ - [DoorEntryResult](doc//DoorEntryResult.md)
+ - [DoorEvent](doc//DoorEvent.md)
+ - [DoorLookupInput](doc//DoorLookupInput.md)
+ - [DoorLookupResult](doc//DoorLookupResult.md)
+ - [DoorRefusal](doc//DoorRefusal.md)
+ - [DoorRefusalCard](doc//DoorRefusalCard.md)
+ - [DoorRefusalError](doc//DoorRefusalError.md)
+ - [DoorSyncAttemptInput](doc//DoorSyncAttemptInput.md)
+ - [DoorSyncCard](doc//DoorSyncCard.md)
+ - [DoorSyncEntryInput](doc//DoorSyncEntryInput.md)
+ - [DoorSyncResult](doc//DoorSyncResult.md)
+ - [DoorSyncSnapshot](doc//DoorSyncSnapshot.md)
+ - [DoorSyncSnapshotApproversInner](doc//DoorSyncSnapshotApproversInner.md)
+ - [DoorSyncUpload](doc//DoorSyncUpload.md)
  - [ErrorResponse](doc//ErrorResponse.md)
  - [ErrorResponseError](doc//ErrorResponseError.md)
  - [ErrorResponseErrorIssuesInner](doc//ErrorResponseErrorIssuesInner.md)
  - [Event](doc//Event.md)
+ - [EventAuditEntry](doc//EventAuditEntry.md)
+ - [EventAuditPage](doc//EventAuditPage.md)
  - [EventCreateInput](doc//EventCreateInput.md)
  - [EventList](doc//EventList.md)
  - [EventPlan](doc//EventPlan.md)
  - [EventType](doc//EventType.md)
  - [EventTypeList](doc//EventTypeList.md)
  - [EventUpdateInput](doc//EventUpdateInput.md)
+ - [ExportKind](doc//ExportKind.md)
  - [Guest](doc//Guest.md)
  - [GuestBulkInput](doc//GuestBulkInput.md)
  - [GuestBulkInputGuestsInner](doc//GuestBulkInputGuestsInner.md)
@@ -144,9 +264,12 @@ Class | Method | HTTP request | Description
  - [GuestBulkResponseInvalidInner](doc//GuestBulkResponseInvalidInner.md)
  - [GuestCreateInput](doc//GuestCreateInput.md)
  - [GuestCreateResponse](doc//GuestCreateResponse.md)
+ - [GuestMedia](doc//GuestMedia.md)
  - [GuestPage](doc//GuestPage.md)
  - [GuestUpdateInput](doc//GuestUpdateInput.md)
  - [HealthResponse](doc//HealthResponse.md)
+ - [HostPayment](doc//HostPayment.md)
+ - [HostPaymentMethod](doc//HostPaymentMethod.md)
  - [ImportConfirmInput](doc//ImportConfirmInput.md)
  - [ImportCopyInput](doc//ImportCopyInput.md)
  - [ImportPreview](doc//ImportPreview.md)
@@ -160,12 +283,43 @@ Class | Method | HTTP request | Description
  - [InviteCreateInput](doc//InviteCreateInput.md)
  - [InviteCreateResponse](doc//InviteCreateResponse.md)
  - [InviteInfo](doc//InviteInfo.md)
+ - [LinkCardInput](doc//LinkCardInput.md)
+ - [LinkCardResult](doc//LinkCardResult.md)
+ - [ListConfirmations200Response](doc//ListConfirmations200Response.md)
+ - [ListConfirmations200ResponseCounts](doc//ListConfirmations200ResponseCounts.md)
+ - [ListConfirmations200ResponseGuestsInner](doc//ListConfirmations200ResponseGuestsInner.md)
+ - [ListDoorDevices200Response](doc//ListDoorDevices200Response.md)
+ - [ListDoorEvents200Response](doc//ListDoorEvents200Response.md)
+ - [ListEventMedia200Response](doc//ListEventMedia200Response.md)
+ - [ListWalkIns200Response](doc//ListWalkIns200Response.md)
+ - [MediaItem](doc//MediaItem.md)
+ - [MediaKind](doc//MediaKind.md)
+ - [MediaLimits](doc//MediaLimits.md)
+ - [MediaSettings](doc//MediaSettings.md)
+ - [MediaSettingsCounts](doc//MediaSettingsCounts.md)
+ - [MediaSettingsInput](doc//MediaSettingsInput.md)
+ - [MediaStatus](doc//MediaStatus.md)
+ - [MediaStatusInput](doc//MediaStatusInput.md)
+ - [MediaType](doc//MediaType.md)
+ - [MessageLog](doc//MessageLog.md)
+ - [MessageLogItemsInner](doc//MessageLogItemsInner.md)
+ - [MessageLogOptOutsInner](doc//MessageLogOptOutsInner.md)
+ - [MessagePlanLimits](doc//MessagePlanLimits.md)
+ - [MessageSettings](doc//MessageSettings.md)
+ - [MessageSettingsTemplatesInner](doc//MessageSettingsTemplatesInner.md)
+ - [MessageSettingsUsage](doc//MessageSettingsUsage.md)
+ - [MyCard](doc//MyCard.md)
+ - [MyCardList](doc//MyCardList.md)
+ - [OfflineWalkInInput](doc//OfflineWalkInInput.md)
  - [Payment](doc//Payment.md)
+ - [PaymentAttempt](doc//PaymentAttempt.md)
  - [PaymentCreateInput](doc//PaymentCreateInput.md)
  - [PaymentMethod](doc//PaymentMethod.md)
  - [PaymentResult](doc//PaymentResult.md)
+ - [PaymentStatus](doc//PaymentStatus.md)
  - [PaymentUpdateInput](doc//PaymentUpdateInput.md)
  - [Plan](doc//Plan.md)
+ - [PlanKey](doc//PlanKey.md)
  - [PlanList](doc//PlanList.md)
  - [Pledge](doc//Pledge.md)
  - [PledgeDetail](doc//PledgeDetail.md)
@@ -173,11 +327,36 @@ Class | Method | HTTP request | Description
  - [PledgeUpdateInput](doc//PledgeUpdateInput.md)
  - [PublicCard](doc//PublicCard.md)
  - [PublicCardEvent](doc//PublicCardEvent.md)
+ - [QueueStats](doc//QueueStats.md)
+ - [QueueStatsList](doc//QueueStatsList.md)
+ - [RetryAdminQueue200Response](doc//RetryAdminQueue200Response.md)
  - [Rsvp](doc//Rsvp.md)
  - [RsvpInput](doc//RsvpInput.md)
+ - [SendManualMessage200Response](doc//SendManualMessage200Response.md)
+ - [SendManualMessage202Response](doc//SendManualMessage202Response.md)
+ - [SendManualMessageRequest](doc//SendManualMessageRequest.md)
+ - [SendTestMessage202Response](doc//SendTestMessage202Response.md)
+ - [SendTestMessageRequest](doc//SendTestMessageRequest.md)
+ - [SetConfirmationRequest](doc//SetConfirmationRequest.md)
+ - [SharingMode](doc//SharingMode.md)
  - [Team](doc//Team.md)
  - [TeamMembersInner](doc//TeamMembersInner.md)
  - [TeamRole](doc//TeamRole.md)
+ - [TotpCodeInput](doc//TotpCodeInput.md)
+ - [TotpEnrolment](doc//TotpEnrolment.md)
+ - [TotpRecoveryCodes](doc//TotpRecoveryCodes.md)
+ - [TotpStatus](doc//TotpStatus.md)
+ - [UpdateMessageSettingsRequest](doc//UpdateMessageSettingsRequest.md)
+ - [UpdateMessageSettingsRequestSettingsInner](doc//UpdateMessageSettingsRequestSettingsInner.md)
+ - [UpdateMessageSettingsRequestSettingsInnerSchedule](doc//UpdateMessageSettingsRequestSettingsInnerSchedule.md)
+ - [UploadCompleteInput](doc//UploadCompleteInput.md)
+ - [UploadSession](doc//UploadSession.md)
+ - [UploadSessionInput](doc//UploadSessionInput.md)
+ - [WalkIn](doc//WalkIn.md)
+ - [WalkInConflict](doc//WalkInConflict.md)
+ - [WalkInCreateInput](doc//WalkInCreateInput.md)
+ - [WalkInDecisionInput](doc//WalkInDecisionInput.md)
+ - [WalkInStatus](doc//WalkInStatus.md)
 
 
 ## Documentation For Authorization

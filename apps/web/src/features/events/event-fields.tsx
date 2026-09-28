@@ -95,6 +95,7 @@ export function OptionsFields(props: Props & { autoUpgradeAllowed: boolean }) {
       {text("singleAmount", t("wizard.singleAmount"), { inputMode: "numeric" })}
       {text("doubleAmount", t("wizard.doubleAmount"), { inputMode: "numeric" })}
       {text("budgetAmount", t("wizard.budgetAmount"), { inputMode: "numeric" })}
+      <div className="sm:col-span-2">{text("paymentDetails", t("wizard.paymentDetails"), { maxLength: 120 })}</div>
       <div className="sm:col-span-2">{text("photoAlbumUrl", t("wizard.photoAlbumUrl"), { type: "url", inputMode: "url" })}</div>
     </div>
   );

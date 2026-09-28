@@ -49,11 +49,18 @@ in-progress
 
 ### P03
 
-- [ ] Messaging — `docs/implementation/phases/phase-03-messaging.md`
+- [x] T03-01 Messaging foundation: schema, templates, adapters, send queue, message log
+- [ ] T03-02 Transactional messages: contribution request, thank-you, card, upgrade
+- [ ] T03-03 Provider webhooks: delivery status, button replies, STOP, template category guard
+- [ ] T03-04 Scheduled messages: reminders, confirmation, event reminder, thank-you, quiet hours, plan limits
+- [ ] T03-05 Web message settings, SMS editor and test send
+- [ ] T03-06 Manual send to groups and host message log
+- [ ] T03-07 Admin WhatsApp template registry and provider rates
+- [ ] T03-08 Push notification setup (device tokens, FCM sender)
 
 ### P04
 
-- [ ] Confirmations and check-in — `docs/implementation/phases/phase-04-confirmation-check-in.md`
+- [x] Confirmations and check-in — `docs/implementation/phases/phase-04-confirmation-check-in.md`
 
 ### P05
 
@@ -61,11 +68,18 @@ in-progress
 
 ### P06
 
-- [ ] Completion — `docs/implementation/phases/phase-06-completion.md`
+- [ ] Completion — `docs/implementation/phases/phase-06-completion.md` (T06-01…T06-09 done 2026-09-27; waits for staging deploy and owner setup)
+- [ ] Store the rate category on `message_log` so the cost report can re-cost messages sent before a rate existed (T06-05 follow-up).
+- [ ] Guest deep links: open `/c/<token>` in the D-Card app and link the card (T06-02 follow-up).
+- [ ] Script-src CSP with per-request nonces (SEC-04 follow-up, `docs/security/2026-09-security-review.md`).
+- [ ] Separate keys per purpose for token hashing, OAuth state and admin proofs, with a rotation plan (SEC-19).
+- [ ] Decide a per-guest limit on media reports so one guest cannot hide a whole gallery (SEC-17).
+- [ ] Pass only the needed message namespaces to `NextIntlClientProvider` on the card page (~12.7 kB gz, T06-07 follow-up).
 
 ### P07
 
-- [ ] Hardening and pilot — `docs/implementation/phases/phase-07-hardening-pilot.md`
+- [ ] T07-01 Marketing site (started early, owner request 2026-09-25)
+- [ ] Hardening and pilot — `docs/implementation/phases/phase-07-hardening-pilot.md` (in progress; T07-02…T07-05)
 
 ### Owner requests (2026-09-25) — to design and schedule
 
@@ -77,3 +91,15 @@ Raised after reviewing the web app. Each needs a design decision (order, scope, 
 - [ ] **Events I'm invited to.** Needs guest sign-in with Google/Apple linked to the Person (AUTH-3, GST-16 event history).
 - [x] **"Host can only create one event"** — checked 2026-09-25: two events created back to back in the web wizard both appear on the dashboard. The reported block came from the broken sign-in (`/events/new` redirected to `/login`) and the missing navigation (covered above).
 
+### Owner direction (2026-09-26) — UI/UX and cost
+
+Proposal: `docs/changes/proposed/ui-design-system.md`; sources: `docs/research/ui-reference-projects.md`. Refinement work, scheduled after the owner answers the proposal's open questions (colours, starter pack, dark mode, prototype).
+
+- [ ] **Design tokens, font and icons** — Plus Jakarta Sans, Hugeicons only (replace emoji/Material icons), colour/spacing/radius/type tokens in `dcard_ui` and web `@theme`; lint against hex literals and emoji icons; no decorative gradients/glows/shadows.
+- [ ] **Shared component set** — mobile (from Notify): button, input family, search + filter sheet + active chips, card, status badge, detail rows, bottom sheet, confirm sheet, toast, empty/success views, layout shell, haptics. Web (from Solomon web): Button, inputs, Badge, Card, TableSection + typed table + pagination, Modal, SlideOver, ConfirmProvider, Toast, EmptyState, Skeleton, Tabs.
+- [ ] **Clickable prototype for approval** — host app dashboard + event screen, web shell with side navigation (merges the 2026-09-25 "App navigation" request).
+- [ ] **Roll out** — web shell and lists/forms, mobile shell and dashboard, door result screens, admin area; four states (loading/empty/no results/error) on every async surface.
+- [ ] **Money flows** — review → confirm → receipt pattern for payments and plan checkout (P05), one currency formatter.
+- [x] **Worker hosting at lowest cost** — done 2026-09-26: Railway Hobby (worker + Redis, ~$5/month), `NEXTSMS_LIVE`/`WHATSAPP_LIVE` only there (`docs/deployment.md`).
+- [ ] **Service boundaries** — keep bounded contexts separable in `packages/core` (events, guests, contributions, cards, messaging, check-in, confirmations, admin); document which could split first when scaling.
+- [ ] **Guest upload from the D-Card app** (phase 05 scope C, optional) — the card link is the primary upload path; add in-app upload if hosts ask for it.

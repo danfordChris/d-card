@@ -9,6 +9,9 @@ Future<void> openContributions(WidgetTester tester, String label) async {
   await signIn(tester);
   await tester.tap(find.text('Harusi ya Asha'));
   await tester.pumpAndSettle();
+  // The host's unpaid-event banner pushes the actions down.
+  await tester.scrollUntilVisible(find.text(label), 200, scrollable: find.byType(Scrollable).first);
+  await tester.pumpAndSettle();
   await tester.tap(find.text(label));
   await tester.pumpAndSettle();
 }
@@ -27,9 +30,9 @@ void main() {
       api: apiWith(access: EventAccessEnum.treasurer),
     );
     await openContributions(tester, 'Michango');
-    expect(find.text('Tsh 100,000'), findsOneWidget);
-    expect(find.text('Tsh 20,000'), findsOneWidget);
-    expect(find.textContaining('Amelipa Tsh 20,000 kati ya Tsh 50,000'), findsOneWidget);
+    expect(find.text('TSh 100,000'), findsOneWidget);
+    expect(find.text('TSh 20,000'), findsOneWidget);
+    expect(find.textContaining('Amelipa TSh 20,000 kati ya TSh 50,000'), findsOneWidget);
     await tester.tap(find.widgetWithText(ChoiceChip, 'Hajalipa'));
     await tester.pumpAndSettle();
     expect(find.text('Mzee Salum'), findsNothing);
@@ -53,7 +56,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('payment.amount')), '12.5');
     await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
     await tester.pumpAndSettle();
-    expect(find.text('Enter a whole amount in Tsh.'), findsOneWidget);
+    expect(find.text('Enter a whole amount in TSh.'), findsOneWidget);
     expect(api.payments, isEmpty);
 
     await tester.enterText(find.byKey(const Key('payment.amount')), '30,000');
@@ -65,14 +68,14 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
     await tester.pumpAndSettle();
     expect(find.text('Fully paid. Card 007-1234 has been issued.'), findsOneWidget);
-    expect(find.text('Balance Tsh 0'), findsOneWidget);
+    expect(find.text('Balance TSh 0'), findsOneWidget);
     final sent = api.payments.single;
     expect([sent.amount, sent.method, sent.reference], [30000, PaymentMethod.cash, 'R-9']);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
     expect(find.text('007-1234'), findsOneWidget);
-    expect(find.textContaining('Paid Tsh 50,000 of Tsh 50,000'), findsOneWidget);
+    expect(find.textContaining('Paid TSh 50,000 of TSh 50,000'), findsOneWidget);
   });
 
   testWidgets('a part payment shows the new balance', (tester) async {
@@ -85,7 +88,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
     await tester.pumpAndSettle();
     expect(find.text('Payment saved.'), findsOneWidget);
-    expect(find.text('Balance Tsh 40,000'), findsOneWidget);
+    expect(find.text('Balance TSh 40,000'), findsOneWidget);
   });
 
   testWidgets('committee sees contributions but cannot record', (tester) async {

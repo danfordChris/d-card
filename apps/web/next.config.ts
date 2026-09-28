@@ -27,7 +27,23 @@ const publicEnv = Object.fromEntries(
 
 const nextConfig: NextConfig = {
   env: publicEnv,
+  // `next build` type-checks without the dev server's .next/dev/types (see tsconfig.build.json).
+  typescript: { tsconfigPath: process.env.NODE_ENV === "production" ? "tsconfig.build.json" : "tsconfig.json" },
   serverExternalPackages: ["firebase-admin", "bullmq", "ioredis"],
+  // SEC-04: baseline security headers on every response. A script-src CSP needs per-request
+  // nonces for Next's inline scripts; recorded as a follow-up in docs/security/2026-09-security-review.md.
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
+  },
 };
+
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+  { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+];
 
 export default withNextIntl(nextConfig);

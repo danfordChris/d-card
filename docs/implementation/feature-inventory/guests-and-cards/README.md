@@ -30,4 +30,4 @@
 | [`card-cancel-reinstate`](./card-cancel-reinstate.md) | Host cancels and reinstates cards. | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |
 | [`guest-card-page`](./guest-card-page.md) | Card link page without login: card, QR, venue, programme basics. | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |
 | [`rsvp-and-dietary`](./rsvp-and-dietary.md) | RSVP, dietary needs and add-to-calendar from the card link. | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |
-| [`expected-headcount`](./expected-headcount.md) | Expected headcount from confirmation states and host percentage. | Pending | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |
+| [`expected-headcount`](./expected-headcount.md) | Expected headcount from confirmation states and host percentage. | Done | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |

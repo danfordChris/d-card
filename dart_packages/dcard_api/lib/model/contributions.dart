@@ -55,7 +55,6 @@ class Contributions {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Contributions[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Contributions[$key]" has a null value in JSON.');
         });
         return true;
       }());

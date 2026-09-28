@@ -61,7 +61,6 @@ class ImportResult {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "ImportResult[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ImportResult[$key]" has a null value in JSON.');
         });
         return true;
       }());

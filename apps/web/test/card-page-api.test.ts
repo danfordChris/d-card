@@ -54,6 +54,7 @@ beforeAll(async () => {
       )
     ).json()
   ).id;
+  await (await import("@dcard/core")).grantGuestCards(handle.db, eventId, 500); // paid event (T05-01 payment gate)
   const guestId = (await (await guests.POST(req("POST", HOST, { name: "Juma", phone: "0713700001", consent: true }), { params: Promise.resolve({ id: eventId }) })).json()).guest.id;
   const gp = { params: Promise.resolve({ id: eventId, guestId }) };
   await issue.POST(req("POST", HOST), gp);

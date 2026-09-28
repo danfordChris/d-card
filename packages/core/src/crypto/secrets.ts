@@ -19,7 +19,10 @@ export function encryptSecret(plain: string, keyB64?: string): string {
 export function decryptSecret(sealed: string, keyB64?: string): string {
   const [version, iv, tag, ct] = sealed.split(".");
   if (version !== "v1" || !iv || !tag || ct === undefined) throw new Error("Unsupported secret format.");
-  const decipher = createDecipheriv("aes-256-gcm", key(keyB64), Buffer.from(iv, "base64url"));
-  decipher.setAuthTag(Buffer.from(tag, "base64url"));
+  const tagBytes = Buffer.from(tag, "base64url");
+  // SEC-19: only full 16-byte tags; a truncated tag would weaken authentication.
+  if (tagBytes.length !== 16) throw new Error("Unsupported secret format.");
+  const decipher = createDecipheriv("aes-256-gcm", key(keyB64), Buffer.from(iv, "base64url"), { authTagLength: 16 });
+  decipher.setAuthTag(tagBytes);
   return Buffer.concat([decipher.update(Buffer.from(ct, "base64url")), decipher.final()]).toString("utf8");
 }

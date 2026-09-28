@@ -45,6 +45,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("APP_URL", "Public base URL of the web app and API", URL_PATTERN),
       req("DATABASE_URL", "Postgres connection string (Neon pooled URL in production)", /^postgres(ql)?:\/\/\S+$/),
       opt("DATABASE_URL_UNPOOLED", "Direct (non-pooled) Postgres URL for migrations on Neon", /^postgres(ql)?:\/\/\S+$/),
+      opt("REDIS_TLS_CA_B64", "Base64 PEM of the private CA that signed the Redis TLS certificate (production Railway Redis); pins TLS", /^[A-Za-z0-9+/=]+$/),
       req("REDIS_URL", "Redis connection string for BullMQ", /^rediss?:\/\/\S+$/),
       req("AUTH_VERIFIER", "firebase (real), dev (local: fake: tokens + real Firebase) or fake (tests only); dev/fake are refused in production", /^(firebase|dev|fake)$/),
       req("TOKEN_HASH_SECRET", "Secret for hashing card QR/link tokens (32+ random chars)", /^.{32,}$/),
@@ -57,6 +58,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
         "Client API keys accepted in the X-API-Key header, as client:key pairs (e.g. web:…,mobile:…,door:…,tools:…); 32+ chars each",
         /^[a-z]+:[A-Za-z0-9_-]{32,}(,[a-z]+:[A-Za-z0-9_-]{32,})*$/,
       ),
+      req("WORKER_API_KEY", "The worker: key from API_KEYS; the worker uses it to fetch card images for WhatsApp", /^[A-Za-z0-9_-]{32,}$/),
       req("NEXT_PUBLIC_DCARD_API_KEY", "The web app's own key (the web: entry of API_KEYS); public in the browser", /^[A-Za-z0-9_-]{32,}$/),
     ],
   },
@@ -84,6 +86,8 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("WHATSAPP_BUSINESS_ACCOUNT_ID", "WhatsApp Business Account ID", /^\d+$/),
       req("WHATSAPP_APP_SECRET", "App secret used to verify X-Hub-Signature-256 on webhooks"),
       req("WHATSAPP_WEBHOOK_VERIFY_TOKEN", "Token you choose; entered in the Meta webhook setup"),
+      opt("WHATSAPP_MAX_PER_SECOND", "Outbound WhatsApp cap per second (default 60; Meta allows 80 per number, inbound included)", /^\d+$/),
+      opt("WHATSAPP_LIVE", "true = send real WhatsApp messages; anything else holds them without calling Meta. Set true in production only.", /^(true|false)$/),
       req("WHATSAPP_API_VERSION", "Graph API version, e.g. v23.0", /^v\d+\.\d+$/),
     ],
   },
@@ -93,9 +97,11 @@ export const ENV_GROUPS: ProviderGroup[] = [
     source: "NextSMS dashboard → API; sender ID after registration; webhook token under Customer Info → Customization → Webhooks.",
     keys: [
       req("NEXTSMS_BASE_URL", "API base URL", URL_PATTERN),
-      req("NEXTSMS_API_TOKEN", "API bearer token"),
+      req("NEXTSMS_API_TOKEN", "Basic auth token: Base64 of username:password (sent as Authorization: Basic …)"),
       req("NEXTSMS_SENDER_ID", "Registered sender ID (e.g. DCARD)"),
-      req("NEXTSMS_WEBHOOK_VERIFY_TOKEN", "Delivery Callback Verify Token set in the NextSMS dashboard"),
+      opt("SMS_MAX_PER_SECOND", "Outbound SMS cap per second (default 20)", /^\d+$/),
+      opt("NEXTSMS_LIVE", "true = deliver real SMS; anything else uses the NextSMS test endpoint (no delivery). Set true in production only.", /^(true|false)$/),
+      req("NEXTSMS_WEBHOOK_VERIFY_TOKEN", "Verify token for an optional delivery callback (not in the public API docs; delivery status is polled from /api/sms/v1/logs)"),
     ],
   },
   {
@@ -115,6 +121,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
     keys: [
       req("SNIPPE_BASE_URL", "API base URL", URL_PATTERN),
       req("SNIPPE_API_KEY", "API key", /^snp_\S+$/),
+      opt("SNIPPE_LIVE", "true = real Snippe payments (production only; Snippe has no sandbox). Otherwise a fake gateway is used.", /^(true|false)$/),
       req("SNIPPE_WEBHOOK_SECRET", "Webhook signing secret (separate from the API key)"),
     ],
   },
@@ -125,6 +132,15 @@ export const ENV_GROUPS: ProviderGroup[] = [
     keys: [
       req("RESEND_API_KEY", "Resend API key", /^re_\S+$/),
       req("EMAIL_FROM", "Sender, e.g. D-Card <noreply@your-domain>", /^.+<\S+@\S+>$|^\S+@\S+$/),
+    ],
+  },
+  {
+    id: "observability",
+    name: "Observability (Sentry, alerts)",
+    source: "sentry.io → free Developer plan → create a Node project → Client Keys (DSN). Alerts go by email through Resend.",
+    keys: [
+      opt("SENTRY_DSN", "Sentry DSN for the web API and worker; unset = no error reporting", /^https:\/\/\S+$/),
+      opt("ALERT_EMAIL", "Where the worker emails queue/payment alerts; unset = alerts only logged", /^\S+@\S+$/),
     ],
   },
   {

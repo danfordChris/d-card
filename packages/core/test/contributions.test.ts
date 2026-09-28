@@ -2,12 +2,12 @@ import { auditLog, eventRole, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addContributor,
   cancelCard,
   ConflictError,
   ConsentRequiredError,
-  createEvent,
   ForbiddenError,
   getContributions,
   getPledge,
@@ -45,8 +45,8 @@ beforeAll(async () => {
     .values(["host", "treasurer", "committee"].map((u) => ({ firebaseUid: u, email: `${u}@example.com`, authProvider: "password" as const })))
     .returning({ id: userAccount.id });
   [hostId, treasurerId, committeeId] = users.map((u) => u.id) as [string, string, string];
-  kawaida = await createEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Kawaida" });
-  msingi = await createEvent(handle.db, hostId, { ...base, planKey: "msingi", title: "Msingi" });
+  kawaida = await createPaidEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Kawaida" });
+  msingi = await createPaidEvent(handle.db, hostId, { ...base, planKey: "msingi", title: "Msingi" });
   for (const eventId of [kawaida, msingi]) {
     await handle.db.insert(eventRole).values([
       { eventId, userId: treasurerId, role: "treasurer" },
@@ -104,7 +104,7 @@ describe("payments, auto-issue and auto-upgrade", () => {
   it("no upgrade on Msingi or when the event setting is off; the excess is extra", async () => {
     const m = await contributor(msingi);
     expect((await recordPayment(handle.db, hostId, msingi, m.pledge.id, pay(100_000))).pledge).toMatchObject({ cardType: "single", amountExtra: 50_000 });
-    const other = await createEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Off" });
+    const other = await createPaidEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Off" });
     await updateEvent(handle.db, hostId, other, { autoUpgradeEnabled: false });
     const o = await contributor(other);
     expect((await recordPayment(handle.db, hostId, other, o.pledge.id, pay(100_000))).pledge).toMatchObject({ cardType: "single", amountExtra: 50_000 });
@@ -143,7 +143,7 @@ describe("pledge edits", () => {
 
 describe("dashboard", () => {
   it("totals exclude cancelled pledges from pledged/outstanding but keep their payments", async () => {
-    const other = await createEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Dash", budgetAmount: 1_000_000 });
+    const other = await createPaidEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Dash", budgetAmount: 1_000_000 });
     await handle.db.insert(eventRole).values({ eventId: other, userId: treasurerId, role: "treasurer" });
     const a = await contributor(other, 50_000);
     const b = await contributor(other, 80_000);

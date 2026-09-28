@@ -2,9 +2,11 @@ import { event, eventPlan, invitation, payment, plan, pledge } from "@dcard/db";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { recordAudit } from "../audit/audit.js";
 import { requireEventRole } from "../auth/roles.js";
+import { BillingError } from "../billing/gate.js";
 import { issueInvitationInTx } from "../cards/cards.js";
 import { inTransaction, type DbExecutor } from "../db-types.js";
 import { ConflictError, NotFoundError, ValidationError } from "../errors.js";
+import { enqueueMessage } from "../messaging/outbox.js";
 import { addGuestInTx, assertEventOpen, ConsentRequiredError, recordConsent, type CardType } from "../guests/guests.js";
 
 // docs/design/features/contributions.md (Workflow: Contribution to Card, CON-1..12).
@@ -150,6 +152,8 @@ async function settle(tx: DbExecutor, actorId: string, eventId: string, pledgeId
         oldValue: old,
         newValue: { cardType, amountPledged },
       });
+      // NTF-5: card upgraded to Double.
+      await enqueueMessage(tx, { key: `card_upgraded:${p.id}`, eventId, invitationId: inv.id, messageType: "card_upgraded" });
     }
   }
   await tx
@@ -164,7 +168,12 @@ async function settle(tx: DbExecutor, actorId: string, eventId: string, pledgeId
     })
     .where(eq(pledge.id, p.id));
   if (inv.status === "pending" && paid >= amountPledged) {
-    await issueInvitationInTx(tx, { actorId, eventId, guestId: inv.id, reason: "fully_paid" });
+    try {
+      await issueInvitationInTx(tx, { actorId, eventId, guestId: inv.id, reason: "fully_paid" });
+    } catch (err) {
+      // Unpaid event or all paid cards used: the card waits and is issued when the host pays.
+      if (!(err instanceof BillingError)) throw err;
+    }
   }
   return loadPledgeView(tx, eventId, p.id);
 }
@@ -212,6 +221,14 @@ export async function addContributor(
       targetId: created!.id,
       newValue: { guestId: guest.id, amountPledged: amount, cardType },
     });
+    // NTF-1: contribution request with the committee's payment details.
+    await enqueueMessage(tx, {
+      key: `contribution_request:${created!.id}`,
+      eventId,
+      invitationId: guest.id,
+      messageType: "contribution_request",
+      payload: { pledge_amount: amount },
+    });
     return { pledge: await loadPledgeView(tx, eventId, created!.id), existingGuest: existing };
   });
 }
@@ -255,6 +272,16 @@ export async function recordPayment(
       newValue: { pledgeId, amount: created!.amount, method: created!.method, reference: created!.reference, paidOn },
     });
     const view = await settle(tx, actorId, eventId, pledgeId, { allowUpgrade: kind === "payment" });
+    if (kind === "payment") {
+      // NTF-2: thank-you with the totals as they are after this payment.
+      await enqueueMessage(tx, {
+        key: `thank_you:${created!.id}`,
+        eventId,
+        invitationId: view.guestId,
+        messageType: "thank_you",
+        payload: { amount_paid: view.amountPaid, balance: view.balance },
+      });
+    }
     return { pledge: view, payment: toPaymentView(created!) };
   });
 }
@@ -321,7 +348,7 @@ export async function updatePledge(
         .set({ cardType: next.cardType, totalEntries: next.cardType === "double" ? 2 : 1, partnerName: next.cardType === "single" ? null : inv.partnerName })
         .where(eq(invitation.id, inv.id));
     }
-    await recordAudit(tx, {
+    const auditId = await recordAudit(tx, {
       actorUserId: actorId,
       eventId,
       action: "pledge.updated",
@@ -330,7 +357,18 @@ export async function updatePledge(
       oldValue: { amountPledged: p.amountPledged, cardType: p.cardType },
       newValue: next,
     });
-    return settle(tx, actorId, eventId, p.id, { allowUpgrade: false });
+    const view = await settle(tx, actorId, eventId, p.id, { allowUpgrade: false });
+    // Rule 9: the contributor gets the updated balance (the card message covers a fully paid pledge).
+    if (view.balance > 0) {
+      await enqueueMessage(tx, {
+        key: `pledge_updated:${auditId}`,
+        eventId,
+        invitationId: view.guestId,
+        messageType: "contribution_reminder",
+        payload: { balance: view.balance },
+      });
+    }
+    return view;
   });
 }
 

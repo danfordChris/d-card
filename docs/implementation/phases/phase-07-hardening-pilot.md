@@ -2,8 +2,8 @@
 
 ## Status
 
-- `pending`
-- Last updated: 2026-09-24
+- `in-progress`
+- Last updated: 2026-09-27
 
 ## Objective
 
@@ -24,7 +24,10 @@
 
 ## Task Checklist
 
-- [ ] Break the scope below into task files before the phase starts (vertical slices, per `task-spec.md`).
+- [x] T07-01 — Marketing site (`docs/implementation/tasks/t07-01-marketing-site.md`) — started early at the owner's request
+- [x] Break the rest of the scope into task files (T07-02…T07-05).
+- [x] T07-02 load tests · T07-03 security review · T07-04 launch checklist (review: `docs/implementation/reviews/2026-09-27-phase-07-review.md`)
+- [ ] T07-05 pilots (owner: hosts, dates, launch checklist)
 
 ## Acceptance Criteria
 
@@ -34,8 +37,12 @@
 
 ## Blockers
 
-- Previous phase not done.
+- Phases 05/06 wait only on owner setup and the staging deploy; pilots (T07-05) need production providers live.
 
 ## Linked Tasks
 
-- None yet.
+- docs/implementation/tasks/t07-01-marketing-site.md
+- docs/implementation/tasks/t07-02-load-tests.md
+- docs/implementation/tasks/t07-03-security-review.md
+- docs/implementation/tasks/t07-04-launch-checklist.md
+- docs/implementation/tasks/t07-05-pilot-events.md

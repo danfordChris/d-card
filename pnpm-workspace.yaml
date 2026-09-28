@@ -1,3 +1,9 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# @astrojs/astro2tsx (used by `astro-check` in apps/site) loads this at runtime without declaring it.
+packageExtensions:
+  "@astrojs/astro2tsx":
+    dependencies:
+      "@napi-rs/wasm-runtime": "*"

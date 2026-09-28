@@ -19,3 +19,7 @@ apps/*/lib/l10n/app_localizations*.dart
 .idea/
 # JetBrains HTTP Client secrets (http/)
 http/http-client.private.env.json
+# Astro (apps/site)
+.astro/
+.vercel
+.dcard_api.tmp/

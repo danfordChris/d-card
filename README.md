@@ -77,6 +77,7 @@ Details: [`docs/design/domain/overview.md`](docs/design/domain/overview.md) and 
 | `packages/db` | Drizzle schema, migrations (`drizzle/`), seed data, test DB helper |
 | `packages/core` | Domain rules shared by web + worker: phone format, audit log, roles, queue names |
 | `packages/api-contract` | Zod schemas → `openapi.json` (source for the Dart client) |
+| `apps/site` | Public marketing site (Astro, static, Swahili + English, zero JavaScript); deployed separately (`docs/deployment.md`) |
 | `http/` | Runnable API docs: one `.http` file per area for the JetBrains HTTP Client / httpYac, environments in `http/http-client.env.json` (see `http/README.md`) |
 | `packages/env` | Typed list of every environment key + `env:check` |
 | `packages/config` | Shared TypeScript config |
@@ -134,7 +135,7 @@ openssl rand -base64 32    # DATA_ENCRYPTION_KEY
 | Core | `APP_URL`, `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `REDIS_URL`, `AUTH_VERIFIER`, `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY`, `API_KEYS`, `NEXT_PUBLIC_DCARD_API_KEY` | Local Docker / Neon / Vercel; secrets via `openssl` |
 | Firebase | `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`, `NEXT_PUBLIC_FIREBASE_*` | Firebase console → Project settings |
 | WhatsApp | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_BUSINESS_ACCOUNT_ID`, `WHATSAPP_APP_SECRET`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `WHATSAPP_API_VERSION` | Meta for Developers → WhatsApp → API Setup |
-| NextSMS | `NEXTSMS_BASE_URL`, `NEXTSMS_API_TOKEN`, `NEXTSMS_SENDER_ID`, `NEXTSMS_WEBHOOK_VERIFY_TOKEN` | NextSMS dashboard |
+| NextSMS | `NEXTSMS_BASE_URL`, `NEXTSMS_API_TOKEN` (Base64 `username:password`), `NEXTSMS_SENDER_ID`, `NEXTSMS_WEBHOOK_VERIFY_TOKEN` | NextSMS dashboard; [API docs](https://documenter.getpostman.com/view/4680389/SW7dX7JL) |
 | Google Drive | `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_REDIRECT_URI` | Google Cloud console → Credentials (enable Drive API) |
 | Snippe | `SNIPPE_BASE_URL`, `SNIPPE_API_KEY`, `SNIPPE_WEBHOOK_SECRET` | Snippe Dashboard → Settings |
 | Spikes (local) | `SPIKE_TEST_PHONE`, `SPIKE_PUBLIC_WEBHOOK_BASE_URL`, `WHATSAPP_TEST_TEMPLATE(_LANGUAGE)`, `GOOGLE_TEST_REFRESH_TOKEN` | Your own test resources |

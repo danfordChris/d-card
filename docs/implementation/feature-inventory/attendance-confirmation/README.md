@@ -20,6 +20,6 @@
 
 | Subfeature | Description | Status | Evidence |
 |---|---|---|---|
-| [`whatsapp-buttons`](./whatsapp-buttons.md) | Quick-reply buttons with per-invitation payload; first answer counts; acknowledgement. | Pending | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |
-| [`sms-contact-confirmation`](./sms-contact-confirmation.md) | Information SMS asking basic-phone guests to contact the event contact. | Pending | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |
-| [`manual-confirmation`](./manual-confirmation.md) | Host/committee record phone confirmations and override status (audited). | Pending | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |
+| [`whatsapp-buttons`](./whatsapp-buttons.md) | Quick-reply buttons with per-invitation payload; first answer counts; acknowledgement. | In Review | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |
+| [`sms-contact-confirmation`](./sms-contact-confirmation.md) | Information SMS asking basic-phone guests to contact the event contact. | Done | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |
+| [`manual-confirmation`](./manual-confirmation.md) | Host/committee record phone confirmations and override status (audited). | Done | `P04` (`docs/implementation/phases/phase-04-confirmation-check-in.md`) |

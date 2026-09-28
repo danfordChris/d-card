@@ -26,5 +26,5 @@
 | [`auto-issue`](./auto-issue.md) | Card issued and sent when total paid reaches the pledge. | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |
 | [`auto-upgrade`](./auto-upgrade.md) | Single to Double upgrade before issue when paid reaches Double amount (plan-gated). | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |
 | [`manual-pledge-edit`](./manual-pledge-edit.md) | Host/treasurer edit pledge amount and type before issue. | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |
-| [`contribution-reminders`](./contribution-reminders.md) | Balance reminders at host frequency within plan caps. | Pending | `P03` (`docs/implementation/phases/phase-03-messaging.md`) |
+| [`contribution-reminders`](./contribution-reminders.md) | Balance reminders at host frequency within plan caps. | In Review | `P03` (`docs/implementation/phases/phase-03-messaging.md`) |
 | [`contributions-dashboard`](./contributions-dashboard.md) | Totals, status lists and export. | In Review | `P02` (`docs/implementation/phases/phase-02-contributions-cards.md`) |

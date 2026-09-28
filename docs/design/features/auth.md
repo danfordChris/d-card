@@ -13,7 +13,7 @@
 | AUTH-4 | A link token connects a signed-in guest account to their Person record. | M |
 | AUTH-5 | The card is viewable through its link token **without login**. | M |
 | AUTH-6 | Every API call checks the caller's role for the specific event. | M |
-| AUTH-7 | 2FA for Admin accounts. | M |
+| AUTH-7 | 2FA for Admin accounts: app-level TOTP (authenticator app) with 10 single-use recovery codes; admin API access needs a verified second factor (12 h). Chosen over Firebase TOTP MFA, which needs the paid Identity Platform upgrade (researched 2026-09-27). | M |
 | AUTH-8 | Host invites and removes treasurers, committee, door staff and walk-in approvers with an **invite link** (the host can copy/share it anywhere) and, when an email address is given, **by email** (Resend). | M |
 | AUTH-9 | D-Card Door sessions are tied to one event and one device. The host can revoke a device. | M |
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { Alert, Button } from "../../components/ui";
+import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { Button } from "../../components/ui";
 import { cn } from "../../components/ui/cn";
 import { apiFetch } from "../../lib/api-fetch";
 
@@ -16,6 +16,8 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
   const [dietary, setDietary] = useState(initial.dietaryNotes ?? "");
   const [message, setMessage] = useState<{ tone: "success" | "error"; text: string }>();
   const [busy, setBusy] = useState(false);
+  const ids = useId();
+  const radios = useRef<(HTMLButtonElement | null)[]>([]);
 
   if (!rsvp.open) {
     return (
@@ -46,18 +48,36 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
     setMessage({ tone: "error", text });
   }
 
+  const choices = ["yes", "no"] as const;
+  // Roving tab stop: one Tab reaches the group, arrow keys move and select (WAI-ARIA radio group).
+  const tabStop = answer ?? "yes";
+  function onRadioKey(e: KeyboardEvent<HTMLButtonElement>, i: number) {
+    const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const next = (i + step + choices.length) % choices.length;
+    setAnswer(choices[next]!);
+    radios.current[next]?.focus();
+  }
+
   return (
     <div className="space-y-4">
       <div role="radiogroup" aria-label={t("rsvpTitle")} className="grid gap-2 sm:grid-cols-2">
-        {(["yes", "no"] as const).map((value) => (
+        {choices.map((value, i) => (
           <button
             key={value}
+            ref={(el) => {
+              radios.current[i] = el;
+            }}
             type="button"
             role="radio"
             aria-checked={answer === value}
+            tabIndex={tabStop === value ? 0 : -1}
             onClick={() => setAnswer(value)}
+            onKeyDown={(e) => onRadioKey(e, i)}
             className={cn(
               "rounded-lg px-4 py-3 text-left text-sm font-medium ring-1 transition",
+              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600",
               answer === value ? "text-white ring-transparent" : "bg-white text-gray-800 ring-gray-300 hover:bg-gray-50",
             )}
             style={answer === value ? { backgroundColor: accent } : undefined}
@@ -66,22 +86,35 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
           </button>
         ))}
       </div>
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">{t("dietary")}</span>
+      <div className="space-y-1">
+        <label htmlFor={`${ids}-diet`} className="block text-sm font-medium">
+          {t("dietary")}
+        </label>
         <textarea
+          id={`${ids}-diet`}
+          aria-describedby={`${ids}-diet-hint`}
           value={dietary}
           maxLength={300}
           rows={2}
           onChange={(e) => setDietary(e.target.value)}
-          className="block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600"
+          className="block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none"
         />
-        <span className="text-xs text-gray-500">{t("dietaryHint")}</span>
-      </label>
-      {message && <Alert tone={message.tone}>{message.text}</Alert>}
-      <Button onClick={submit} disabled={!answer || busy} className="w-full sm:w-auto">
+        <p id={`${ids}-diet-hint`} className="text-xs text-gray-600">
+          {t("dietaryHint")}
+        </p>
+      </div>
+      {/* Always mounted, so screen readers announce the result when it appears. */}
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {message && (
+          <p className={cn("rounded-lg p-3 text-sm ring-1", message.tone === "error" ? "bg-red-50 text-red-800 ring-red-200" : "bg-green-50 text-green-800 ring-green-200")}>
+            {message.text}
+          </p>
+        )}
+      </div>
+      <Button onClick={submit} disabled={!answer || busy} aria-busy={busy} className="w-full sm:w-auto">
         {t("save")}
       </Button>
-      <p className="text-xs text-gray-500">{t("change")}</p>
+      <p className="text-xs text-gray-600">{t("change")}</p>
     </div>
   );
 }

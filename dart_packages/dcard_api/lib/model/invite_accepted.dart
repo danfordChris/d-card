@@ -55,7 +55,6 @@ class InviteAccepted {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "InviteAccepted[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "InviteAccepted[$key]" has a null value in JSON.');
         });
         return true;
       }());
