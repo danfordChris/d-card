@@ -77,6 +77,8 @@ Details: [`docs/design/domain/overview.md`](docs/design/domain/overview.md) and 
 | `packages/db` | Drizzle schema, migrations (`drizzle/`), seed data, test DB helper |
 | `packages/core` | Domain rules shared by web + worker: phone format, audit log, roles, queue names |
 | `packages/api-contract` | Zod schemas → `openapi.json` (source for the Dart client) |
+| `apps/site` | Public marketing site (Astro, static, Swahili + English, zero JavaScript); deployed separately (`docs/deployment.md`) |
+| `http/` | Runnable API docs: one `.http` file per area for the JetBrains HTTP Client / httpYac, environments in `http/http-client.env.json` (see `http/README.md`) |
 | `packages/env` | Typed list of every environment key + `env:check` |
 | `packages/config` | Shared TypeScript config |
 | `dart_packages/dcard_core` | Dart domain rules (mirrors `packages/core`) |
@@ -124,20 +126,23 @@ openssl rand -base64 32    # DATA_ENCRYPTION_KEY
 ## 6. Environment keys
 
 - **`.env.example`** is the documented template (committed). **`.env`** holds your values (gitignored).
+- The web app loads the root `.env` itself (`apps/web/next.config.ts`), so `npm run dev` inside `apps/web` works. Restart the dev server after editing `.env`.
 - Every key is declared in [`packages/env/src/schema.ts`](packages/env/src/schema.ts); a test fails if `.env.example` and the schema drift.
 - Values starting with **`dummy_`** are placeholders. `pnpm env:check` lists them per provider; spikes and (later) adapters refuse to run with dummy values.
 
 | Group | Keys | Where to get them |
 |-------|------|-------------------|
-| Core | `APP_URL`, `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `REDIS_URL`, `AUTH_VERIFIER`, `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY` | Local Docker / Neon / Vercel; secrets via `openssl` |
+| Core | `APP_URL`, `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `REDIS_URL`, `AUTH_VERIFIER`, `TOKEN_HASH_SECRET`, `DATA_ENCRYPTION_KEY`, `API_KEYS`, `NEXT_PUBLIC_DCARD_API_KEY` | Local Docker / Neon / Vercel; secrets via `openssl` |
 | Firebase | `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`, `NEXT_PUBLIC_FIREBASE_*` | Firebase console → Project settings |
 | WhatsApp | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_BUSINESS_ACCOUNT_ID`, `WHATSAPP_APP_SECRET`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `WHATSAPP_API_VERSION` | Meta for Developers → WhatsApp → API Setup |
-| NextSMS | `NEXTSMS_BASE_URL`, `NEXTSMS_API_TOKEN`, `NEXTSMS_SENDER_ID`, `NEXTSMS_WEBHOOK_VERIFY_TOKEN` | NextSMS dashboard |
+| NextSMS | `NEXTSMS_BASE_URL`, `NEXTSMS_API_TOKEN` (Base64 `username:password`), `NEXTSMS_SENDER_ID`, `NEXTSMS_WEBHOOK_VERIFY_TOKEN` | NextSMS dashboard; [API docs](https://documenter.getpostman.com/view/4680389/SW7dX7JL) |
 | Google Drive | `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_REDIRECT_URI` | Google Cloud console → Credentials (enable Drive API) |
 | Snippe | `SNIPPE_BASE_URL`, `SNIPPE_API_KEY`, `SNIPPE_WEBHOOK_SECRET` | Snippe Dashboard → Settings |
 | Spikes (local) | `SPIKE_TEST_PHONE`, `SPIKE_PUBLIC_WEBHOOK_BASE_URL`, `WHATSAPP_TEST_TEMPLATE(_LANGUAGE)`, `GOOGLE_TEST_REFRESH_TOKEN` | Your own test resources |
 
-`AUTH_VERIFIER=fake` lets local tests send `Authorization: Bearer fake:<uid>:<email>`; the server **refuses** it when `NODE_ENV=production`.
+Every `/api/v1` request must send `X-API-Key` with a key from `API_KEYS` (per client: web, mobile, door, tools); otherwise `401 invalid_api_key`.
+
+`AUTH_VERIFIER=dev` (local default) accepts both real Firebase sign-in and test tokens `Authorization: Bearer fake:<uid>:<email>`; `fake` accepts only test tokens (automated tests). The server **refuses** both when `NODE_ENV=production`; Vercel uses `firebase`.
 
 ## 7. Everyday commands
 
@@ -233,5 +238,6 @@ Run `pnpm workflow:validate` before merging doc changes. Research notes (market,
 | `Cannot connect to the Docker daemon` | Start Docker/OrbStack (`orb start`) |
 | DB tests fail with connection errors | `pnpm infra:up`, check `DATABASE_URL` |
 | `flutter: command not found` | Add Flutter (or `~/fvm/default/bin`) to `PATH` |
-| `401` from `/api/v1/me` locally | Use `AUTH_VERIFIER=fake` and `Bearer fake:<uid>:<email>` |
+| `401` from `/api/v1/me` locally | Use `AUTH_VERIFIER=dev` and `Bearer fake:<uid>:<email>`, or a real Firebase ID token |
+| Sign-up says it cannot start a session | `AUTH_VERIFIER` is `fake` (test tokens only) or the Firebase admin keys are wrong; use `dev` locally with real `FIREBASE_*` values |
 | Next.js build tries to bundle `drizzle/` | Import migrations only from `@dcard/db/migrate`, never from the web app |

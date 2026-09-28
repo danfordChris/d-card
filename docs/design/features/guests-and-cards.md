@@ -41,16 +41,21 @@ The host issues a card directly (single or double). The invitation goes straight
 | GST-9 | Card type fixed once issued. | M |
 | GST-10 | Unique card number `NNN-PPPP`, QR token and link token per issued card. | M |
 | GST-11 | Host can cancel and reinstate cards. | M |
-| GST-12 | RSVP and dietary needs through the card link, **no login needed**. Polls and history need login. | M |
+| GST-12 | RSVP (**Yes / No**) and dietary needs through the card link, **no login needed**. The guest can change the answer until the event starts. Polls and history need login. | M |
 | GST-13 | Add to calendar. | M |
 | GST-14 | Expected headcount: approved 100%, no response = host % (default 70), declined 0%. Double counts 2. | M |
 | GST-15 | Dietary export, seating chart, table by SMS. | P2 |
 | GST-16 | Event history for **registered guests** only. | P2 |
 
+## Card Design
+
+- Until admin card templates (EVT-5) exist, every card uses D-Card's built-in design for its event type: event title, guest name(s), date and time, venue, QR code and card number (ADR 0001 O20).
+
 ## Access
 
 - Host and committee members add, edit, remove and import guests.
 - Treasurers see the guest list read-only (they need it to record payments).
+- The host issues, cancels and reinstates cards.
 - Door staff and walk-in approvers do not see the guest list in the dashboard.
 
 ## Invitation States

@@ -17,6 +17,8 @@ Name | Type | Description | Notes
 **cardType** | [**CardType**](CardType.md) |  | 
 **totalEntries** | **int** |  | 
 **status** | **String** |  | 
+**cardNumber** | **String** |  | 
+**issuedAt** | [**DateTime**](DateTime.md) |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 

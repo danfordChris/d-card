@@ -93,3 +93,12 @@ Priced **per guest card** (single or double, same price, following market practi
 - [Golden eCards – packages](https://goldencreationss.com/)
 - [M-Kadi – Digital Impact Awards profile](https://www.digital-impact-awards.com/2023/12/m-kadi-is-digitizing-wedding-contributions-fundraising-and-invitations-40-days-40-fintechs-tanzania-day-14/)
 - [Foras Tech – Invitation system](https://foras.co.tz/solutions/invitation-system/)
+
+## RSVP options
+
+Checked 2026-09-25.
+
+- Wedding RSVP tools and etiquette guides ask for a firm **yes or no** by a deadline; "maybe" is discouraged because caterers and venues need a final number ([The Knot](https://www.theknot.com/content/wedding-rsvp-questions), [Zola](https://www.zola.com/expert-advice/best-online-wedding-rsvp-tools), [WeddingWire forum](https://www.weddingwire.com/wedding-forums/maybe-on-a-rsvp/a0a1bc60364fd6fd.html)).
+- WhatsApp-card services with QR entry (e.g. [Da3wa](https://da3wa.online/en/blog/electronic-invitations-for-events-create-a-whatsapp-invitation-card-digital-wedding-invite-69a9f45409d0a)) pair the card with an attend / not-attend RSVP.
+- Result for D-Card: Yes / No plus a dietary note (ADR 0001 O19).
+

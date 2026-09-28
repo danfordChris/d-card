@@ -61,7 +61,6 @@ class InviteCreateResponse {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "InviteCreateResponse[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "InviteCreateResponse[$key]" has a null value in JSON.');
         });
         return true;
       }());

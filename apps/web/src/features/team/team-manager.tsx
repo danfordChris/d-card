@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import { Alert, Button, Card, Field, Input } from "../../components/ui";
+import { apiFetch } from "../../lib/api-fetch";
 
 type Role = "treasurer" | "committee" | "door_staff" | "walkin_approver";
 export type TeamData = {
@@ -27,7 +28,7 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
   const base = `/api/v1/events/${eventId}/team`;
 
   async function refresh() {
-    const res = await fetch(base);
+    const res = await apiFetch(base);
     if (res.ok) setTeam(await res.json());
   }
 
@@ -38,7 +39,7 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
     setEmailError(undefined);
     setError(undefined);
     setBusy(true);
-    const res = await fetch(`${base}/invites`, {
+    const res = await apiFetch(`${base}/invites`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ role, email: trimmed || null }),
@@ -56,13 +57,13 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
   }
 
   async function revoke(id: string) {
-    const res = await fetch(`${base}/invites/${id}`, { method: "DELETE" });
+    const res = await apiFetch(`${base}/invites/${id}`, { method: "DELETE" });
     if (res.ok) await refresh();
   }
 
   async function remove(m: TeamData["members"][number]) {
     if (!window.confirm(t("members.removeConfirm", { email: m.email ?? "—", role: t(`roles.${m.role}`) }))) return;
-    const res = await fetch(`${base}/members/${m.userId}?role=${m.role}`, { method: "DELETE" });
+    const res = await apiFetch(`${base}/members/${m.userId}?role=${m.role}`, { method: "DELETE" });
     if (res.ok) await refresh();
   }
 

@@ -49,7 +49,6 @@ class HealthResponse {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "HealthResponse[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "HealthResponse[$key]" has a null value in JSON.');
         });
         return true;
       }());

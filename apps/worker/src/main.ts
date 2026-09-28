@@ -1,17 +1,38 @@
+import { confirmationToken, createLogger } from "@dcard/core";
+import { createDb } from "@dcard/db";
+import { fetchCardImage } from "./messaging/card-image.js";
+import { sendersFromEnv } from "./messaging/senders.js";
+import { pushSenderFromEnv } from "./push/push.js";
 import { createRedis } from "./redis.js";
+import { workerErrorReporter } from "./sentry.js";
 import { startWorkers } from "./worker.js";
 
 const connection = createRedis();
-const running = await startWorkers(connection);
+const database = createDb();
+const appUrl = process.env.APP_URL;
+const logger = createLogger({ service: "worker" });
+const running = await startWorkers(connection, (msg) => logger(msg), {
+  onJobFailed: workerErrorReporter(),
+  alertEmail: process.env.ALERT_EMAIL,
+  push: { db: database.db, sender: await pushSenderFromEnv() },
+  messaging: {
+    db: database.db,
+    ...sendersFromEnv(),
+    appUrl,
+    confirmToken: confirmationToken,
+    cardImage: (linkToken, language) => fetchCardImage({ appUrl: appUrl ?? "", apiKey: process.env.WORKER_API_KEY ?? "" }, linkToken, language),
+  },
+});
 
 let stopping = false;
 async function shutdown(signal: string): Promise<void> {
   if (stopping) return;
   stopping = true;
-  console.log(`worker:stopping (${signal})`);
+  logger("worker:stopping", { signal });
   await running.close();
   await connection.quit();
-  console.log("worker:stopped");
+  await database.close();
+  logger("worker:stopped");
   process.exit(0);
 }
 

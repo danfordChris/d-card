@@ -1,0 +1,191 @@
+# D-Card API — contributions (michango)
+# docs/design/features/contributions.md. D-Card only records payments made outside it (M-Pesa, bank, cash…).
+# Host + committee add contributors; host + treasurers record payments and edit pledges; all three see amounts.
+# This file runs as the host. To try committee/treasurer tokens, grant the roles first with 06-team.http.
+# Rules on every payment: (1) auto-upgrade Single → Double before issue when paid ≥ Double amount
+# (Kawaida/Premium with the event setting on), then (2) auto-issue the card when paid ≥ pledge.
+
+
+### Setup
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+###
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{committeeToken}}
+
+### Setup: Kawaida event with card amounts and a budget
+# @name event
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "kawaida", "eventTypeKey": "wedding", "title": "Michango demo", "startsAt": "2026-12-12T15:00:00+03:00", "contactName": "Asha", "contactPhone": "0754123456", "singleAmount": 50000, "doubleAmount": 100000, "budgetAmount": 3000000 }
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+### Add a contributor with a pledge (host, committee)
+# Body: name, phone, cardType?, partnerName?, amount (whole TZS 1–100,000,000), consent: true.
+# Reuses the invitation when the phone is already a guest (GST-2); one pledge per invitation.
+# 201 → { "pledge": Pledge, "existingGuest": bool } · 409 already has a pledge · 422 consent_required / validation · 403 treasurer.
+# Pledge: { id, guestId, name, phone, partnerName, cardType, amountPledged, amountPaid, amountExtra, balance,
+#   status: not_paid|part_paid|fully_paid, upgradedAt, invitationStatus: pending|issued|cancelled, cardNumber }
+# @name salum
+POST {{baseUrl}}/api/v1/events/{{eventId}}/contributions
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Mzee Salum", "phone": "0713 500 001", "cardType": "single", "amount": 50000, "consent": true }
+
+> {%
+  client.global.set("salumPledge", response.body.pledge.id);
+%}
+
+### Record a part payment (host, treasurer)
+# Body: amount (positive), method: mpesa|mixx_by_yas|airtel_money|halopesa|bank|cash|other, reference?, paidOn (YYYY-MM-DD), kind? payment|refund.
+# 201 → { "pledge": Pledge, "payment": Payment { id, kind, amount (signed), method, reference, paidOn, recordedBy, recordedAt } }
+# 403 committee · 422 validation.
+# @name firstPayment
+POST {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}/payments
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "amount": 20000, "method": "mpesa", "reference": "QX12AB", "paidOn": "2026-10-01" }
+
+> {%
+  client.global.set("firstPaymentId", response.body.payment.id);
+%}
+
+### Final payment → card issued automatically (pledge.invitationStatus "issued", cardNumber set)
+POST {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}/payments
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "amount": 30000, "method": "cash", "paidOn": "2026-10-05" }
+
+### More than the pledge → the rest is an extra contribution (card unchanged)
+POST {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}/payments
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "amount": 10000, "method": "mpesa", "paidOn": "2026-10-06" }
+
+### Refund (recorded as a negative payment; card stays issued)
+# 422 if the refund is more than the amount paid.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}/payments
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "kind": "refund", "amount": 10000, "method": "cash", "reference": "Returned in cash", "paidOn": "2026-10-07" }
+
+### Correct a payment record (host, treasurer; audited with old/new values)
+# Any of amount, method, reference, paidOn. Totals and card issue are recomputed.
+# 200 → { pledge, payment } · 404 unknown payment.
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}/payments/{{firstPaymentId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "reference": "QX12AB-FIXED" }
+
+### Auto-upgrade: one payment of the Double amount on a Single pledge → Double card
+# @name upgrade
+POST {{baseUrl}}/api/v1/events/{{eventId}}/contributions
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Bw. Kassim", "phone": "0713500002", "amount": 50000, "consent": true }
+
+> {%
+  client.global.set("upgradePledgeId", response.body.pledge.id);
+%}
+
+###
+POST {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{upgradePledgeId}}/payments
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "amount": 100000, "method": "bank", "reference": "CRDB-7781", "paidOn": "2026-10-02" }
+
+### Edit a pledge before the card is issued (host, treasurer)
+# Any of amount, cardType. Issues the card at once if payments already cover the new amount. 409 after issue.
+# @name rehema
+POST {{baseUrl}}/api/v1/events/{{eventId}}/contributions
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Rehema", "phone": "0713500003", "cardType": "double", "partnerName": "Hamisi", "amount": 100000, "consent": true }
+
+> {%
+  client.global.set("rehemaPledgeId", response.body.pledge.id);
+%}
+
+###
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{rehemaPledgeId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "amount": 80000 }
+
+### Pledge edit after issue → 409
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "amount": 70000 }
+
+### Committee cannot record payments → 403
+# (403 with or without the committee role; roles are granted in 06-team.http.)
+POST {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}/payments
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{committeeToken}}
+Content-Type: application/json
+
+{ "amount": 1000, "method": "cash", "paidOn": "2026-10-08" }
+
+### One contributor with payment history (host, committee, treasurer)
+# 200 → { "pledge": Pledge, "payments": [Payment…] } (oldest first)
+GET {{baseUrl}}/api/v1/events/{{eventId}}/pledges/{{salumPledge}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Dashboard: totals and contributors (host, committee, treasurer)
+# Query: status not_paid|part_paid|fully_paid|cancelled, q (name or phone digits).
+# 200 → { "summary": { pledged, collected, outstanding, extras, refunds, budget, counts: { not_paid, part_paid, fully_paid, cancelled } }, "contributors": [Pledge] }
+# Cancelled cards leave pledged/outstanding, but their payments still count in collected.
+GET {{baseUrl}}/api/v1/events/{{eventId}}/contributions
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Filter by status
+GET {{baseUrl}}/api/v1/events/{{eventId}}/contributions?status=part_paid
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Export for committee meetings (CON-10): CSV (UTF-8 with BOM) or Excel
+# Column headers follow the caller's language cookie (NEXT_LOCALE, default sw).
+GET {{baseUrl}}/api/v1/events/{{eventId}}/contributions/export?format=csv
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Cookie: NEXT_LOCALE={{locale}}
+
+###
+GET {{baseUrl}}/api/v1/events/{{eventId}}/contributions/export?format=xlsx
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Cookie: NEXT_LOCALE={{locale}}

@@ -7,6 +7,7 @@ extension FailureText on AppLocalizations {
     AppFailure.tooManyRequests => errorTooManyRequests,
     AppFailure.network => errorNetwork,
     AppFailure.unauthorized => errorUnauthorized,
-    AppFailure.unknown => errorGeneric,
+    AppFailure.otherSignInMethod => errorOtherSignInMethod,
+    AppFailure.cancelled || AppFailure.unknown => errorGeneric,
   };
 }

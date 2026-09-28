@@ -19,6 +19,8 @@
 
 ## Decisions
 
+- Snippe has **no sandbox or test keys** (checked 2026-09-26, docs.snippe.sh): every call with the API key is real. Tests and local development use a fake gateway; real calls only when `SNIPPE_LIVE=true` (production), same pattern as `NEXTSMS_LIVE` / `WHATSAPP_LIVE`.
+
 - Adapter behind a `PaymentGateway` interface.
 - No cards or messages are sent for an event until its host payment is confirmed.
 

@@ -14,6 +14,12 @@ class EventSummary {
     required this.contactName,
     required this.contactPhone,
     this.canManageGuests = false,
+    this.canViewContributions = false,
+    this.canRecordPayments = false,
+    this.canViewWalkIns = false,
+    this.canDecideWalkIns = false,
+    this.isHost = false,
+    this.planPaid = false,
     this.venueName,
     this.venueAddress,
     this.contact2Name,
@@ -36,6 +42,24 @@ class EventSummary {
 
   /// Host or committee on a draft/published event (GST-1, Access).
   final bool canManageGuests;
+
+  /// Host, committee and treasurers see contribution amounts (CON-12).
+  final bool canViewContributions;
+
+  /// Host and treasurers record payments (CON-2).
+  final bool canRecordPayments;
+
+  /// Host, committee and walk-in approvers see walk-in requests (CHK-8).
+  final bool canViewWalkIns;
+
+  /// Host and walk-in approvers approve/refuse and review offline walk-ins; committee is read-only.
+  final bool canDecideWalkIns;
+
+  /// Only the host pays for the event (T05-03).
+  final bool isHost;
+
+  /// Guest cards have been paid for at least once.
+  final bool planPaid;
 
   String typeName(String languageCode) => languageCode == 'sw' ? typeNameSw : typeNameEn;
 }

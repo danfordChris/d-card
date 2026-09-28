@@ -1,0 +1,59 @@
+# D-Card API — system and authentication
+# See http/README.md for setup. Environment: local.
+
+
+### Health check (public)
+# Liveness for uptime checks and deploys.
+# 200 → { "status": "ok" }
+GET {{baseUrl}}/api/v1/health
+X-API-Key: {{apiKey}}
+
+### Missing or wrong API key → 401 invalid_api_key (checked before any route runs)
+GET {{baseUrl}}/api/v1/health
+
+###
+GET {{baseUrl}}/api/v1/health
+X-API-Key: not-a-real-key
+
+### Provision the caller's D-Card account (any signed-in user)
+# Call once after Firebase sign-up. Creates `user_account` (Firebase UID, email, provider).
+# 201 → created · 200 → already existed (same account). 401 without a valid token.
+# Response: { "id", "firebaseUid", "email", "authProvider": "password|google|apple", "personId", "isAdmin", "emailVerified", "createdAt" }
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Current account
+# 200 → account · 404 not_found before POST /me · 401 without a token.
+GET {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Missing token → 401
+GET {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+
+### Start a web session (web app only)
+# Exchanges a Firebase ID token for the httpOnly `dcard_session` cookie (5 days).
+# 204 + Set-Cookie. 401 for an invalid token. Apps keep using the bearer header instead.
+POST {{baseUrl}}/api/v1/session
+X-API-Key: {{apiKey}}
+Content-Type: application/json
+
+{ "idToken": "{{hostToken}}" }
+
+### End the web session
+# 204 + expired cookie.
+DELETE {{baseUrl}}/api/v1/session
+X-API-Key: {{apiKey}}
+
+### Get a Firebase ID token (dev / production)
+# Signs in an existing Firebase user (email/password) directly with Firebase — not the D-Card API,
+# so no X-API-Key. Copy `idToken` from the response into hostToken (or another *Token) in
+# http/http-client.private.env.json for that environment. Tokens expire after 1 hour. Local keeps using fake: tokens.
+# 200 → { "idToken", "email", "localId", "expiresIn": "3600", … } · 400 INVALID_LOGIN_CREDENTIALS.
+POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{firebaseWebApiKey}}
+Content-Type: application/json
+
+{ "email": "{{testUserEmail}}", "password": "{{testUserPassword}}", "returnSecureToken": true }
+

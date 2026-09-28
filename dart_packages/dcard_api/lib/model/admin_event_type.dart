@@ -73,7 +73,6 @@ class AdminEventType {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "AdminEventType[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "AdminEventType[$key]" has a null value in JSON.');
         });
         return true;
       }());

@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { safeNext } from "./safe-next";
 import { useState, type FormEvent } from "react";
 import { Alert, Button, Field, Input } from "../../components/ui";
 import { firebaseAuth, startServerSession } from "../../lib/firebase-client";
@@ -12,7 +13,7 @@ import { mapFirebaseError, validateEmail, validatePassword, type AuthErrorKey } 
 export function LoginForm() {
   const t = useTranslations("auth");
   const router = useRouter();
-  const next = useSearchParams().get("next") ?? "/dashboard";
+  const next = safeNext(useSearchParams().get("next"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: AuthErrorKey; password?: AuthErrorKey; form?: AuthErrorKey }>({});
@@ -27,8 +28,9 @@ export function LoginForm() {
     try {
       const cred = await signInWithEmailAndPassword(firebaseAuth(), email.trim(), password);
       await startServerSession(await cred.user.getIdToken());
-      router.replace(next.startsWith("/") ? next : "/dashboard");
+      router.replace(next);
     } catch (err) {
+      console.error("sign-in failed", err);
       setErrors({ form: mapFirebaseError((err as { code?: string }).code) });
     } finally {
       setBusy(false);

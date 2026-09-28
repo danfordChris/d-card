@@ -17,8 +17,19 @@ export async function createTestDatabase(
   const base = new URL(requireDatabaseUrl());
   const admin = postgres(base.toString(), { max: 1, onnotice: () => {} });
   try {
-    await admin.unsafe(`DROP DATABASE IF EXISTS "${name}" WITH (FORCE)`);
-    await admin.unsafe(`CREATE DATABASE "${name}"`);
+    // Parallel test suites create databases at the same time; Postgres can then report a
+    // transient catalog conflict (23505 on pg_database, or 55006 on template1). Retry briefly.
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await admin.unsafe(`DROP DATABASE IF EXISTS "${name}" WITH (FORCE)`);
+        await admin.unsafe(`CREATE DATABASE "${name}"`);
+        break;
+      } catch (err) {
+        const code = (err as { code?: string }).code;
+        if (attempt >= 5 || (code !== "23505" && code !== "55006")) throw err;
+        await new Promise((r) => setTimeout(r, 200 * attempt));
+      }
+    }
   } finally {
     await admin.end({ timeout: 5 });
   }

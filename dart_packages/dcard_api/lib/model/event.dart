@@ -34,9 +34,12 @@ class Event {
     required this.autoUpgradeEnabled,
     required this.singleAmount,
     required this.doubleAmount,
+    required this.budgetAmount,
+    required this.paymentDetails,
     required this.reminderFrequencyDays,
     required this.photoAlbumUrl,
     required this.access,
+    this.roles = const [],
     required this.createdAt,
     required this.updatedAt,
   });
@@ -83,11 +86,17 @@ class Event {
 
   int? doubleAmount;
 
+  int? budgetAmount;
+
+  String? paymentDetails;
+
   int? reminderFrequencyDays;
 
   String? photoAlbumUrl;
 
   EventAccessEnum access;
+
+  List<EventRolesEnum> roles;
 
   DateTime createdAt;
 
@@ -116,9 +125,12 @@ class Event {
     other.autoUpgradeEnabled == autoUpgradeEnabled &&
     other.singleAmount == singleAmount &&
     other.doubleAmount == doubleAmount &&
+    other.budgetAmount == budgetAmount &&
+    other.paymentDetails == paymentDetails &&
     other.reminderFrequencyDays == reminderFrequencyDays &&
     other.photoAlbumUrl == photoAlbumUrl &&
     other.access == access &&
+    _deepEquality.equals(other.roles, roles) &&
     other.createdAt == createdAt &&
     other.updatedAt == updatedAt;
 
@@ -146,14 +158,17 @@ class Event {
     (autoUpgradeEnabled.hashCode) +
     (singleAmount == null ? 0 : singleAmount!.hashCode) +
     (doubleAmount == null ? 0 : doubleAmount!.hashCode) +
+    (budgetAmount == null ? 0 : budgetAmount!.hashCode) +
+    (paymentDetails == null ? 0 : paymentDetails!.hashCode) +
     (reminderFrequencyDays == null ? 0 : reminderFrequencyDays!.hashCode) +
     (photoAlbumUrl == null ? 0 : photoAlbumUrl!.hashCode) +
     (access.hashCode) +
+    (roles.hashCode) +
     (createdAt.hashCode) +
     (updatedAt.hashCode);
 
   @override
-  String toString() => 'Event[id=$id, title=$title, status=$status, eventType=$eventType, plan=$plan, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl, access=$access, createdAt=$createdAt, updatedAt=$updatedAt]';
+  String toString() => 'Event[id=$id, title=$title, status=$status, eventType=$eventType, plan=$plan, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, budgetAmount=$budgetAmount, paymentDetails=$paymentDetails, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl, access=$access, roles=$roles, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -210,6 +225,16 @@ class Event {
     } else {
       json[r'doubleAmount'] = null;
     }
+    if (this.budgetAmount != null) {
+      json[r'budgetAmount'] = this.budgetAmount;
+    } else {
+      json[r'budgetAmount'] = null;
+    }
+    if (this.paymentDetails != null) {
+      json[r'paymentDetails'] = this.paymentDetails;
+    } else {
+      json[r'paymentDetails'] = null;
+    }
     if (this.reminderFrequencyDays != null) {
       json[r'reminderFrequencyDays'] = this.reminderFrequencyDays;
     } else {
@@ -221,6 +246,7 @@ class Event {
       json[r'photoAlbumUrl'] = null;
     }
       json[r'access'] = this.access;
+      json[r'roles'] = this.roles;
       json[r'createdAt'] = this.createdAt.toUtc().toIso8601String();
       json[r'updatedAt'] = this.updatedAt.toUtc().toIso8601String();
     return json;
@@ -239,7 +265,6 @@ class Event {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "Event[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Event[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -266,9 +291,12 @@ class Event {
         autoUpgradeEnabled: mapValueOfType<bool>(json, r'autoUpgradeEnabled')!,
         singleAmount: mapValueOfType<int>(json, r'singleAmount'),
         doubleAmount: mapValueOfType<int>(json, r'doubleAmount'),
+        budgetAmount: mapValueOfType<int>(json, r'budgetAmount'),
+        paymentDetails: mapValueOfType<String>(json, r'paymentDetails'),
         reminderFrequencyDays: mapValueOfType<int>(json, r'reminderFrequencyDays'),
         photoAlbumUrl: mapValueOfType<String>(json, r'photoAlbumUrl'),
         access: EventAccessEnum.fromJson(json[r'access'])!,
+        roles: EventRolesEnum.listFromJson(json[r'roles']),
         createdAt: mapDateTime(json, r'createdAt', r'')!,
         updatedAt: mapDateTime(json, r'updatedAt', r'')!,
       );
@@ -339,9 +367,12 @@ class Event {
     'autoUpgradeEnabled',
     'singleAmount',
     'doubleAmount',
+    'budgetAmount',
+    'paymentDetails',
     'reminderFrequencyDays',
     'photoAlbumUrl',
     'access',
+    'roles',
     'createdAt',
     'updatedAt',
   };
@@ -507,6 +538,89 @@ class EventAccessEnumTypeTransformer {
 
   /// Singleton [EventAccessEnumTypeTransformer] instance.
   static EventAccessEnumTypeTransformer? _instance;
+}
+
+
+
+class EventRolesEnum {
+  /// Instantiate a new enum with the provided [value].
+  const EventRolesEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const host = EventRolesEnum._(r'host');
+  static const treasurer = EventRolesEnum._(r'treasurer');
+  static const committee = EventRolesEnum._(r'committee');
+  static const doorStaff = EventRolesEnum._(r'door_staff');
+  static const walkinApprover = EventRolesEnum._(r'walkin_approver');
+
+  /// List of all possible values in this [enum][EventRolesEnum].
+  static const values = <EventRolesEnum>[
+    host,
+    treasurer,
+    committee,
+    doorStaff,
+    walkinApprover,
+  ];
+
+  static EventRolesEnum? fromJson(dynamic value) => EventRolesEnumTypeTransformer().decode(value);
+
+  static List<EventRolesEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <EventRolesEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = EventRolesEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [EventRolesEnum] to String,
+/// and [decode] dynamic data back to [EventRolesEnum].
+class EventRolesEnumTypeTransformer {
+  factory EventRolesEnumTypeTransformer() => _instance ??= const EventRolesEnumTypeTransformer._();
+
+  const EventRolesEnumTypeTransformer._();
+
+  String encode(EventRolesEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a EventRolesEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  EventRolesEnum? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'host': return EventRolesEnum.host;
+        case r'treasurer': return EventRolesEnum.treasurer;
+        case r'committee': return EventRolesEnum.committee;
+        case r'door_staff': return EventRolesEnum.doorStaff;
+        case r'walkin_approver': return EventRolesEnum.walkinApprover;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [EventRolesEnumTypeTransformer] instance.
+  static EventRolesEnumTypeTransformer? _instance;
 }
 
 

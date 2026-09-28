@@ -29,9 +29,12 @@ Name | Type | Description | Notes
 **autoUpgradeEnabled** | **bool** |  | 
 **singleAmount** | **int** |  | 
 **doubleAmount** | **int** |  | 
+**budgetAmount** | **int** |  | 
+**paymentDetails** | **String** |  | 
 **reminderFrequencyDays** | **int** |  | 
 **photoAlbumUrl** | **String** |  | 
 **access** | **String** |  | 
+**roles** | **List<String>** |  | [default to const []]
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 

@@ -1,0 +1,87 @@
+# D-Card API — guest card page (public, no login)
+# The link token is the credential. Responses are `no-store`; the page is `noindex` and sends no Referer.
+# Contribution amounts are never returned here (CON-12).
+
+
+### Setup: event with an issued card
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+###
+# @name event
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "kawaida", "eventTypeKey": "wedding", "title": "Harusi ya Juma na Neema", "startsAt": "2026-12-12T15:00:00+03:00", "venueName": "Diamond Jubilee Hall", "venueAddress": "Upanga, Dar es Salaam", "contactName": "Asha", "contactPhone": "0754123456" }
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+###
+# @name guest
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Juma Salum", "phone": "0713700001", "cardType": "double", "partnerName": "Neema", "consent": true }
+
+> {%
+  client.global.set("guestId", response.body.guest.id);
+%}
+
+###
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/issue
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Get the card link; its token is saved for the public requests below
+# The page itself is <baseUrl>/c/<token> (open the returned link in a browser).
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}/card
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+> {%
+  client.global.set("cardToken", response.body.link.split("/c/")[1]);
+%}
+
+### Card by link token (public)
+# 200 → { status: issued|cancelled, guestName, partnerName, cardType, cardNumber, qrToken (null when cancelled),
+#   rsvp: { status: none|yes|no, dietaryNotes, at, open }, event: { title, typeKey, typeNameSw, typeNameEn, startsAt, endsAt,
+#   timeZone, venueName, venueAddress, venueMapUrl, contactName, contactPhone, status } }
+# 404 unknown or malformed token.
+GET {{baseUrl}}/api/v1/cards/{{cardToken}}
+X-API-Key: {{apiKey}}
+
+### RSVP Yes/No with a dietary note (public; editable until the event starts)
+# Body: answer yes|no, dietaryNotes? (≤ 300 chars).
+# 200 → { status, dietaryNotes, at, open } · 409 card cancelled or event started · 422 other answers · 429 more than 20 writes per card per hour.
+POST {{baseUrl}}/api/v1/cards/{{cardToken}}/rsvp
+X-API-Key: {{apiKey}}
+Content-Type: application/json
+
+{ "answer": "yes", "dietaryNotes": "Sili nyama ya nguruwe" }
+
+### "maybe" is not an option → 422
+POST {{baseUrl}}/api/v1/cards/{{cardToken}}/rsvp
+X-API-Key: {{apiKey}}
+Content-Type: application/json
+
+{ "answer": "maybe" }
+
+### Add to calendar (.ics, text/calendar)
+GET {{baseUrl}}/api/v1/cards/{{cardToken}}/calendar.ics
+X-API-Key: {{apiKey}}
+
+### Card image with QR (PNG 1080×1350, rendered on demand, not stored)
+# lang sw (default) or en. 404 for cancelled or unknown cards. Used for download now and WhatsApp in phase 03.
+GET {{baseUrl}}/api/v1/cards/{{cardToken}}/image?lang={{locale}}
+X-API-Key: {{apiKey}}
+
+### Unknown token → 404
+GET {{baseUrl}}/api/v1/cards/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+X-API-Key: {{apiKey}}

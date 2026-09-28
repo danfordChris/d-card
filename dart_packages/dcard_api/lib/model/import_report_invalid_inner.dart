@@ -61,7 +61,6 @@ class ImportReportInvalidInner {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "ImportReportInvalidInner[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ImportReportInvalidInner[$key]" has a null value in JSON.');
         });
         return true;
       }());

@@ -61,7 +61,6 @@ class ImportReportDuplicatesInFileInner {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "ImportReportDuplicatesInFileInner[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ImportReportDuplicatesInFileInner[$key]" has a null value in JSON.');
         });
         return true;
       }());

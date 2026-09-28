@@ -58,6 +58,7 @@ Inbound flow: **provider webhook → Next.js route → verify signature → idem
 - Authentication by **Firebase Auth** (password storage and hashing, email verification, password reset, brute-force protection). The API verifies Firebase ID tokens on every request, then applies roles from Postgres. TOTP 2FA for admins (Identity Platform). Login data held by Google must be covered in the data-protection review (O3).
 - Per-event role checks. Door devices registered and revocable.
 - Long random link and QR tokens, stored hashed.
+- Every API request carries a per-client API key (`X-API-Key`), checked before routing; a missing or wrong key gets `401 invalid_api_key`.
 - Offline cache encrypted and auto-wiped.
 - Card-number brute-force lockout.
 - Webhook signature verification.

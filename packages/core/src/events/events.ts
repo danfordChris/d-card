@@ -15,6 +15,8 @@ export type EventSettingsInput = {
   autoUpgradeEnabled?: boolean;
   singleAmount?: number | null;
   doubleAmount?: number | null;
+  budgetAmount?: number | null;
+  paymentDetails?: string | null;
   reminderFrequencyDays?: number | null;
   photoAlbumUrl?: string | null;
 };
@@ -61,9 +63,13 @@ export type EventView = {
   autoUpgradeEnabled: boolean;
   singleAmount: number | null;
   doubleAmount: number | null;
+  budgetAmount: number | null;
+  paymentDetails: string | null;
   reminderFrequencyDays: number | null;
   photoAlbumUrl: string | null;
   access: EventAccess;
+  /** Every role the user holds here (a person can be committee and walk-in approver at once). */
+  roles: EventAccess[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -78,7 +84,7 @@ function checkSettings(input: EventSettingsInput & { startsAt?: Date; endsAt?: D
   if (input.confirmationOffsetDays !== undefined && (input.confirmationOffsetDays < 0 || input.confirmationOffsetDays > 30)) {
     issues.push({ path: "confirmationOffsetDays", message: "Must be between 0 and 30 days." });
   }
-  for (const key of ["singleAmount", "doubleAmount"] as const) {
+  for (const key of ["singleAmount", "doubleAmount", "budgetAmount"] as const) {
     const v = input[key];
     if (v !== undefined && v !== null && (!Number.isInteger(v) || v < 0)) {
       issues.push({ path: key, message: "Must be a whole, non-negative amount in TZS." });
@@ -146,6 +152,8 @@ export async function createEvent(db: DbExecutor, hostUserId: string, input: Cre
         autoUpgradeEnabled: input.autoUpgradeEnabled ?? chosenPlan.entitlements.autoUpgrade,
         singleAmount: input.singleAmount ?? null,
         doubleAmount: input.doubleAmount ?? null,
+        budgetAmount: input.budgetAmount ?? null,
+        paymentDetails: input.paymentDetails?.trim() || null,
         reminderFrequencyDays: input.reminderFrequencyDays ?? null,
         photoAlbumUrl: input.photoAlbumUrl ?? null,
       })
@@ -175,7 +183,7 @@ async function loadEvent(db: DbExecutor, eventId: string) {
   return row;
 }
 
-function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access: EventAccess): EventView {
+function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access: EventAccess, roles: EventAccess[] = [access]): EventView {
   const e = row.event;
   return {
     id: e.id,
@@ -205,9 +213,12 @@ function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access:
     autoUpgradeEnabled: e.autoUpgradeEnabled,
     singleAmount: e.singleAmount,
     doubleAmount: e.doubleAmount,
+    budgetAmount: e.budgetAmount,
+    paymentDetails: e.paymentDetails,
     reminderFrequencyDays: e.reminderFrequencyDays,
     photoAlbumUrl: e.photoAlbumUrl,
     access,
+    roles,
     createdAt: e.createdAt,
     updatedAt: e.updatedAt,
   };
@@ -218,9 +229,11 @@ const ALL_ROLES = ["treasurer", "committee", "door_staff", "walkin_approver"] as
 /** Any team member (or the host) can view an event. */
 export async function getEvent(db: DbExecutor, userId: string, eventId: string): Promise<EventView> {
   const access = await requireEventRole(db, { userId, eventId, roles: ALL_ROLES });
+  const held = await db.select({ role: eventRole.role }).from(eventRole).where(and(eq(eventRole.eventId, eventId), eq(eventRole.userId, userId)));
+  const roles = [...new Set<EventAccess>([...(access === "host" ? (["host"] as const) : []), ...held.map((h) => h.role)])];
   const row = await loadEvent(db, eventId);
   if (!row) throw new NotFoundError("Event not found.");
-  return toView(row, access);
+  return toView(row, access, roles.length ? roles : [access]);
 }
 
 /** Events where the user is host or holds any event role, newest start first. */
@@ -236,9 +249,9 @@ export async function listEvents(db: DbExecutor, userId: string): Promise<EventV
     .where(memberIds.length ? or(eq(event.hostUserId, userId), inArray(event.id, memberIds)) : eq(event.hostUserId, userId))
     .orderBy(desc(event.startsAt));
   return rows.map((row) => {
-    const access: EventAccess =
-      row.event.hostUserId === userId ? "host" : memberships.find((m) => m.eventId === row.event.id)!.role;
-    return toView(row, access);
+    const held = memberships.filter((m) => m.eventId === row.event.id).map((m) => m.role);
+    const access: EventAccess = row.event.hostUserId === userId ? "host" : held[0]!;
+    return toView(row, access, [...new Set<EventAccess>([...(access === "host" ? (["host"] as const) : []), ...held])]);
   });
 }
 
@@ -260,6 +273,8 @@ const DETAIL_FIELDS = [
   "autoUpgradeEnabled",
   "singleAmount",
   "doubleAmount",
+  "budgetAmount",
+  "paymentDetails",
   "reminderFrequencyDays",
   "photoAlbumUrl",
 ] as const;

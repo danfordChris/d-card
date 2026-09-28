@@ -34,7 +34,7 @@ A host can run a real event end-to-end on D-Card:
 
 ## Deferred Phases
 
-- [ ] `docs/implementation/phases/phase-02-contributions-cards.md`
+- [x] `docs/implementation/phases/phase-02-contributions-cards.md` (done)
 - [ ] `docs/implementation/phases/phase-03-messaging.md`
 - [ ] `docs/implementation/phases/phase-04-confirmation-check-in.md`
 - [ ] `docs/implementation/phases/phase-05-payments-media.md`

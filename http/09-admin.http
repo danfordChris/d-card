@@ -1,0 +1,54 @@
+# D-Card API — admin: event types (EVT-5)
+# Needs user_account.is_admin = true (see http/README.md › Authentication). Everyone else gets 403.
+
+
+### Setup: provision the admin (then set is_admin in the database)
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{adminToken}}
+
+### All event types, including inactive
+# 200 → { "eventTypes": [{ id, key, nameSw, nameEn, active }] } · 403 non-admin.
+GET {{baseUrl}}/api/v1/admin/event-types
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{adminToken}}
+
+### Non-admin → 403
+GET {{baseUrl}}/api/v1/admin/event-types
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Create an event type
+# key: 2–40 lowercase letters/digits/_ starting with a letter (normalised to lowercase; never changes).
+# 201 → AdminEventType · 409 duplicate key · 422 validation. Appears in GET /api/v1/event-types while active.
+POST {{baseUrl}}/api/v1/admin/event-types
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{ "key": "silver_jubilee", "nameSw": "Jubilei ya fedha", "nameEn": "Silver jubilee" }
+
+### Rename (audited)
+# Any of nameSw, nameEn, active. 200 → AdminEventType · 404 unknown key.
+PATCH {{baseUrl}}/api/v1/admin/event-types/silver_jubilee
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{ "nameEn": "Silver wedding jubilee" }
+
+### Deactivate: hidden from new events; existing events keep it
+PATCH {{baseUrl}}/api/v1/admin/event-types/silver_jubilee
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{ "active": false }
+
+### Reactivate
+PATCH {{baseUrl}}/api/v1/admin/event-types/silver_jubilee
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{ "active": true }

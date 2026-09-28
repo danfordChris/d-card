@@ -33,6 +33,10 @@ describe("validation helpers", () => {
     expect(validatePassword("long-enough")).toBeUndefined();
     expect(mapFirebaseError("auth/invalid-credential")).toBe("invalidCredentials");
     expect(mapFirebaseError("auth/email-already-in-use")).toBe("emailInUse");
+    expect(mapFirebaseError("auth/configuration-not-found")).toBe("authConfig");
+    expect(mapFirebaseError("auth/operation-not-allowed")).toBe("authConfig");
+    expect(mapFirebaseError("dcard/session")).toBe("serverSession");
+    expect(mapFirebaseError("auth/too-many-requests")).toBe("tooManyRequests");
     expect(mapFirebaseError("anything-else")).toBe("generic");
   });
 });

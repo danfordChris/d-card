@@ -16,10 +16,25 @@ export const GuestSchema = z
     cardType: CardTypeSchema,
     totalEntries: z.number().int(),
     status: z.enum(["pending", "issued", "cancelled"]),
+    cardNumber: z.string().nullable().openapi({ example: "005-4827" }),
+    issuedAt: z.iso.datetime().nullable(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
   })
   .openapi("Guest");
+
+export const CardSchema = z
+  .object({
+    guestId: z.uuid(),
+    status: z.enum(["pending", "issued", "cancelled"]),
+    cardNumber: z.string().nullable(),
+    cardType: CardTypeSchema,
+    issuedAt: z.iso.datetime().nullable(),
+    cancelledAt: z.iso.datetime().nullable(),
+  })
+  .openapi("Card");
+
+export const CardLinkSchema = CardSchema.extend({ link: z.url().openapi({ example: "https://dcard.co.tz/c/abc" }) }).openapi("CardLink");
 
 export const GuestCreateInput = z
   .object({
@@ -81,3 +96,42 @@ export const GuestListQuery = z.object({
 
 export type GuestCreateInput = z.infer<typeof GuestCreateInput>;
 export type GuestDto = z.infer<typeof GuestSchema>;
+
+// Guest card page (public, link token). docs/design/features/guests-and-cards.md GST-12.
+export const RsvpInput = z
+  .object({
+    answer: z.enum(["yes", "no"]),
+    dietaryNotes: z.string().max(300).nullable().optional(),
+  })
+  .openapi("RsvpInput");
+
+export const RsvpSchema = z
+  .object({ status: z.enum(["none", "yes", "no"]), dietaryNotes: z.string().nullable(), at: z.iso.datetime().nullable(), open: z.boolean() })
+  .openapi("Rsvp");
+
+export const PublicCardSchema = z
+  .object({
+    status: z.enum(["issued", "cancelled"]),
+    guestName: z.string(),
+    partnerName: z.string().nullable(),
+    cardType: CardTypeSchema,
+    cardNumber: z.string(),
+    qrToken: z.string().nullable(),
+    rsvp: RsvpSchema,
+    event: z.object({
+      title: z.string(),
+      typeKey: z.string(),
+      typeNameSw: z.string(),
+      typeNameEn: z.string(),
+      startsAt: z.iso.datetime(),
+      endsAt: z.iso.datetime().nullable(),
+      timeZone: z.string(),
+      venueName: z.string().nullable(),
+      venueAddress: z.string().nullable(),
+      venueMapUrl: z.string().nullable(),
+      contactName: z.string(),
+      contactPhone: z.string(),
+      status: z.enum(["draft", "published", "completed", "cancelled"]),
+    }),
+  })
+  .openapi("PublicCard");

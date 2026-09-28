@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { firebaseAuth } from "../../lib/firebase-client";
 import { Button } from "../ui";
+import { apiFetch } from "../../lib/api-fetch";
 
 export function SignOutButton() {
   const t = useTranslations("app");
@@ -13,7 +14,7 @@ export function SignOutButton() {
     <Button
       variant="ghost"
       onClick={async () => {
-        await fetch("/api/v1/session", { method: "DELETE" });
+        await apiFetch("/api/v1/session", { method: "DELETE" });
         await signOut(firebaseAuth()).catch(() => undefined);
         router.replace("/login");
       }}

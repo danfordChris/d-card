@@ -29,6 +29,8 @@ export type GuestView = {
   cardType: CardType;
   totalEntries: number;
   status: "pending" | "issued" | "cancelled";
+  cardNumber: string | null;
+  issuedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -47,6 +49,8 @@ function toView(row: typeof invitation.$inferSelect): GuestView {
     cardType: row.cardType,
     totalEntries: row.totalEntries,
     status: row.status,
+    cardNumber: row.cardNumber,
+    issuedAt: row.issuedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
@@ -60,7 +64,7 @@ function cleanName(name: string, path = "name"): string {
 }
 
 /** Guests can only be managed on draft or published events. */
-async function assertEventOpen(db: DbExecutor, eventId: string): Promise<void> {
+export async function assertEventOpen(db: DbExecutor, eventId: string): Promise<void> {
   const [row] = await db.select({ status: event.status }).from(event).where(eq(event.id, eventId));
   if (!row) throw new NotFoundError("Event not found.");
   if (row.status !== "draft" && row.status !== "published") {
@@ -81,7 +85,7 @@ async function upsertPerson(tx: DbExecutor, phone: string, name: string): Promis
  * Returns the existing invitation with `existing: true` when the phone is already invited.
  * Caller must hold consent; `recordConsent` is done by the caller once per batch.
  */
-async function addOne(
+export async function addGuestInTx(
   tx: DbExecutor,
   actorId: string,
   eventId: string,
@@ -155,7 +159,7 @@ export async function addGuest(
   if (!input.consent) throw new ConsentRequiredError();
   await assertEventOpen(db, eventId);
   return inTransaction(db, async (tx) => {
-    const result = await addOne(tx, actorId, eventId, input);
+    const result = await addGuestInTx(tx, actorId, eventId, input);
     if (!result.existing) await recordConsent(tx, { eventId, actorId, source: "form", guestCount: 1 });
     return result;
   });
@@ -182,7 +186,7 @@ export async function addGuestsBulk(
     const result: BulkResult = { added: [], existing: [], invalid: [] };
     for (const [index, g] of guests.entries()) {
       try {
-        const { guest, existing } = await addOne(tx, actorId, eventId, g);
+        const { guest, existing } = await addGuestInTx(tx, actorId, eventId, g);
         (existing ? result.existing : result.added).push(guest);
       } catch (err) {
         if (err instanceof DomainError) {

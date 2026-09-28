@@ -61,8 +61,50 @@ String parameterToString(dynamic value) {
   if (value is CardType) {
     return CardTypeTypeTransformer().encode(value).toString();
   }
+  if (value is CheckInMethod) {
+    return CheckInMethodTypeTransformer().encode(value).toString();
+  }
+  if (value is DeviceApp) {
+    return DeviceAppTypeTransformer().encode(value).toString();
+  }
+  if (value is DevicePlatform) {
+    return DevicePlatformTypeTransformer().encode(value).toString();
+  }
+  if (value is ExportKind) {
+    return ExportKindTypeTransformer().encode(value).toString();
+  }
+  if (value is HostPaymentMethod) {
+    return HostPaymentMethodTypeTransformer().encode(value).toString();
+  }
+  if (value is MediaKind) {
+    return MediaKindTypeTransformer().encode(value).toString();
+  }
+  if (value is MediaStatus) {
+    return MediaStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is MediaType) {
+    return MediaTypeTypeTransformer().encode(value).toString();
+  }
+  if (value is PaymentMethod) {
+    return PaymentMethodTypeTransformer().encode(value).toString();
+  }
+  if (value is PaymentStatus) {
+    return PaymentStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is PlanKey) {
+    return PlanKeyTypeTransformer().encode(value).toString();
+  }
+  if (value is PledgeStatus) {
+    return PledgeStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is SharingMode) {
+    return SharingModeTypeTransformer().encode(value).toString();
+  }
   if (value is TeamRole) {
     return TeamRoleTypeTransformer().encode(value).toString();
+  }
+  if (value is WalkInStatus) {
+    return WalkInStatusTypeTransformer().encode(value).toString();
   }
   return value.toString();
 }

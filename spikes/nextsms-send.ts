@@ -1,4 +1,4 @@
-// Spike: send one SMS via NextSMS and poll its delivery report
+// Spike: send one SMS via NextSMS and poll its delivery status by reference
 // (docs/design/integrations/messaging.md). The delivery webhook also arrives at
 // `pnpm spike:webhooks` if the Delivery Callback URL points to your tunnel.
 import { env, log, postJson, requireKeys, requireProvider, run } from "./_shared.js";
@@ -6,19 +6,19 @@ import { env, log, postJson, requireKeys, requireProvider, run } from "./_shared
 await run("nextsms-send", async () => {
   const sms = requireProvider(env, "nextsms");
   const { SPIKE_TEST_PHONE } = requireKeys(env, ["SPIKE_TEST_PHONE"]);
-  const auth = { authorization: `Bearer ${sms.NEXTSMS_API_TOKEN}` };
+  const auth = { authorization: `Basic ${sms.NEXTSMS_API_TOKEN}` };
+  const reference = `spike${Date.now()}`;
   const text = "D-Card test: Kadi yako 005-4827. Maswali: piga Asha 0754 123 456.";
   const res = (await postJson(
-    `${sms.NEXTSMS_BASE_URL}/api/sms/v2/text/single`,
-    { from: sms.NEXTSMS_SENDER_ID, to: SPIKE_TEST_PHONE, text },
+    `${sms.NEXTSMS_BASE_URL}/api/sms/v1/text/single`,
+    { from: sms.NEXTSMS_SENDER_ID, to: SPIKE_TEST_PHONE, text, reference },
     auth,
-  )) as { messages?: { messageId?: string }[] };
+  )) as { messages?: { status?: { groupName?: string } }[] };
   log("send response", res);
-  const messageId = res.messages?.[0]?.messageId;
-  if (!messageId) throw new Error("No messageId in response");
+  if (res.messages?.[0]?.status?.groupName === "REJECTED") throw new Error("Rejected at send");
   for (let i = 0; i < 12; i++) {
     await new Promise((r) => setTimeout(r, 10_000));
-    const report = await fetch(`${sms.NEXTSMS_BASE_URL}/api/v2/reports?messageId=${messageId}`, {
+    const report = await fetch(`${sms.NEXTSMS_BASE_URL}/api/sms/v1/logs?reference=${reference}`, {
       headers: { ...auth, accept: "application/json" },
     }).then((r) => r.json());
     log(`delivery report (poll ${i + 1})`, report);

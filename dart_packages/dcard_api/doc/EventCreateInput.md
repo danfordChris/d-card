@@ -27,6 +27,8 @@ Name | Type | Description | Notes
 **autoUpgradeEnabled** | **bool** |  | [optional] 
 **singleAmount** | **int** |  | [optional] 
 **doubleAmount** | **int** |  | [optional] 
+**budgetAmount** | **int** |  | [optional] 
+**paymentDetails** | **String** |  | [optional] 
 **reminderFrequencyDays** | **int** |  | [optional] 
 **photoAlbumUrl** | **String** |  | [optional] 
 
