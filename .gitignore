@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+# Dart / Flutter
+.dart_tool/
+build/
+# Generated Flutter localisations
+apps/*/lib/l10n/app_localizations*.dart
+# Vercel
+.vercel/
+# IDE
+.idea/
+# JetBrains HTTP Client secrets (http/)
+http/http-client.private.env.json
+# Astro (apps/site)
+.astro/
+.vercel
+.dcard_api.tmp/

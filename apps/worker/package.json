@@ -1,0 +1,27 @@
+{
+  "name": "@dcard/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "tsx src/main.ts",
+    "start:prod": "node dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src test load",
+    "test": "vitest run",
+    "load": "tsx load/run.ts"
+  },
+  "dependencies": {
+    "@dcard/core": "workspace:*",
+    "@dcard/db": "workspace:*",
+    "@sentry/node": "^11.0.0",
+    "bullmq": "^6.3.8",
+    "firebase-admin": "^14.5.0",
+    "ioredis": "^6.0.0"
+  },
+  "devDependencies": {
+    "drizzle-orm": "^0.45.3",
+    "tsx": "^4.23.15"
+  }
+}

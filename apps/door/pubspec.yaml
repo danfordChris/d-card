@@ -1,0 +1,41 @@
+name: dcard_door
+description: "D-Card Door app for check-in at the event entrance."
+publish_to: none
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  dcard_api: any
+  dcard_core: any
+  dcard_ui: any
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  firebase_messaging: ^16.7.0
+  shared_preferences: ^2.5.5
+  mobile_scanner: ^7.4.2
+  http: ^1.6.0
+  sqflite_sqlcipher: ^3.4.1
+  flutter_secure_storage: ^11.2.0
+  connectivity_plus: ^7.3.1
+  crypto: ^3.0.7
+  path: ^1.9.1
+  hugeicons: ^1.2.0
+  sentry_flutter: ^8.14.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  sqflite_common_ffi: ^2.4.3
+
+flutter:
+  uses-material-design: true
+  generate: true

@@ -1,0 +1,1716 @@
+{
+  "app": {
+    "name": "D-Card",
+    "tagline": "Digital invitation cards",
+    "language": "Language",
+    "signOut": "Sign out",
+    "admin": "Admin",
+    "privacy": "Privacy notice"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "loginTitle": "Sign in to D-Card",
+    "loginSubmit": "Sign in",
+    "signupTitle": "Create your D-Card account",
+    "signupSubmit": "Create account",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot password?",
+    "resetTitle": "Reset your password",
+    "resetSubmit": "Send reset link",
+    "resetSent": "If an account exists for this email, a reset link has been sent.",
+    "verifySent": "We sent a verification link to your email. Please verify before continuing.",
+    "backToLogin": "Back to sign in",
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "passwordLength": "Use at least 8 characters.",
+      "invalidCredentials": "Email or password is incorrect.",
+      "emailInUse": "An account with this email already exists.",
+      "network": "Network problem. Check your connection and try again.",
+      "generic": "Something went wrong. Please try again.",
+      "tooManyRequests": "Too many attempts. Wait a few minutes and try again.",
+      "authConfig": "Sign-in is not set up correctly for this site (Firebase settings). Please contact support.",
+      "serverSession": "Your account was created in Firebase, but D-Card could not start your session. Try signing in; if it keeps failing, contact support."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {email}",
+    "back": "Back to event",
+    "live": "Live",
+    "connecting": "Connecting…",
+    "reconnecting": "Reconnecting…",
+    "loading": "Loading…",
+    "loadFailed": "Could not load the dashboard. Retrying…",
+    "admitted": {
+      "title": "Admitted vs expected",
+      "arrived": "Arrived",
+      "split": "Cards {cards} · Walk-ins {walkIns} · Online {online} · Offline {offline}",
+      "expected": "Expected {expected} (non-responders at {pct}%)"
+    },
+    "cards": {
+      "title": "Cards checked in",
+      "notArrived": "{count, plural, =0 {Everyone has arrived} one {# card not yet arrived} other {# cards not yet arrived}}"
+    },
+    "confirmations": {
+      "title": "Confirmations",
+      "yes": "Coming",
+      "none": "No answer",
+      "no": "Not coming"
+    },
+    "walkIns": {
+      "title": "Walk-ins",
+      "pending": "{count, plural, =0 {No walk-ins waiting} one {# walk-in waiting for approval} other {# walk-ins waiting for approval}}",
+      "review": "{count, plural, =0 {No offline walk-ins to review} one {# offline walk-in to review} other {# offline walk-ins to review}}",
+      "open": "Open walk-ins"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "empty": "No alerts.",
+      "overUsedLabel": "Card over-used:",
+      "overUsed": "{name} ({card}) · {used} of {total} entries used",
+      "lockoutLabel": "Card numbers locked:",
+      "lockout": "{device} · {staff}",
+      "offline": "offline"
+    },
+    "devices": {
+      "title": "Door devices",
+      "empty": "No door devices yet.",
+      "device": "Device",
+      "staff": "Staff",
+      "lastSeen": "Last seen",
+      "lastSync": "Last sync",
+      "pending": "Waiting to sync",
+      "state": "Status",
+      "never": "Never",
+      "unnamed": "Unnamed device",
+      "synced": "Synced",
+      "waiting": "Syncing",
+      "stale": "Not synced",
+      "revoked": "Revoked",
+      "revoke": "Revoke",
+      "revokeYes": "Yes, revoke",
+      "cancel": "Cancel",
+      "revokeFailed": "Could not revoke the device. Please try again."
+    },
+    "backup": {
+      "link": "Backup list",
+      "title": "Backup guest list",
+      "back": "Back to dashboard",
+      "print": "Print",
+      "count": "{count, plural, one {# card} other {# cards}}",
+      "printedAt": "Printed {date}",
+      "empty": "No issued cards yet.",
+      "name": "Name",
+      "cardNumber": "Card number",
+      "type": "Type",
+      "entries": "Entries used",
+      "tick": "✓",
+      "single": "Single",
+      "double": "Double"
+    }
+  },
+  "events": {
+    "title": "Events",
+    "new": "New event",
+    "empty": "No events yet. Create your first event.",
+    "open": "Open",
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "access": {
+      "host": "Host",
+      "treasurer": "Treasurer",
+      "committee": "Committee",
+      "door_staff": "Door staff",
+      "walkin_approver": "Walk-in approver"
+    },
+    "wizard": {
+      "title": "Create an event",
+      "step": "Step {current} of {total}",
+      "back": "Back",
+      "next": "Next",
+      "create": "Create event",
+      "steps": {
+        "plan": "Plan",
+        "details": "Details",
+        "contact": "Contact",
+        "options": "Options"
+      },
+      "perGuest": "Tsh {price} per guest card",
+      "eventType": "Event type",
+      "eventTitle": "Event title",
+      "startsAt": "Date and time",
+      "endsAt": "Ends (optional)",
+      "venueName": "Venue",
+      "venueAddress": "Venue address",
+      "venueMapUrl": "Map link (optional)",
+      "contactName": "Contact name",
+      "contactPhone": "Contact phone",
+      "contactHint": "Shown in every SMS so guests can call. Example: 0754 123 456",
+      "contact2Name": "Second contact name (optional)",
+      "contact2Phone": "Second contact phone (optional)",
+      "confirmationEnabled": "Ask guests to confirm attendance",
+      "confirmationOffsetDays": "Days before the event to ask",
+      "headcountPct": "Count guests who don't answer as (%)",
+      "autoUpgradeEnabled": "Auto-upgrade Single to Double when the Double amount is paid",
+      "autoUpgradeLocked": "Not included in the Msingi plan",
+      "singleAmount": "Single card contribution (Tsh)",
+      "doubleAmount": "Double card contribution (Tsh)",
+      "photoAlbumUrl": "Google Photos album link (optional)",
+      "budgetAmount": "Contribution budget target (Tsh, optional)",
+      "paymentDetails": "How contributors pay (e.g. M-Pesa 0754 123 456, Asha) — shown in contribution messages"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "phone": "Enter a Tanzanian phone number, e.g. 0754 123 456.",
+      "url": "Enter a full link starting with https://",
+      "endsBeforeStart": "The end must be after the start.",
+      "number": "Enter a whole number.",
+      "range": "Out of range.",
+      "generic": "Could not save. Please try again.",
+      "invalid": "This value is not valid."
+    },
+    "summary": {
+      "plan": "Plan",
+      "type": "Type",
+      "when": "When",
+      "venue": "Venue",
+      "contact": "Contact",
+      "settings": "Settings",
+      "edit": "Edit",
+      "cancel": "Cancel event",
+      "cancelConfirm": "Cancel this event? This cannot be undone.",
+      "unpaid": "Not paid yet",
+      "confirmationOn": "Confirmation {days} days before",
+      "confirmationOff": "No attendance confirmation",
+      "headcount": "Non-responders counted at {pct}%",
+      "autoUpgradeOn": "Auto-upgrade on",
+      "autoUpgradeOff": "Auto-upgrade off",
+      "amounts": "Single Tsh {single} · Double Tsh {double}",
+      "notSet": "Not set",
+      "save": "Save changes",
+      "editTitle": "Edit event",
+      "guests": "Guests",
+      "team": "Team",
+      "contributions": "Contributions",
+      "messages": "Messages",
+      "walkIns": "Walk-ins",
+      "dashboard": "Dashboard",
+      "backupList": "Backup list"
+    }
+  },
+  "guests": {
+    "title": "Guests",
+    "back": "Back to event",
+    "add": "Add guest",
+    "search": "Search by name or phone",
+    "empty": "No guests yet.",
+    "noResults": "No guests match your search.",
+    "loadMore": "Load more",
+    "readOnly": "You can view guests but not change them.",
+    "columns": {
+      "name": "Name",
+      "phone": "Phone",
+      "card": "Card",
+      "status": "Status",
+      "actions": "Actions",
+      "cardNumber": "Card number"
+    },
+    "card": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "status": {
+      "pending": "Pending",
+      "issued": "Issued",
+      "cancelled": "Cancelled"
+    },
+    "form": {
+      "addTitle": "Add guest",
+      "editTitle": "Edit guest",
+      "name": "Full name",
+      "phone": "Phone",
+      "phoneHint": "Example: 0754 123 456",
+      "cardType": "Card type",
+      "partnerName": "Partner name (optional)",
+      "consent": "The guest agreed to receive messages about this event (WhatsApp and SMS).",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "edit": "Edit",
+    "remove": "Remove",
+    "removeConfirm": "Remove {name} from the guest list?",
+    "alreadyInvited": "{name} is already on the guest list.",
+    "added": "{name} added.",
+    "errors": {
+      "required": "This field is required.",
+      "phone": "Enter a Tanzanian phone number, e.g. 0754 123 456.",
+      "consent": "Please confirm the guest agreed to receive messages.",
+      "generic": "Could not save. Please try again."
+    },
+    "import": "Import",
+    "cardActions": {
+      "issue": "Issue card",
+      "cancel": "Cancel card",
+      "reinstate": "Reinstate",
+      "copyLink": "Copy link",
+      "open": "Open card",
+      "issueConfirm": "Issue a card to {name} now? The card type cannot change after this.",
+      "cancelConfirm": "Cancel the card for {name}? Door scans will show \"Card cancelled\". Payments are kept.",
+      "reinstateConfirm": "Reinstate the card for {name}? It keeps the same card number and QR code.",
+      "issueDone": "Card {number} issued to {name}.",
+      "cancelDone": "Card for {name} cancelled.",
+      "reinstateDone": "Card for {name} reinstated.",
+      "copied": "Card link for {name} copied.",
+      "error": "Something went wrong. Please try again."
+    }
+  },
+  "imports": {
+    "title": "Import guests",
+    "back": "Back to guests",
+    "file": {
+      "heading": "From Excel or CSV",
+      "intro": "Download the template, fill one guest per row, then upload it. Columns: name, phone, card_type (single or double), partner_name.",
+      "example": "Example row: Juma Hamisi · 0754 123 456 · double · Neema Juma",
+      "templateXlsx": "Download Excel template",
+      "templateCsv": "Download CSV template",
+      "choose": "Choose file (.xlsx or .csv)",
+      "preview": "Check file"
+    },
+    "copy": {
+      "heading": "Copy from a past event",
+      "intro": "Copy the people from one of your earlier events. Pledges and answers are not copied.",
+      "choose": "Past event",
+      "none": "You have no other events to copy from.",
+      "preview": "Check guests"
+    },
+    "report": {
+      "heading": "Check before importing",
+      "total": "Rows in file: {count}",
+      "valid": "Ready to add: {count}",
+      "invalid": "Rows with problems",
+      "duplicates": "Repeated in the file",
+      "existing": "Already on the guest list",
+      "row": "Row {row}",
+      "sameAs": "same number as row {row}",
+      "reasons": {
+        "invalid_phone": "invalid phone number",
+        "name_required": "name missing",
+        "invalid_card_type": "card type must be single or double"
+      },
+      "consent": "These guests agreed to receive messages about this event (WhatsApp and SMS).",
+      "import": "Add {count} guests",
+      "nothing": "There is nothing new to add."
+    },
+    "done": "{count} guests added.",
+    "viewGuests": "View guest list",
+    "errors": {
+      "file": "Choose a file first.",
+      "consent": "Please confirm the guests agreed to receive messages.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "team": {
+    "title": "Team",
+    "back": "Back to event",
+    "roles": {
+      "treasurer": "Treasurer",
+      "committee": "Committee member",
+      "door_staff": "Door staff",
+      "walkin_approver": "Walk-in approver"
+    },
+    "invite": {
+      "heading": "Invite a team member",
+      "role": "Role",
+      "email": "Email (optional)",
+      "emailHint": "We email the link if you add an address. You can also share the link yourself.",
+      "create": "Create invite link",
+      "link": "Invite link (valid 7 days, one person)",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "emailQueued": "We are emailing the link to {email}.",
+      "planLimit": "Your plan does not allow more door staff."
+    },
+    "members": {
+      "heading": "Members",
+      "empty": "No team members yet.",
+      "remove": "Remove",
+      "removeConfirm": "Remove {email} ({role}) from this event?"
+    },
+    "pending": {
+      "heading": "Pending invites",
+      "empty": "No pending invites.",
+      "expires": "Expires {date}",
+      "revoke": "Revoke",
+      "anyone": "Anyone with the link"
+    },
+    "errors": {
+      "email": "Enter a valid email address.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "invitePage": {
+    "title": "You're invited",
+    "body": "You have been invited to join the team for {event} as {role}.",
+    "signIn": "Sign in to accept",
+    "signUp": "Create an account",
+    "accept": "Accept invitation",
+    "accepted": "You joined the team.",
+    "invalid": "This invitation link is no longer valid. Ask the host for a new one.",
+    "notFound": "This invitation link was not found."
+  },
+  "adminEventTypes": {
+    "title": "Event types",
+    "intro": "Hosts choose from active types when creating an event. Deactivating a type hides it from new events; existing events keep it.",
+    "key": "Key",
+    "keyHint": "Lowercase letters, digits and _ — cannot be changed later.",
+    "nameSw": "Name (Swahili)",
+    "nameEn": "Name (English)",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "create": "Add event type",
+    "createHeading": "New event type",
+    "save": "Save",
+    "saved": "Saved",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "errors": {
+      "required": "Required.",
+      "key": "Use 2–40 lowercase letters, digits or _ (start with a letter).",
+      "duplicate": "This key already exists.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "cardPage": {
+    "invitationFor": "Invitation for",
+    "and": "and",
+    "entries": "{count, plural, =1{Admits 1} other{Admits {count}}}",
+    "date": "Date",
+    "time": "Time",
+    "venue": "Venue",
+    "map": "Open map",
+    "cardNumber": "Card number",
+    "showQr": "Show this QR code or card number at the door.",
+    "qrLabel": "QR code for card {number}",
+    "newTab": "(opens in a new tab)",
+    "contact": "Event contact",
+    "calendar": "Add to calendar",
+    "calendarApple": "Calendar file (.ics)",
+    "calendarGoogle": "Google Calendar",
+    "rsvpTitle": "Will you attend?",
+    "rsvpYes": "Yes, I will attend",
+    "rsvpNo": "No, I can't attend",
+    "dietary": "Dietary needs (optional)",
+    "dietaryHint": "For example: vegetarian, no pork, allergies.",
+    "save": "Send answer",
+    "saved": "Thank you. Your answer has been saved.",
+    "yourAnswer": "Your answer: {answer}",
+    "answerYes": "attending",
+    "answerNo": "not attending",
+    "rsvpClosed": "Answers are closed for this event.",
+    "change": "You can change your answer until the event starts.",
+    "cancelledTitle": "Card cancelled",
+    "cancelledBody": "This card has been cancelled by the host. Please contact the event contact if you think this is a mistake.",
+    "notFoundTitle": "Card not found",
+    "notFoundBody": "This card link is not valid. Check the link in your message.",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "rateLimited": "Too many attempts. Please try again later.",
+      "closed": "Answers are closed for this event."
+    },
+    "poweredBy": "D-Card digital invitation",
+    "download": "Download card image",
+    "story": {
+      "title": "Our story"
+    },
+    "gallery": {
+      "title": "Event gallery",
+      "photo": "Photo",
+      "video": "Video",
+      "empty": "No photos or videos yet. Be the first to share one.",
+      "emptyClosed": "No photos or videos yet.",
+      "add": "Add photos/videos",
+      "left": "{count, plural, =0{No uploads left.} =1{You can add 1 more.} other{You can add # more.}}",
+      "hint": "Photos are made smaller before upload to save data. Videos up to {seconds} seconds.",
+      "closesAt": "Uploads close on {date}.",
+      "limitUsed": "You have used all {limit} of your uploads. Thank you for sharing.",
+      "pageClosed": "The gallery for this event has closed. The photos and videos stay with the host.",
+      "loadError": "Could not load the photos and videos. Check your connection.",
+      "retryLoad": "Try again",
+      "closed": {
+        "not_started": "Uploads are not open yet. Please come back later.",
+        "window_closed": "The time for uploading photos and videos has ended.",
+        "drive_full": "The host's storage is full, so uploads are paused.",
+        "gallery_closed": "This gallery has closed.",
+        "not_available": "Guest uploads are not available for this event."
+      },
+      "queueTitle": "Your uploads",
+      "clearDone": "Clear finished",
+      "retry": "Retry",
+      "status": {
+        "waiting": "Waiting",
+        "preparing": "Preparing…",
+        "uploading": "Uploading {percent}%",
+        "finishing": "Finishing…",
+        "done": "Uploaded",
+        "failed": "Not uploaded"
+      },
+      "errors": {
+        "type": "This file type is not supported. Choose a photo or a video.",
+        "tooLarge": "This file is too large (maximum {mb} MB).",
+        "tooLong": "This video is too long (maximum {seconds} seconds).",
+        "duration": "Could not read this video. Try another file.",
+        "limitReached": "You have reached your upload limit.",
+        "uploadsClosed": "Uploads are closed.",
+        "driveFull": "The host's storage is full, so uploads are paused.",
+        "rateLimited": "Too many uploads at once. Wait a moment, then retry.",
+        "invalidFile": "This file was not accepted. Check its type, size and length.",
+        "network": "Connection lost. Check your network, then retry.",
+        "sessionExpired": "The upload expired. Retry to start again.",
+        "generic": "Upload failed. Please retry."
+      },
+      "viewer": {
+        "position": "{index} of {total}",
+        "close": "Close",
+        "previous": "Previous",
+        "next": "Next",
+        "loading": "Loading…",
+        "loadFailed": "Could not load this item.",
+        "by": "Shared by {name}",
+        "byYou": "Shared by you",
+        "delete": "Delete",
+        "deleteConfirm": "Delete your upload? This cannot be undone.",
+        "report": "Report",
+        "reportConfirm": "Report this item to the host?",
+        "reported": "Thank you. The host has been told.",
+        "cancel": "Cancel",
+        "actionFailed": "That did not work. Please try again."
+      }
+    }
+  },
+  "contributions": {
+    "title": "Contributions",
+    "back": "Back to event",
+    "add": "Add contributor",
+    "addTitle": "New contributor",
+    "search": "Search name or phone",
+    "empty": "No contributors match.",
+    "exportXlsx": "Export Excel",
+    "exportCsv": "Export CSV",
+    "budget": "Budget progress (target {budget})",
+    "cardNumber": "Card number",
+    "history": "Payments",
+    "noPayments": "No payments yet.",
+    "recordHeading": "Record a payment or refund",
+    "recordPayment": "Record payment",
+    "recordRefund": "Record refund",
+    "recorded": "Saved.",
+    "cardIssued": "Fully paid. Card {number} has been issued.",
+    "editPledge": "Edit pledge",
+    "savePledge": "Save pledge",
+    "pledgeSaved": "Pledge updated.",
+    "cancel": "Cancel",
+    "consent": "This contributor agreed to receive event messages (WhatsApp and SMS).",
+    "totals": {
+      "pledged": "Pledged",
+      "collected": "Collected",
+      "outstanding": "Outstanding",
+      "extras": "Extra contributions",
+      "refunds": "Refunds"
+    },
+    "filters": {
+      "all": "All",
+      "not_paid": "Not paid",
+      "part_paid": "Part paid",
+      "fully_paid": "Fully paid",
+      "cancelled": "Cancelled"
+    },
+    "fields": {
+      "name": "Name",
+      "phone": "Phone",
+      "cardType": "Card type",
+      "partnerName": "Partner name",
+      "amountPledged": "Pledge",
+      "amountPaid": "Paid",
+      "balance": "Balance",
+      "amountExtra": "Extra",
+      "status": "Status",
+      "kind": "Type",
+      "amount": "Amount (Tsh)",
+      "method": "Method",
+      "reference": "Reference (optional)",
+      "paidOn": "Date paid"
+    },
+    "cardTypes": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "kinds": {
+      "payment": "Payment",
+      "refund": "Refund"
+    },
+    "methods": {
+      "mpesa": "M-Pesa",
+      "mixx_by_yas": "Mixx by Yas",
+      "airtel_money": "Airtel Money",
+      "halopesa": "HaloPesa",
+      "bank": "Bank",
+      "cash": "Cash",
+      "other": "Other"
+    },
+    "errors": {
+      "required": "Required.",
+      "phone": "Enter a valid Tanzanian phone number.",
+      "amount": "Enter a whole amount in Tsh.",
+      "date": "Choose a date.",
+      "consent": "Confirm consent to continue.",
+      "refundTooLarge": "A refund cannot be more than the amount paid.",
+      "hasPledge": "This person already has a pledge for this event.",
+      "alreadyIssued": "The card is already issued, so the pledge can no longer change.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "adminMessaging": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "save": "Save",
+    "saved": "Saved",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "templates": {
+      "title": "WhatsApp templates",
+      "intro": "Register Meta template variants and control which approved variants hosts can choose.",
+      "createHeading": "Register a template variant",
+      "messageType": "Message type",
+      "variant": "Variant key",
+      "language": "Language",
+      "metaName": "Meta template name",
+      "category": "Category",
+      "bodyParams": "Body parameters",
+      "editableParams": "Host-editable parameters",
+      "paramsHint": "Comma-separated parameter keys",
+      "headerImage": "Header image",
+      "confirmButtons": "Confirmation buttons",
+      "status": "Meta status",
+      "active": "Availability",
+      "actions": "Actions",
+      "create": "Register template"
+    },
+    "rates": {
+      "title": "Provider rates",
+      "intro": "Add effective-dated provider prices used for internal message cost tracking.",
+      "createHeading": "Add a provider rate",
+      "provider": "Provider",
+      "channel": "Channel",
+      "category": "Category",
+      "market": "Market",
+      "price": "Price (Tsh)",
+      "priceHint": "Price for one delivered message or SMS segment",
+      "effectiveFrom": "Effective from",
+      "create": "Add rate"
+    },
+    "messageTypes": {
+      "contribution_request": "Contribution request",
+      "thank_you": "Payment thank-you",
+      "contribution_reminder": "Contribution reminder",
+      "invitation_card": "Invitation card",
+      "card_upgraded": "Card upgraded",
+      "attendance_confirmation": "Attendance confirmation",
+      "event_reminder": "Event reminder",
+      "post_event_thanks": "Post-event thank-you"
+    },
+    "languages": {
+      "sw": "Swahili",
+      "en": "English"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "paused": "Paused"
+    },
+    "categories": {
+      "utility": "Utility",
+      "marketing": "Marketing",
+      "authentication": "Authentication",
+      "service": "Service",
+      "sms_segment": "SMS segment"
+    },
+    "providers": {
+      "meta": "Meta",
+      "nextsms": "NextSMS"
+    },
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS"
+    },
+    "errors": {
+      "required": "Complete the required fields.",
+      "duplicateTemplate": "That message type, variant and language already exist.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "messageSettings": {
+    "title": "Messages",
+    "back": "Back to event",
+    "intro": "Choose which messages guests receive, on which channel, with what wording and when. Changes apply to messages not yet sent.",
+    "planNote": "Some controls are not included in your plan ({plan}). Locked controls show a lock.",
+    "locked": "Not in your plan",
+    "save": "Save messages",
+    "saved": "Messages saved.",
+    "saving": "Saving…",
+    "reset": "Use default wording",
+    "test": "Send me a test",
+    "testSent": "Test queued to your phone.",
+    "enabled": "Send this message",
+    "alwaysOn": "Always sent (the card cannot be turned off)",
+    "channel": "Channel",
+    "channels": {
+      "both": "WhatsApp + SMS",
+      "sms": "SMS only",
+      "whatsapp": "WhatsApp only"
+    },
+    "whatsappOnlyWarning": "Guests with basic phones will not receive WhatsApp-only messages.",
+    "sms": "SMS wording",
+    "languages": {
+      "sw": "Kiswahili",
+      "en": "English"
+    },
+    "counter": "{chars} characters · {segments, plural, =1{1 SMS} other{# SMS}}",
+    "gsmWarning": "These characters make the SMS much shorter per part: {chars}. Use plain letters instead.",
+    "insert": "Insert",
+    "preview": "Preview (sample guest)",
+    "contactRequired": "'{contact_name}' and '{contact_phone}' must stay in every SMS.",
+    "whatsapp": "WhatsApp",
+    "variant": "Style",
+    "note": "Personal note (max 200)",
+    "timing": "Timing",
+    "offsetDays": "Days before the event",
+    "offsetDaysAfter": "Days after the event",
+    "timeOfDay": "Time of day",
+    "frequencyDays": "Every (days)",
+    "maxCount": "At most (times)",
+    "types": {
+      "contribution_request": {
+        "name": "Contribution request",
+        "when": "When a contributor is added"
+      },
+      "thank_you": {
+        "name": "Thank-you and balance",
+        "when": "After each payment"
+      },
+      "contribution_reminder": {
+        "name": "Contribution reminder",
+        "when": "Every few days, to contributors with a balance"
+      },
+      "invitation_card": {
+        "name": "Invitation card",
+        "when": "When a card is issued"
+      },
+      "card_upgraded": {
+        "name": "Card upgraded to Double",
+        "when": "When a pledge is upgraded"
+      },
+      "attendance_confirmation": {
+        "name": "Attendance confirmation",
+        "when": "Before the event (if confirmation is on)"
+      },
+      "event_reminder": {
+        "name": "Event reminder",
+        "when": "Before the event"
+      },
+      "post_event_thanks": {
+        "name": "Thank-you after the event",
+        "when": "After the event"
+      }
+    },
+    "errors": {
+      "plan_limit": "Your plan does not allow this change.",
+      "validation": "Check the highlighted messages.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "messageLog": {
+    "title": "Message log",
+    "back": "Back to messages",
+    "openLog": "Message log and send now",
+    "heading": "Delivery log",
+    "send": {
+      "title": "Send a message now",
+      "intro": "Send a chosen message to a group of guests now. Quiet hours still apply, so messages sent late at night go out in the morning.",
+      "messageType": "Message",
+      "group": "Guests",
+      "groups": {
+        "all": "All guests",
+        "unpaid": "Guests with an unpaid pledge",
+        "not_confirmed": "Guests who have not confirmed",
+        "confirmed": "Guests who confirmed"
+      },
+      "check": "Check recipients",
+      "checking": "Checking…",
+      "recipients": "{count, plural, =0{No guests match this group.} =1{1 guest will receive this message.} other{# guests will receive this message.}}",
+      "usage": "Manual sends used: {used} of {allowed}",
+      "confirm": "Send now",
+      "sending": "Sending…",
+      "cancel": "Change",
+      "queued": "{count, plural, =0{No messages were queued.} =1{1 message queued.} other{# messages queued.}}",
+      "locked": "Sending messages yourself is not included in your plan ({plan}). Upgrade to send messages now.",
+      "errors": {
+        "plan_limit": "You have used all the manual sends your plan allows for this event.",
+        "validation": "Choose a message and a group.",
+        "forbidden": "Only the host can send messages.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "filters": {
+      "status": "Status",
+      "type": "Message",
+      "channel": "Channel",
+      "search": "Search guest or phone",
+      "searchButton": "Search",
+      "all": "All"
+    },
+    "statuses": {
+      "queued": "Queued",
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "read": "Read",
+      "failed": "Failed",
+      "held": "On hold"
+    },
+    "channels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp"
+    },
+    "columns": {
+      "guest": "Guest",
+      "phone": "Phone",
+      "type": "Message",
+      "channel": "Channel",
+      "status": "Status",
+      "time": "Time"
+    },
+    "unknownGuest": "Unknown guest",
+    "unknownType": "Other",
+    "empty": "No messages yet.",
+    "loading": "Loading…",
+    "loadMore": "Load more",
+    "refresh": "Refresh",
+    "error": "Could not load the message log. Please try again.",
+    "optOuts": {
+      "title": "Guests who stopped WhatsApp",
+      "intro": "These guests replied STOP. They get SMS only for this event.",
+      "empty": "No guest has stopped WhatsApp messages.",
+      "since": "Since {date}"
+    }
+  },
+  "walkIns": {
+    "title": "Walk-ins",
+    "back": "Back to event",
+    "loading": "Loading…",
+    "error": "Could not load walk-ins. Please try again.",
+    "readOnly": "View only. The host and walk-in approvers decide.",
+    "forbidden": "You can't decide walk-ins for this event.",
+    "decisionError": "Could not save the decision. Please try again.",
+    "alreadyDecided": "Already decided by {name} ({status}).",
+    "alreadyDecidedNoName": "Already decided ({status}).",
+    "linkedGuest": "Invitation: {name}",
+    "people": "{count, plural, one {# person} other {# people}}",
+    "requestedBy": "Requested by {name}",
+    "device": "Device: {name}",
+    "pending": {
+      "title": "Waiting for approval",
+      "intro": "Door staff asked to let these guests in. The first answer decides.",
+      "empty": "No walk-in is waiting."
+    },
+    "review": {
+      "title": "Needs review",
+      "intro": "Admitted at the door while offline. Check the reason, then accept or flag.",
+      "empty": "Nothing needs review.",
+      "reason": "Reason"
+    },
+    "history": {
+      "title": "History",
+      "empty": "No decisions yet.",
+      "decided": "Decided by {name} · {date}",
+      "someone": "someone",
+      "undecided": "Not decided yet"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "refused": "Refused",
+      "admitted_offline": "Admitted offline",
+      "accepted": "Accepted",
+      "flagged": "Flagged"
+    },
+    "actions": {
+      "approve": "Approve",
+      "refuse": "Refuse",
+      "accept": "Accept",
+      "flag": "Flag"
+    }
+  },
+  "confirmations": {
+    "nav": "Confirmations",
+    "title": "Attendance confirmations",
+    "intro": "Record phone responses, override an answer when needed, and review the expected event headcount.",
+    "back": "Back to event",
+    "save": "Save",
+    "saved": "Saved",
+    "notRecorded": "Not recorded",
+    "empty": "No guests match this confirmation state.",
+    "summary": {
+      "expected": "Expected headcount",
+      "totalEntries": "All invited places",
+      "assumption": "No response counts at {pct}%"
+    },
+    "filters": {
+      "label": "Filter confirmations",
+      "all": "All",
+      "yes": "Coming",
+      "none": "No response",
+      "no": "Not coming"
+    },
+    "status": {
+      "yes": "Coming",
+      "none": "No response",
+      "no": "Not coming"
+    },
+    "card": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "columns": {
+      "guest": "Guest",
+      "phone": "Phone",
+      "card": "Card",
+      "current": "Current answer",
+      "recorded": "Recorded",
+      "action": "Record or override"
+    },
+    "errors": {
+      "generic": "Could not save the confirmation. Please try again."
+    }
+  },
+  "billing": {
+    "title": "Plan and payments",
+    "back": "Back to event",
+    "loading": "Loading…",
+    "loadError": "Could not load plan and payments. Please try again.",
+    "retry": "Try again",
+    "banner": {
+      "text": "Guest cards for this event are not paid for yet. Pay before sending cards.",
+      "link": "Pay for cards"
+    },
+    "summary": {
+      "plan": "{name} plan",
+      "pricePerGuest": "{amount} per guest card",
+      "paid": "Paid",
+      "unpaidBadge": "Not paid",
+      "cardsPaid": "Cards paid",
+      "cardsIssued": "Cards issued",
+      "guests": "Guests added",
+      "amountPaid": "Amount paid",
+      "unpaid": "Pay for your guest cards before sending them. You can add more cards later in blocks of 10.",
+      "overLimit": "You have {guests} guests but {paid} cards paid. Add more cards to invite everyone.",
+      "launchOffer": "Launch offer: {percent}% off your first event."
+    },
+    "actions": {
+      "buy": "Buy cards",
+      "addBlock": "Add 10 more",
+      "upgrade": "Upgrade plan"
+    },
+    "pending": {
+      "title": "A payment is waiting",
+      "body": "{amount}, started {date}.",
+      "resume": "Check status"
+    },
+    "history": {
+      "title": "Receipts",
+      "empty": "No payments yet."
+    },
+    "receipt": {
+      "reference": "Reference",
+      "amount": "Amount",
+      "discount": "Launch offer",
+      "cards": "Guest cards",
+      "cardsValue": "{count, plural, one {# card} other {# cards}}",
+      "plan": "Plan",
+      "date": "Date"
+    },
+    "checkout": {
+      "titles": {
+        "buy": "Buy guest cards",
+        "add": "Add more cards",
+        "upgrade": "Upgrade plan",
+        "resume": "Payment"
+      },
+      "intro": "Choose how many cards you need. The price below comes from D-Card and updates as you change it.",
+      "plan": "Plan",
+      "planOption": "{name} · {price} per card",
+      "planCurrent": "{name} · {price} per card (current)",
+      "cards": "Guest cards",
+      "decrease": "{size} fewer cards",
+      "increase": "{size} more cards",
+      "blockHint": "You have {paid} cards paid. Extra cards come in blocks of {size}.",
+      "suggestHint": "Suggested: one card for each of your {count} guests.",
+      "calculating": "Calculating the price…",
+      "minimumNote": "The minimum charge per event is {amount}.",
+      "nothingToPay": "Nothing to pay: these cards are already paid for.",
+      "lines": {
+        "new_cards": "{quantity} cards × {unitPrice}",
+        "extra_cards": "{quantity} extra cards × {unitPrice}",
+        "upgrade": "Upgrade {quantity} cards (+{unitPrice} each)",
+        "minimum_top_up": "Top-up to the minimum charge",
+        "other": "Other ({quantity})"
+      },
+      "subtotal": "Subtotal",
+      "launchOffer": "Launch offer ({percent}% off)",
+      "total": "Total",
+      "continue": "Review",
+      "cancel": "Cancel",
+      "back": "Back",
+      "review": {
+        "title": "Review and pay",
+        "intro": "{plan} plan, {count, plural, one {# guest card} other {# guest cards}} in total.",
+        "method": "How do you want to pay?",
+        "methods": {
+          "mobile": "Mobile money",
+          "mobileHint": "M-Pesa, Airtel Money, Mixx by Yas or HaloPesa. You confirm with your PIN.",
+          "session": "Card or other",
+          "sessionHint": "Opens a secure payment page in a new tab."
+        },
+        "phone": "Mobile money number",
+        "phoneHint": "For example 0754 123 456",
+        "secure": "Secure payment through Snippe.",
+        "pay": "Pay {amount}",
+        "paying": "Starting payment…"
+      },
+      "waiting": {
+        "mobileTitle": "Check your phone and enter your PIN",
+        "mobileBody": "We sent a request for {amount} to {phone}. Enter your mobile money PIN to pay.",
+        "sessionTitle": "Finish paying in the new tab",
+        "sessionBody": "Pay {amount} on the payment page. This page updates when the payment is done.",
+        "openPage": "Open the payment page",
+        "polling": "Waiting for confirmation…",
+        "later": "Close and check later"
+      },
+      "success": {
+        "title": "Payment received",
+        "next": "You can now send cards to up to {count} guests.",
+        "done": "Done"
+      },
+      "failure": {
+        "title": "The payment did not go through",
+        "expiredTitle": "The payment request expired",
+        "body": "No money was taken. You can try again.",
+        "retry": "Try again"
+      },
+      "errors": {
+        "phoneRequired": "Enter the mobile money number to pay from.",
+        "phoneInvalid": "Enter a Tanzanian number, for example 0754 123 456.",
+        "quote_changed": "The price changed. Check the new total and confirm again.",
+        "nothing_to_pay": "There is nothing to pay for these cards.",
+        "payment_in_progress": "Another payment for this event is still waiting. Check its status first.",
+        "provider": "The payment service is not available right now. Please try again shortly.",
+        "validation": "Check the details and try again.",
+        "forbidden": "Only the host can pay for this event.",
+        "generic": "Could not start the payment. Please try again.",
+        "quote": "Could not get the price. Please try again.",
+        "quoteInvalid": "Choose at least {min} cards and a plan the same or higher than the current one."
+      }
+    },
+    "admin": {
+      "title": "Billing settings",
+      "pageIntro": "Offers that apply to hosts' payments.",
+      "launchOffer": "Launch offer",
+      "intro": "A discount on a host's first event. Switch it off or change the percent at any time; payments already made are not affected.",
+      "enabled": "Launch offer is on",
+      "percent": "Discount (%)",
+      "percentHint": "0 to 90",
+      "percentError": "Enter a whole number from 0 to 90.",
+      "statusOn": "Hosts now get {percent}% off their first event.",
+      "statusOff": "No launch offer at the moment.",
+      "saved": "Saved.",
+      "error": "Could not save. Please try again.",
+      "loadError": "Could not load the settings.",
+      "loading": "Loading…",
+      "save": "Save",
+      "saving": "Saving…"
+    },
+    "nav": "Plan and payments"
+  },
+  "media": {
+    "nav": "Photos & videos",
+    "back": "Back to event",
+    "title": "Photos and videos",
+    "intro": "Photos and videos are kept in your own Google Drive. D-Card saves only the file references, never the files.",
+    "loading": "Loading photos and videos…",
+    "loadError": "Could not load the media settings.",
+    "retry": "Try again",
+    "readOnly": "Only the host can change photos, videos and the gallery. You can view them here.",
+    "msingi": "The Msingi plan has no photos or videos on the card. You can still share a Google Photos album link with your guests.",
+    "drive": {
+      "title": "Google Drive",
+      "intro": "Photos and videos go straight to a “D-Card – event name” folder in your Google Drive.",
+      "notConnected": "Google Drive is not connected yet. Connect it to add card photos, the story page and the guest gallery.",
+      "connect": "Connect Google Drive",
+      "hostOnly": "Only the host can connect Google Drive.",
+      "scopeNote": "D-Card can only see files it creates in that folder, never your other Drive files.",
+      "connected": "Google Drive is connected.",
+      "connectedAs": "Connected as {email}",
+      "openFolder": "Open folder in Drive",
+      "downloadHint": "To download everything, open the folder in Google Drive and use Drive's own download.",
+      "disconnect": "Disconnect",
+      "disconnected": "Google Drive has been disconnected. Your files stay in your Drive.",
+      "needsReconnect": "D-Card can no longer reach some files in your Google Drive. Reconnect so guests can see the photos and videos again.",
+      "reconnect": "Reconnect Google Drive",
+      "cancel": "Cancel",
+      "disconnectConfirm": {
+        "title": "Disconnect Google Drive?",
+        "body": "Guests will stop seeing the card photos, story and gallery until you connect again. Nothing is deleted: the files stay in your Drive."
+      },
+      "quota": {
+        "title": "Drive storage",
+        "used": "{used} of {limit} used",
+        "usedNoLimit": "{used} used",
+        "free": "{free} free",
+        "warning": "Your Drive may be too small for the photos and videos guests are expected to upload. Free up space or buy more Google storage before the event. Guest uploads pause when the Drive is full."
+      },
+      "sharing": {
+        "title": "Who can open the files",
+        "intro": "You can change this at any time.",
+        "default": "Recommended",
+        "private": {
+          "title": "Private",
+          "body": "Only you can open the folder in Drive. Guests see photos and videos only through D-Card with a valid card link, and access ends when the gallery page closes."
+        },
+        "link": {
+          "title": "Anyone with the link",
+          "body": "Simpler: guests load files straight from Drive. But anyone who gets a forwarded link can open them, until you change this setting."
+        },
+        "save": "Save sharing choice",
+        "connectFirst": "Connect Google Drive first."
+      },
+      "modeSaved": "Sharing choice saved.",
+      "errors": {
+        "notConnected": "Connect Google Drive before choosing how files are shared.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "photosLink": {
+      "title": "Google Photos album",
+      "intro": "Optional: paste a shared Google Photos album link to show on the card. D-Card stores nothing from it.",
+      "introMsingi": "Paste a shared Google Photos album link and guests will see it on the card. D-Card stores nothing from it.",
+      "label": "Album link",
+      "hint": "In Google Photos, open the album, tap Share and copy the link. Leave empty to remove it.",
+      "save": "Save link",
+      "saved": "Album link saved.",
+      "cleared": "Album link removed.",
+      "invalid": "Paste a full link that starts with https://",
+      "error": "Could not save the link. Please try again."
+    },
+    "editor": {
+      "card": {
+        "title": "Card photos and video",
+        "intro": "Shown on the invitation card as a slideshow, with a short video."
+      },
+      "story": {
+        "title": "Story page",
+        "intro": "Your photos and videos on the card link, for guests to enjoy before the event."
+      },
+      "counts": "Photos {photos}/{maxPhotos} · Videos {videos}/{maxVideos}",
+      "rules": "Photos are made smaller before upload. Videos up to {seconds} seconds.",
+      "limitReached": "You have used all the photos and videos your plan allows here.",
+      "connectFirst": "Connect Google Drive above to add photos and videos.",
+      "addPhotos": "Add photos",
+      "addVideo": "Add video",
+      "empty": "No photos or videos yet.",
+      "loadError": "Could not load the photos and videos.",
+      "retry": "Try again",
+      "dismiss": "Remove from list",
+      "photoAlt": "Photo",
+      "videoAlt": "Video",
+      "delete": "Delete",
+      "deleteError": "Could not delete. Please try again.",
+      "cancel": "Cancel",
+      "deleteConfirm": {
+        "title": "Delete this item?",
+        "body": "It will be removed from the card and deleted from the D-Card folder in your Drive."
+      },
+      "status": {
+        "hidden": "Hidden",
+        "missing": "Missing"
+      },
+      "stage": {
+        "checking": "Checking…",
+        "resizing": "Making the photo smaller…",
+        "uploading": "Uploading… {pct}%",
+        "finishing": "Finishing…"
+      },
+      "errors": {
+        "type": "This file type is not supported. Use JPG, PNG, WebP or HEIC photos, or MP4, MOV or WebM videos.",
+        "tooBig": "This file is larger than your plan allows.",
+        "tooLong": "This video is longer than {seconds} seconds. Trim it and try again.",
+        "duration": "Could not read the video length. Try another file.",
+        "photoLimit": "You have reached the photo limit for your plan.",
+        "videoLimit": "You have reached the video limit for your plan.",
+        "plan_limit": "Your plan does not allow more here.",
+        "drive_full": "Your Google Drive is full. Free up space and try again.",
+        "drive_not_connected": "Google Drive is not connected.",
+        "validation": "This file cannot be uploaded.",
+        "drive": "The upload to Google Drive failed.",
+        "network": "The connection dropped during the upload."
+      }
+    },
+    "gallery": {
+      "title": "Guest gallery",
+      "intro": "Photos and videos your guests upload from their card link. Hide anything you don't want shown; reported items come first.",
+      "refresh": "Refresh",
+      "loading": "Loading the gallery…",
+      "loadError": "Could not load the gallery.",
+      "error": "Could not save the change. Please try again.",
+      "empty": "No guest uploads yet.",
+      "reportedCount": "{count, plural, one {# item was reported by a guest.} other {# items were reported by guests.}}",
+      "host": "Host",
+      "photoAlt": "Photo from {name}",
+      "videoAlt": "Video from {name}",
+      "show": "Show",
+      "keep": "Keep showing",
+      "hide": "Hide",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "deleteConfirm": {
+        "title": "Delete the upload from {name}?",
+        "body": "It will be removed from the gallery and deleted from the D-Card folder in your Drive. This cannot be undone."
+      },
+      "status": {
+        "uploading": "Uploading",
+        "visible": "Shown",
+        "hidden": "Hidden",
+        "reported": "Reported",
+        "deleted": "Deleted",
+        "missing": "Missing"
+      }
+    },
+    "slideshow": {
+      "title": "Live slideshow",
+      "intro": "Show guest photos on the venue screen as they arrive. Open it on the computer connected to the screen.",
+      "open": "Open slideshow"
+    },
+    "slideshowPage": {
+      "notAvailable": "The live slideshow is part of the Premium plan.",
+      "back": "Back to photos and videos",
+      "waiting": "Waiting for guests' photos…",
+      "photoBy": "Photo from {name}",
+      "host": "the host",
+      "fullscreen": "Full screen",
+      "exit": "Exit"
+    }
+  },
+  "adminNav": {
+    "label": "Admin sections",
+    "eventTypes": "Event types",
+    "templates": "WhatsApp templates",
+    "rates": "Provider rates",
+    "billing": "Billing",
+    "users": "Users",
+    "events": "Events",
+    "audit": "Audit log",
+    "queues": "Queues",
+    "costReport": "Cost report",
+    "security": "Security"
+  },
+  "audit": {
+    "nav": "Audit log",
+    "title": "Audit log",
+    "intro": "Every change to this event: who made it, when, and what changed. Download your records as CSV files for Excel.",
+    "back": "Back to event",
+    "exports": {
+      "title": "Download records (CSV)",
+      "guests": "Guests",
+      "contributions": "Contributions",
+      "attendance": "Attendance",
+      "failed": "The download failed. Please try again."
+    },
+    "filter": {
+      "label": "Show",
+      "all": "All actions",
+      "groups": {
+        "event": "Event settings",
+        "guest": "Guests",
+        "card": "Cards",
+        "pledge": "Pledges",
+        "payment": "Payments",
+        "refund": "Refunds",
+        "confirmation": "Confirmations",
+        "door": "Check-in",
+        "walkin": "Walk-ins",
+        "team": "Team",
+        "message": "Messages",
+        "billing": "Billing",
+        "media": "Photos and videos",
+        "export": "Downloads"
+      }
+    },
+    "columns": {
+      "time": "Time",
+      "actor": "By",
+      "action": "Action",
+      "changes": "Changes"
+    },
+    "system": "D-Card (automatic)",
+    "unknownActor": "Removed account",
+    "noChanges": "—",
+    "empty": "No audit entries match this filter.",
+    "loadMore": "Load more",
+    "loading": "Loading…",
+    "error": "Could not load the audit log. Please try again.",
+    "actions": {
+      "event": {
+        "created": "Event created",
+        "updated": "Event settings changed",
+        "cancelled": "Event cancelled"
+      },
+      "guest": {
+        "added": "Guest added",
+        "updated": "Guest edited",
+        "removed": "Guest removed"
+      },
+      "guests": {
+        "imported": "Guests imported",
+        "consent_confirmed": "Guest consent confirmed"
+      },
+      "card": {
+        "issued": "Card issued",
+        "cancelled": "Card cancelled",
+        "reinstated": "Card reinstated"
+      },
+      "pledge": {
+        "created": "Pledge added",
+        "updated": "Pledge edited",
+        "auto_upgraded": "Card upgraded automatically"
+      },
+      "payment": {
+        "recorded": "Payment recorded",
+        "updated": "Payment edited"
+      },
+      "refund": {
+        "recorded": "Refund recorded"
+      },
+      "confirmation": {
+        "recorded": "Attendance confirmation recorded"
+      },
+      "rsvp": {
+        "submitted": "RSVP received"
+      },
+      "door": {
+        "admitted": "Guest admitted",
+        "refused": "Entry refused",
+        "over_used": "Card over-used",
+        "card_number_lockout": "Card number lockout",
+        "device_registered": "Door device registered",
+        "device_revoked": "Door device revoked",
+        "synced": "Offline check-ins synced"
+      },
+      "walkin": {
+        "requested": "Walk-in requested",
+        "approved": "Walk-in approved",
+        "refused": "Walk-in refused",
+        "admitted_offline": "Walk-in admitted offline",
+        "accepted": "Offline walk-in accepted",
+        "flagged": "Offline walk-in flagged"
+      },
+      "team": {
+        "invite_created": "Team invite sent",
+        "invite_accepted": "Team invite accepted",
+        "invite_revoked": "Team invite revoked",
+        "member_removed": "Team member removed"
+      },
+      "message": {
+        "settings_updated": "Message settings changed",
+        "manual_send": "Message sent manually"
+      },
+      "whatsapp": {
+        "opted_out": "Guest opted out of WhatsApp"
+      },
+      "billing": {
+        "checkout_started": "Payment started",
+        "paid": "Plan paid",
+        "payment_failed": "Plan payment failed",
+        "payment_expired": "Plan payment expired",
+        "settings_updated": "Billing settings changed"
+      },
+      "media": {
+        "drive_connected": "Google Drive connected",
+        "drive_disconnected": "Google Drive disconnected",
+        "sharing_changed": "Media sharing changed",
+        "deleted": "Photo or video deleted",
+        "deleted_by_guest": "Guest deleted their upload",
+        "reported": "Photo or video reported",
+        "shown": "Photo or video shown",
+        "hidden": "Photo or video hidden"
+      },
+      "export": {
+        "downloaded": "Records downloaded"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Privacy notice",
+    "lastUpdated": "Last updated: 27 September 2026",
+    "intro": "This notice explains what personal information D-Card keeps, why, who we share it with, how long we keep it and what you can do about it. It covers the D-Card web app, the card pages guests open, and the D-Card mobile and door apps.",
+    "languages": "Language",
+    "sections": {
+      "who": {
+        "title": "Who we are",
+        "body": [
+          "D-Card is a digital invitation-card service for events in Tanzania. Hosts (the people organising an event) use D-Card to add guests, send invitation cards by WhatsApp or SMS, record contributions and check guests in at the door.",
+          "When a host adds you as a guest, the host decides who is invited and what is recorded about the invitation. D-Card keeps and processes that information to provide the service to the host."
+        ]
+      },
+      "collect": {
+        "title": "What we collect",
+        "body": [
+          "We collect only what the service needs:"
+        ],
+        "items": [
+          "Hosts and committee members: your name, the email address or phone number you sign in with, the events you create (title, date, venue, card design), your guest lists, the contributions you record, the messages you send, and the payments you make to D-Card (amount, mobile-money reference and status). We never see your mobile-money PIN.",
+          "Guests: the name and phone number the host adds, your invitation (card number and how many people it admits), your RSVP or attendance confirmation, pledges and payments recorded by the host's committee, the messages sent to you and whether they were delivered, and your check-in at the door. If you sign in with Google or Apple, we also keep your account's name and email address.",
+          "Photos and videos: if you upload to an event gallery, we keep the file name, who uploaded it and the file's id. The file itself is stored in the host's own Google Drive, not on D-Card servers.",
+          "Door staff: your name or phone number, the device registered for check-in, and every check-in you perform.",
+          "Technical information: sign-in sessions, the device and app details needed for sign-in and notifications, and an audit log of important actions (for example edited payments, role changes and check-ins)."
+        ]
+      },
+      "use": {
+        "title": "Why we use it",
+        "body": [
+          "We use this information to:"
+        ],
+        "items": [
+          "create invitation cards and send event messages by WhatsApp or SMS;",
+          "let the host track RSVPs, contributions and attendance;",
+          "check guests in at the door and stop a card being used more times than allowed;",
+          "take payment for the host's plan;",
+          "show an event photo gallery when the host turns it on;",
+          "keep the service secure, investigate problems and keep a record of important changes."
+        ],
+        "after": [
+          "When hosts add or import guests, they confirm that the guests agreed to receive messages about the event. We do not sell personal information and we do not use it for advertising."
+        ]
+      },
+      "share": {
+        "title": "Who we share it with",
+        "body": [
+          "The host of an event can see the information about their own guests. We also use the following service providers to run D-Card; each receives only what it needs for its part of the service:"
+        ],
+        "items": [
+          "Firebase Authentication (Google): sign-in.",
+          "Meta WhatsApp Cloud API: sending WhatsApp messages.",
+          "NextSMS: sending SMS messages.",
+          "Snippe: mobile-money payments to D-Card.",
+          "Google Drive: the host's own Drive stores gallery photos and videos.",
+          "Resend: sending email.",
+          "Vercel: hosting the web app and API (European Union region).",
+          "Railway: background work such as sending messages (European Union region).",
+          "Neon: the database.",
+          "Sentry: error reports, once enabled."
+        ],
+        "after": [
+          "Some of these providers process information outside Tanzania, for example in the European Union or the United States. We may also disclose information when the law requires it."
+        ]
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "items": [
+          "Guests without a D-Card account: two weeks after the event ends, we remove the link between the invitation and your personal record, disable your card link and QR code, delete your personal record if nothing else uses it, and mask your phone number and message text in our message logs and audit records.",
+          "The host keeps its own event records (each guest's name, phone number, pledge, payments and entries) until the host deletes the event.",
+          "Registered guests keep their event history until they delete their account.",
+          "Host accounts are kept while they are in use. A host can delete their account once they have no active events.",
+          "Gallery pages close after the period included in the host's plan. The files stay in the host's Google Drive, which the host controls."
+        ]
+      },
+      "rights": {
+        "title": "Your choices and rights",
+        "items": [
+          "If you have a D-Card account, you can download a copy of your data and delete your account from within D-Card.",
+          "If you do not have an account, ask the host of the event to correct or remove your details, or contact us and we will help.",
+          "You can ask us what information we hold about you, ask us to correct it, or object to how we use it.",
+          "To stop receiving messages about an event, ask the host or contact us."
+        ]
+      },
+      "security": {
+        "title": "How we protect it",
+        "body": [
+          "We use encrypted connections, limit access to the people who need it, and keep an audit log of important actions. No system is completely secure, so please tell us straight away if you notice a problem."
+        ]
+      },
+      "children": {
+        "title": "Children",
+        "body": [
+          "D-Card is meant for adults organising and attending events. Hosts should not add children as guests with their own phone numbers. If you think we hold information about a child, contact us and we will remove it."
+        ]
+      },
+      "changes": {
+        "title": "Changes to this notice",
+        "body": [
+          "We will update this notice when the service changes. The date at the top shows when it was last updated. If a change is significant, we will tell hosts in D-Card."
+        ]
+      },
+      "contact": {
+        "title": "Contact us",
+        "body": [
+          "For questions or requests about your personal information, email us:"
+        ]
+      }
+    },
+    "email": "privacy@dcard.danfordchris.dev"
+  },
+  "adminPlatform": {
+    "list": {
+      "loading": "Loading…",
+      "errorTitle": "Could not load this list",
+      "errorBody": "Check your connection and try again.",
+      "retry": "Try again",
+      "noResultsTitle": "No results",
+      "noResultsBody": "Nothing matches these filters. Change or clear them.",
+      "pagination": "Pages",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}",
+      "cancel": "Cancel"
+    },
+    "twoStep": {
+      "title": "Two-step sign-in",
+      "intro": {
+        "intro": "The admin area needs a code from an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password and others) as well as your password.",
+        "enrol": "Add D-Card to your authenticator app, then type the 6-digit code it shows.",
+        "verify": "Type the 6-digit code from your authenticator app to open the admin area.",
+        "codes": "Two-step sign-in is on. Save these recovery codes now."
+      },
+      "setUp": "Set up two-step sign-in",
+      "stepApp": "Open your authenticator app.",
+      "stepScan": "Scan this QR code, or enter the key by hand.",
+      "stepCode": "Type the 6-digit code the app shows.",
+      "qrAlt": "QR code to add D-Card to your authenticator app",
+      "manualKey": "Can't scan? Enter this key:",
+      "openInApp": "Open in authenticator app",
+      "codeLabel": "6-digit code",
+      "codeOrRecoveryLabel": "Code or recovery code",
+      "recoveryHint": "Lost your phone? Use one of your recovery codes. Each works once.",
+      "confirm": "Turn on",
+      "verify": "Continue",
+      "codesLabel": "Recovery codes",
+      "codesWarning": "Each code works once if you lose your authenticator app. They will not be shown again: copy or download them and keep them somewhere safe.",
+      "copy": "Copy codes",
+      "copied": "Copied",
+      "download": "Download (.txt)",
+      "fileHeading": "D-Card admin recovery codes (each works once)",
+      "saved": "I saved them",
+      "errors": {
+        "short": "Enter the 6-digit code.",
+        "invalid": "That code is not right. Check the time on your phone and try again.",
+        "locked": "Too many wrong codes. Wait 15 minutes and try again.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "users": {
+      "title": "Users",
+      "intro": "Find accounts by email, name or phone. Grant or remove admin access, or disable an account. Every change is recorded in the audit log.",
+      "search": "Search users",
+      "searchPlaceholder": "Email, name or phone (255…)",
+      "searchButton": "Search",
+      "empty": "No accounts yet.",
+      "columns": {
+        "user": "Account",
+        "phone": "Phone",
+        "roles": "Roles",
+        "events": "Events hosted",
+        "status": "Status",
+        "joined": "Joined"
+      },
+      "provider": {
+        "password": "Email and password",
+        "google": "Google",
+        "apple": "Apple"
+      },
+      "admin": "Admin",
+      "teamRoles": "{count, plural, =0 {No team roles} one {# team role} other {# team roles}}",
+      "status": {
+        "active": "Active",
+        "disabled": "Disabled",
+        "deleted": "Deleted"
+      },
+      "you": "You",
+      "actions": {
+        "grantAdmin": "Make admin",
+        "revokeAdmin": "Remove admin",
+        "disable": "Disable",
+        "enable": "Enable"
+      },
+      "confirm": {
+        "grantAdmin": {
+          "title": "Make {name} an admin?",
+          "body": "They will be able to see every event, change prices and manage accounts once they set up two-step sign-in."
+        },
+        "revokeAdmin": {
+          "title": "Remove admin access from {name}?",
+          "body": "They keep their account and events but lose access to the admin area."
+        },
+        "disable": {
+          "title": "Disable {name}?",
+          "body": "They are signed out and cannot sign in until you enable the account again. Their events stay as they are."
+        },
+        "enable": {
+          "title": "Enable {name}?",
+          "body": "They can sign in again."
+        }
+      },
+      "done": {
+        "grantAdmin": "{name} is now an admin.",
+        "revokeAdmin": "{name} is no longer an admin.",
+        "disable": "{name} is disabled.",
+        "enable": "{name} is enabled."
+      },
+      "errors": {
+        "self": "You cannot change your own account here.",
+        "generic": "Could not save the change. Please try again."
+      }
+    },
+    "events": {
+      "title": "Events",
+      "intro": "Search every event by title, host email and date. Read only.",
+      "search": "Title or host email",
+      "searchPlaceholder": "e.g. Harusi ya Juma",
+      "from": "From",
+      "to": "To",
+      "searchButton": "Search",
+      "clear": "Clear",
+      "empty": "No events yet.",
+      "columns": {
+        "event": "Event",
+        "date": "Date",
+        "status": "Status",
+        "plan": "Plan",
+        "guests": "Guests / limit",
+        "cards": "Cards",
+        "paid": "Paid",
+        "messages": "Messages"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "noPlan": "No plan"
+    },
+    "audit": {
+      "title": "Audit log",
+      "intro": "Every recorded change across D-Card. Filter, then export the same results as CSV.",
+      "eventId": "Event ID",
+      "actorUserId": "Account ID",
+      "action": "Action",
+      "actionHint": "Starts with, e.g. admin. or guest.",
+      "from": "From",
+      "to": "To",
+      "searchButton": "Filter",
+      "clear": "Clear",
+      "export": "Export CSV",
+      "exporting": "Exporting…",
+      "exportFailed": "The export failed. Please try again.",
+      "empty": "No audit entries yet.",
+      "columns": {
+        "time": "Time",
+        "actor": "By",
+        "action": "Action",
+        "target": "Target",
+        "change": "Change"
+      },
+      "system": "D-Card (automatic)",
+      "unknownActor": "Removed account",
+      "eventRef": "Event {id}",
+      "errors": {
+        "id": "Paste a full ID (36 characters)."
+      }
+    },
+    "queues": {
+      "title": "Queues",
+      "intro": "Background jobs per queue (messages, cards, imports). Retry failed jobs after fixing the cause.",
+      "refresh": "Refresh",
+      "empty": "No queues found.",
+      "columns": {
+        "name": "Queue",
+        "waiting": "Waiting",
+        "active": "Active",
+        "delayed": "Delayed",
+        "failed": "Failed",
+        "completed": "Completed"
+      },
+      "retry": "Retry failed",
+      "retryLabel": "Retry failed jobs in {name}",
+      "confirmTitle": "Retry failed jobs in {name}?",
+      "confirmBody": "{count, plural, one {# failed job} other {# failed jobs}} will run again. Messages may be sent again if they failed after sending.",
+      "retried": "{count, plural, =0 {No jobs to retry in {name}.} one {# job in {name} will run again.} other {# jobs in {name} will run again.}}",
+      "retryFailed": "Could not retry the jobs. Please try again."
+    },
+    "costReport": {
+      "title": "Cost report",
+      "intro": "Internal only: revenue from paid plans, estimated WhatsApp and SMS cost, payment fees and margin, by events starting in the period.",
+      "from": "From",
+      "to": "To",
+      "feePercent": "Payment fee (%)",
+      "feeHint": "Snippe fee, 0 to 50",
+      "run": "Update",
+      "summary": "{count, plural, one {# event} other {# events}} · payment fee {fee}",
+      "totals": "Totals",
+      "messageCost": "Message cost",
+      "messageSplit": "{whatsapp} WhatsApp · {sms} SMS",
+      "uncosted": "{count, plural, one {# sent message has} other {# sent messages have}} no cost because there was no provider rate at send time. Add the missing rate so costs are complete.",
+      "byPlan": "By plan",
+      "byMonth": "By month",
+      "byEvent": "By event",
+      "empty": "No events in this period",
+      "emptyBody": "Pick another date range.",
+      "noPlan": "No plan",
+      "columns": {
+        "plan": "Plan",
+        "month": "Month",
+        "event": "Event",
+        "cardsPaid": "Cards paid",
+        "revenue": "Revenue",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS",
+        "paymentFee": "Payment fee",
+        "margin": "Margin",
+        "marginPct": "Margin %",
+        "count": "{count, plural, one {# message} other {# messages}}"
+      },
+      "errors": {
+        "range": "Pick a start date on or before the end date.",
+        "fee": "Enter a number from 0 to 50."
+      }
+    },
+    "security": {
+      "title": "Security",
+      "intro": "Your two-step sign-in for the admin area.",
+      "statusTitle": "Two-step sign-in",
+      "on": "On. The admin area asks for a code from your authenticator app every 12 hours.",
+      "off": "Off.",
+      "recoveryLeft": "{count, plural, =0 {No recovery codes left.} one {# recovery code left.} other {# recovery codes left.}}",
+      "disableTitle": "Turn off two-step sign-in",
+      "disableBody": "You will need to set it up again before you can use the admin area.",
+      "codeLabel": "Code or recovery code",
+      "disable": "Turn off"
+    }
+  }
+}

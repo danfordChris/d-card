@@ -1,0 +1,98 @@
+# D-Card API — guest import (Excel/CSV) and copy from a past event (host, committee)
+# Two steps: preview (validation report, nothing written) → confirm with consent.
+# Template: /templates/guests-template.xlsx or .csv (columns name, phone, card_type, partner_name; Swahili headers also accepted).
+
+
+### Setup
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Setup: event to import into
+# @name event
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "kawaida", "eventTypeKey": "send_off", "title": "Import demo", "startsAt": "2026-12-19T15:00:00+03:00", "contactName": "Asha", "contactPhone": "0754123456" }
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+### Preview a CSV upload (multipart field "file", .xlsx or .csv, ≤ 2 MB, ≤ 5,000 rows)
+# 201 → { "jobId", "report": { "total", "valid", "invalid": [{ row, phone, reason: invalid_phone|name_required|invalid_card_type }],
+#   "duplicatesInFile": [{ row, phone, firstRow }], "existing": [{ row, phone, name }] } }
+# The sample file gives: 5 rows, 3 valid, 1 invalid phone, 1 duplicate of row 2.
+# 422 wrong type / missing name or phone column / too many rows.
+# @name preview
+POST {{baseUrl}}/api/v1/events/{{eventId}}/imports
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: multipart/form-data; boundary=----DCardBoundary
+
+------DCardBoundary
+Content-Disposition: form-data; name="file"; filename="guests.csv"
+Content-Type: text/csv
+
+< ./fixtures/guests.csv
+------DCardBoundary--
+
+> {%
+  client.global.set("previewJobId", response.body.jobId);
+%}
+
+### Confirm the import (consent required)
+# Creates invitations for the valid rows and one guest_consent (source "import").
+# 200 → { "imported": 3, "existing": 0, "invalid": 0 } · 422 consent_required · 409 already confirmed · 404 unknown job.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/imports/{{previewJobId}}/confirm
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "consent": true }
+
+### Confirming twice → 409
+POST {{baseUrl}}/api/v1/events/{{eventId}}/imports/{{previewJobId}}/confirm
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "consent": true }
+
+### Copy guests from a past event of the same host (GST-7)
+# People only (no pledges, payments or answers). Same preview → confirm flow.
+# 201 → { "jobId", "report" } · 403 not your event · 422 same event.
+# @name target
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "kawaida", "eventTypeKey": "wedding", "title": "Copy target", "startsAt": "2027-02-14T15:00:00+03:00", "contactName": "Asha", "contactPhone": "0754123456" }
+
+> {%
+  client.global.set("targetEventId", response.body.id);
+%}
+
+###
+# @name copy
+POST {{baseUrl}}/api/v1/events/{{targetEventId}}/imports/copy
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "fromEventId": "{{eventId}}" }
+
+> {%
+  client.global.set("copyJobId", response.body.jobId);
+%}
+
+###
+POST {{baseUrl}}/api/v1/events/{{targetEventId}}/imports/{{copyJobId}}/confirm
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "consent": true }

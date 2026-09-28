@@ -1,0 +1,47 @@
+# ADR 0003 — Technical Stack
+
+## Date
+
+2026-09-24
+
+## Decision
+
+| Area | Decision |
+|------|----------|
+| Web + backend | Next.js (App Router, Route Handlers), TypeScript, on Vercel (Cape Town) |
+| Mobile | Flutter: two apps, **D-Card** and **D-Card Door** |
+| Database | PostgreSQL (Neon) with **Drizzle ORM** |
+| Queues / messaging jobs | Redis + BullMQ, consumed by a long-lived Node.js worker |
+| Authentication | **Firebase Auth** (email/password; Google/Apple for guests). Roles and permissions in Postgres, keyed by Firebase UID |
+| Push notifications | Firebase Cloud Messaging / APNs |
+| Payments (host plans) | **Snippe** (snippe.sh), behind `PaymentGateway` |
+| SMS | NextSMS |
+| WhatsApp | Meta WhatsApp Cloud API, one D-Card number |
+| Media | Host's Google Drive (ADR 0002) |
+| Flutter local storage | **sqflite (`sqflite_sqlcipher`) and `shared_preferences` only — no Hive.** `flutter_secure_storage` holds tokens and the DB key only |
+| Repo tooling | One monorepo: pnpm + Turborepo (TypeScript), Melos (Dart) |
+| Worker + Redis hosting | Railway, near the Neon/Vercel region |
+| API contract | Zod → OpenAPI → generated Dart client |
+| Web UI | **Tailwind CSS only** (own components, no component library); `next-intl` for Swahili/English |
+| Email | **Resend** (team invitation emails), behind `EmailSender` |
+| API client keys | Every `/api/v1` request sends `X-API-Key`; keys are per client (`API_KEYS`: web, mobile, door, tools) and checked in the Next.js proxy (constant-time, SHA-256 digests) before any route runs. They identify and allow the calling app and can be rotated per client; user identity stays Firebase + roles. The web key is public in the browser |
+| Marketing site | **Astro** (static output, zero client JavaScript by default) + Tailwind in `apps/site`, deployed separately from the web app (owner decision 2026-09-25) |
+| Provider webhooks | `/api/webhooks/*` are exempt from `X-API-Key` (providers cannot send it) and verified instead: Meta `X-Hub-Signature-256` HMAC over the raw body, NextSMS verify token, Snippe HMAC; idempotent handlers |
+| Message dispatch | Transactional outbox: business changes write an `outbox` row in the same transaction; the worker turns each row into per-channel BullMQ jobs with idempotent ids, so a crash never loses or duplicates a message |
+| Local auth mode | `AUTH_VERIFIER=dev` accepts `fake:` test tokens and real Firebase tokens (non-production only); `fake` is for automated tests; production uses `firebase` |
+| Card link and QR tokens | 32 random bytes (base64url). Stored as an HMAC-SHA256 hash (`TOKEN_HASH_SECRET`) for lookup, plus an AES-256-GCM encrypted copy (`DATA_ENCRYPTION_KEY`) so a card can be re-sent without changing its link or QR |
+
+## Reason
+
+- Stack agreed by the product owner. Firestore rejected: check-in needs atomic conditional SQL updates and contributions need relational reporting.
+- Firebase Auth minimises auth work for two Flutter apps and shares the FCM project.
+- Snippe chosen by the product owner: 2.5% mobile money, no monthly fee, USSD push on all major networks, Node SDK.
+- Web UI: product owner chose Tailwind only (2026-09-24).
+- Email: product owner chose invite link + email; Resend picked for its free tier and Next.js fit (research: `docs/research/`).
+- Hive rejected: original package unmaintained; no query language or transactions.
+
+## Impacted Docs
+
+- `docs/design/architecture/system.md`
+- `docs/design/architecture/codebase.md`
+- `docs/design/integrations/*`

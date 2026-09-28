@@ -1,0 +1,5 @@
+{
+  "//": "Builds and CI type-check without .next/dev/types: the running dev server rewrites those files, and a half-written copy broke builds. Editors use tsconfig.json.",
+  "extends": "./tsconfig.json",
+  "include": ["next-env.d.ts", "src", "test", "vitest.config.ts", "next.config.ts", ".next/types/**/*.ts"]
+}

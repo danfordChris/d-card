@@ -1,0 +1,132 @@
+# D-Card API — guests (host and committee manage; treasurer reads)
+# docs/design/features/guests-and-cards.md. Run top to bottom.
+
+
+### Setup: provision users
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+###
+POST {{baseUrl}}/api/v1/me
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{treasurerToken}}
+
+### Setup: create an event
+# @name event
+POST {{baseUrl}}/api/v1/events
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "planKey": "kawaida", "eventTypeKey": "wedding", "title": "Guests demo", "startsAt": "2026-12-12T15:00:00+03:00", "contactName": "Asha", "contactPhone": "0754123456" }
+
+> {%
+  client.global.set("eventId", response.body.id);
+%}
+
+### Add a guest (form)
+# Body: name (1–120), phone, cardType single|double (default single), partnerName (double only), consent (must be true, MSG-14).
+# One Person per phone platform-wide; one invitation per person per event (GST-2).
+# 201 → { "guest": Guest, "existing": false }
+# 200 → { "guest": <the existing invitation>, "existing": true } when the phone is already invited.
+# 422 consent_required · 422 invalid_phone · 403 treasurer/stranger · 409 event cancelled/completed.
+# Guest: { id, eventId, personId, name, phone "2557…", partnerName, cardType, totalEntries 1|2, status pending|issued|cancelled, cardNumber, issuedAt, createdAt, updatedAt }
+# @name addGuest
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Juma Salum", "phone": "0713 000 001", "cardType": "double", "partnerName": "Neema", "consent": true }
+
+> {%
+  client.global.set("guestId", response.body.guest.id);
+%}
+
+### Same phone again → 200 existing: true (no duplicate)
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Juma S.", "phone": "+255713000001", "consent": true }
+
+### Without consent → 422 consent_required
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Zawadi", "phone": "0713000002", "consent": false }
+
+### Add many guests (phone contacts in the D-Card app, GST-6)
+# Body: guests[1–500] of { name, phone, cardType?, partnerName? } + consent. Invalid rows are reported, not fatal.
+# One guest_consent record with source "contacts".
+# 201 → { "added": [Guest], "existing": [Guest], "invalid": [{ "index", "phone", "reason": "invalid_phone" }] } · 200 when nothing new.
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests/bulk
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{
+  "guests": [
+    { "name": "Bahati", "phone": "+255 713 100 001" },
+    { "name": "Chausiku", "phone": "0713-100-002", "cardType": "double", "partnerName": "Daudi" },
+    { "name": "Juma again", "phone": "0713000001" },
+    { "name": "Broken", "phone": "12345" }
+  ],
+  "consent": true
+}
+
+### List guests (host, committee, treasurer)
+# Newest first, keyset pagination. Query: q (name or ≥ 3 phone digits), limit 1–200 (default 50), cursor (from nextCursor).
+# 200 → { "guests": [Guest], "nextCursor": "…" | null } · 422 bad limit/cursor.
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests?limit=2
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Search by name
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests?q=chau
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Search by phone digits
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests?q=0713 100
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+
+### Treasurer: read-only once they hold the role (accept an invite in 06-team.http)
+# Without a role on this event (as in a fresh run of this file) → 403 forbidden.
+GET {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{treasurerToken}}
+
+### Edit a pending guest (host, committee)
+# Any of: name, partnerName, cardType. Double ↔ single updates totalEntries. Audited.
+# 200 → Guest · 409 once the card is issued (card type is fixed, GST-9) · 404 unknown guest.
+PATCH {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{guestId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Juma Salum Hamisi", "partnerName": "Neema Juma" }
+
+### Remove a pending guest (host, committee)
+# 204 · 409 once issued (cancel the card instead) · 404 unknown.
+# @name toRemove
+POST {{baseUrl}}/api/v1/events/{{eventId}}/guests
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}
+Content-Type: application/json
+
+{ "name": "Temporary", "phone": "0713999999", "consent": true }
+
+> {%
+  client.global.set("toRemoveGuestId", response.body.guest.id);
+%}
+
+###
+DELETE {{baseUrl}}/api/v1/events/{{eventId}}/guests/{{toRemoveGuestId}}
+X-API-Key: {{apiKey}}
+Authorization: Bearer {{hostToken}}

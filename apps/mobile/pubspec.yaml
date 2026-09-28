@@ -1,0 +1,38 @@
+name: dcard_mobile
+description: "D-Card app for guests, hosts and committee."
+publish_to: none
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  dcard_api: any
+  dcard_core: any
+  dcard_ui: any
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  shared_preferences: ^2.5.5
+  flutter_contacts: ^2.5.0
+  firebase_messaging: ^16.7.0
+  hugeicons: ^1.2.0
+  url_launcher: ^6.3.2
+  http: ^1.6.0
+  qr_flutter: ^4.1.0
+  path_provider: ^2.1.5
+  sentry_flutter: ^8.14.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true

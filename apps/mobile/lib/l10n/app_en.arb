@@ -1,0 +1,1229 @@
+{
+  "@@locale": "en",
+  "appTitle": "D-Card",
+  "@appTitle": {
+    "description": "Application name shown in the app bar and task switcher."
+  },
+  "loginTitle": "Welcome to D-Card",
+  "@loginTitle": {
+    "description": "Heading on the sign-in screen."
+  },
+  "loginSubtitle": "Sign in to manage your events",
+  "@loginSubtitle": {
+    "description": "Subtitle on the sign-in screen."
+  },
+  "emailLabel": "Email",
+  "@emailLabel": {
+    "description": "Email field label."
+  },
+  "passwordLabel": "Password",
+  "@passwordLabel": {
+    "description": "Password field label."
+  },
+  "signIn": "Sign in",
+  "@signIn": {
+    "description": "Sign-in button."
+  },
+  "signOut": "Sign out",
+  "@signOut": {
+    "description": "Sign-out action tooltip."
+  },
+  "errorEmailRequired": "Enter your email.",
+  "@errorEmailRequired": {
+    "description": "Validation: empty email."
+  },
+  "errorEmailInvalid": "Enter a valid email address.",
+  "@errorEmailInvalid": {
+    "description": "Validation: malformed email."
+  },
+  "errorPasswordRequired": "Enter your password.",
+  "@errorPasswordRequired": {
+    "description": "Validation: empty password."
+  },
+  "errorInvalidCredentials": "Wrong email or password.",
+  "@errorInvalidCredentials": {
+    "description": "Sign-in rejected."
+  },
+  "errorTooManyRequests": "Too many attempts. Wait a moment and try again.",
+  "@errorTooManyRequests": {
+    "description": "Rate limited."
+  },
+  "errorNetwork": "No connection. Check your internet and try again.",
+  "@errorNetwork": {
+    "description": "Network failure."
+  },
+  "errorUnauthorized": "Your session has ended. Please sign in again.",
+  "@errorUnauthorized": {
+    "description": "401/403 from the API."
+  },
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {
+    "description": "Unknown failure."
+  },
+  "retry": "Try again",
+  "@retry": {
+    "description": "Retry button."
+  },
+  "eventsTitle": "My events",
+  "@eventsTitle": {
+    "description": "Events list app bar title."
+  },
+  "eventsEmpty": "No events yet. Create your first event on the D-Card website.",
+  "@eventsEmpty": {
+    "description": "Empty events list."
+  },
+  "statusDraft": "Draft",
+  "@statusDraft": {
+    "description": "Event status."
+  },
+  "statusPublished": "Published",
+  "@statusPublished": {
+    "description": "Event status."
+  },
+  "statusCompleted": "Completed",
+  "@statusCompleted": {
+    "description": "Event status."
+  },
+  "statusCancelled": "Cancelled",
+  "@statusCancelled": {
+    "description": "Event status."
+  },
+  "eventType": "Event type",
+  "@eventType": {
+    "description": "Summary label."
+  },
+  "eventDate": "Date",
+  "@eventDate": {
+    "description": "Summary label."
+  },
+  "eventVenue": "Venue",
+  "@eventVenue": {
+    "description": "Summary label."
+  },
+  "eventContact": "Contact",
+  "@eventContact": {
+    "description": "Summary label."
+  },
+  "eventPlan": "Package",
+  "@eventPlan": {
+    "description": "Summary label."
+  },
+  "notSet": "Not set",
+  "@notSet": {
+    "description": "Placeholder for an empty optional field."
+  },
+  "contactsTitle": "Add from contacts",
+  "@contactsTitle": {
+    "description": "Contacts picker title and button."
+  },
+  "contactsPermissionTitle": "Allow access to contacts",
+  "@contactsPermissionTitle": {
+    "description": "Permission denied heading."
+  },
+  "contactsPermissionBody": "D-Card needs your contacts to pick guests. We only read the names and numbers you choose.",
+  "@contactsPermissionBody": {
+    "description": "Why the permission is needed."
+  },
+  "contactsOpenSettings": "Open settings",
+  "@contactsOpenSettings": {
+    "description": "Opens app settings."
+  },
+  "contactsSearch": "Search name or number",
+  "@contactsSearch": {
+    "description": "Search hint."
+  },
+  "contactsEmpty": "No contacts with phone numbers.",
+  "@contactsEmpty": {
+    "description": "No contacts."
+  },
+  "contactsNoName": "No name",
+  "@contactsNoName": {
+    "description": "Contact without a name."
+  },
+  "contactsInvalidNumber": "Not a valid Tanzanian number",
+  "@contactsInvalidNumber": {
+    "description": "Invalid number marker."
+  },
+  "contactsConsent": "These guests agreed to receive event messages",
+  "@contactsConsent": {
+    "description": "Consent checkbox (MSG-14)."
+  },
+  "contactsConsentRequired": "Confirm consent to continue.",
+  "@contactsConsentRequired": {
+    "description": "Consent missing."
+  },
+  "contactsAdd": "{count, plural, =0{Add guests} =1{Add 1 guest} other{Add {count} guests}}",
+  "@contactsAdd": {
+    "description": "Submit button.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsAdded": "{count, plural, =0{No new guests added} =1{1 guest added} other{{count} guests added}}",
+  "@contactsAdded": {
+    "description": "Result.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsExisting": "{count, plural, =1{1 was already invited} other{{count} were already invited}}",
+  "@contactsExisting": {
+    "description": "Result.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsInvalid": "{count, plural, =1{1 could not be added} other{{count} could not be added}}",
+  "@contactsInvalid": {
+    "description": "Result.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Close button."
+  },
+  "contributionsTitle": "Contributions",
+  "@contributionsTitle": {
+    "description": "Contributions screen and button."
+  },
+  "contributionsSearch": "Search name or phone",
+  "@contributionsSearch": {
+    "description": "Search hint."
+  },
+  "contributionsEmpty": "No contributors.",
+  "@contributionsEmpty": {
+    "description": "Empty list."
+  },
+  "totalPledged": "Pledged",
+  "@totalPledged": {
+    "description": "Total."
+  },
+  "totalCollected": "Collected",
+  "@totalCollected": {
+    "description": "Total."
+  },
+  "totalOutstanding": "Outstanding",
+  "@totalOutstanding": {
+    "description": "Total."
+  },
+  "filterAll": "All",
+  "@filterAll": {
+    "description": "Filter chip."
+  },
+  "statusNotPaid": "Not paid",
+  "@statusNotPaid": {
+    "description": "Pledge status."
+  },
+  "statusPartPaid": "Part paid",
+  "@statusPartPaid": {
+    "description": "Pledge status."
+  },
+  "statusFullyPaid": "Fully paid",
+  "@statusFullyPaid": {
+    "description": "Pledge status."
+  },
+  "paidOf": "Paid {paid} of {pledged}",
+  "@paidOf": {
+    "description": "Paid vs pledged.",
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "pledged": {
+        "type": "String"
+      }
+    }
+  },
+  "balanceShort": "Balance {amount}",
+  "@balanceShort": {
+    "description": "Balance.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "extraShort": "Extra {amount}",
+  "@extraShort": {
+    "description": "Extra contribution.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "recordPaymentTitle": "Record payment",
+  "@recordPaymentTitle": {
+    "description": "Screen title."
+  },
+  "recordPaymentButton": "Record payment",
+  "@recordPaymentButton": {
+    "description": "Submit."
+  },
+  "amountLabel": "Amount (TSh)",
+  "@amountLabel": {
+    "description": "Field."
+  },
+  "methodLabel": "Method",
+  "@methodLabel": {
+    "description": "Field."
+  },
+  "referenceLabel": "Reference (optional)",
+  "@referenceLabel": {
+    "description": "Field."
+  },
+  "paidOnLabel": "Date paid",
+  "@paidOnLabel": {
+    "description": "Field."
+  },
+  "methodBank": "Bank",
+  "@methodBank": {
+    "description": "Method."
+  },
+  "methodCash": "Cash",
+  "@methodCash": {
+    "description": "Method."
+  },
+  "methodOther": "Other",
+  "@methodOther": {
+    "description": "Method."
+  },
+  "errorAmountRequired": "Enter the amount.",
+  "@errorAmountRequired": {
+    "description": "Validation."
+  },
+  "errorAmountInvalid": "Enter a whole amount in TSh.",
+  "@errorAmountInvalid": {
+    "description": "Validation."
+  },
+  "paymentSaved": "Payment saved.",
+  "@paymentSaved": {
+    "description": "Success."
+  },
+  "cardIssuedNow": "Fully paid. Card {number} has been issued.",
+  "@cardIssuedNow": {
+    "description": "Auto-issue.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInsTitle": "Walk-ins",
+  "@walkInsTitle": {
+    "description": "Walk-ins screen title and event button."
+  },
+  "walkInsPending": "Waiting for approval",
+  "@walkInsPending": {
+    "description": "Section: pending walk-in requests."
+  },
+  "walkInsPendingEmpty": "No one is waiting at the door.",
+  "@walkInsPendingEmpty": {
+    "description": "Empty pending section."
+  },
+  "walkInsNeedsReview": "Admitted offline – needs review",
+  "@walkInsNeedsReview": {
+    "description": "Section: offline walk-ins to review."
+  },
+  "walkInsHistory": "Decided",
+  "@walkInsHistory": {
+    "description": "Section: decided walk-ins."
+  },
+  "walkInsEmpty": "No walk-in requests yet.",
+  "@walkInsEmpty": {
+    "description": "No walk-ins at all."
+  },
+  "walkInsReadOnly": "Only the host and walk-in approvers can decide. You can follow requests here.",
+  "@walkInsReadOnly": {
+    "description": "Committee read-only note."
+  },
+  "walkInApprove": "Approve",
+  "@walkInApprove": {
+    "description": "Approve a pending walk-in."
+  },
+  "walkInRefuse": "Refuse",
+  "@walkInRefuse": {
+    "description": "Refuse a pending walk-in."
+  },
+  "walkInAccept": "Accept",
+  "@walkInAccept": {
+    "description": "Accept an offline walk-in."
+  },
+  "walkInFlag": "Flag",
+  "@walkInFlag": {
+    "description": "Flag an offline walk-in."
+  },
+  "walkInPeople": "{count, plural, =1{1 person} other{{count} people}}",
+  "@walkInPeople": {
+    "description": "People to admit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "walkInCard": "Card: {name}",
+  "@walkInCard": {
+    "description": "Linked invitation's guest.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInGate": "Gate: {device}",
+  "@walkInGate": {
+    "description": "Door device that sent the request.",
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInRequestedBy": "Requested by {who}",
+  "@walkInRequestedBy": {
+    "description": "Door staff who sent the request.",
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInReason": "Reason: {reason}",
+  "@walkInReason": {
+    "description": "Offline admission reason.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInAt": "At {time}",
+  "@walkInAt": {
+    "description": "When the walk-in happened.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInSomeone": "someone",
+  "@walkInSomeone": {
+    "description": "Fallback when the decider is unknown."
+  },
+  "walkInStatusLabel": "{status, select, pending{Waiting} approved{Approved} refused{Refused} admitted_offline{Needs review} accepted{Accepted} flagged{Flagged} other{Updated}}",
+  "@walkInStatusLabel": {
+    "description": "Walk-in status.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInDecidedBy": "{status} by {who} · {time}",
+  "@walkInDecidedBy": {
+    "description": "Who decided and when.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInAlreadyDecided": "{status, select, approved{Already approved by {who}.} refused{Already refused by {who}.} accepted{Already accepted by {who}.} flagged{Already flagged by {who}.} other{Already answered by {who}.}}",
+  "@walkInAlreadyDecided": {
+    "description": "Someone else answered first (409).",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInSaved": "{status, select, approved{Approved. Let them in.} refused{Refused.} accepted{Accepted.} flagged{Flagged.} other{Saved.}}",
+  "@walkInSaved": {
+    "description": "Decision saved.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "walkInPushPending": "New walk-in request at the door",
+  "@walkInPushPending": {
+    "description": "Foreground push banner: pending."
+  },
+  "walkInPushReview": "An offline walk-in needs review",
+  "@walkInPushReview": {
+    "description": "Foreground push banner: offline."
+  },
+  "walkInOpen": "Open",
+  "@walkInOpen": {
+    "description": "Open the walk-ins screen from the banner."
+  },
+  "paymentTitle": "Payment",
+  "@paymentTitle": {
+    "description": "Event screen entry and billing screen title."
+  },
+  "billingPayBannerText": "Guest cards for this event are not paid for yet. Pay before sending cards.",
+  "@billingPayBannerText": {
+    "description": "Billing/checkout: billingPayBannerText."
+  },
+  "billingPayForCards": "Pay for cards",
+  "@billingPayForCards": {
+    "description": "Billing/checkout: billingPayForCards."
+  },
+  "billingPlan": "{name} plan",
+  "@billingPlan": {
+    "description": "Billing/checkout: billingPlan.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPricePerGuest": "{amount} per guest card",
+  "@billingPricePerGuest": {
+    "description": "Billing/checkout: billingPricePerGuest.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPaidBadge": "Paid",
+  "@billingPaidBadge": {
+    "description": "Billing/checkout: billingPaidBadge."
+  },
+  "billingUnpaidBadge": "Not paid",
+  "@billingUnpaidBadge": {
+    "description": "Billing/checkout: billingUnpaidBadge."
+  },
+  "billingCardsPaid": "Cards paid",
+  "@billingCardsPaid": {
+    "description": "Billing/checkout: billingCardsPaid."
+  },
+  "billingCardsIssued": "Cards issued",
+  "@billingCardsIssued": {
+    "description": "Billing/checkout: billingCardsIssued."
+  },
+  "billingGuests": "Guests added",
+  "@billingGuests": {
+    "description": "Billing/checkout: billingGuests."
+  },
+  "billingAmountPaid": "Amount paid",
+  "@billingAmountPaid": {
+    "description": "Billing/checkout: billingAmountPaid."
+  },
+  "billingUnpaidText": "Pay for your guest cards before sending them. You can add more cards later in blocks of 10.",
+  "@billingUnpaidText": {
+    "description": "Billing/checkout: billingUnpaidText."
+  },
+  "billingOverLimit": "You have {guests} guests but {paid} cards paid. Add more cards to invite everyone.",
+  "@billingOverLimit": {
+    "description": "Billing/checkout: billingOverLimit.",
+    "placeholders": {
+      "guests": {
+        "type": "int"
+      },
+      "paid": {
+        "type": "int"
+      }
+    }
+  },
+  "billingLaunchOffer": "Launch offer: {percent}% off your first event.",
+  "@billingLaunchOffer": {
+    "description": "Billing/checkout: billingLaunchOffer.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "billingAddBlock": "Add {size} more",
+  "@billingAddBlock": {
+    "description": "Billing/checkout: billingAddBlock.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "billingUpgrade": "Upgrade plan",
+  "@billingUpgrade": {
+    "description": "Billing/checkout: billingUpgrade."
+  },
+  "billingPendingTitle": "A payment is waiting",
+  "@billingPendingTitle": {
+    "description": "Billing/checkout: billingPendingTitle."
+  },
+  "billingPendingBody": "{amount}, started {date}.",
+  "@billingPendingBody": {
+    "description": "Billing/checkout: billingPendingBody.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPendingResume": "Check status",
+  "@billingPendingResume": {
+    "description": "Billing/checkout: billingPendingResume."
+  },
+  "billingReceiptsTitle": "Receipts",
+  "@billingReceiptsTitle": {
+    "description": "Billing/checkout: billingReceiptsTitle."
+  },
+  "billingReceiptsEmpty": "No payments yet.",
+  "@billingReceiptsEmpty": {
+    "description": "Billing/checkout: billingReceiptsEmpty."
+  },
+  "receiptReference": "Reference",
+  "@receiptReference": {
+    "description": "Billing/checkout: receiptReference."
+  },
+  "receiptAmount": "Amount",
+  "@receiptAmount": {
+    "description": "Billing/checkout: receiptAmount."
+  },
+  "receiptDiscount": "Launch offer",
+  "@receiptDiscount": {
+    "description": "Billing/checkout: receiptDiscount."
+  },
+  "receiptCards": "Guest cards",
+  "@receiptCards": {
+    "description": "Billing/checkout: receiptCards."
+  },
+  "receiptCardsValue": "{count, plural, =1{1 card} other{{count} cards}}",
+  "@receiptCardsValue": {
+    "description": "Billing/checkout: receiptCardsValue.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptPlan": "Plan",
+  "@receiptPlan": {
+    "description": "Billing/checkout: receiptPlan."
+  },
+  "receiptDate": "Date",
+  "@receiptDate": {
+    "description": "Billing/checkout: receiptDate."
+  },
+  "checkoutTitleBuy": "Buy guest cards",
+  "@checkoutTitleBuy": {
+    "description": "Billing/checkout: checkoutTitleBuy."
+  },
+  "checkoutTitleAdd": "Add more cards",
+  "@checkoutTitleAdd": {
+    "description": "Billing/checkout: checkoutTitleAdd."
+  },
+  "checkoutTitleUpgrade": "Upgrade plan",
+  "@checkoutTitleUpgrade": {
+    "description": "Billing/checkout: checkoutTitleUpgrade."
+  },
+  "checkoutIntro": "Choose how many cards you need. The price below comes from D-Card and updates as you change it.",
+  "@checkoutIntro": {
+    "description": "Billing/checkout: checkoutIntro."
+  },
+  "checkoutPlan": "Plan",
+  "@checkoutPlan": {
+    "description": "Billing/checkout: checkoutPlan."
+  },
+  "checkoutPlanOption": "{name} · {price} per card",
+  "@checkoutPlanOption": {
+    "description": "Billing/checkout: checkoutPlanOption.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutPlanCurrent": "{name} · {price} per card (current)",
+  "@checkoutPlanCurrent": {
+    "description": "Billing/checkout: checkoutPlanCurrent.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutCards": "Guest cards",
+  "@checkoutCards": {
+    "description": "Billing/checkout: checkoutCards."
+  },
+  "checkoutDecrease": "{size} fewer cards",
+  "@checkoutDecrease": {
+    "description": "Billing/checkout: checkoutDecrease.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutIncrease": "{size} more cards",
+  "@checkoutIncrease": {
+    "description": "Billing/checkout: checkoutIncrease.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutBlockHint": "You have {paid} cards paid. Extra cards come in blocks of {size}.",
+  "@checkoutBlockHint": {
+    "description": "Billing/checkout: checkoutBlockHint.",
+    "placeholders": {
+      "paid": {
+        "type": "int"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutSuggestHint": "Suggested: one card for each of your {count} guests.",
+  "@checkoutSuggestHint": {
+    "description": "Billing/checkout: checkoutSuggestHint.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutCalculating": "Calculating the price…",
+  "@checkoutCalculating": {
+    "description": "Billing/checkout: checkoutCalculating."
+  },
+  "checkoutMinimumNote": "The minimum charge per event is {amount}, so you get {count} cards.",
+  "@checkoutMinimumNote": {
+    "description": "Billing/checkout: checkoutMinimumNote.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutEffectiveCards": "You get {count} cards (blocks of {size}).",
+  "@checkoutEffectiveCards": {
+    "description": "Billing/checkout: checkoutEffectiveCards.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutNothingToPay": "Nothing to pay: these cards are already paid for. Choose more cards or a higher plan.",
+  "@checkoutNothingToPay": {
+    "description": "Billing/checkout: checkoutNothingToPay."
+  },
+  "checkoutLineNewCards": "{quantity} cards × {unitPrice}",
+  "@checkoutLineNewCards": {
+    "description": "Billing/checkout: checkoutLineNewCards.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unitPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutLineExtraCards": "{quantity} extra cards × {unitPrice}",
+  "@checkoutLineExtraCards": {
+    "description": "Billing/checkout: checkoutLineExtraCards.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unitPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutLineUpgrade": "Upgrade {quantity} cards (+{unitPrice} each)",
+  "@checkoutLineUpgrade": {
+    "description": "Billing/checkout: checkoutLineUpgrade.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unitPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutLineOther": "Other ({quantity})",
+  "@checkoutLineOther": {
+    "description": "Billing/checkout: checkoutLineOther.",
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutSubtotal": "Subtotal",
+  "@checkoutSubtotal": {
+    "description": "Billing/checkout: checkoutSubtotal."
+  },
+  "checkoutLaunchOffer": "Launch offer ({percent}% off)",
+  "@checkoutLaunchOffer": {
+    "description": "Billing/checkout: checkoutLaunchOffer.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutTotal": "Total",
+  "@checkoutTotal": {
+    "description": "Billing/checkout: checkoutTotal."
+  },
+  "checkoutContinue": "Review",
+  "@checkoutContinue": {
+    "description": "Billing/checkout: checkoutContinue."
+  },
+  "checkoutBack": "Back",
+  "@checkoutBack": {
+    "description": "Billing/checkout: checkoutBack."
+  },
+  "checkoutReviewTitle": "Review and pay",
+  "@checkoutReviewTitle": {
+    "description": "Billing/checkout: checkoutReviewTitle."
+  },
+  "checkoutReviewIntro": "{plan} plan, {count, plural, =1{1 guest card} other{{count} guest cards}} in total.",
+  "@checkoutReviewIntro": {
+    "description": "Billing/checkout: checkoutReviewIntro.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutMethod": "How do you want to pay?",
+  "@checkoutMethod": {
+    "description": "Billing/checkout: checkoutMethod."
+  },
+  "checkoutMethodMobile": "Mobile money",
+  "@checkoutMethodMobile": {
+    "description": "Billing/checkout: checkoutMethodMobile."
+  },
+  "checkoutMethodMobileHint": "M-Pesa, Airtel Money, Mixx by Yas or HaloPesa. You confirm with your PIN.",
+  "@checkoutMethodMobileHint": {
+    "description": "Billing/checkout: checkoutMethodMobileHint."
+  },
+  "checkoutMethodSession": "Card or other",
+  "@checkoutMethodSession": {
+    "description": "Billing/checkout: checkoutMethodSession."
+  },
+  "checkoutMethodSessionHint": "Opens a secure payment page in your browser.",
+  "@checkoutMethodSessionHint": {
+    "description": "Billing/checkout: checkoutMethodSessionHint."
+  },
+  "checkoutPhone": "Mobile money number",
+  "@checkoutPhone": {
+    "description": "Billing/checkout: checkoutPhone."
+  },
+  "checkoutPhoneHint": "For example 0754 123 456",
+  "@checkoutPhoneHint": {
+    "description": "Billing/checkout: checkoutPhoneHint."
+  },
+  "checkoutSecure": "Secure payment through Snippe.",
+  "@checkoutSecure": {
+    "description": "Billing/checkout: checkoutSecure."
+  },
+  "checkoutPay": "Pay {amount}",
+  "@checkoutPay": {
+    "description": "Billing/checkout: checkoutPay.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutPaying": "Starting payment…",
+  "@checkoutPaying": {
+    "description": "Billing/checkout: checkoutPaying."
+  },
+  "checkoutWaitingMobileTitle": "Check your phone and enter your PIN",
+  "@checkoutWaitingMobileTitle": {
+    "description": "Billing/checkout: checkoutWaitingMobileTitle."
+  },
+  "checkoutWaitingMobileBody": "We sent a request for {amount} to {phone}. Enter your mobile money PIN to pay.",
+  "@checkoutWaitingMobileBody": {
+    "description": "Billing/checkout: checkoutWaitingMobileBody.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutWaitingSessionTitle": "Finish paying in your browser",
+  "@checkoutWaitingSessionTitle": {
+    "description": "Billing/checkout: checkoutWaitingSessionTitle."
+  },
+  "checkoutWaitingSessionBody": "Pay {amount} on the payment page. This screen updates when the payment is done.",
+  "@checkoutWaitingSessionBody": {
+    "description": "Billing/checkout: checkoutWaitingSessionBody.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutOpenPage": "Open the payment page",
+  "@checkoutOpenPage": {
+    "description": "Billing/checkout: checkoutOpenPage."
+  },
+  "checkoutPolling": "Waiting for confirmation…",
+  "@checkoutPolling": {
+    "description": "Billing/checkout: checkoutPolling."
+  },
+  "checkoutLater": "Close and check later",
+  "@checkoutLater": {
+    "description": "Billing/checkout: checkoutLater."
+  },
+  "checkoutSuccessTitle": "Payment received",
+  "@checkoutSuccessTitle": {
+    "description": "Billing/checkout: checkoutSuccessTitle."
+  },
+  "checkoutSuccessNext": "You can now send cards to up to {count} guests.",
+  "@checkoutSuccessNext": {
+    "description": "Billing/checkout: checkoutSuccessNext.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutDone": "Done",
+  "@checkoutDone": {
+    "description": "Billing/checkout: checkoutDone."
+  },
+  "checkoutFailureTitle": "The payment did not go through",
+  "@checkoutFailureTitle": {
+    "description": "Billing/checkout: checkoutFailureTitle."
+  },
+  "checkoutExpiredTitle": "The payment request expired",
+  "@checkoutExpiredTitle": {
+    "description": "Billing/checkout: checkoutExpiredTitle."
+  },
+  "checkoutFailureBody": "No money was taken. You can try again.",
+  "@checkoutFailureBody": {
+    "description": "Billing/checkout: checkoutFailureBody."
+  },
+  "checkoutPhoneRequired": "Enter the mobile money number to pay from.",
+  "@checkoutPhoneRequired": {
+    "description": "Billing/checkout: checkoutPhoneRequired."
+  },
+  "checkoutPhoneInvalid": "Enter a Tanzanian number, for example 0754 123 456.",
+  "@checkoutPhoneInvalid": {
+    "description": "Billing/checkout: checkoutPhoneInvalid."
+  },
+  "checkoutQuoteChanged": "The price changed. Check the new total and confirm again.",
+  "@checkoutQuoteChanged": {
+    "description": "Billing/checkout: checkoutQuoteChanged."
+  },
+  "checkoutNothingToPayError": "There is nothing to pay for these cards.",
+  "@checkoutNothingToPayError": {
+    "description": "Billing/checkout: checkoutNothingToPayError."
+  },
+  "checkoutPaymentInProgress": "Another payment for this event is still waiting. Check its status first.",
+  "@checkoutPaymentInProgress": {
+    "description": "Billing/checkout: checkoutPaymentInProgress."
+  },
+  "checkoutProviderUnavailable": "The payment service is not available right now. Please try again shortly.",
+  "@checkoutProviderUnavailable": {
+    "description": "Billing/checkout: checkoutProviderUnavailable."
+  },
+  "checkoutValidation": "Check the details and try again.",
+  "@checkoutValidation": {
+    "description": "Billing/checkout: checkoutValidation."
+  },
+  "checkoutForbidden": "Only the host can pay for this event.",
+  "@checkoutForbidden": {
+    "description": "Billing/checkout: checkoutForbidden."
+  },
+  "checkoutEventClosed": "This event is closed and cannot be paid for.",
+  "@checkoutEventClosed": {
+    "description": "Billing/checkout: checkoutEventClosed."
+  },
+  "checkoutQuoteError": "Could not get the price. Please try again.",
+  "@checkoutQuoteError": {
+    "description": "Billing/checkout: checkoutQuoteError."
+  },
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": {
+    "description": "Guest sign-in button."
+  },
+  "continueWithApple": "Continue with Apple",
+  "@continueWithApple": {
+    "description": "Guest sign-in button (iOS)."
+  },
+  "loginOr": "or",
+  "@loginOr": {
+    "description": "Divider between guest and host sign-in."
+  },
+  "loginGuestHint": "Invited to an event? Sign in with Google or Apple to keep all your cards in one place.",
+  "@loginGuestHint": {
+    "description": "Sign-in: guest hint."
+  },
+  "loginHostHint": "Hosts and committee: sign in with email",
+  "@loginHostHint": {
+    "description": "Sign-in: host section."
+  },
+  "errorOtherSignInMethod": "This email already signs in another way. Use that method instead.",
+  "@errorOtherSignInMethod": {
+    "description": "Sign-in error."
+  },
+  "navEvents": "Events",
+  "@navEvents": {
+    "description": "Bottom navigation."
+  },
+  "navMyCards": "My cards",
+  "@navMyCards": {
+    "description": "Bottom navigation."
+  },
+  "navAccount": "Account",
+  "@navAccount": {
+    "description": "Bottom navigation."
+  },
+  "myCardsTitle": "My cards",
+  "@myCardsTitle": {
+    "description": "My cards: title."
+  },
+  "myCardsEmptyTitle": "No cards yet",
+  "@myCardsEmptyTitle": {
+    "description": "My cards: empty state title."
+  },
+  "myCardsEmptyBody": "When a host invites you, D-Card sends your card link by SMS or WhatsApp. Tap \"Link a card\" and paste that link to keep the card here.",
+  "@myCardsEmptyBody": {
+    "description": "My cards: empty state explanation."
+  },
+  "linkCard": "Link a card",
+  "@linkCard": {
+    "description": "My cards: link action and sheet title."
+  },
+  "linkCardHint": "Paste the card link you received by SMS or WhatsApp.",
+  "@linkCardHint": {
+    "description": "Link sheet: hint."
+  },
+  "linkCardField": "Card link",
+  "@linkCardField": {
+    "description": "Link sheet: field label."
+  },
+  "linkCardPaste": "Paste",
+  "@linkCardPaste": {
+    "description": "Link sheet: paste from clipboard."
+  },
+  "linkCardSubmit": "Link card",
+  "@linkCardSubmit": {
+    "description": "Link sheet: submit."
+  },
+  "linkCardDone": "Card linked.",
+  "@linkCardDone": {
+    "description": "Link: success."
+  },
+  "linkErrorInvalid": "This is not a D-Card card link. Check it and try again.",
+  "@linkErrorInvalid": {
+    "description": "Link error."
+  },
+  "linkErrorNotFound": "We could not find this card. Check the link and try again.",
+  "@linkErrorNotFound": {
+    "description": "Link error: 404."
+  },
+  "linkErrorPersonLinked": "This card's guest already uses another D-Card account. Sign in with that account to see it.",
+  "@linkErrorPersonLinked": {
+    "description": "Link error: 409 person_linked."
+  },
+  "linkErrorAccountLinked": "This account already belongs to another guest, so this card cannot be added here.",
+  "@linkErrorAccountLinked": {
+    "description": "Link error: 409 account_linked."
+  },
+  "cardStatusIssued": "Active",
+  "@cardStatusIssued": {
+    "description": "Card status badge."
+  },
+  "cardStatusCancelled": "Cancelled",
+  "@cardStatusCancelled": {
+    "description": "Card status badge."
+  },
+  "rsvpBadgeYes": "Attending",
+  "@rsvpBadgeYes": {
+    "description": "RSVP badge."
+  },
+  "rsvpBadgeNo": "Not attending",
+  "@rsvpBadgeNo": {
+    "description": "RSVP badge."
+  },
+  "rsvpBadgeNone": "No reply yet",
+  "@rsvpBadgeNone": {
+    "description": "RSVP badge."
+  },
+  "cardTypeSingle": "Single",
+  "@cardTypeSingle": {
+    "description": "Card type."
+  },
+  "cardTypeDouble": "Double",
+  "@cardTypeDouble": {
+    "description": "Card type."
+  },
+  "cardNumberLabel": "Card number",
+  "@cardNumberLabel": {
+    "description": "Card view."
+  },
+  "cardGuestLabel": "Guest",
+  "@cardGuestLabel": {
+    "description": "Card view."
+  },
+  "cardShowQr": "Show this QR code at the entrance.",
+  "@cardShowQr": {
+    "description": "Card view: QR hint."
+  },
+  "cardQrLabel": "QR code for card {number}",
+  "@cardQrLabel": {
+    "description": "Card view: QR accessibility label.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "cardCancelledNotice": "This card has been cancelled.",
+  "@cardCancelledNotice": {
+    "description": "Card view."
+  },
+  "cardEventCancelledNotice": "This event has been cancelled.",
+  "@cardEventCancelledNotice": {
+    "description": "Card view."
+  },
+  "rsvpTitle": "Will you attend?",
+  "@rsvpTitle": {
+    "description": "Card view: RSVP."
+  },
+  "rsvpYes": "Yes, I will attend",
+  "@rsvpYes": {
+    "description": "RSVP button."
+  },
+  "rsvpNo": "No, I can't",
+  "@rsvpNo": {
+    "description": "RSVP button."
+  },
+  "rsvpClosed": "Replies are closed for this event.",
+  "@rsvpClosed": {
+    "description": "RSVP closed."
+  },
+  "rsvpSaved": "Thank you, your answer is saved.",
+  "@rsvpSaved": {
+    "description": "RSVP saved."
+  },
+  "openMap": "Open map",
+  "@openMap": {
+    "description": "Card view: venue map."
+  },
+  "accountTitle": "Account",
+  "@accountTitle": {
+    "description": "Account: title."
+  },
+  "accountSignedInWith": "Signed in with {method}",
+  "@accountSignedInWith": {
+    "description": "Account: sign-in method.",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "accountMethodPassword": "email and password",
+  "@accountMethodPassword": {
+    "description": "Account: method name."
+  },
+  "accountYourData": "Your data",
+  "@accountYourData": {
+    "description": "Account: section."
+  },
+  "downloadMyData": "Download my data",
+  "@downloadMyData": {
+    "description": "Account: export."
+  },
+  "downloadMyDataHint": "A JSON file with your account, cards and activity.",
+  "@downloadMyDataHint": {
+    "description": "Account: export hint."
+  },
+  "downloadMyDataSaved": "Saved to {path}",
+  "@downloadMyDataSaved": {
+    "description": "Account: export saved.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteMyAccount": "Delete my account",
+  "@deleteMyAccount": {
+    "description": "Account: delete."
+  },
+  "deleteMyAccountHint": "Removes your sign-in and personal details from D-Card.",
+  "@deleteMyAccountHint": {
+    "description": "Account: delete hint."
+  },
+  "deleteAccountConfirmTitle": "Delete your account?",
+  "@deleteAccountConfirmTitle": {
+    "description": "Delete sheet: title."
+  },
+  "deleteAccountConfirmBody": "You will be signed out and your D-Card account will be deleted. This cannot be undone.",
+  "@deleteAccountConfirmBody": {
+    "description": "Delete sheet: body."
+  },
+  "deleteAccountConfirm": "Delete account",
+  "@deleteAccountConfirm": {
+    "description": "Delete sheet: confirm."
+  },
+  "deleteAccountBlocked": "You still host events. Delete your events before deleting your account.",
+  "@deleteAccountBlocked": {
+    "description": "Delete refused: 409."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel."
+  }
+}

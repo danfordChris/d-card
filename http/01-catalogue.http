@@ -1,0 +1,14 @@
+# D-Card API — catalogue (public)
+
+
+### Plans and entitlements
+# Prices are per guest card (TZS). Entitlements gate features (door staff accounts, auto-upgrade, reminders…).
+# 200 → { "plans": [{ "key": "msingi|kawaida|premium", "name", "pricePerGuest": 1000|1500|2000, "entitlements": { "doorStaffAccounts": 2|5|null, "autoUpgrade": bool, … } }] }
+GET {{baseUrl}}/api/v1/plans
+X-API-Key: {{apiKey}}
+
+### Active event types
+# Only active types (admins can deactivate). Use `key` as `eventTypeKey` when creating an event.
+# 200 → { "eventTypes": [{ "key": "wedding", "nameSw": "Harusi", "nameEn": "Wedding" }, …] }
+GET {{baseUrl}}/api/v1/event-types
+X-API-Key: {{apiKey}}
