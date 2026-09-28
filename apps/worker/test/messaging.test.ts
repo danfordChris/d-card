@@ -1,5 +1,5 @@
 import { enqueueMessage, MESSAGE_JOBS, QUEUES, type SendMessageJob } from "@dcard/core";
-import { event, invitation, messageLog, person, userAccount } from "@dcard/db";
+import { event, eventPlan, invitation, messageLog, person, plan, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import type { Job } from "bullmq";
 import { Queue } from "bullmq";
@@ -56,6 +56,9 @@ beforeAll(async () => {
     .values({ hostUserId: u!.id, eventTypeId: types!.id, title: "Harusi ya Juma", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "255754123456" })
     .returning();
   eventId = ev!.id;
+  // Guest messages are dispatched for paid events only (T05-01).
+  const [pl] = await handle.db.select().from(plan).limit(1);
+  await handle.db.insert(eventPlan).values({ eventId, planId: pl!.id, pricePerGuest: pl!.pricePerGuest, guestLimit: 100 });
   const [p] = await handle.db.insert(person).values({ phone: "255713900001", name: "Juma" }).returning();
   const [inv] = await handle.db.insert(invitation).values({ eventId, personId: p!.id, guestName: "Juma", guestPhone: "255713900001" }).returning();
   invitationId = inv!.id;

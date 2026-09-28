@@ -7,13 +7,17 @@ OUT="dart_packages/dcard_api"
 GENERATOR_IMAGE="openapitools/openapi-generator-cli:v7.16.0"
 
 pnpm --dir "$ROOT" --filter @dcard/api-contract openapi
-rm -rf "$ROOT/$OUT"
+# Generate into a temp folder first so a failed run (e.g. Docker down) never deletes the client.
+TMP_OUT=".dcard_api.tmp"
+rm -rf "$ROOT/$TMP_OUT"
 docker run --rm -u "$(id -u):$(id -g)" -v "$ROOT:/local" "$GENERATOR_IMAGE" generate \
   -i /local/packages/api-contract/openapi.json \
   -g dart \
-  -o "/local/$OUT" \
+  -o "/local/$TMP_OUT" \
   --additional-properties=pubName=dcard_api,pubDescription="Generated D-Card API client (do not edit)",pubVersion=0.0.1,pubLibrary=dcard_api \
   --skip-validate-spec >/dev/null
+rm -rf "$ROOT/$OUT"
+mv "$ROOT/$TMP_OUT" "$ROOT/$OUT"
 
 # Make the generated package a member of the Dart pub workspace.
 cd "$ROOT/$OUT"

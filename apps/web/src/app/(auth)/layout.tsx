@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { LocaleSwitcher } from "../../components/layout/locale-switcher";
 import { Card } from "../../components/ui";
@@ -15,6 +16,11 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         <LocaleSwitcher />
       </div>
       <Card>{children}</Card>
+      <p className="text-center text-xs text-gray-500">
+        <Link className="hover:text-brand-600 hover:underline" href="/privacy">
+          {t("privacy")}
+        </Link>
+      </p>
     </main>
   );
 }

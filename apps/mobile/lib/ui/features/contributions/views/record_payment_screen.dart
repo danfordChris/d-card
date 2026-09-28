@@ -5,7 +5,7 @@ import '../../../../domain/models/contributor.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/failure_text.dart';
 import '../view_models/record_payment_view_model.dart';
-import 'money.dart';
+import '../../../core/money.dart';
 
 class RecordPaymentScreen extends StatefulWidget {
   const RecordPaymentScreen({super.key, required this.viewModel});

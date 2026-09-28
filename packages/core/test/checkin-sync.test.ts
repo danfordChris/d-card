@@ -3,9 +3,9 @@ import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addGuest,
-  createEvent,
   decryptSecret,
   doorAdmit,
   doorSyncDownload,
@@ -50,7 +50,7 @@ beforeAll(async () => {
   const [host, a, b, mc] = users.map((u) => u.id) as [string, string, string, string];
   [hostId, staffA, staffB] = [host, a, b];
   const make = () =>
-    createEvent(handle.db, hostId, { planKey: "kawaida", eventTypeKey: "wedding", title: `E${++n}`, startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" });
+    createPaidEvent(handle.db, hostId, { planKey: "kawaida", eventTypeKey: "wedding", title: `E${++n}`, startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" });
   eventId = await make();
   await handle.db.insert(eventRole).values([
     { eventId, userId: staffA, role: "door_staff" },
@@ -122,6 +122,20 @@ describe("door sync upload", () => {
     const detail = alerts[0]!.newValue as { used: number; entries: { deviceName: string }[] };
     expect(detail.used).toBe(2);
     expect(detail.entries.map((e) => e.deviceName).sort()).toEqual(["Gate A", "Gate B"]);
+  });
+
+  it("flags over-use when two gates upload the same card at the same moment", async () => {
+    // Regression (T07-02 load test): without row locks each transaction saw only its own entry.
+    for (let i = 0; i < 5; i++) {
+      const single = await card("single");
+      const [a, b] = await Promise.all([
+        upload(staffA, gateA, { entries: [offlineEntry(single, 1, "2026-12-12T15:01:00+03:00")] }),
+        upload(staffB, gateB, { entries: [offlineEntry(single, 1, "2026-12-12T15:01:05+03:00")] }),
+      ]);
+      expect([...a.overUsed, ...b.overUsed]).toEqual([single]);
+      const [row] = await handle.db.select().from(invitation).where(eq(invitation.id, single));
+      expect(row!.overUsedAt).not.toBeNull();
+    }
   });
 
   it("rejects entries for other events and reports offline lockouts", async () => {

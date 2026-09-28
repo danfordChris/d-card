@@ -1,6 +1,7 @@
 import { event, invitation } from "@dcard/db";
 import { and, eq, sql } from "drizzle-orm";
 import { randomInt } from "node:crypto";
+import { assertCardAvailableInTx } from "../billing/gate.js";
 import { recordAudit } from "../audit/audit.js";
 import { requireEventRole } from "../auth/roles.js";
 import { decryptSecret, encryptSecret } from "../crypto/secrets.js";
@@ -63,6 +64,8 @@ export async function issueInvitationInTx(
     .returning({ seq: sql<number>`${event.nextGuestSeq} - 1`, status: event.status });
   if (!ev) throw new NotFoundError("Event not found.");
   if (ev.status !== "draft" && ev.status !== "published") throw new ConflictError(`Cards cannot be issued on a ${ev.status} event.`);
+  // Under the event row lock taken above: paid, and within the paid guest cards.
+  await assertCardAvailableInTx(tx, params.eventId);
   const qrToken = generateToken();
   const linkToken = generateToken();
   const cardNumber = formatCardNumber(ev.seq, randomInt(0, 10_000));
@@ -130,6 +133,10 @@ export async function reinstateCard(db: DbExecutor, actorId: string, eventId: st
     const row = await lockInvitation(tx, eventId, guestId);
     if (row.status !== "cancelled") throw new ConflictError("Only cancelled cards can be reinstated.");
     const status = row.issuedAt ? "issued" : "pending";
+    if (status === "issued") {
+      await tx.select({ id: event.id }).from(event).where(eq(event.id, eventId)).for("update");
+      await assertCardAvailableInTx(tx, eventId);
+    }
     const [updated] = await tx.update(invitation).set({ status, cancelledAt: null }).where(eq(invitation.id, row.id)).returning();
     await recordAudit(tx, {
       actorUserId: actorId,

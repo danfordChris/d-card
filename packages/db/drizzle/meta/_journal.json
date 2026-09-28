@@ -99,6 +99,34 @@
       "when": 1790366711151,
       "tag": "0013_check_in",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1790410010801,
+      "tag": "0014_billing",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1790410895354,
+      "tag": "0015_media",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1790460313885,
+      "tag": "0016_retention",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1790460713568,
+      "tag": "0017_admin",
+      "breakpoints": true
     }
   ]
 }

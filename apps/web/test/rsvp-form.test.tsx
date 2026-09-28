@@ -39,6 +39,17 @@ describe("RsvpForm", () => {
     expect(JSON.parse(fetchMock.mock.calls[0]![1]!.body as string)).toEqual({ answer: "yes", dietaryNotes: "No pork" });
   });
 
+  it("is one tab stop; arrow keys move and select the answer", () => {
+    renderForm({ status: "none", dietaryNotes: null, open: true });
+    const [yes, no] = screen.getAllByRole("radio") as HTMLButtonElement[];
+    expect([yes!.tabIndex, no!.tabIndex]).toEqual([0, -1]);
+    fireEvent.keyDown(yes!, { key: "ArrowDown" });
+    expect(no!.getAttribute("aria-checked")).toBe("true");
+    expect(document.activeElement).toBe(no);
+    expect([yes!.tabIndex, no!.tabIndex]).toEqual([-1, 0]);
+    expect(screen.getByRole("status")).toBeTruthy();
+  });
+
   it("shows the rate-limit message on 429 and the closed state", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response("{}", { status: 429 }));
     renderForm({ status: "no", dietaryNotes: null, open: true });

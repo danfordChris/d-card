@@ -16,6 +16,9 @@ Future<void> openPicker(WidgetTester tester) async {
   await signIn(tester);
   await tester.tap(find.text('Harusi ya Asha'));
   await tester.pumpAndSettle();
+  // The host's unpaid-event banner pushes the actions down.
+  await tester.scrollUntilVisible(find.text('Add from contacts'), 200, scrollable: find.byType(Scrollable).first);
+  await tester.pumpAndSettle();
   await tester.tap(find.text('Add from contacts'));
   await tester.pumpAndSettle();
 }
@@ -29,6 +32,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(contacts.permissionRequests, 0);
 
+    // The host's unpaid-event banner pushes the actions down.
+    await tester.scrollUntilVisible(find.text('Add from contacts'), 200, scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Add from contacts'));
     await tester.pumpAndSettle();
     expect(contacts.permissionRequests, 1);
@@ -102,6 +108,9 @@ void main() {
     );
     await signIn(tester);
     await tester.tap(find.text('Harusi ya Asha'));
+    await tester.pumpAndSettle();
+    // The host's unpaid-event banner pushes the actions down.
+    await tester.scrollUntilVisible(find.text('Ongeza kutoka simu'), 200, scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ongeza kutoka simu'));
     await tester.pumpAndSettle();

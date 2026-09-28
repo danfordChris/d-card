@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  bigint,
   boolean,
   check,
   index,
@@ -62,7 +63,30 @@ export const userAccount = pgTable("user_account", {
   personId: uuid("person_id").references(() => person.id, { onDelete: "set null" }),
   isAdmin: boolean("is_admin").notNull().default(false),
   emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true }),
+  /** "Delete my account": the row stays as a tombstone (audit history points at it), personal data is cleared. */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  /** Set by an admin: the account can no longer use D-Card. */
+  disabledAt: timestamp("disabled_at", { withTimezone: true }),
   createdAt: createdAt(),
+});
+
+/** AUTH-7: an admin's authenticator-app (TOTP) second factor. */
+export const adminTotp = pgTable("admin_totp", {
+  userId: uuid("user_id")
+    .primaryKey()
+    .references(() => userAccount.id, { onDelete: "cascade" }),
+  /** Base32 secret, AES-GCM encrypted. */
+  secretEnc: text("secret_enc").notNull(),
+  /** Null until the admin proves the app works with a first code. */
+  confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+  /** HMAC hashes of the unused one-time recovery codes. */
+  recoveryHashes: jsonb("recovery_hashes").$type<string[]>().notNull().default([]),
+  /** Last accepted 30-second step; a code is never accepted twice. */
+  lastUsedStep: bigint("last_used_step", { mode: "number" }),
+  failedCount: integer("failed_count").notNull().default(0),
+  lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
 });
 
 /** Admin-managed event types (wedding, send-off, kitchen party, ...). */
@@ -713,5 +737,175 @@ export const walkinRequest = pgTable(
     check("walkin_admitted_count", sql`${t.admittedCount} between 1 and 2`),
     check("walkin_offline_reason", sql`${t.source} = 'online' or ${t.offlineReason} is not null`),
     index("walkin_request_event_idx").on(t.eventId, t.status),
+  ],
+);
+
+// ── Billing (T05-01; plans-and-billing.md, integrations/snippe.md) ──
+
+export const paymentAttemptStatusEnum = pgEnum("payment_attempt_status", ["pending", "completed", "failed", "expired"]);
+export const hostPaymentMethodEnum = pgEnum("host_payment_method", ["mobile", "session"]);
+
+/** One try to pay through Snippe. Money is only recorded as `host_payment` when it completes. */
+export const paymentAttempt = pgTable(
+  "payment_attempt",
+  {
+    id: id(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    hostUserId: uuid("host_user_id")
+      .notNull()
+      .references(() => userAccount.id),
+    planId: uuid("plan_id")
+      .notNull()
+      .references(() => plan.id),
+    pricePerGuest: integer("price_per_guest").notNull(),
+    /** Total guest cards after this payment. */
+    guestCards: integer("guest_cards").notNull(),
+    subtotal: integer("subtotal").notNull(),
+    discountAmount: integer("discount_amount").notNull().default(0),
+    amount: integer("amount").notNull(),
+    method: hostPaymentMethodEnum("method").notNull(),
+    phone: text("phone"),
+    provider: text("provider").notNull().default("snippe"),
+    /** Snippe payment/session reference. */
+    providerReference: text("provider_reference").unique(),
+    idempotencyKey: text("idempotency_key").notNull().unique(),
+    checkoutUrl: text("checkout_url"),
+    status: paymentAttemptStatusEnum("status").notNull().default("pending"),
+    failureReason: text("failure_reason"),
+    createdAt: createdAt(),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+  },
+  (t) => [
+    check("payment_attempt_amounts", sql`${t.amount} >= 0 AND ${t.guestCards} > 0`),
+    check("payment_attempt_phone_format", sql`${t.phone} IS NULL OR ${t.phone} ~ '^255[0-9]{9}$'`),
+    index("payment_attempt_event_idx").on(t.eventId, t.createdAt),
+    index("payment_attempt_pending_idx").on(t.status, t.createdAt),
+  ],
+);
+
+/** Confirmed payment for an event's guest cards (exactly one per completed attempt). */
+export const hostPayment = pgTable(
+  "host_payment",
+  {
+    id: id(),
+    attemptId: uuid("attempt_id")
+      .notNull()
+      .unique()
+      .references(() => paymentAttempt.id),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    hostUserId: uuid("host_user_id")
+      .notNull()
+      .references(() => userAccount.id),
+    planId: uuid("plan_id")
+      .notNull()
+      .references(() => plan.id),
+    guestCards: integer("guest_cards").notNull(),
+    amount: integer("amount").notNull(),
+    discountAmount: integer("discount_amount").notNull().default(0),
+    method: hostPaymentMethodEnum("method").notNull(),
+    reference: text("reference").notNull(),
+    paidAt: timestamp("paid_at", { withTimezone: true }).notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index("host_payment_host_idx").on(t.hostUserId)],
+);
+
+/** Provider webhook events already processed (deduplicated by the provider's event id). */
+export const webhookEvent = pgTable("webhook_event", {
+  id: text("id").primaryKey(),
+  provider: text("provider").notNull(),
+  type: text("type").notNull(),
+  receivedAt: timestamp("received_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Platform billing settings (single row, id = 1): the launch offer an admin can change or switch off. */
+export const billingSetting = pgTable(
+  "billing_setting",
+  {
+    id: integer("id").primaryKey().default(1),
+    launchOfferEnabled: boolean("launch_offer_enabled").notNull().default(true),
+    launchOfferPercent: integer("launch_offer_percent").notNull().default(20),
+    updatedBy: uuid("updated_by").references(() => userAccount.id),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    check("billing_setting_single_row", sql`${t.id} = 1`),
+    check("billing_setting_percent", sql`${t.launchOfferPercent} BETWEEN 0 AND 90`),
+  ],
+);
+
+// ── Media in the host's Google Drive (T05-04; features/media.md, integrations/google-drive.md) ──
+
+export const sharingModeEnum = pgEnum("sharing_mode", ["private", "link"]);
+export const mediaKindEnum = pgEnum("media_kind", ["card", "story", "gallery"]);
+export const mediaTypeEnum = pgEnum("media_type", ["photo", "video"]);
+export const mediaStatusEnum = pgEnum("media_status", ["uploading", "visible", "hidden", "reported", "deleted", "missing"]);
+
+/** A host's Google account (scope drive.file). The refresh token is AES-GCM encrypted. */
+export const googleConnection = pgTable(
+  "google_connection",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => userAccount.id, { onDelete: "cascade" }),
+    googleEmail: text("google_email").notNull(),
+    refreshTokenEnc: text("refresh_token_enc").notNull(),
+    scopes: text("scopes").notNull(),
+    connectedAt: timestamp("connected_at", { withTimezone: true }).notNull().defaultNow(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  },
+  (t) => [index("google_connection_user_idx").on(t.userId)],
+);
+
+/** An event's Drive folder ("D-Card – {title}" with card/story/gallery) and sharing mode. */
+export const eventMedia = pgTable("event_media", {
+  eventId: uuid("event_id")
+    .primaryKey()
+    .references(() => event.id, { onDelete: "cascade" }),
+  connectionId: uuid("connection_id").references(() => googleConnection.id, { onDelete: "set null" }),
+  folderId: text("folder_id"),
+  cardFolderId: text("card_folder_id"),
+  storyFolderId: text("story_folder_id"),
+  galleryFolderId: text("gallery_folder_id"),
+  sharingMode: sharingModeEnum("sharing_mode").notNull().default("private"),
+  /** Drive access failed (revoked, folder deleted): the host must reconnect (MED-13). */
+  needsReconnect: boolean("needs_reconnect").notNull().default(false),
+  /** Uploads paused because the host's Drive is full (MED-10). */
+  driveFull: boolean("drive_full").notNull().default(false),
+  updatedAt: updatedAt(),
+});
+
+/** One photo or video. The bytes live only in the host's Drive; D-Card keeps ids and metadata. */
+export const mediaItem = pgTable(
+  "media_item",
+  {
+    id: id(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    kind: mediaKindEnum("kind").notNull(),
+    type: mediaTypeEnum("type").notNull(),
+    /** Guest uploads (gallery) are tied to the invitation behind the card link. */
+    invitationId: uuid("invitation_id").references(() => invitation.id, { onDelete: "set null" }),
+    uploadedByUserId: uuid("uploaded_by_user_id").references(() => userAccount.id),
+    driveFileId: text("drive_file_id"),
+    fileName: text("file_name").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: bigint("size_bytes", { mode: "number" }).notNull(),
+    durationSeconds: integer("duration_seconds"),
+    status: mediaStatusEnum("status").notNull().default("uploading"),
+    reportedAt: timestamp("reported_at", { withTimezone: true }),
+    createdAt: createdAt(),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("media_item_event_idx").on(t.eventId, t.kind, t.status),
+    index("media_item_invitation_idx").on(t.invitationId),
+    unique("media_item_drive_file_unique").on(t.driveFileId),
   ],
 );

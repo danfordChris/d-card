@@ -17,6 +17,7 @@ import '../events/view_models/event_select_view_model.dart';
 import '../events/views/event_select_screen.dart';
 import '../walk_in/view_models/walk_in_view_model.dart';
 import '../walk_in/views/walk_in_screen.dart';
+import 'revoked_screen.dart';
 
 /// Signed-in part of the app: choose the event (registering this phone), then check guests in.
 /// Owns the view models so they live as long as their screen.
@@ -49,6 +50,10 @@ class _DoorHomeState extends State<DoorHome> {
   late EventSelectViewModel _events = _newEvents();
   CheckInViewModel? _checkIn;
 
+  /// The event this phone was refused for (403), while the revoked screen shows.
+  DoorEvent? _revokedEvent;
+  Future<int>? _revokeCleanup;
+
   EventSelectViewModel _newEvents() => EventSelectViewModel(widget.door, sync: widget.sync);
 
   @override
@@ -72,8 +77,47 @@ class _DoorHomeState extends State<DoorHome> {
     if (sync != null) unawaited(sync.start(session).catchError((Object _) {}));
   }
 
-  /// AUTH-9: a revoked device (or lost door access / ended session) goes back to sign-in.
-  Future<void> _accessDenied(AppFailure because) => widget.session.signOut(because: because);
+  /// AUTH-9. 401 (session ended) signs out. 403 (the host revoked this phone or removed the
+  /// door access) stops scanning, lets the sync layer try one last upload and wipe the cache,
+  /// and shows the revoked screen (another event or sign-out from there).
+  Future<void> _accessDenied(AppFailure because) async {
+    if (because != AppFailure.doorAccessDenied) return widget.session.signOut(because: because);
+    final event = _checkIn?.session.event ?? widget.sync?.session?.event;
+    if (event == null || !mounted || _revokedEvent != null) return;
+    _showRevoked(event, widget.sync?.deviceRevoked() ?? Future.value(0));
+  }
+
+  /// Registering this phone for [event] was refused (revoked earlier): wipe the offline copy
+  /// if it is that event's, then explain.
+  void _openRefused(DoorEvent event) {
+    final sync = widget.sync;
+    Future<int> cleanup() async {
+      if (sync == null) return 0;
+      final cached = await sync.cachedSession();
+      return cached?.event.id == event.id ? sync.deviceRevoked() : 0;
+    }
+
+    _showRevoked(event, cleanup());
+  }
+
+  void _showRevoked(DoorEvent event, Future<int> cleanup) {
+    final old = _checkIn;
+    setState(() {
+      _checkIn = null;
+      _revokedEvent = event;
+      _revokeCleanup = cleanup.catchError((Object _) => 0);
+    });
+    if (old != null) WidgetsBinding.instance.addPostFrameCallback((_) => old.dispose());
+  }
+
+  void _leaveRevoked() {
+    setState(() {
+      _revokedEvent = null;
+      _revokeCleanup = null;
+      _events.dispose();
+      _events = _newEvents();
+    });
+  }
 
   /// Warns before sign-out deletes entries that have not uploaded yet.
   Future<void> _signOut() async {
@@ -137,6 +181,21 @@ class _DoorHomeState extends State<DoorHome> {
 
   @override
   Widget build(BuildContext context) {
+    final revoked = _revokedEvent;
+    if (revoked != null) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _leaveRevoked();
+        },
+        child: RevokedScreen(
+          event: revoked,
+          cleanup: _revokeCleanup!,
+          onChooseEvent: _leaveRevoked,
+          onSignOut: () => widget.session.signOut(),
+        ),
+      );
+    }
     final checkIn = _checkIn;
     if (checkIn != null) {
       return PopScope(
@@ -163,6 +222,7 @@ class _DoorHomeState extends State<DoorHome> {
       viewModel: _events,
       onOpened: _opened,
       onSignOut: _signOut,
+      onRefused: _openRefused,
     );
   }
 }

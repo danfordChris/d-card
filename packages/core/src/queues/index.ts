@@ -19,6 +19,12 @@ export const SYSTEM_JOBS = {
   scheduleMessages: "schedule-messages",
   /** Every 10 minutes: fetch NextSMS delivery status for recent SMS. */
   pollSmsDelivery: "poll-sms-delivery",
+  /** Every 2 minutes: check pending Snippe payments (fallback when a webhook is late). */
+  pollPayments: "poll-payments",
+  /** Daily: W13 retention (anonymise guests without an account 14 days after the event). */
+  runRetention: "run-retention",
+  /** Every 5 minutes: queue backlog, failing jobs and stuck payments → alert email (T06-06). */
+  checkHealth: "check-health",
 } as const;
 
 /** Queues `sms` and `whatsapp`, job `send`; job id = message_log id. Queue `whatsapp`, job `reply`: free-form reply in the 24 h window, job id = `reply-<inbound wamid>`. */

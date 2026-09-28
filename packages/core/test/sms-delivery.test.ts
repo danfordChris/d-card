@@ -1,4 +1,4 @@
-import { event, eventType, invitation, messageLog, person, userAccount } from "@dcard/db";
+import { event, eventPlan, eventType, invitation, messageLog, person, plan, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -29,6 +29,9 @@ beforeAll(async () => {
     .values({ hostUserId: u!.id, eventTypeId: t!.id, title: "Harusi", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "255754123456" })
     .returning();
   eventId = ev!.id;
+  // Paid event: guest messages are only dispatched for paid events (T05-01).
+  const [pl] = await handle.db.select().from(plan).limit(1);
+  await handle.db.insert(eventPlan).values({ eventId, planId: pl!.id, pricePerGuest: pl!.pricePerGuest, guestLimit: 100 });
   const [p] = await handle.db.insert(person).values({ phone: "255713966001", name: "Juma" }).returning();
   const [inv] = await handle.db.insert(invitation).values({ eventId, personId: p!.id, guestName: "Juma", guestPhone: "255713966001" }).returning();
   invitationId = inv!.id;

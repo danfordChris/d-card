@@ -23,56 +23,99 @@ Method | HTTP request | Description
 [**adminUpdateWhatsappTemplate**](DefaultApi.md#adminupdatewhatsapptemplate) | **PATCH** /api/v1/admin/whatsapp-templates/{id} | Update registration, Meta status or host availability
 [**cancelCard**](DefaultApi.md#cancelcard) | **POST** /api/v1/events/{id}/guests/{guestId}/cancel | Cancel the card (host). Payments are kept.
 [**cancelEvent**](DefaultApi.md#cancelevent) | **POST** /api/v1/events/{id}/cancel | Cancel a draft or published event (host only)
+[**completeGuestUpload**](DefaultApi.md#completeguestupload) | **POST** /api/v1/cards/{token}/media/{itemId}/complete | Register the guest's Drive file after upload
+[**completeHostUpload**](DefaultApi.md#completehostupload) | **POST** /api/v1/events/{id}/media/{itemId}/complete | Register the Drive file after the upload finished
+[**confirmAdminTotp**](DefaultApi.md#confirmadmintotp) | **POST** /api/v1/admin/2fa/confirm | Confirm setup with a first code; returns 10 one-time recovery codes and sets the admin session cookie
 [**confirmGuestImport**](DefaultApi.md#confirmguestimport) | **POST** /api/v1/events/{id}/imports/{jobId}/confirm | 
+[**connectGoogleDrive**](DefaultApi.md#connectgoogledrive) | **GET** /api/v1/media/google/connect | Redirects the host to Google consent (drive.file) for an event
 [**createEvent**](DefaultApi.md#createevent) | **POST** /api/v1/events | Create a draft event (caller becomes host)
+[**createGuestUploadSession**](DefaultApi.md#createguestuploadsession) | **POST** /api/v1/cards/{token}/media/upload-sessions | Guest gallery upload from the card link: Drive resumable URL within window and per-guest limits
+[**createHostUploadSession**](DefaultApi.md#createhostuploadsession) | **POST** /api/v1/events/{id}/media/upload-sessions | Host upload (card or story): returns a Drive resumable URL within plan limits
 [**createInvite**](DefaultApi.md#createinvite) | **POST** /api/v1/events/{id}/team/invites | Create a 7-day, single-use invite link; emails it when an email is given (host only)
 [**decideWalkIn**](DefaultApi.md#decidewalkin) | **POST** /api/v1/events/{id}/walk-ins/{walkInId}/decision | Approve/refuse a pending walk-in or accept/flag an offline one; the first answer wins
+[**deleteEventMedia**](DefaultApi.md#deleteeventmedia) | **DELETE** /api/v1/events/{id}/media/{itemId} | Delete an item (also deletes the Drive file D-Card created)
+[**deleteGuestMedia**](DefaultApi.md#deleteguestmedia) | **DELETE** /api/v1/cards/{token}/media/{itemId} | Guest deletes their own upload
+[**deleteMe**](DefaultApi.md#deleteme) | **DELETE** /api/v1/me | Delete my account (registered guests; hosts must delete their events first)
+[**disableAdminTotp**](DefaultApi.md#disableadmintotp) | **POST** /api/v1/admin/2fa/disable | Turn two-step sign-in off (needs a code)
+[**disconnectGoogleDrive**](DefaultApi.md#disconnectgoogledrive) | **DELETE** /api/v1/media/google | Disconnect Google Drive (files stay in the host's Drive)
 [**doorAdmit**](DefaultApi.md#dooradmit) | **POST** /api/v1/door/entries | Admit 1 or 2 on a card, atomically (idempotent per entry id)
 [**doorGetWalkIn**](DefaultApi.md#doorgetwalkin) | **GET** /api/v1/door/walk-ins/{walkInId} | The door polls its request for the decision
 [**doorLookup**](DefaultApi.md#doorlookup) | **POST** /api/v1/door/lookup | Find a card by QR token, card number or name
 [**doorRequestWalkIn**](DefaultApi.md#doorrequestwalkin) | **POST** /api/v1/door/walk-ins | Request approval for a walk-in; pushes to the host and walk-in approvers
 [**doorSyncDownload**](DefaultApi.md#doorsyncdownload) | **GET** /api/v1/door/sync | Event cache for offline check-in: full without `since`, changes only with it
 [**doorSyncUpload**](DefaultApi.md#doorsyncupload) | **POST** /api/v1/door/sync | Upload offline entries and attempts (idempotent; merges in any order)
+[**downloadEventExport**](DefaultApi.md#downloadeventexport) | **GET** /api/v1/events/{id}/exports/{kind} | CSV export (UTF-8 with BOM): guests and attendance for the host, contributions for host or treasurer; audited
+[**exportAdminAudit**](DefaultApi.md#exportadminaudit) | **GET** /api/v1/admin/audit/export | Audit search as CSV (up to 10,000 rows)
+[**exportMyData**](DefaultApi.md#exportmydata) | **GET** /api/v1/me/export | Download my data (JSON file)
+[**getAdminQueues**](DefaultApi.md#getadminqueues) | **GET** /api/v1/admin/queues | Job counts per queue
+[**getAdminTotp**](DefaultApi.md#getadmintotp) | **GET** /api/v1/admin/2fa | Two-step sign-in status for this admin
+[**getBilling**](DefaultApi.md#getbilling) | **GET** /api/v1/events/{id}/billing | Plan, paid guest cards, payments and any pending payment (host)
+[**getBillingSettings**](DefaultApi.md#getbillingsettings) | **GET** /api/v1/admin/billing/settings | Launch offer setting (admin)
 [**getCardCalendar**](DefaultApi.md#getcardcalendar) | **GET** /api/v1/cards/{token}/calendar.ics | Calendar entry (text/calendar)
 [**getCardLink**](DefaultApi.md#getcardlink) | **GET** /api/v1/events/{id}/guests/{guestId}/card | Card number and link (host, committee)
+[**getCheckout**](DefaultApi.md#getcheckout) | **GET** /api/v1/events/{id}/checkout/{attemptId} | Payment status (poll while pending)
 [**getContributions**](DefaultApi.md#getcontributions) | **GET** /api/v1/events/{id}/contributions | Totals and contributors (host, committee, treasurer)
+[**getCostReport**](DefaultApi.md#getcostreport) | **GET** /api/v1/admin/cost-report | Revenue, message cost, payment fee and margin per event, plan and month
 [**getEvent**](DefaultApi.md#getevent) | **GET** /api/v1/events/{id} | 
+[**getEventMediaContent**](DefaultApi.md#geteventmediacontent) | **GET** /api/v1/events/{id}/media/{itemId}/content | Private mode: streams the thumbnail or file for the host (?size=thumb|full)
+[**getGuestMedia**](DefaultApi.md#getguestmedia) | **GET** /api/v1/cards/{token}/media | Story and gallery for a card link (no login); upload window and the guest's remaining uploads
+[**getGuestMediaContent**](DefaultApi.md#getguestmediacontent) | **GET** /api/v1/cards/{token}/media/{itemId}/content | Private mode: streams a visible item for a valid card link (?size=thumb|full)
 [**getHealth**](DefaultApi.md#gethealth) | **GET** /api/v1/health | Service health
 [**getInvite**](DefaultApi.md#getinvite) | **GET** /api/v1/invites/{token} | Public invite info for the accept page
 [**getMe**](DefaultApi.md#getme) | **GET** /api/v1/me | Current account
+[**getMediaSettings**](DefaultApi.md#getmediasettings) | **GET** /api/v1/events/{id}/media/settings | Drive connection, sharing mode, quota, plan limits and counts (host, committee)
 [**getMessageSettings**](DefaultApi.md#getmessagesettings) | **GET** /api/v1/events/{id}/messages | Message settings for NTF-1…8 with the plan's limits (host, committee)
 [**getPledge**](DefaultApi.md#getpledge) | **GET** /api/v1/events/{id}/pledges/{pledgeId} | 
 [**getPublicCard**](DefaultApi.md#getpubliccard) | **GET** /api/v1/cards/{token} | Guest card by link token (public, no login)
 [**getTeam**](DefaultApi.md#getteam) | **GET** /api/v1/events/{id}/team | Members and pending invites (host only)
 [**issueCard**](DefaultApi.md#issuecard) | **POST** /api/v1/events/{id}/guests/{guestId}/issue | Issue the card directly (host). Pending only.
+[**linkMyCard**](DefaultApi.md#linkmycard) | **POST** /api/v1/me/cards/link | Link a card (by its link token) to the signed-in guest account
+[**listConfirmations**](DefaultApi.md#listconfirmations) | **GET** /api/v1/events/{id}/confirmations | Confirmation states and expected headcount (host or committee)
 [**listDoorDevices**](DefaultApi.md#listdoordevices) | **GET** /api/v1/events/{id}/door-devices | Door devices of an event with last sync (host, committee)
 [**listDoorEvents**](DefaultApi.md#listdoorevents) | **GET** /api/v1/door/events | Events the signed-in user can check guests in for (host, committee, door staff)
+[**listEventAudit**](DefaultApi.md#listeventaudit) | **GET** /api/v1/events/{id}/audit | Event audit trail, newest first (host or treasurer)
+[**listEventMedia**](DefaultApi.md#listeventmedia) | **GET** /api/v1/events/{id}/media | Media of an event for the host (all statuses except deleted)
 [**listEventTypes**](DefaultApi.md#listeventtypes) | **GET** /api/v1/event-types | Active event types
 [**listEvents**](DefaultApi.md#listevents) | **GET** /api/v1/events | Events where the caller is host or team member
 [**listGuests**](DefaultApi.md#listguests) | **GET** /api/v1/events/{id}/guests | Guests of an event, newest first (host, committee, treasurer)
 [**listMessageLog**](DefaultApi.md#listmessagelog) | **GET** /api/v1/events/{id}/messages/log | Event message log (no costs) and WhatsApp opt-outs (host, committee)
+[**listMyCards**](DefaultApi.md#listmycards) | **GET** /api/v1/me/cards | The signed-in guest's cards across events
 [**listPlans**](DefaultApi.md#listplans) | **GET** /api/v1/plans | Active plans with price per guest and entitlements
 [**listWalkIns**](DefaultApi.md#listwalkins) | **GET** /api/v1/events/{id}/walk-ins | Walk-ins of an event (host, committee, walk-in approvers)
 [**previewCopyGuests**](DefaultApi.md#previewcopyguests) | **POST** /api/v1/events/{id}/imports/copy | Preview copying people from the caller's past event
 [**previewGuestImport**](DefaultApi.md#previewguestimport) | **POST** /api/v1/events/{id}/imports | Upload .xlsx/.csv (field `file`, ≤ 2 MB, ≤ 5,000 rows) and get a validation report; nothing is written
 [**provisionMe**](DefaultApi.md#provisionme) | **POST** /api/v1/me | Create the D-Card account for the signed-in Firebase user (idempotent)
+[**quoteBilling**](DefaultApi.md#quotebilling) | **POST** /api/v1/events/{id}/billing/quote | Price for buying cards, adding blocks of 10 or upgrading (minimum charge, launch offer applied)
 [**recordPayment**](DefaultApi.md#recordpayment) | **POST** /api/v1/events/{id}/pledges/{pledgeId}/payments | Record a payment or refund (host, treasurer). Final payment issues the card.
 [**registerDevice**](DefaultApi.md#registerdevice) | **POST** /api/v1/me/devices | Register (upsert) this device's push token for the signed-in user
 [**registerDoorDevice**](DefaultApi.md#registerdoordevice) | **POST** /api/v1/door/devices | Register this device for one event (idempotent per deviceId)
 [**reinstateCard**](DefaultApi.md#reinstatecard) | **POST** /api/v1/events/{id}/guests/{guestId}/reinstate | Reinstate a cancelled card (host): same number and tokens.
 [**removeGuest**](DefaultApi.md#removeguest) | **DELETE** /api/v1/events/{id}/guests/{guestId} | 
 [**removeMember**](DefaultApi.md#removemember) | **DELETE** /api/v1/events/{id}/team/members/{userId} | 
+[**reportGuestMedia**](DefaultApi.md#reportguestmedia) | **POST** /api/v1/cards/{token}/media/{itemId}/report | Report an item to the host
+[**retryAdminQueue**](DefaultApi.md#retryadminqueue) | **POST** /api/v1/admin/queues/{name}/retry | Retry the failed jobs of a queue
 [**revokeDoorDevice**](DefaultApi.md#revokedoordevice) | **DELETE** /api/v1/events/{id}/door-devices/{deviceId} | Revoke a door device (host); its next door call gets 403
 [**revokeInvite**](DefaultApi.md#revokeinvite) | **DELETE** /api/v1/events/{id}/team/invites/{inviteId} | 
+[**searchAdminAudit**](DefaultApi.md#searchadminaudit) | **GET** /api/v1/admin/audit | Search the audit log
+[**searchAdminEvents**](DefaultApi.md#searchadminevents) | **GET** /api/v1/admin/events | Search events by title or host email and date
+[**searchAdminUsers**](DefaultApi.md#searchadminusers) | **GET** /api/v1/admin/users | Search accounts by email, name or phone
 [**sendManualMessage**](DefaultApi.md#sendmanualmessage) | **POST** /api/v1/events/{id}/messages/send | Send a message now to a guest group, or preview the recipient count (host)
 [**sendTestMessage**](DefaultApi.md#sendtestmessage) | **POST** /api/v1/events/{id}/messages/{type}/test | Send a message with sample values to the host's own phone (rate-limited)
+[**setConfirmation**](DefaultApi.md#setconfirmation) | **PUT** /api/v1/events/{id}/confirmations/{guestId} | Record or override a guest confirmation (host or committee)
+[**setMediaStatus**](DefaultApi.md#setmediastatus) | **PATCH** /api/v1/events/{id}/media/{itemId} | Hide or show an item (host moderation, audited)
+[**startAdminTotp**](DefaultApi.md#startadmintotp) | **POST** /api/v1/admin/2fa/enrol | Start authenticator-app setup (secret + otpauth URI for a QR code)
+[**startCheckout**](DefaultApi.md#startcheckout) | **POST** /api/v1/events/{id}/checkout | Start a Snippe payment: mobile-money push or hosted checkout session
 [**submitRsvp**](DefaultApi.md#submitrsvp) | **POST** /api/v1/cards/{token}/rsvp | RSVP Yes/No with dietary note (public); editable until the event starts
 [**unregisterDevice**](DefaultApi.md#unregisterdevice) | **DELETE** /api/v1/me/devices/{token} | Remove a push token of the signed-in user (idempotent; call on sign-out)
+[**updateAdminUser**](DefaultApi.md#updateadminuser) | **PATCH** /api/v1/admin/users/{userId} | Grant/revoke admin, disable/enable an account (not yourself)
+[**updateBillingSettings**](DefaultApi.md#updatebillingsettings) | **PUT** /api/v1/admin/billing/settings | Change or switch off the launch offer (admin, audited)
 [**updateEvent**](DefaultApi.md#updateevent) | **PATCH** /api/v1/events/{id} | Edit details, contact and settings (host only)
 [**updateGuest**](DefaultApi.md#updateguest) | **PATCH** /api/v1/events/{id}/guests/{guestId} | 
+[**updateMediaSettings**](DefaultApi.md#updatemediasettings) | **PUT** /api/v1/events/{id}/media/settings | Change sharing mode or the Google Photos link (host, audited)
 [**updateMessageSettings**](DefaultApi.md#updatemessagesettings) | **PUT** /api/v1/events/{id}/messages | Save all 8 message settings (host)
 [**updatePayment**](DefaultApi.md#updatepayment) | **PATCH** /api/v1/events/{id}/payments/{paymentId} | Correct a payment record (host, treasurer); audited
 [**updatePledge**](DefaultApi.md#updatepledge) | **PATCH** /api/v1/events/{id}/pledges/{pledgeId} | Change amount/card type before issue (host, treasurer); issues if already covered
+[**verifyAdminTotp**](DefaultApi.md#verifyadmintotp) | **POST** /api/v1/admin/2fa/verify | Verify a code or recovery code; sets the admin session cookie (12 h)
 
 
 # **acceptInvite**
@@ -789,6 +832,167 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **completeGuestUpload**
+> MediaItem completeGuestUpload(token, itemId, uploadCompleteInput)
+
+Register the guest's Drive file after upload
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final token = token_example; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final uploadCompleteInput = UploadCompleteInput(); // UploadCompleteInput | 
+
+try {
+    final result = api_instance.completeGuestUpload(token, itemId, uploadCompleteInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->completeGuestUpload: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  | 
+ **itemId** | **String**|  | 
+ **uploadCompleteInput** | [**UploadCompleteInput**](UploadCompleteInput.md)|  | [optional] 
+
+### Return type
+
+[**MediaItem**](MediaItem.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **completeHostUpload**
+> MediaItem completeHostUpload(id, itemId, uploadCompleteInput)
+
+Register the Drive file after the upload finished
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final uploadCompleteInput = UploadCompleteInput(); // UploadCompleteInput | 
+
+try {
+    final result = api_instance.completeHostUpload(id, itemId, uploadCompleteInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->completeHostUpload: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **itemId** | **String**|  | 
+ **uploadCompleteInput** | [**UploadCompleteInput**](UploadCompleteInput.md)|  | [optional] 
+
+### Return type
+
+[**MediaItem**](MediaItem.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **confirmAdminTotp**
+> TotpRecoveryCodes confirmAdminTotp(totpCodeInput)
+
+Confirm setup with a first code; returns 10 one-time recovery codes and sets the admin session cookie
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final totpCodeInput = TotpCodeInput(); // TotpCodeInput | 
+
+try {
+    final result = api_instance.confirmAdminTotp(totpCodeInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->confirmAdminTotp: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **totpCodeInput** | [**TotpCodeInput**](TotpCodeInput.md)|  | [optional] 
+
+### Return type
+
+[**TotpRecoveryCodes**](TotpRecoveryCodes.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **confirmGuestImport**
 > ImportResult confirmGuestImport(id, jobId, importConfirmInput)
 
@@ -844,6 +1048,56 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **connectGoogleDrive**
+> connectGoogleDrive(eventId)
+
+Redirects the host to Google consent (drive.file) for an event
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final eventId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    api_instance.connectGoogleDrive(eventId);
+} catch (e) {
+    print('Exception when calling DefaultApi->connectGoogleDrive: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **eventId** | **String**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **createEvent**
 > Event createEvent(eventCreateInput)
 
@@ -883,6 +1137,112 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Event**](Event.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **createGuestUploadSession**
+> UploadSession createGuestUploadSession(token, uploadSessionInput)
+
+Guest gallery upload from the card link: Drive resumable URL within window and per-guest limits
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final token = token_example; // String | 
+final uploadSessionInput = UploadSessionInput(); // UploadSessionInput | 
+
+try {
+    final result = api_instance.createGuestUploadSession(token, uploadSessionInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->createGuestUploadSession: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  | 
+ **uploadSessionInput** | [**UploadSessionInput**](UploadSessionInput.md)|  | [optional] 
+
+### Return type
+
+[**UploadSession**](UploadSession.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **createHostUploadSession**
+> UploadSession createHostUploadSession(id, uploadSessionInput)
+
+Host upload (card or story): returns a Drive resumable URL within plan limits
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final uploadSessionInput = UploadSessionInput(); // UploadSessionInput | 
+
+try {
+    final result = api_instance.createHostUploadSession(id, uploadSessionInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->createHostUploadSession: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **uploadSessionInput** | [**UploadSessionInput**](UploadSessionInput.md)|  | [optional] 
+
+### Return type
+
+[**UploadSession**](UploadSession.md)
 
 ### Authorization
 
@@ -1000,6 +1360,248 @@ Name | Type | Description  | Notes
 
  - **Content-Type**: application/json
  - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteEventMedia**
+> deleteEventMedia(id, itemId)
+
+Delete an item (also deletes the Drive file D-Card created)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    api_instance.deleteEventMedia(id, itemId);
+} catch (e) {
+    print('Exception when calling DefaultApi->deleteEventMedia: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **itemId** | **String**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteGuestMedia**
+> deleteGuestMedia(token, itemId)
+
+Guest deletes their own upload
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final token = token_example; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    api_instance.deleteGuestMedia(token, itemId);
+} catch (e) {
+    print('Exception when calling DefaultApi->deleteGuestMedia: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  | 
+ **itemId** | **String**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteMe**
+> deleteMe()
+
+Delete my account (registered guests; hosts must delete their events first)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = DefaultApi();
+
+try {
+    api_instance.deleteMe();
+} catch (e) {
+    print('Exception when calling DefaultApi->deleteMe: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **disableAdminTotp**
+> disableAdminTotp(totpCodeInput)
+
+Turn two-step sign-in off (needs a code)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final totpCodeInput = TotpCodeInput(); // TotpCodeInput | 
+
+try {
+    api_instance.disableAdminTotp(totpCodeInput);
+} catch (e) {
+    print('Exception when calling DefaultApi->disableAdminTotp: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **totpCodeInput** | [**TotpCodeInput**](TotpCodeInput.md)|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **disconnectGoogleDrive**
+> disconnectGoogleDrive()
+
+Disconnect Google Drive (files stay in the host's Drive)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    api_instance.disconnectGoogleDrive();
+} catch (e) {
+    print('Exception when calling DefaultApi->disconnectGoogleDrive: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -1315,6 +1917,357 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **downloadEventExport**
+> String downloadEventExport(id, kind, lang)
+
+CSV export (UTF-8 with BOM): guests and attendance for the host, contributions for host or treasurer; audited
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final kind = ; // ExportKind | 
+final lang = lang_example; // String | 
+
+try {
+    final result = api_instance.downloadEventExport(id, kind, lang);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->downloadEventExport: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **kind** | [**ExportKind**](.md)|  | 
+ **lang** | **String**|  | [optional] 
+
+### Return type
+
+**String**
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: text/csv, application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **exportAdminAudit**
+> String exportAdminAudit(eventId, actorUserId, action, from, to, page)
+
+Audit search as CSV (up to 10,000 rows)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final eventId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final actorUserId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final action = action_example; // String | 
+final from = 2013-10-20T19:20:30+01:00; // DateTime | 
+final to = 2013-10-20T19:20:30+01:00; // DateTime | 
+final page = 56; // int | 
+
+try {
+    final result = api_instance.exportAdminAudit(eventId, actorUserId, action, from, to, page);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->exportAdminAudit: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **eventId** | **String**|  | [optional] 
+ **actorUserId** | **String**|  | [optional] 
+ **action** | **String**|  | [optional] 
+ **from** | **DateTime**|  | [optional] 
+ **to** | **DateTime**|  | [optional] 
+ **page** | **int**|  | [optional] 
+
+### Return type
+
+**String**
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: text/csv, application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **exportMyData**
+> Map<String, Object> exportMyData()
+
+Download my data (JSON file)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.exportMyData();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->exportMyData: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Map<String, Object>**](Object.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAdminQueues**
+> QueueStatsList getAdminQueues()
+
+Job counts per queue
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.getAdminQueues();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getAdminQueues: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**QueueStatsList**](QueueStatsList.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAdminTotp**
+> TotpStatus getAdminTotp()
+
+Two-step sign-in status for this admin
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.getAdminTotp();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getAdminTotp: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**TotpStatus**](TotpStatus.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getBilling**
+> BillingSummary getBilling(id)
+
+Plan, paid guest cards, payments and any pending payment (host)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final result = api_instance.getBilling(id);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getBilling: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**BillingSummary**](BillingSummary.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getBillingSettings**
+> BillingSettings getBillingSettings()
+
+Launch offer setting (admin)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.getBillingSettings();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getBillingSettings: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**BillingSettings**](BillingSettings.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getCardCalendar**
 > String getCardCalendar(token)
 
@@ -1413,6 +2366,59 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getCheckout**
+> PaymentAttempt getCheckout(id, attemptId)
+
+Payment status (poll while pending)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final attemptId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final result = api_instance.getCheckout(id, attemptId);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getCheckout: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **attemptId** | **String**|  | 
+
+### Return type
+
+[**PaymentAttempt**](PaymentAttempt.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getContributions**
 > Contributions getContributions(id, status, q)
 
@@ -1468,6 +2474,61 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getCostReport**
+> CostReport getCostReport(from, to, feePercent)
+
+Revenue, message cost, payment fee and margin per event, plan and month
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final from = 2013-10-20T19:20:30+01:00; // DateTime | 
+final to = 2013-10-20T19:20:30+01:00; // DateTime | 
+final feePercent = 8.14; // num | 
+
+try {
+    final result = api_instance.getCostReport(from, to, feePercent);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getCostReport: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **from** | **DateTime**|  | 
+ **to** | **DateTime**|  | 
+ **feePercent** | **num**|  | [optional] 
+
+### Return type
+
+[**CostReport**](CostReport.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getEvent**
 > Event getEvent(id)
 
@@ -1507,6 +2568,165 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Event**](Event.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getEventMediaContent**
+> getEventMediaContent(id, itemId, size)
+
+Private mode: streams the thumbnail or file for the host (?size=thumb|full)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final size = size_example; // String | 
+
+try {
+    api_instance.getEventMediaContent(id, itemId, size);
+} catch (e) {
+    print('Exception when calling DefaultApi->getEventMediaContent: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **itemId** | **String**|  | 
+ **size** | **String**|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getGuestMedia**
+> GuestMedia getGuestMedia(token)
+
+Story and gallery for a card link (no login); upload window and the guest's remaining uploads
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final token = token_example; // String | 
+
+try {
+    final result = api_instance.getGuestMedia(token);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getGuestMedia: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  | 
+
+### Return type
+
+[**GuestMedia**](GuestMedia.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getGuestMediaContent**
+> getGuestMediaContent(token, itemId, size)
+
+Private mode: streams a visible item for a valid card link (?size=thumb|full)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final token = token_example; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final size = size_example; // String | 
+
+try {
+    api_instance.getGuestMediaContent(token, itemId, size);
+} catch (e) {
+    print('Exception when calling DefaultApi->getGuestMediaContent: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  | 
+ **itemId** | **String**|  | 
+ **size** | **String**|  | [optional] 
+
+### Return type
+
+void (empty response body)
 
 ### Authorization
 
@@ -1640,6 +2860,57 @@ This endpoint does not need any parameter.
 ### Authorization
 
 [firebaseIdToken](../README.md#firebaseIdToken)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getMediaSettings**
+> MediaSettings getMediaSettings(id)
+
+Drive connection, sharing mode, quota, plan limits and counts (host, committee)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final result = api_instance.getMediaSettings(id);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->getMediaSettings: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**MediaSettings**](MediaSettings.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
 
 ### HTTP request headers
 
@@ -1901,6 +3172,108 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **linkMyCard**
+> LinkCardResult linkMyCard(linkCardInput)
+
+Link a card (by its link token) to the signed-in guest account
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final linkCardInput = LinkCardInput(); // LinkCardInput | 
+
+try {
+    final result = api_instance.linkMyCard(linkCardInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->linkMyCard: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **linkCardInput** | [**LinkCardInput**](LinkCardInput.md)|  | [optional] 
+
+### Return type
+
+[**LinkCardResult**](LinkCardResult.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listConfirmations**
+> ListConfirmations200Response listConfirmations(id)
+
+Confirmation states and expected headcount (host or committee)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final result = api_instance.listConfirmations(id);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listConfirmations: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**ListConfirmations200Response**](ListConfirmations200Response.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **listDoorDevices**
 > ListDoorDevices200Response listDoorDevices(id)
 
@@ -1987,6 +3360,116 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**ListDoorEvents200Response**](ListDoorEvents200Response.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listEventAudit**
+> EventAuditPage listEventAudit(id, action, limit, cursor)
+
+Event audit trail, newest first (host or treasurer)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final action = action_example; // String | Dotted prefix: \"payment\" matches payment.*; \"card.issued\" matches exactly.
+final limit = 56; // int | 
+final cursor = cursor_example; // String | 
+
+try {
+    final result = api_instance.listEventAudit(id, action, limit, cursor);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listEventAudit: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **action** | **String**| Dotted prefix: \"payment\" matches payment.*; \"card.issued\" matches exactly. | [optional] 
+ **limit** | **int**|  | [optional] 
+ **cursor** | **String**|  | [optional] 
+
+### Return type
+
+[**EventAuditPage**](EventAuditPage.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listEventMedia**
+> ListEventMedia200Response listEventMedia(id, kind)
+
+Media of an event for the host (all statuses except deleted)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final kind = ; // MediaKind | 
+
+try {
+    final result = api_instance.listEventMedia(id, kind);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listEventMedia: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **kind** | [**MediaKind**](.md)|  | [optional] 
+
+### Return type
+
+[**ListEventMedia200Response**](ListEventMedia200Response.md)
 
 ### Authorization
 
@@ -2195,6 +3678,53 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MessageLog**](MessageLog.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listMyCards**
+> MyCardList listMyCards()
+
+The signed-in guest's cards across events
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.listMyCards();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->listMyCards: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**MyCardList**](MyCardList.md)
 
 ### Authorization
 
@@ -2446,6 +3976,59 @@ This endpoint does not need any parameter.
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **quoteBilling**
+> BillingQuote quoteBilling(id, billingQuoteInput)
+
+Price for buying cards, adding blocks of 10 or upgrading (minimum charge, launch offer applied)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final billingQuoteInput = BillingQuoteInput(); // BillingQuoteInput | 
+
+try {
+    final result = api_instance.quoteBilling(id, billingQuoteInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->quoteBilling: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **billingQuoteInput** | [**BillingQuoteInput**](BillingQuoteInput.md)|  | [optional] 
+
+### Return type
+
+[**BillingQuote**](BillingQuote.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -2766,6 +4349,109 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **reportGuestMedia**
+> reportGuestMedia(token, itemId)
+
+Report an item to the host
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final token = token_example; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    api_instance.reportGuestMedia(token, itemId);
+} catch (e) {
+    print('Exception when calling DefaultApi->reportGuestMedia: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  | 
+ **itemId** | **String**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **retryAdminQueue**
+> RetryAdminQueue200Response retryAdminQueue(name)
+
+Retry the failed jobs of a queue
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final name = name_example; // String | 
+
+try {
+    final result = api_instance.retryAdminQueue(name);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->retryAdminQueue: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**|  | 
+
+### Return type
+
+[**RetryAdminQueue200Response**](RetryAdminQueue200Response.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **revokeDoorDevice**
 > revokeDoorDevice(id, deviceId)
 
@@ -2858,6 +4544,177 @@ Name | Type | Description  | Notes
 ### Return type
 
 void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **searchAdminAudit**
+> AdminAuditPage searchAdminAudit(eventId, actorUserId, action, from, to, page)
+
+Search the audit log
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final eventId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final actorUserId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final action = action_example; // String | 
+final from = 2013-10-20T19:20:30+01:00; // DateTime | 
+final to = 2013-10-20T19:20:30+01:00; // DateTime | 
+final page = 56; // int | 
+
+try {
+    final result = api_instance.searchAdminAudit(eventId, actorUserId, action, from, to, page);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->searchAdminAudit: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **eventId** | **String**|  | [optional] 
+ **actorUserId** | **String**|  | [optional] 
+ **action** | **String**|  | [optional] 
+ **from** | **DateTime**|  | [optional] 
+ **to** | **DateTime**|  | [optional] 
+ **page** | **int**|  | [optional] 
+
+### Return type
+
+[**AdminAuditPage**](AdminAuditPage.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **searchAdminEvents**
+> AdminEventPage searchAdminEvents(q, from, to, page)
+
+Search events by title or host email and date
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final q = q_example; // String | 
+final from = 2013-10-20T19:20:30+01:00; // DateTime | 
+final to = 2013-10-20T19:20:30+01:00; // DateTime | 
+final page = 56; // int | 
+
+try {
+    final result = api_instance.searchAdminEvents(q, from, to, page);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->searchAdminEvents: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **q** | **String**|  | [optional] 
+ **from** | **DateTime**|  | [optional] 
+ **to** | **DateTime**|  | [optional] 
+ **page** | **int**|  | [optional] 
+
+### Return type
+
+[**AdminEventPage**](AdminEventPage.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **searchAdminUsers**
+> AdminUserPage searchAdminUsers(q, page)
+
+Search accounts by email, name or phone
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final q = q_example; // String | 
+final page = 56; // int | 
+
+try {
+    final result = api_instance.searchAdminUsers(q, page);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->searchAdminUsers: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **q** | **String**|  | [optional] 
+ **page** | **int**|  | [optional] 
+
+### Return type
+
+[**AdminUserPage**](AdminUserPage.md)
 
 ### Authorization
 
@@ -2978,6 +4835,216 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **setConfirmation**
+> ListConfirmations200ResponseGuestsInner setConfirmation(id, guestId, setConfirmationRequest)
+
+Record or override a guest confirmation (host or committee)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final guestId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final setConfirmationRequest = SetConfirmationRequest(); // SetConfirmationRequest | 
+
+try {
+    final result = api_instance.setConfirmation(id, guestId, setConfirmationRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->setConfirmation: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **guestId** | **String**|  | 
+ **setConfirmationRequest** | [**SetConfirmationRequest**](SetConfirmationRequest.md)|  | [optional] 
+
+### Return type
+
+[**ListConfirmations200ResponseGuestsInner**](ListConfirmations200ResponseGuestsInner.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **setMediaStatus**
+> MediaItem setMediaStatus(id, itemId, mediaStatusInput)
+
+Hide or show an item (host moderation, audited)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final itemId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final mediaStatusInput = MediaStatusInput(); // MediaStatusInput | 
+
+try {
+    final result = api_instance.setMediaStatus(id, itemId, mediaStatusInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->setMediaStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **itemId** | **String**|  | 
+ **mediaStatusInput** | [**MediaStatusInput**](MediaStatusInput.md)|  | [optional] 
+
+### Return type
+
+[**MediaItem**](MediaItem.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **startAdminTotp**
+> TotpEnrolment startAdminTotp()
+
+Start authenticator-app setup (secret + otpauth URI for a QR code)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+
+try {
+    final result = api_instance.startAdminTotp();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->startAdminTotp: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**TotpEnrolment**](TotpEnrolment.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **startCheckout**
+> PaymentAttempt startCheckout(id, checkoutInput)
+
+Start a Snippe payment: mobile-money push or hosted checkout session
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final checkoutInput = CheckoutInput(); // CheckoutInput | 
+
+try {
+    final result = api_instance.startCheckout(id, checkoutInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->startCheckout: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **checkoutInput** | [**CheckoutInput**](CheckoutInput.md)|  | [optional] 
+
+### Return type
+
+[**PaymentAttempt**](PaymentAttempt.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **submitRsvp**
 > Rsvp submitRsvp(token, rsvpInput)
 
@@ -3071,6 +5138,109 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateAdminUser**
+> updateAdminUser(userId, adminUserUpdateInput)
+
+Grant/revoke admin, disable/enable an account (not yourself)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final userId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final adminUserUpdateInput = AdminUserUpdateInput(); // AdminUserUpdateInput | 
+
+try {
+    api_instance.updateAdminUser(userId, adminUserUpdateInput);
+} catch (e) {
+    print('Exception when calling DefaultApi->updateAdminUser: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userId** | **String**|  | 
+ **adminUserUpdateInput** | [**AdminUserUpdateInput**](AdminUserUpdateInput.md)|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateBillingSettings**
+> BillingSettings updateBillingSettings(billingSettings)
+
+Change or switch off the launch offer (admin, audited)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final billingSettings = BillingSettings(); // BillingSettings | 
+
+try {
+    final result = api_instance.updateBillingSettings(billingSettings);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->updateBillingSettings: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **billingSettings** | [**BillingSettings**](BillingSettings.md)|  | [optional] 
+
+### Return type
+
+[**BillingSettings**](BillingSettings.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -3171,6 +5341,59 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Guest**](Guest.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateMediaSettings**
+> MediaSettings updateMediaSettings(id, mediaSettingsInput)
+
+Change sharing mode or the Google Photos link (host, audited)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final mediaSettingsInput = MediaSettingsInput(); // MediaSettingsInput | 
+
+try {
+    final result = api_instance.updateMediaSettings(id, mediaSettingsInput);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->updateMediaSettings: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **mediaSettingsInput** | [**MediaSettingsInput**](MediaSettingsInput.md)|  | [optional] 
+
+### Return type
+
+[**MediaSettings**](MediaSettings.md)
 
 ### Authorization
 
@@ -3334,6 +5557,56 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Pledge**](Pledge.md)
+
+### Authorization
+
+[firebaseIdToken](../README.md#firebaseIdToken), [apiKey](../README.md#apiKey)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **verifyAdminTotp**
+> verifyAdminTotp(totpCodeInput)
+
+Verify a code or recovery code; sets the admin session cookie (12 h)
+
+### Example
+```dart
+import 'package:dcard_api/api.dart';
+// TODO Configure HTTP Bearer authorization: firebaseIdToken
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('firebaseIdToken').setAccessToken(yourTokenGeneratorFunction);
+// TODO Configure API key authorization: apiKey
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('apiKey').apiKeyPrefix = 'Bearer';
+
+final api_instance = DefaultApi();
+final totpCodeInput = TotpCodeInput(); // TotpCodeInput | 
+
+try {
+    api_instance.verifyAdminTotp(totpCodeInput);
+} catch (e) {
+    print('Exception when calling DefaultApi->verifyAdminTotp: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **totpCodeInput** | [**TotpCodeInput**](TotpCodeInput.md)|  | [optional] 
+
+### Return type
+
+void (empty response body)
 
 ### Authorization
 

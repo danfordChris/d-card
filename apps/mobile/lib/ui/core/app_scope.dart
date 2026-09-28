@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 
+import '../../data/repositories/billing_repository.dart';
 import '../../data/repositories/contributions_repository.dart';
 import '../../data/repositories/guests_repository.dart';
 import '../../data/repositories/walk_in_alerts_repository.dart';
 import '../../data/repositories/walk_ins_repository.dart';
 import '../../data/services/contacts_source.dart';
+import '../../data/services/link_opener.dart';
 
 /// Dependencies that deeper screens need without threading them through every constructor.
 class AppScope extends InheritedWidget {
@@ -15,6 +17,8 @@ class AppScope extends InheritedWidget {
     required this.contributions,
     required this.walkIns,
     required this.walkInAlerts,
+    required this.billing,
+    required this.links,
     required super.child,
   });
 
@@ -23,6 +27,8 @@ class AppScope extends InheritedWidget {
   final ContributionsRepository contributions;
   final WalkInsRepository walkIns;
   final WalkInAlertsRepository walkInAlerts;
+  final BillingRepository billing;
+  final LinkOpener links;
 
   static AppScope of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<AppScope>()!;
 
@@ -32,5 +38,7 @@ class AppScope extends InheritedWidget {
       contacts != oldWidget.contacts ||
       contributions != oldWidget.contributions ||
       walkIns != oldWidget.walkIns ||
-      walkInAlerts != oldWidget.walkInAlerts;
+      walkInAlerts != oldWidget.walkInAlerts ||
+      billing != oldWidget.billing ||
+      links != oldWidget.links;
 }

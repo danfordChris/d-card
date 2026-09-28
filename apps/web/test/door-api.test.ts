@@ -55,6 +55,7 @@ beforeAll(async () => {
     req("POST", HOST, { planKey: "kawaida", eventTypeKey: "wedding", title: "Harusi", startsAt: "2026-12-12T15:00:00+03:00", contactName: "Asha", contactPhone: "0754123456" }),
   );
   eventId = (await created.json()).id;
+  await (await import("@dcard/core")).grantGuestCards(handle.db, eventId, 500); // paid event (T05-01 payment gate)
   const [staff] = await handle.db.select().from(userAccount).where(eq(userAccount.firebaseUid, "d-staff"));
   const [host] = await handle.db.select().from(userAccount).where(eq(userAccount.firebaseUid, "d-host"));
   await handle.db.insert(eventRole).values({ eventId, userId: staff!.id, role: "door_staff" });

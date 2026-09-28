@@ -10,6 +10,9 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
   const account = await requireAccount();
   const event = await loadEventOr404(account.id, (await params).id);
   const [t, tc, locale] = await Promise.all([getTranslations("events"), getTranslations("confirmations"), getLocale()]);
+  const tb = await getTranslations("billing");
+  const tm = await getTranslations("media");
+  const ta = await getTranslations("audit");
   const editable = event.access === "host" && (event.status === "draft" || event.status === "published");
   const row = (label: string, value: string) => (
     <div className="grid grid-cols-3 gap-2 py-2 text-sm">
@@ -53,6 +56,22 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
               {t("summary.messages")}
             </Link>
           )}
+          {event.access === "host" && event.plan.paid && (
+            <Link
+              href={`/events/${event.id}/billing`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {tb("nav")}
+            </Link>
+          )}
+          {["host", "committee"].includes(event.access) && (
+            <Link
+              href={`/events/${event.id}/media`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {tm("nav")}
+            </Link>
+          )}
           {["host", "committee"].includes(event.access) && (
             <Link
               href={`/events/${event.id}/confirmations`}
@@ -85,6 +104,14 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
               </Link>
             </>
           )}
+          {["host", "treasurer"].includes(event.access) && (
+            <Link
+              href={`/events/${event.id}/audit`}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+            >
+              {ta("nav")}
+            </Link>
+          )}
         {editable && (
           <>
             <Link
@@ -104,6 +131,14 @@ export default async function EventSummaryPage({ params }: { params: Promise<{ i
         )}
         </div>
       </div>
+      {event.access === "host" && !event.plan.paid && event.status !== "cancelled" && (
+        <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200">
+          <span>{tb("banner.text")}</span>
+          <Link href={`/events/${event.id}/billing?checkout=buy`} className="font-semibold text-amber-900 underline hover:no-underline">
+            {tb("banner.link")}
+          </Link>
+        </div>
+      )}
       <Card>
         <dl className="divide-y divide-gray-100">
           {row(

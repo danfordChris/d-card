@@ -7,7 +7,7 @@ import '../../../core/app_scope.dart';
 import '../../../core/failure_text.dart';
 import '../view_models/contributions_view_model.dart';
 import '../view_models/record_payment_view_model.dart';
-import 'money.dart';
+import '../../../core/money.dart';
 import 'record_payment_screen.dart';
 
 class ContributionsScreen extends StatefulWidget {

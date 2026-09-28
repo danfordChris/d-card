@@ -2,10 +2,10 @@ import { auditLog, eventRole, teamInvite, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   acceptInvite,
   ConflictError,
-  createEvent,
   createInvite,
   ForbiddenError,
   getInviteInfo,
@@ -34,8 +34,8 @@ beforeAll(async () => {
     .returning({ id: userAccount.id });
   [hostId, aliceId, bobId] = users.map((u) => u.id) as [string, string, string];
   const base = { eventTypeKey: "wedding", startsAt: new Date("2026-12-12T12:00:00Z"), contactName: "Asha", contactPhone: "0754123456" };
-  msingiEvent = await createEvent(handle.db, hostId, { ...base, planKey: "msingi", title: "Msingi event" });
-  otherEvent = await createEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Other" });
+  msingiEvent = await createPaidEvent(handle.db, hostId, { ...base, planKey: "msingi", title: "Msingi event" });
+  otherEvent = await createPaidEvent(handle.db, hostId, { ...base, planKey: "kawaida", title: "Other" });
 });
 
 afterAll(async () => {

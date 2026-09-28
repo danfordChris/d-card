@@ -2,7 +2,8 @@ import { eventRole, invitation, messageLog, outbox, userAccount } from "@dcard/d
 import { createTestDatabase } from "@dcard/db/testing";
 import { eq, like } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { addContributor, addGuest, ConflictError, createEvent, ForbiddenError, issueCard, listMessageLog, manualSend, PlanLimitError } from "../src/index.js";
+import { createPaidEvent } from "./helpers.js";
+import { addContributor, addGuest, ConflictError, ForbiddenError, issueCard, listMessageLog, manualSend, PlanLimitError } from "../src/index.js";
 
 let handle: Awaited<ReturnType<typeof createTestDatabase>>;
 let hostId: string;
@@ -17,7 +18,7 @@ beforeAll(async () => {
     .values(["host", "committee"].map((u) => ({ firebaseUid: u, email: `${u}@example.com`, authProvider: "password" as const })))
     .returning();
   [hostId, committeeId] = users.map((u) => u.id) as [string, string];
-  eventId = await createEvent(handle.db, hostId, {
+  eventId = await createPaidEvent(handle.db, hostId, {
     planKey: "kawaida",
     eventTypeKey: "wedding",
     title: "Harusi",

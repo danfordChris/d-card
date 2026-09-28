@@ -24,7 +24,12 @@ import {
   PledgeUpdateInput,
 } from "./contributions.js";
 import { AdminEventTypeCreateInput, AdminEventTypeListResponse, AdminEventTypeSchema, AdminEventTypeUpdateInput } from "./admin.js";
+import { registerBillingPaths } from "./billing.js";
+import { registerMePaths } from "./me.js";
+import { registerAdminPlatformPaths } from "./admin-platform.js";
 import { registerCheckinPaths } from "./checkin.js";
+import { registerMediaPaths } from "./media.js";
+import { registerAuditPaths } from "./audit.js";
 import { registerDevicePaths } from "./devices.js";
 import { registerMessagePaths } from "./messages.js";
 import { z } from "zod";
@@ -85,6 +90,31 @@ export function buildOpenApiDocument(): OpenApiDocument {
     responses: {
       200: { description: "Account already existed", content: { "application/json": { schema: Account } } },
       201: { description: "Account created", content: { "application/json": { schema: Account } } },
+      401: error("Missing or invalid token"),
+    },
+  });
+
+  registry.registerPath({
+    method: "delete",
+    path: "/api/v1/me",
+    operationId: "deleteMe",
+    summary: "Delete my account (registered guests; hosts must delete their events first)",
+    security: [{ [bearer.name]: [] }],
+    responses: {
+      204: { description: "Deleted" },
+      401: error("Missing or invalid token"),
+      409: error("The account still hosts events"),
+    },
+  });
+
+  registry.registerPath({
+    method: "get",
+    path: "/api/v1/me/export",
+    operationId: "exportMyData",
+    summary: "Download my data (JSON file)",
+    security: [{ [bearer.name]: [] }],
+    responses: {
+      200: { description: "Account, person, invitations, contributions and uploaded media", content: { "application/json": { schema: z.record(z.string(), z.unknown()) } } },
       401: error("Missing or invalid token"),
     },
   });
@@ -554,6 +584,11 @@ export function buildOpenApiDocument(): OpenApiDocument {
   registerDevicePaths(registry, secured);
   registerMessagePaths(registry, secured);
   registerCheckinPaths(registry, secured);
+  registerBillingPaths(registry, secured);
+  registerMePaths(registry, secured);
+  registerAdminPlatformPaths(registry, secured);
+  registerMediaPaths(registry, secured);
+  registerAuditPaths(registry, secured);
 
   return new OpenApiGeneratorV31(registry.definitions).generateDocument({
     openapi: "3.1.0",

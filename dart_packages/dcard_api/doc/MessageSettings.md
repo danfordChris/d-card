@@ -8,7 +8,7 @@ import 'package:dcard_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**settings** | [**List<MessageSettingsSettingsInner>**](MessageSettingsSettingsInner.md) |  | [default to const []]
+**settings** | [**List<UpdateMessageSettingsRequestSettingsInner>**](UpdateMessageSettingsRequestSettingsInner.md) |  | [default to const []]
 **limits** | [**MessagePlanLimits**](MessagePlanLimits.md) |  | 
 **templates** | [**List<MessageSettingsTemplatesInner>**](MessageSettingsTemplatesInner.md) |  | [default to const []]
 **usage** | [**MessageSettingsUsage**](MessageSettingsUsage.md) |  | 

@@ -3,10 +3,10 @@ import { createTestDatabase } from "@dcard/db/testing";
 import { and, eq } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addGuest,
   cancelCard,
-  createEvent,
   DoorRefusalError,
   doorAdmit,
   doorLookup,
@@ -47,7 +47,7 @@ beforeAll(async () => {
     .values(["host", "staff", "stranger"].map((u) => ({ firebaseUid: u, email: `${u}@example.com`, authProvider: "password" as const })))
     .returning();
   [hostId, staffId, strangerId] = users.map((u) => u.id) as [string, string, string];
-  eventId = await createEvent(handle.db, hostId, {
+  eventId = await createPaidEvent(handle.db, hostId, {
     planKey: "kawaida",
     eventTypeKey: "wedding",
     title: "Harusi",

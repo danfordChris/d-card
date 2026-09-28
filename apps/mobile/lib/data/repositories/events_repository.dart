@@ -47,6 +47,8 @@ class EventsRepository {
           EventRolesEnum.walkinApprover,
         ].contains(r)) ||
         const [EventAccessEnum.host, EventAccessEnum.committee, EventAccessEnum.walkinApprover].contains(e.access),
+    isHost: e.access == EventAccessEnum.host || e.roles.contains(EventRolesEnum.host),
+    planPaid: e.plan.paid,
     canDecideWalkIns: e.roles.contains(EventRolesEnum.host) ||
         e.roles.contains(EventRolesEnum.walkinApprover) ||
         e.access == EventAccessEnum.host ||

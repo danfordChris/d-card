@@ -162,3 +162,21 @@ describe("fetchCardImage", () => {
     await expect(fetchCardImage({ appUrl: "https://dcard.test", apiKey: "k" }, "bad", "sw", fakeFetch as typeof fetch)).rejects.toThrow(/not a PNG/);
   });
 });
+
+describe("provider throughput limits (T07-02)", () => {
+  it("retries Meta throughput errors that arrive as HTTP 400", async () => {
+    const { isMetaPermanent } = await import("../src/messaging/senders.js");
+    expect(isMetaPermanent(400, 'HTTP 400 {"error":{"message":"(#130429) Rate limit hit","code":130429}}')).toBe(false);
+    expect(isMetaPermanent(400, 'HTTP 400 {"error":{"code":131056}}')).toBe(false);
+    expect(isMetaPermanent(400, 'HTTP 400 {"error":{"code":132001,"message":"template does not exist"}}')).toBe(true);
+    expect(isMetaPermanent(500, "HTTP 500")).toBe(false);
+  });
+
+  it("caps sends per second per queue, configurable", async () => {
+    const { sendLimiter } = await import("../src/worker.js");
+    expect(sendLimiter("whatsapp", {})).toEqual({ max: 15, duration: 250 });
+    expect(sendLimiter("sms", {})).toEqual({ max: 5, duration: 250 });
+    expect(sendLimiter("whatsapp", { WHATSAPP_MAX_PER_SECOND: "250" })).toEqual({ max: 63, duration: 250 });
+    expect(sendLimiter("sms", { SMS_MAX_PER_SECOND: "abc" })).toEqual({ max: 5, duration: 250 });
+  });
+});

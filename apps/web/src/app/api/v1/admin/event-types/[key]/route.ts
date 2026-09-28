@@ -1,6 +1,6 @@
 import { AdminEventTypeUpdateInput } from "@dcard/api-contract";
 import { updateEventType } from "@dcard/core";
-import { requireUser } from "../../../../../../server/current-user";
+import { requireAdminUser } from "../../../../../../server/admin-auth";
 import { getDb } from "../../../../../../server/db";
 import { parseBody, toErrorResponse } from "../../../../../../server/http";
 
@@ -10,7 +10,7 @@ type Params = { params: Promise<{ key: string }> };
 
 export async function PATCH(request: Request, { params }: Params): Promise<Response> {
   try {
-    const user = await requireUser(request);
+    const user = await requireAdminUser(request);
     const input = await parseBody(request, AdminEventTypeUpdateInput);
     return Response.json(await updateEventType(getDb(), user.id, (await params).key, input));
   } catch (err) {

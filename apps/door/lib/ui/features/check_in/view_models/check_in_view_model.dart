@@ -62,6 +62,7 @@ class CheckInViewModel extends ChangeNotifier {
     DateTime Function()? clock,
   }) : _now = clock ?? DateTime.now {
     _sync?.addListener(_syncChanged);
+    unawaited(_restoreLock());
   }
 
   final DoorRepository _door;
@@ -69,7 +70,7 @@ class CheckInViewModel extends ChangeNotifier {
   final DoorSyncRepository? _sync;
   final DoorSession session;
   /// Called when the server refuses this device or session (403 revoked / no access, 401);
-  /// the app signs out and says why (AUTH-9).
+  /// the app shows why: the revoked screen, or sign-in after a 401 (AUTH-9).
   final Future<void> Function(AppFailure because) _onAccessDenied;
   final DateTime Function() _now;
 
@@ -109,6 +110,32 @@ class CheckInViewModel extends ChangeNotifier {
   bool get offlineReady => _offline?.isAvailable(session) ?? false;
 
   Future<void> syncNow() async => _sync?.syncNow();
+
+  /// Whether the event is before its door window or over, on this phone's clock.
+  EventTiming get timing => session.event.timingAt(_now());
+
+  /// Staff chose to check in although the event has not started or has ended.
+  bool timingAcknowledged = false;
+
+  /// Show the "not started" / "ended" screen instead of scanning.
+  bool get showTimingNotice => timing != EventTiming.open && !timingAcknowledged;
+
+  void acknowledgeTiming() {
+    timingAcknowledged = true;
+    notifyListeners();
+  }
+
+  /// The event window is 24 h past and the offline copy was wiped.
+  bool get cacheExpired => _sync?.expired ?? false;
+
+  /// No network and no offline copy of this event: nothing can be checked (retry or wait).
+  bool get offlineWithoutCache => isOffline && !offlineReady && !cacheExpired;
+
+  /// This phone's clock differs from the server's by more than [DoorRepository.clockSkewTolerance].
+  bool get clockSkewed => _door.clockSkewed;
+
+  /// Server time minus phone time (see [DoorRepository.clockSkew]).
+  Duration? get clockSkew => _door.clockSkew;
 
   bool get isLocked => _lockedUntil != null && _now().isBefore(_lockedUntil!);
 
@@ -267,7 +294,15 @@ class CheckInViewModel extends ChangeNotifier {
       await action();
     } on DoorRefusedException catch (e) {
       if (e.reason == RefusalReason.locked) {
-        _lock(e.lockedUntil ?? _now().add(lockDuration));
+        final until = e.lockedUntil;
+        if (_local) {
+          _lock(until ?? _now().add(lockDuration));
+        } else {
+          // The server's expiry, on this phone's clock; kept so it holds offline and on reopen.
+          final local = until == null ? _now().add(lockDuration) : _door.toLocalClock(until);
+          _lock(local);
+          unawaited(_offline?.rememberLock(local));
+        }
       } else {
         result = Refused(e.reason, card: e.card ?? fallbackCard, offline: _local);
       }
@@ -286,6 +321,13 @@ class CheckInViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> _restoreLock() async {
+    final until = await _offline?.lockedUntil();
+    if (until == null || _disposed || !_now().isBefore(until)) return;
+    _lock(until);
+    notifyListeners();
+  }
+
   void _lock(DateTime until) {
     _lockedUntil = until;
     _ticker?.cancel();
@@ -295,7 +337,7 @@ class CheckInViewModel extends ChangeNotifier {
         _ticker = null;
         _lockedUntil = null;
       }
-      notifyListeners();
+      if (!_disposed) notifyListeners();
     });
   }
 

@@ -2,12 +2,12 @@ import { auditLog, invitation, userAccount } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createPaidEvent } from "./helpers.js";
 import {
   addContributor,
   addGuest,
   cancelCard,
   ConflictError,
-  createEvent,
   eventIcs,
   getCardLink,
   getPublicCard,
@@ -35,7 +35,7 @@ beforeAll(async () => {
     .values({ firebaseUid: "host", email: "host@example.com", authProvider: "password" })
     .returning({ id: userAccount.id });
   hostId = host!.id;
-  eventId = await createEvent(handle.db, hostId, {
+  eventId = await createPaidEvent(handle.db, hostId, {
     planKey: "kawaida",
     eventTypeKey: "wedding",
     title: "Harusi ya Juma, na Neema; Dar",

@@ -67,13 +67,28 @@ class ResultView extends StatelessWidget {
     final (Verdict verdict, String headline, CheckInCard? card) = switch (result) {
       CardFound(:final card) when card.refusal != null => (
         verdictOf(card),
-        refusalTitle(l10n, card.refusal!),
+        card.overUsed ? l10n.overUsedTitle : refusalTitle(l10n, card.refusal!),
         card,
       ),
       CardFound(:final card) => (Verdict.ok, l10n.resultValid, card),
       Admitted(:final card, :final count) => (Verdict.ok, l10n.resultAdmitted(count), card),
-      Refused(:final reason, :final card) => (verdictOfRefusal(reason), refusalTitle(l10n, reason), card),
+      Refused(:final reason, :final card) => (
+        verdictOfRefusal(reason),
+        card != null && card.overUsed && reason == RefusalReason.fullyUsed
+            ? l10n.overUsedTitle
+            : refusalTitle(l10n, reason),
+        card,
+      ),
     };
+    // Why, for refusals that staff must explain to the guest.
+    final refusalReason = switch (result) {
+      Refused(:final reason) => reason,
+      CardFound(:final card) => card.refusal,
+      Admitted() => null,
+    };
+    final String? detail = card != null && card.overUsed && refusalReason != null
+        ? l10n.overUsedDetail
+        : (refusalReason == RefusalReason.cancelled ? l10n.cancelledDetail : null);
     final admitCard = result is CardFound && result.card.refusal == null ? result.card : null;
     final showEntries =
         card != null &&
@@ -104,6 +119,15 @@ class ResultView extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: onVerdict, fontSize: 32, fontWeight: FontWeight.w800),
                   ),
+                  if (detail != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      detail,
+                      key: const Key('result.detail'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: onVerdict, fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                   if (offline) ...[
                     const SizedBox(height: 8),
                     Row(

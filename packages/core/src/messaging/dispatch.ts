@@ -1,5 +1,5 @@
 import { event, eventMessageSetting, invitation, messageLog, outbox, person, whatsappOptout } from "@dcard/db";
-import { and, asc, eq, isNull, lt, sql } from "drizzle-orm";
+import { and, asc, eq, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import { inTransaction, type DbExecutor } from "../db-types.js";
 import { inQuietHours } from "./time.js";
 import { channelsOf, MESSAGE_DEFAULTS, type Channel, type ChannelChoice } from "./types.js";
@@ -14,7 +14,13 @@ export async function dispatchOutbox(db: DbExecutor, limit = 100, now = new Date
     const rows = await tx
       .select()
       .from(outbox)
-      .where(isNull(outbox.dispatchedAt))
+      // Guest messages wait until the event is paid (T05-01); direct host messages (test sends) do not.
+      .where(
+        and(
+          isNull(outbox.dispatchedAt),
+          or(isNotNull(outbox.toPhone), sql`exists (select 1 from event_plan ep where ep.event_id = ${outbox.eventId} and ep.guest_limit > 0)`),
+        ),
+      )
       .orderBy(asc(outbox.createdAt))
       .limit(limit)
       .for("update", { skipLocked: true });

@@ -100,6 +100,24 @@ function deviceView(d: DeviceRow, staffName: string | null) {
   return { id: d.id, eventId: d.eventId, name: d.name, staffName, createdAt: d.createdAt, lastSyncAt: d.lastSyncAt, revokedAt: d.revokedAt };
 }
 
+/**
+ * SEC-03 (AUTH-9): once the host revokes one of a staff member's devices, that person cannot
+ * register a new device for the event (a new app install would bypass the revocation) until the
+ * host removes and re-adds their door role. The host themself is never blocked.
+ */
+async function assertNotRevokedStaff(db: DbExecutor, userId: string, eventId: string): Promise<void> {
+  const [row] = await db.execute<{ revoked: Date | null; granted: Date | null; host: boolean }>(sql`
+    select
+      (select max(d.revoked_at) from door_device d where d.event_id = ${eventId} and d.staff_user_id = ${userId}) as revoked,
+      (select max(r.created_at) from event_role r where r.event_id = ${eventId} and r.user_id = ${userId}) as granted,
+      exists (select 1 from event e where e.id = ${eventId} and e.host_user_id = ${userId}) as host`);
+  const r = row as { revoked: Date | string | null; granted: Date | string | null; host: boolean } | undefined;
+  if (!r || r.host || !r.revoked) return;
+  if (!r.granted || new Date(r.revoked) > new Date(r.granted)) {
+    throw new ForbiddenError("The host revoked your door device. Ask the host to add you again.");
+  }
+}
+
 export async function registerDoorDevice(
   db: DbExecutor,
   userId: string,
@@ -110,6 +128,8 @@ export async function registerDoorDevice(
   if (existing) {
     if (existing.eventId !== input.eventId) throw new ConflictError("This device id belongs to another event.");
     if (existing.revokedAt) throw new ForbiddenError("This device was revoked by the host.");
+    // SEC-20: a device id stays with the person who registered it.
+    if (existing.staffUserId !== userId) throw new ConflictError("This device is registered to another door staff member.");
     const [updated] = await db
       .update(doorDevice)
       .set({ staffUserId: userId, lastSeenAt: new Date(), ...(input.name ? { name: input.name } : {}) })
@@ -117,6 +137,7 @@ export async function registerDoorDevice(
       .returning();
     return { created: false, device: deviceView(updated!, await staffName(db, userId)) };
   }
+  await assertNotRevokedStaff(db, userId, input.eventId);
   const [created] = await inTransaction(db, async (tx) => {
     const rows = await tx
       .insert(doorDevice)
@@ -144,7 +165,8 @@ export async function revokeDoorDevice(db: DbExecutor, userId: string, eventId: 
   await inTransaction(db, async (tx) => {
     const [row] = await tx
       .update(doorDevice)
-      .set({ revokedAt: new Date(), revokedBy: userId })
+      // Database clock: compared with event_role.created_at when the person re-registers (SEC-03).
+      .set({ revokedAt: sql`now()`, revokedBy: userId })
       .where(and(eq(doorDevice.id, deviceId), eq(doorDevice.eventId, eventId), isNull(doorDevice.revokedAt)))
       .returning();
     if (row) await recordAudit(tx, { actorUserId: userId, eventId, action: "door.device_revoked", targetType: "door_device", targetId: deviceId });
