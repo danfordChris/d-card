@@ -22,7 +22,7 @@ export default async function PrivacyPage({ searchParams }: Props) {
   const t = await getTranslations({ locale, namespace: "privacy" });
   return (
     <main lang={locale} className="mx-auto max-w-2xl px-4 py-12">
-      <p className="mb-8 text-2xl font-bold text-brand-600">D-Card</p>
+      <p className="mb-8 text-2xl font-bold text-primary">D-Card</p>
       <PrivacyNotice t={t} locale={locale} />
     </main>
   );

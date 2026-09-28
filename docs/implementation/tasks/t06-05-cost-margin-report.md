@@ -15,7 +15,7 @@
 - Owner: Claude Code (lead)
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/plans-and-billing.md` (Cost check), `docs/research/whatsapp-pricing.md`
-- Constraints: admin only; message cost from `message_log.cost_tzs` (estimated at send from `provider_rate`); revenue from completed `host_payment`; Snippe fee from settings as a percentage; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: admin only; message cost from `message_log.cost_tzs` (estimated at send from `provider_rate`); revenue from completed `host_payment`; Snippe fee from settings as a percentage; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

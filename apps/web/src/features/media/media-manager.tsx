@@ -46,8 +46,8 @@ export function MediaManager({ eventId, canEdit }: { eventId: string; canEdit: b
       </Alert>
     ) : (
       <div className="space-y-4" aria-busy="true" aria-label={t("loading")}>
-        <div className="h-40 animate-pulse rounded-2xl border border-gray-200 bg-gray-50" />
-        <div className="h-56 animate-pulse rounded-2xl border border-gray-200 bg-gray-50" />
+        <div className="h-40 animate-pulse rounded-tile bg-tile" />
+        <div className="h-56 animate-pulse rounded-tile bg-tile" />
       </div>
     );
   }

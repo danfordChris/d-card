@@ -44,8 +44,8 @@ class DCardApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      theme: DCardTheme.light(),
-      darkTheme: DCardTheme.dark(),
+      theme: DcTheme.light(),
+      darkTheme: DcTheme.dark(),
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

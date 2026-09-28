@@ -15,7 +15,7 @@
 - Owner: Subagent (review report) + Claude Code (lead, fixes)
 - Skills: none
 - Design docs: `docs/adr/0003-technical-stack.md`, `docs/design/features/auth.md`, `docs/design/features/privacy-and-audit.md`, `docs/design/integrations/*.md`
-- Constraints: review is evidence-based (file:line); fixes keep behaviour in design; no secrets printed; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: review is evidence-based (file:line); fixes keep behaviour in design; no secrets printed; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

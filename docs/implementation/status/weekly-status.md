@@ -32,7 +32,7 @@
 - Production: web app on Vercel (`api.dcard.danfordchris.dev`, functions fra1) with Neon Postgres and Upstash Redis (Frankfurt, free); marketing site on `dcard.danfordchris.dev`; WhatsApp keys and webhook live (signed POSTs verified). Worker host still to do. `WHATSAPP_LIVE` added: only production sends WhatsApp.
 - Phase 04 planned and started: T04-01…T04-07 (check-in core, offline sync API, confirmations + headcount, door app online, door app offline, walk-ins, live dashboard + backup list). Split: lead T04-01/02/06 backend, JetBrains assistant T04-03, subagents for the door app, approver screens and dashboard.
 - Phase 04 done and reviewed (`docs/implementation/reviews/2026-09-26-phase-04-review.md`): online and offline door check-in with CRDT sync and over-use alerts, lockout, walk-ins with push approvals, WhatsApp first-answer confirmations with replies, manual confirmations and expected headcount, live dashboard and printable backup list, D-Card Door app (online + encrypted offline cache).
-- UI direction recorded: reference projects analysed (`docs/research/ui-reference-projects.md`), design-system proposal (`docs/changes/proposed/ui-design-system.md`) and backlog items; owner decisions pending (colours, starter pack, dark mode, prototype).
+- UI direction recorded: reference projects analysed (`docs/research/ui-reference-projects.md`), design-system proposal (`docs/design/ui/design-system.md`) and backlog items; owner decisions pending (colours, starter pack, dark mode, prototype).
 
 ## 2026-09-27
 

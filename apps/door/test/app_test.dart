@@ -4,6 +4,7 @@ import 'package:dcard_door/data/repositories/push_registration_repository.dart';
 import 'package:dcard_door/data/repositories/session_repository.dart';
 import 'package:dcard_door/data/services/door_device_store.dart';
 import 'package:dcard_door/domain/models/app_failure.dart';
+import 'package:dcard_door/ui/features/check_in/view_models/check_in_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,12 +20,24 @@ Widget fakeScanner(BuildContext context, ValueChanged<String> onScanned) => Colu
   ],
 );
 
+/// A phone-sized screen (390 × 844 logical px), like the approved prototype.
+void usePhoneScreen(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1170, 2532);
+  tester.view.devicePixelRatio = 3;
+  addTearDown(tester.view.reset);
+}
+
+/// The Scan / Number / Name segment of the check-in screen.
+Finder modeTab(CheckInMode mode) =>
+    find.descendant(of: find.byKey(const Key('checkIn.modes')), matching: find.byType(InkWell)).at(mode.index);
+
 Future<(FakeAuthService, FakeDoorApi)> pumpApp(
   WidgetTester tester, {
   String? locale = 'en',
   FakeAuthService? auth,
   FakeDoorApi? api,
 }) async {
+  usePhoneScreen(tester);
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
   final a = auth ?? FakeAuthService();
@@ -117,7 +130,7 @@ void main() {
     expect(find.text('Asha Juma'), findsOneWidget);
     expect(find.text('SINGLE'), findsOneWidget);
     expect(find.text('1 of 1 left'), findsOneWidget);
-    expect(find.text('Table 12'), findsOneWidget);
+    expect(find.text('12'), findsOneWidget, reason: 'table');
     expect(find.text('Issued'), findsOneWidget);
     expect(find.byKey(const Key('result.admit2')), findsNothing);
 
@@ -165,7 +178,7 @@ void main() {
   testWidgets('name search lists cards and opens the chosen one', (tester) async {
     await pumpApp(tester);
     await openEvent(tester);
-    await tester.tap(find.byKey(const Key('mode.name')));
+    await tester.tap(modeTab(CheckInMode.name));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('name.query')), 'neema');
     await tester.tap(find.byKey(const Key('name.search')));
@@ -179,7 +192,7 @@ void main() {
   testWidgets('3 wrong card numbers lock the keypad with a countdown', (tester) async {
     final (_, api) = await pumpApp(tester);
     await openEvent(tester);
-    await tester.tap(find.byKey(const Key('mode.number')));
+    await tester.tap(modeTab(CheckInMode.number));
     await tester.pumpAndSettle();
 
     await typeCardNumber(tester, '007-1234');
@@ -235,7 +248,7 @@ void main() {
 
     auth.failure = null;
     await signIn(tester);
-    await tester.tap(find.byTooltip('Sign out'));
+    await tester.tap(find.byKey(const Key('events.signOut')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('login.email')), findsOneWidget);
     expect(api.pushUnregistered, ['door-token-1']);

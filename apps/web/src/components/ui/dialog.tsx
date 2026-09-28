@@ -20,8 +20,8 @@ export function Dialog({ title, onClose, children }: { title: string; onClose: (
   }, [onClose]);
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
-      <div ref={panel} role="dialog" aria-modal="true" aria-labelledby={titleId} className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
-        <h2 id={titleId} className="mb-4 text-lg font-semibold">
+      <div ref={panel} role="dialog" aria-modal="true" aria-labelledby={titleId} className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-hero bg-bg p-6">
+        <h2 id={titleId} className="mb-4 font-display text-2xl font-bold">
           {title}
         </h2>
         {children}

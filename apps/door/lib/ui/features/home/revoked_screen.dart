@@ -1,3 +1,4 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -27,37 +28,47 @@ class RevokedScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       key: const Key('revoked.screen'),
-      body: FutureBuilder<int>(
-        future: cleanup,
-        builder: (context, snapshot) {
-          final done = snapshot.connectionState == ConnectionState.done;
-          final lost = snapshot.data ?? 0;
-          return DoorStateView(
-            icon: HugeIcons.strokeRoundedSquareLock02,
-            title: l10n.revokedTitle,
-            body: l10n.revokedBody(event.title),
-            busy: !done,
-            details: [
-              Text(
-                !done ? l10n.revokedWorking : (lost > 0 ? l10n.revokedLost(lost) : l10n.revokedNothingLost),
-                key: const Key('revoked.lost'),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: lost > 0 ? Theme.of(context).colorScheme.error : null,
-                ),
-              ),
-            ],
-            actions: [
-              FilledButton(
-                key: const Key('revoked.chooseEvent'),
-                onPressed: onChooseEvent,
-                child: Text(l10n.chooseAnotherEvent),
-              ),
-              OutlinedButton(key: const Key('revoked.signOut'), onPressed: onSignOut, child: Text(l10n.signOut)),
-            ],
-          );
-        },
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.only(top: DcSpace.md),
+          child: FutureBuilder<int>(
+            future: cleanup,
+            builder: (context, snapshot) {
+              final done = snapshot.connectionState == ConnectionState.done;
+              final lost = snapshot.data ?? 0;
+              return DoorStateView(
+                icon: HugeIcons.strokeRoundedSquareLock02,
+                title: l10n.revokedTitle,
+                body: l10n.revokedBody(event.title),
+                busy: !done,
+                details: [
+                  Text(
+                    !done ? l10n.revokedWorking : (lost > 0 ? l10n.revokedLost(lost) : l10n.revokedNothingLost),
+                    key: const Key('revoked.lost'),
+                    textAlign: TextAlign.center,
+                    style: DcType.ui(16, weight: lost > 0 ? FontWeight.w800 : FontWeight.w700)
+                        .copyWith(color: context.dc.dangerFg),
+                  ),
+                ],
+                actions: [
+                  DcButton(
+                    key: const Key('revoked.chooseEvent'),
+                    label: l10n.chooseAnotherEvent,
+                    variant: DcButtonVariant.tonal,
+                    onPressed: onChooseEvent,
+                  ),
+                  DcButton(
+                    key: const Key('revoked.signOut'),
+                    label: l10n.signOut,
+                    icon: HugeIcons.strokeRoundedLogout03,
+                    onPressed: onSignOut,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

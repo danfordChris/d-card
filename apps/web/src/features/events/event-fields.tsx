@@ -30,7 +30,7 @@ export function DetailsFields(props: Props & { eventTypes: EventTypeOption[] }) 
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label={t("wizard.eventType")} error={err("eventTypeKey")}>
         <select
-          className="block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600"
+          className="block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary"
           value={props.values.eventTypeKey}
           onChange={(e) => props.onChange({ eventTypeKey: e.target.value })}
         >
@@ -71,7 +71,7 @@ export function OptionsFields(props: Props & { autoUpgradeAllowed: boolean }) {
       <label className="flex items-center gap-2 text-sm sm:col-span-2">
         <input
           type="checkbox"
-          className="size-4 accent-brand-600"
+          className="size-4 accent-primary"
           checked={values.confirmationEnabled}
           onChange={(e) => onChange({ confirmationEnabled: e.target.checked })}
         />
@@ -82,14 +82,14 @@ export function OptionsFields(props: Props & { autoUpgradeAllowed: boolean }) {
       <label className="flex items-center gap-2 text-sm sm:col-span-2">
         <input
           type="checkbox"
-          className="size-4 accent-brand-600"
+          className="size-4 accent-primary"
           disabled={!props.autoUpgradeAllowed}
           checked={props.autoUpgradeAllowed && values.autoUpgradeEnabled}
           onChange={(e) => onChange({ autoUpgradeEnabled: e.target.checked })}
         />
         <span>
           {t("wizard.autoUpgradeEnabled")}
-          {!props.autoUpgradeAllowed && <span className="block text-gray-500">{t("wizard.autoUpgradeLocked")}</span>}
+          {!props.autoUpgradeAllowed && <span className="block text-muted">{t("wizard.autoUpgradeLocked")}</span>}
         </span>
       </label>
       {text("singleAmount", t("wizard.singleAmount"), { inputMode: "numeric" })}

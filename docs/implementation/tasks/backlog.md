@@ -81,6 +81,16 @@ in-progress
 - [ ] T07-01 Marketing site (started early, owner request 2026-09-25)
 - [ ] Hardening and pilot — `docs/implementation/phases/phase-07-hardening-pilot.md` (in progress; T07-02…T07-05)
 
+### P08
+
+- [x] Design system rollout — `docs/implementation/phases/phase-08-design-system.md` (T08-01…T08-04; approved design `docs/design/ui/design-system.md`)
+
+- [ ] Mobile host screens that exist only on web today: create event, guests list, messages, team (T08-02 follow-up; prototype H4, H7, H10, H11).
+- [ ] Notification history in the mobile app (the Notifications tab is an empty state).
+- [ ] Money and confirmation figures in the mobile events list response so the dashboard stat tiles can show collected/confirmed/cards sent (prototype H3).
+- [ ] Door walk-in form with name, phone and people (prototype D7) and a checked-in counter on the scan screen.
+- [ ] Add `flutter_pack` once it supports win32 ^6 (design doc, Utilities).
+
 ### Owner requests (2026-09-25) — to design and schedule
 
 Raised after reviewing the web app. Each needs a design decision (order, scope, prototype approval) before it becomes tasks.
@@ -93,7 +103,7 @@ Raised after reviewing the web app. Each needs a design decision (order, scope, 
 
 ### Owner direction (2026-09-26) — UI/UX and cost
 
-Proposal: `docs/changes/proposed/ui-design-system.md`; sources: `docs/research/ui-reference-projects.md`. Refinement work, scheduled after the owner answers the proposal's open questions (colours, starter pack, dark mode, prototype).
+Proposal: `docs/design/ui/design-system.md`; sources: `docs/research/ui-reference-projects.md`. Refinement work, scheduled after the owner answers the proposal's open questions (colours, starter pack, dark mode, prototype).
 
 - [ ] **Design tokens, font and icons** — Plus Jakarta Sans, Hugeicons only (replace emoji/Material icons), colour/spacing/radius/type tokens in `dcard_ui` and web `@theme`; lint against hex literals and emoji icons; no decorative gradients/glows/shadows.
 - [ ] **Shared component set** — mobile (from Notify): button, input family, search + filter sheet + active chips, card, status badge, detail rows, bottom sheet, confirm sheet, toast, empty/success views, layout shell, haptics. Web (from Solomon web): Button, inputs, Badge, Card, TableSection + typed table + pagination, Modal, SlideOver, ConfirmProvider, Toast, EmptyState, Skeleton, Tabs.

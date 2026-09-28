@@ -3,19 +3,19 @@
 import { Album02Icon, Delete02Icon, Flag02Icon, RefreshIcon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Dialog, cn } from "../../components/ui";
+import { Alert, Badge, Button, cn, Dialog, type Tone } from "../../components/ui";
 import { deleteItem, fetchItems, setItemStatus } from "./api";
 import { Icon, MediaThumb, Panel, PanelHeader } from "./parts";
 import type { MediaItem, MediaStatus } from "./types";
 
 const EAT = "Africa/Dar_es_Salaam";
 
-const BADGE: Partial<Record<MediaStatus, string>> = {
-  visible: "bg-green-50 text-green-700 ring-green-200",
-  hidden: "bg-gray-100 text-gray-700 ring-gray-200",
-  reported: "bg-red-50 text-red-700 ring-red-200",
-  missing: "bg-amber-50 text-amber-800 ring-amber-200",
-  uploading: "bg-blue-50 text-blue-700 ring-blue-200",
+const BADGE: Partial<Record<MediaStatus, Tone>> = {
+  visible: "success",
+  hidden: "neutral",
+  reported: "danger",
+  missing: "warning",
+  uploading: "brand",
 };
 
 const time = (iso: string) => Date.parse(iso) || 0;
@@ -92,15 +92,15 @@ export function GalleryModeration({ eventId, canEdit }: { eventId: string; canEd
         }
       />
       {reported > 0 && (
-        <div role="status" className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+        <div role="status" className="flex items-center gap-2 rounded-xl bg-danger-bg p-3 text-sm text-danger">
           <Icon icon={Flag02Icon} />
           {t("reportedCount", { count: reported })}
         </div>
       )}
       {failed && <Alert tone="error">{t("loadError")}</Alert>}
       {notice && <Alert tone="error">{notice}</Alert>}
-      {items === null && !failed && <p className="text-sm text-gray-500">{t("loading")}</p>}
-      {items !== null && ordered.length === 0 && <p className="text-sm text-gray-500">{t("empty")}</p>}
+      {items === null && !failed && <p className="text-sm text-muted">{t("loading")}</p>}
+      {items !== null && ordered.length === 0 && <p className="text-sm text-muted">{t("empty")}</p>}
 
       {ordered.length > 0 && (
         <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -111,17 +111,17 @@ export function GalleryModeration({ eventId, canEdit }: { eventId: string; canEd
               <li
                 key={item.id}
                 data-testid={`gallery-item-${item.id}`}
-                className={cn("space-y-2 rounded-xl border p-2", item.status === "reported" ? "border-red-300" : "border-gray-200")}
+                className={cn("space-y-2 rounded-2xl p-2", item.status === "reported" ? "bg-danger-bg" : "bg-bg")}
               >
                 <div className={cn(item.status === "hidden" && "opacity-50")}>
                   <MediaThumb item={item} alt={t(item.type === "photo" ? "photoAlt" : "videoAlt", { name: item.uploadedBy ?? t("host") })} />
                 </div>
                 <div className="space-y-1 px-1 text-sm">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="truncate font-medium text-gray-900">{item.uploadedBy ?? t("host")}</span>
-                    <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ring-1", BADGE[item.status])}>{t(`status.${item.status}`)}</span>
+                    <span className="truncate font-medium text-ink">{item.uploadedBy ?? t("host")}</span>
+                    <Badge tone={BADGE[item.status] ?? "neutral"} className="shrink-0">{t(`status.${item.status}`)}</Badge>
                   </div>
-                  <p className="text-xs text-gray-500">{fmt(item.createdAt)}</p>
+                  <p className="text-xs text-muted">{fmt(item.createdAt)}</p>
                 </div>
                 {canEdit && (
                   <div className="flex flex-wrap gap-1 px-1 pb-1">
@@ -139,7 +139,7 @@ export function GalleryModeration({ eventId, canEdit }: { eventId: string; canEd
                     )}
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold text-danger hover:bg-danger-bg disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={() => setConfirmDelete(item)}
                       disabled={busy === item.id}
                     >
@@ -156,7 +156,7 @@ export function GalleryModeration({ eventId, canEdit }: { eventId: string; canEd
 
       {confirmDelete && (
         <Dialog title={t("deleteConfirm.title", { name: confirmDelete.uploadedBy ?? t("host") })} onClose={() => setConfirmDelete(null)}>
-          <p className="text-sm text-gray-600">{t("deleteConfirm.body")}</p>
+          <p className="text-sm text-muted">{t("deleteConfirm.body")}</p>
           <div className="mt-6 flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setConfirmDelete(null)}>
               {t("cancel")}

@@ -1,6 +1,6 @@
 # UI reference projects (owner's earlier apps)
 
-Checked 2026-09-26 (read-only code review). Reference only; the adopted direction lives in `docs/changes/proposed/ui-design-system.md` until accepted.
+Checked 2026-09-26 (read-only code review). Reference only; the adopted direction lives in `docs/design/ui/design-system.md` until accepted.
 
 The owner named three projects to learn from. Colours may change; patterns, structure and UX should carry over.
 

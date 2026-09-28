@@ -204,6 +204,28 @@
       "walkIns": "Wageni wa mlangoni",
       "dashboard": "Dashibodi",
       "backupList": "Orodha ya akiba"
+    },
+    "overview": {
+      "daysToGo": "{count, plural, one {siku imebaki} other {siku zimebaki}}",
+      "today": "Leo",
+      "guests": "Wageni",
+      "cardsIssued": "{count, plural, =0 {Bado hakuna kadi iliyotolewa} one {Kadi # imetolewa} other {Kadi # zimetolewa}}",
+      "confirmed": "Wamethibitisha",
+      "confirmedNote": "{pct}% ya kadi zilizotolewa",
+      "contributions": "Michango",
+      "ofTarget": "{pct}% ya Tsh {target}",
+      "messagesSent": "Ujumbe uliotumwa",
+      "delivered": "{pct}% umefika",
+      "door": "Ukaguzi mlangoni",
+      "doorDevices": "{count, plural, =0 {Bado hakuna kifaa cha mlangoni} one {Kifaa # kiko tayari} other {Vifaa # viko tayari}}",
+      "recent": "Michango ya karibuni",
+      "viewAll": "Tazama yote",
+      "noContributions": "Bado hakuna wachangiaji.",
+      "nextMessages": "Ujumbe unaofuata",
+      "noMessages": "Hakuna ujumbe uliopangwa.",
+      "every": "Kila siku {days} · {time}",
+      "details": "Maelezo ya tukio",
+      "sections": "Simamia"
     }
   },
   "guests": {
@@ -1712,5 +1734,29 @@
       "codeLabel": "Namba au namba ya dharura",
       "disable": "Zima"
     }
+  },
+  "shell": {
+    "nav": "Urambazaji mkuu",
+    "menu": "Menyu",
+    "events": "Matukio",
+    "newEvent": "Tukio jipya",
+    "admin": "Utawala",
+    "openMenu": "Fungua menyu",
+    "closeMenu": "Funga menyu",
+    "account": "Akaunti",
+    "roleAdmin": "Msimamizi",
+    "roleHost": "Umeingia",
+    "theme": {
+      "legend": "Mandhari",
+      "light": "Mwanga",
+      "dark": "Giza",
+      "system": "Mfumo"
+    },
+    "skip": "Ruka hadi maudhui"
+  },
+  "eventNav": {
+    "label": "Sehemu za tukio",
+    "overview": "Muhtasari",
+    "events": "Matukio"
   }
 }

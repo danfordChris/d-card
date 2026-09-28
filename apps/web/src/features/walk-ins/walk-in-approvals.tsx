@@ -2,20 +2,20 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Card, cn } from "../../components/ui";
+import { Alert, Badge, Button, Card, type Tone } from "../../components/ui";
 import { apiFetch } from "../../lib/api-fetch";
 import type { WalkIn, WalkInDecision, WalkInStatus } from "./types";
 
 const EAT = "Africa/Dar_es_Salaam";
 export const POLL_MS = 5000;
 
-const BADGE: Record<WalkInStatus, string> = {
-  pending: "bg-amber-50 text-amber-800 ring-amber-200",
-  approved: "bg-green-50 text-green-700 ring-green-200",
-  refused: "bg-red-50 text-red-700 ring-red-200",
-  admitted_offline: "bg-blue-50 text-blue-700 ring-blue-200",
-  accepted: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  flagged: "bg-red-50 text-red-700 ring-red-200",
+const BADGE: Record<WalkInStatus, Tone> = {
+  pending: "warning",
+  approved: "success",
+  refused: "danger",
+  admitted_offline: "brand",
+  accepted: "success",
+  flagged: "danger",
 };
 
 type Notice = { tone: "error" | "info"; text: string };
@@ -116,12 +116,12 @@ export function WalkInApprovals({ eventId, canDecide }: { eventId: string; canDe
     <>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <span className="font-medium">{w.description}</span>
-        <span className={cn("inline-flex rounded-full px-2 py-0.5 text-xs font-medium ring-1", BADGE[w.status])}>{t(`statuses.${w.status}`)}</span>
+        <Badge tone={BADGE[w.status]}>{t(`statuses.${w.status}`)}</Badge>
       </div>
-      <div className="text-gray-600">
+      <div className="text-muted">
         {[w.guestName ? t("linkedGuest", { name: w.guestName }) : null, t("people", { count: w.admittedCount })].filter(Boolean).join(" · ")}
       </div>
-      <div className="text-gray-600">
+      <div className="text-muted">
         {[
           w.requestedBy ? t("requestedBy", { name: w.requestedBy }) : null,
           w.deviceName ? t("device", { name: w.deviceName }) : null,
@@ -151,19 +151,19 @@ export function WalkInApprovals({ eventId, canDecide }: { eventId: string; canDe
     <div className="space-y-6">
       {!canDecide && <Alert tone="info">{t("readOnly")}</Alert>}
       {failed && <Alert tone="error">{t("error")}</Alert>}
-      {walkIns === null && !failed && <p className="text-sm text-gray-500">{t("loading")}</p>}
+      {walkIns === null && !failed && <p className="text-sm text-muted">{t("loading")}</p>}
 
       {walkIns !== null && (
         <>
           <Card className="space-y-3" data-testid="walk-ins-pending">
             <div>
-              <h2 className="font-semibold">{t("pending.title")}</h2>
-              <p className="text-sm text-gray-600">{t("pending.intro")}</p>
+              <h2 className="font-display text-xl font-bold">{t("pending.title")}</h2>
+              <p className="text-sm text-muted">{t("pending.intro")}</p>
             </div>
             {pending.length === 0 ? (
-              <p className="text-sm text-gray-500">{t("pending.empty")}</p>
+              <p className="text-sm text-muted">{t("pending.empty")}</p>
             ) : (
-              <ul className="divide-y divide-gray-100">
+              <ul className="divide-y divide-line">
                 {pending.map((w) => (
                   <li key={w.id} className="space-y-1 py-3 text-sm" data-testid={`walk-in-${w.id}`}>
                     {details(w)}
@@ -177,18 +177,18 @@ export function WalkInApprovals({ eventId, canDecide }: { eventId: string; canDe
 
           <Card className="space-y-3" data-testid="walk-ins-review">
             <div>
-              <h2 className="font-semibold">{t("review.title")}</h2>
-              <p className="text-sm text-gray-600">{t("review.intro")}</p>
+              <h2 className="font-display text-xl font-bold">{t("review.title")}</h2>
+              <p className="text-sm text-muted">{t("review.intro")}</p>
             </div>
             {review.length === 0 ? (
-              <p className="text-sm text-gray-500">{t("review.empty")}</p>
+              <p className="text-sm text-muted">{t("review.empty")}</p>
             ) : (
-              <ul className="divide-y divide-gray-100">
+              <ul className="divide-y divide-line">
                 {review.map((w) => (
                   <li key={w.id} className="space-y-1 py-3 text-sm" data-testid={`walk-in-${w.id}`}>
                     {details(w)}
                     {w.offlineReason && (
-                      <div className="rounded-lg bg-gray-50 p-2 text-gray-700">
+                      <div className="rounded-lg bg-tile2 p-2 text-ink">
                         <span className="font-medium">{t("review.reason")}:</span> {w.offlineReason}
                       </div>
                     )}
@@ -201,20 +201,20 @@ export function WalkInApprovals({ eventId, canDecide }: { eventId: string; canDe
           </Card>
 
           <Card className="space-y-3" data-testid="walk-ins-history">
-            <h2 className="font-semibold">{t("history.title")}</h2>
+            <h2 className="font-display text-xl font-bold">{t("history.title")}</h2>
             {history.length === 0 ? (
-              <p className="text-sm text-gray-500">{t("history.empty")}</p>
+              <p className="text-sm text-muted">{t("history.empty")}</p>
             ) : (
-              <ul className="divide-y divide-gray-100">
+              <ul className="divide-y divide-line">
                 {history.map((w) => (
                   <li key={w.id} className="space-y-1 py-3 text-sm" data-testid={`walk-in-${w.id}`}>
                     {details(w)}
                     {w.offlineReason && (
-                      <div className="text-gray-600">
+                      <div className="text-muted">
                         {t("review.reason")}: {w.offlineReason}
                       </div>
                     )}
-                    <div className="text-gray-700">
+                    <div className="text-ink">
                       {w.decidedAt
                         ? t("history.decided", { name: w.decidedBy ?? t("history.someone"), date: fmt(w.decidedAt) })
                         : t("history.undecided")}

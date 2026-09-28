@@ -44,14 +44,14 @@ export function GuestFormDialog({
           <Input type="tel" inputMode="tel" value={values.phone} disabled={mode === "edit"} onChange={(e) => set({ phone: e.target.value })} />
         </Field>
         <fieldset>
-          <legend className="mb-1 text-sm font-medium text-gray-700">{t("form.cardType")}</legend>
+          <legend className="mb-1 text-sm font-medium text-ink">{t("form.cardType")}</legend>
           <div className="flex gap-4">
             {(["single", "double"] as const).map((type) => (
               <label key={type} className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
                   name="cardType"
-                  className="accent-brand-600"
+                  className="accent-primary"
                   checked={values.cardType === type}
                   onChange={() => set({ cardType: type })}
                 />
@@ -70,14 +70,14 @@ export function GuestFormDialog({
             <label className="flex items-start gap-2 text-sm">
               <input
                 type="checkbox"
-                className="mt-0.5 size-4 accent-brand-600"
+                className="mt-0.5 size-4 accent-primary"
                 checked={values.consent}
                 onChange={(e) => set({ consent: e.target.checked })}
               />
               {t("form.consent")}
             </label>
             {errors.consent && (
-              <p role="alert" className="mt-1 text-sm text-red-600">
+              <p role="alert" className="mt-1 text-sm text-danger">
                 {msg(errors.consent)}
               </p>
             )}

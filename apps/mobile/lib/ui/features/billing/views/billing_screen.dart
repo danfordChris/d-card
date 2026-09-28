@@ -1,3 +1,4 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -59,7 +60,7 @@ class BillingScreen extends StatelessWidget {
           if (!didPop) Navigator.of(context).pop(viewModel.summary?.paid);
         },
         child: Scaffold(
-          appBar: AppBar(title: Text(l10n.paymentTitle)),
+          appBar: DcTopBar(title: l10n.paymentTitle, backLabel: l10n.back),
           body: _body(context, l10n),
         ),
       ),
@@ -70,138 +71,136 @@ class BillingScreen extends StatelessWidget {
     final vm = viewModel;
     final s = vm.summary;
     if (s == null) {
-      if (vm.loading) return const Center(child: CircularProgressIndicator());
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(l10n.failure(vm.failure ?? AppFailure.unknown), textAlign: TextAlign.center),
-              const SizedBox(height: 12),
-              OutlinedButton(onPressed: vm.load, child: Text(l10n.retry)),
-            ],
-          ),
-        ),
+      if (vm.loading) return const DcStateView(kind: DcStateKind.loading);
+      return DcStateView(
+        kind: DcStateKind.error,
+        title: l10n.failure(vm.failure ?? AppFailure.unknown),
+        actionLabel: l10n.retry,
+        onAction: vm.load,
       );
     }
-    final scheme = Theme.of(context).colorScheme;
-    final text = Theme.of(context).textTheme;
+    final c = context.dc;
     final pending = s.pendingAttempt;
     return RefreshIndicator(
       onRefresh: vm.load,
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.sm, DcSpace.page, DcSpace.xxxl),
         children: [
-          FlatCard(
+          DcTile(
+            variant: DcTileVariant.hero,
+            radius: DcRadius.hero,
+            padding: const EdgeInsets.all(DcSpace.xl),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    const IconDisc(icon: HugeIcons.strokeRoundedTicket01),
-                    const SizedBox(width: 12),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(l10n.billingPlan(s.planName), style: text.titleMedium),
-                          Text(l10n.billingPricePerGuest(tsh(s.pricePerGuest)), style: text.bodySmall),
-                        ],
-                      ),
+                      child: Text(l10n.billingPlan(s.planName), style: DcType.heading(26).copyWith(color: c.onHero)),
                     ),
-                    _Badge(paid: s.paid),
+                    DcBadge(
+                      label: s.paid ? l10n.billingPaidBadge : l10n.billingUnpaidBadge,
+                      tone: s.paid ? DcTone.success : DcTone.warning,
+                    ),
                   ],
                 ),
-                if (s.paid) ...[
-                  const SizedBox(height: 12),
-                  AmountRow(label: l10n.billingCardsPaid, value: '${s.guestLimit}', valueKey: const Key('billing.cardsPaid')),
-                  AmountRow(label: l10n.billingCardsIssued, value: '${s.issuedCards}'),
-                  AmountRow(label: l10n.billingGuests, value: '${s.guestCount}'),
-                  AmountRow(label: l10n.billingAmountPaid, value: tsh(s.amountPaid)),
-                ],
+                const SizedBox(height: DcSpace.xs),
+                Text(
+                  l10n.billingPricePerGuest(tsh(s.pricePerGuest)),
+                  style: DcType.ui(13).copyWith(color: c.heroMuted),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          if (s.paid) ...[
+            const SizedBox(height: DcSpace.gap),
+            DcBento(
+              items: [
+                DcBentoItem(
+                  DcStatTile(
+                    key: const Key('billing.cardsPaid'),
+                    label: l10n.billingCardsPaid,
+                    value: '${s.guestLimit}',
+                    progress: s.guestLimit == 0 ? null : s.issuedCards / s.guestLimit,
+                    note: '${l10n.billingCardsIssued}: ${s.issuedCards}',
+                  ),
+                ),
+                DcBentoItem(
+                  DcStatTile(
+                    variant: DcTileVariant.soft,
+                    label: l10n.billingGuests,
+                    value: '${s.guestCount}',
+                  ),
+                ),
+                DcBentoItem(
+                  DcStatTile(label: l10n.billingAmountPaid, value: tsh(s.amountPaid), valueSize: 22),
+                  span: 2,
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: DcSpace.gap),
           if (pending != null && pending.isPending) ...[
-            FlatCard(
-              color: scheme.secondaryContainer,
-              child: Row(
-                children: [
-                  const IconDisc(icon: HugeIcons.strokeRoundedClock01),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(l10n.billingPendingTitle, style: text.titleSmall),
-                        Text(l10n.billingPendingBody(tsh(pending.amount), formatEat(context, pending.createdAt))),
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    key: const Key('billing.resume'),
-                    onPressed: () => _checkout(context, CheckoutMode.resume),
-                    child: Text(l10n.billingPendingResume),
-                  ),
-                ],
+            DcNoticeTile(
+              tone: DcTone.warning,
+              icon: HugeIcons.strokeRoundedClock01,
+              title: l10n.billingPendingTitle,
+              message: l10n.billingPendingBody(tsh(pending.amount), formatEat(context, pending.createdAt)),
+              trailing: TextButton(
+                key: const Key('billing.resume'),
+                onPressed: () => _checkout(context, CheckoutMode.resume),
+                child: Text(l10n.billingPendingResume),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: DcSpace.gap),
           ],
           if (!s.paid) ...[
-            Text(l10n.billingUnpaidText),
+            Text(l10n.billingUnpaidText, style: DcType.ui(14).copyWith(color: c.muted)),
             if (s.launchOfferEligible) ...[
-              const SizedBox(height: 8),
-              Notice(text: l10n.billingLaunchOffer(s.launchOfferPercent)),
+              const SizedBox(height: DcSpace.gap),
+              DcNoticeTile(
+                tone: DcTone.success,
+                icon: HugeIcons.strokeRoundedDiscount,
+                message: l10n.billingLaunchOffer(s.launchOfferPercent),
+              ),
             ],
-            const SizedBox(height: 12),
-            FilledButton.icon(
+            const SizedBox(height: DcSpace.lg),
+            DcButton(
               key: const Key('billing.buy'),
-              icon: const HugeIcon(icon: HugeIcons.strokeRoundedWallet01, size: 20),
-              label: Text(l10n.billingPayForCards),
+              icon: HugeIcons.strokeRoundedWallet01,
+              label: l10n.billingPayForCards,
               onPressed: () => _checkout(context, CheckoutMode.buy),
             ),
           ] else ...[
             if (s.guestCount > s.guestLimit) ...[
-              Notice(text: l10n.billingOverLimit(s.guestCount, s.guestLimit)),
-              const SizedBox(height: 12),
+              DcNoticeTile(tone: DcTone.warning, message: l10n.billingOverLimit(s.guestCount, s.guestLimit)),
+              const SizedBox(height: DcSpace.gap),
             ],
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    key: const Key('billing.addBlock'),
-                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 20),
-                    label: Text(l10n.billingAddBlock(CheckoutViewModel.defaultBlockSize)),
-                    onPressed: () => _checkout(context, CheckoutMode.addBlock),
-                  ),
-                ),
-                if (vm.canUpgrade) ...[
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      key: const Key('billing.upgrade'),
-                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowUp02, size: 20),
-                      label: Text(l10n.billingUpgrade),
-                      onPressed: () => _checkout(context, CheckoutMode.upgrade),
-                    ),
-                  ),
-                ],
-              ],
+            DcButton(
+              key: const Key('billing.addBlock'),
+              icon: HugeIcons.strokeRoundedAdd01,
+              label: l10n.billingAddBlock(CheckoutViewModel.defaultBlockSize),
+              onPressed: () => _checkout(context, CheckoutMode.addBlock),
             ),
+            if (vm.canUpgrade) ...[
+              const SizedBox(height: DcSpace.sm),
+              DcButton(
+                key: const Key('billing.upgrade'),
+                variant: DcButtonVariant.tonal,
+                icon: HugeIcons.strokeRoundedArrowUp02,
+                label: l10n.billingUpgrade,
+                onPressed: () => _checkout(context, CheckoutMode.upgrade),
+              ),
+            ],
           ],
-          const SizedBox(height: 24),
-          Text(l10n.billingReceiptsTitle, style: text.titleMedium),
-          const SizedBox(height: 8),
+          DcSectionHeader(title: l10n.billingReceiptsTitle),
           if (s.payments.isEmpty)
-            Text(l10n.billingReceiptsEmpty, style: text.bodyMedium?.copyWith(color: scheme.onSurfaceVariant))
+            Text(l10n.billingReceiptsEmpty, style: DcType.ui(14).copyWith(color: c.muted))
           else
             for (final p in s.payments)
               Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: FlatCard(
+                padding: const EdgeInsets.only(top: DcSpace.sm),
+                child: DcTile(
                   child: ReceiptDetails(
                     reference: p.reference,
                     amount: p.amount,
@@ -214,26 +213,6 @@ class BillingScreen extends StatelessWidget {
               ),
         ],
       ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({required this.paid});
-
-  final bool paid;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final scheme = Theme.of(context).colorScheme;
-    final (bg, fg) = paid
-        ? (scheme.primaryContainer, scheme.onPrimaryContainer)
-        : (scheme.errorContainer, scheme.onErrorContainer);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
-      child: Text(paid ? l10n.billingPaidBadge : l10n.billingUnpaidBadge, style: TextStyle(color: fg, fontSize: 12)),
     );
   }
 }

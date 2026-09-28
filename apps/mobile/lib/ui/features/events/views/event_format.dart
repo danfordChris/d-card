@@ -1,14 +1,32 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../domain/models/event_summary.dart';
 import '../../../../l10n/app_localizations.dart';
 
-/// Events are in Tanzania (UTC+03:00, no daylight saving); show that wall-clock time.
+/// Events are in Tanzania (UTC+03:00, no daylight saving): the wall-clock time there.
+DateTime eatTime(DateTime at) => at.toUtc().add(const Duration(hours: 3));
+
+/// Show the Tanzanian wall-clock date and time.
 String formatEventDate(BuildContext context, DateTime startsAt) {
-  final local = startsAt.toUtc().add(const Duration(hours: 3));
+  final local = eatTime(startsAt);
   final locale = Localizations.localeOf(context).toLanguageTag();
   return '${DateFormat.yMMMEd(locale).format(local)} · ${DateFormat.Hm(locale).format(local)}';
+}
+
+/// Day of month and short month name (EAT) for a date block.
+(String day, String month) eventDayMonth(BuildContext context, DateTime startsAt) {
+  final local = eatTime(startsAt);
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  return ('${local.day}', DateFormat.MMM(locale).format(local));
+}
+
+/// Whole days from today to the event (both in EAT); negative once it has passed.
+int daysUntil(DateTime startsAt, {DateTime? now}) {
+  final a = eatTime(now ?? DateTime.now());
+  final b = eatTime(startsAt);
+  return DateTime.utc(b.year, b.month, b.day).difference(DateTime.utc(a.year, a.month, a.day)).inDays;
 }
 
 String statusLabel(AppLocalizations l10n, EventStatus status) => switch (status) {
@@ -24,17 +42,13 @@ class EventStatusChip extends StatelessWidget {
   final EventStatus status;
 
   @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final (bg, fg) = switch (status) {
-      EventStatus.published => (scheme.primaryContainer, scheme.onPrimaryContainer),
-      EventStatus.cancelled => (scheme.errorContainer, scheme.onErrorContainer),
-      _ => (scheme.surfaceContainerHighest, scheme.onSurfaceVariant),
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
-      child: Text(statusLabel(AppLocalizations.of(context), status), style: TextStyle(color: fg, fontSize: 12)),
-    );
-  }
+  Widget build(BuildContext context) => DcBadge(
+    label: statusLabel(AppLocalizations.of(context), status),
+    tone: switch (status) {
+      EventStatus.published => DcTone.success,
+      EventStatus.cancelled => DcTone.danger,
+      EventStatus.draft => DcTone.warning,
+      EventStatus.completed => DcTone.neutral,
+    },
+  );
 }

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ImportPanel } from "../../../../../../features/imports/import-panel";
 import { getDb } from "../../../../../../server/db";
 import { loadEventOr404, requireAccount } from "../../../../../../server/events-page-data";
+import { PageHeader } from "../../../../../../components/ui";
 
 export default async function ImportGuestsPage({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
@@ -15,14 +16,14 @@ export default async function ImportGuestsPage({ params }: { params: Promise<{ i
   const pastEvents = mine.filter((e) => e.access === "host" && e.id !== event.id).map((e) => ({ id: e.id, title: e.title }));
   return (
     <section className="space-y-6">
-      <div>
-        <Link href={`/events/${event.id}/guests`} className="text-sm text-brand-600 hover:underline">
-          ← {t("back")}
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold">
-          {t("title")} · {event.title}
-        </h1>
-      </div>
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}/guests`} className="hover:text-primary hover:underline">
+            ← {t("back")}
+          </Link>
+        }
+        title={t("title")}
+      />
       <ImportPanel eventId={event.id} pastEvents={pastEvents} />
     </section>
   );

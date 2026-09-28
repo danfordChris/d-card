@@ -1,31 +1,40 @@
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "./cn";
 
-type Variant = "primary" | "secondary" | "danger" | "ghost";
+type Variant = "primary" | "tonal" | "secondary" | "danger" | "ghost";
 
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-brand-600 text-white hover:bg-brand-700 disabled:bg-brand-600/50",
-  secondary: "bg-white text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50",
-  danger: "bg-red-600 text-white hover:bg-red-700 disabled:bg-red-600/50",
-  ghost: "text-brand-600 hover:bg-brand-50",
+  primary: "bg-primary text-on-primary hover:bg-primary-strong disabled:opacity-50",
+  tonal: "bg-tile text-ink hover:bg-tile2 disabled:opacity-50",
+  /** Former name of `tonal`. */
+  secondary: "bg-tile text-ink hover:bg-tile2 disabled:opacity-50",
+  danger: "bg-danger-bg text-danger hover:brightness-95 disabled:opacity-50",
+  ghost: "text-primary hover:bg-tile",
 };
+
+/** Button look for links (`<Link className={buttonClasses("tonal")}>`). */
+export function buttonClasses(variant: Variant = "primary", size: "md" | "lg" = "md", className?: string): string {
+  return cn(
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-button px-5 font-bold transition-colors",
+    size === "lg" ? "h-14 text-base" : "h-11 text-sm",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+    "disabled:cursor-not-allowed",
+    VARIANTS[variant],
+    className,
+  );
+}
 
 export function Button({
   variant = "primary",
+  size = "md",
   className,
   type = "button",
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: "md" | "lg" }) {
   return (
     <button
       type={type}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600",
-        "disabled:cursor-not-allowed",
-        VARIANTS[variant],
-        className,
-      )}
+      className={buttonClasses(variant, size, className)}
       {...props}
     />
   );

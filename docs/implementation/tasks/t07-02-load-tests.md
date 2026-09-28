@@ -15,7 +15,7 @@
 - Owner: Claude Code (lead)
 - Skills: none
 - Design docs: `docs/design/features/check-in.md`, `docs/design/architecture/offline-sync.md`, `docs/design/integrations/messaging.md`, `docs/design/features/media.md` (MED-8)
-- Constraints: load scripts run against the local stack (Postgres, Redis, web on localhost) with fake providers — never real SMS/WhatsApp/Drive; WhatsApp sends stay under Meta's default 80 messages/second per number (throughput counts inbound too), error 130429 backs off; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: load scripts run against the local stack (Postgres, Redis, web on localhost) with fake providers — never real SMS/WhatsApp/Drive; WhatsApp sends stay under Meta's default 80 messages/second per number (throughput counts inbound too), error 130429 backs off; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

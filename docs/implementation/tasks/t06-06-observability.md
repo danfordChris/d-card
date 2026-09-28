@@ -15,7 +15,7 @@
 - Owner: Claude Code (lead)
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/architecture/codebase.md`, `docs/deployment.md`
-- Constraints: Sentry free Developer plan (5k errors/month) for web, worker and both Flutter apps, enabled only when `SENTRY_DSN` is set; no personal data in events (phones/tokens scrubbed); structured JSON logs (pino) with request id; alerts by email through Resend to `ALERT_EMAIL`; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: Sentry free Developer plan (5k errors/month) for web, worker and both Flutter apps, enabled only when `SENTRY_DSN` is set; no personal data in events (phones/tokens scrubbed); structured JSON logs (pino) with request id; alerts by email through Resend to `ALERT_EMAIL`; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

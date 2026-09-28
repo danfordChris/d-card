@@ -15,7 +15,7 @@
 - Owner: Subagent (web)
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/media.md` (MED-5, MED-6, MED-7, MED-11, MED-12)
-- Constraints: no login: uploads tied to the invitation behind the card token; upload window and per-guest limits from the plan; images resized in the browser; gallery page closes after the plan period; guests can delete their own uploads and report an item; works well on low-end phones and slow networks; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon (`docs/changes/proposed/ui-design-system.md` principles: no decorative gradients/shadows); money as whole TZS integers; phone numbers `255` + 9 digits
+- Constraints: no login: uploads tied to the invitation behind the card token; upload window and per-guest limits from the plan; images resized in the browser; gallery page closes after the plan period; guests can delete their own uploads and report an item; works well on low-end phones and slow networks; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon (`docs/design/ui/design-system.md` principles: no decorative gradients/shadows); money as whole TZS integers; phone numbers `255` + 9 digits
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

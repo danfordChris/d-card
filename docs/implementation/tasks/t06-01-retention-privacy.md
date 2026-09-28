@@ -15,7 +15,7 @@
 - Owner: Claude Code (lead) — core, schema, worker; web privacy page and account screens by a subagent
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/privacy-and-audit.md` (W13, MVP privacy basics), `docs/design/features/media.md` (gallery page period), `docs/design/features/auth.md`
-- Constraints: the audit log stays append-only except a retention-only masking path guarded by a transaction-local setting; card tokens may only be cleared (never changed) by retention; the host's invitation snapshot (name, phone, pledge, payments, entries) is never touched; the job is idempotent and audited (`retention.run`); commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: the audit log stays append-only except a retention-only masking path guarded by a transaction-local setting; card tokens may only be cleared (never changed) by retention; the host's invitation snapshot (name, phone, pledge, payments, entries) is never touched; the job is idempotent and audited (`retention.run`); commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

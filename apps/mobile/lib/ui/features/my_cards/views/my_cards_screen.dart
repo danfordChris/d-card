@@ -1,3 +1,4 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -6,7 +7,6 @@ import '../../../../domain/models/app_failure.dart';
 import '../../../../domain/models/guest_card.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/failure_text.dart';
-import '../../billing/views/billing_widgets.dart';
 import '../../events/views/event_format.dart';
 import '../view_models/card_view_model.dart';
 import '../view_models/my_cards_view_model.dart';
@@ -54,146 +54,178 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.myCardsTitle),
-        actions: [
-          IconButton(
-            key: const Key('myCards.link'),
-            tooltip: l10n.linkCard,
-            icon: const HugeIcon(icon: HugeIcons.strokeRoundedLink01),
-            onPressed: _link,
-          ),
-        ],
-      ),
-      body: ListenableBuilder(
-        listenable: widget.viewModel,
-        builder: (context, _) {
-          final vm = widget.viewModel;
-          if (vm.loading && !vm.loaded) return const Center(child: CircularProgressIndicator());
-          if (vm.failure != null && vm.cards.isEmpty) {
-            return _Centered(
-              children: [
-                Text(l10n.failure(vm.failure!), textAlign: TextAlign.center),
-                TextButton(onPressed: vm.load, child: Text(l10n.retry)),
-              ],
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: vm.load,
-            child: vm.cards.isEmpty
-                ? ListView(children: [_Empty(onLink: _link)])
-                : ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: vm.cards.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, i) => _CardTile(card: vm.cards[i], onTap: () => _open(vm.cards[i])),
-                  ),
-          );
-        },
+    final header = DcPageHeader(
+      title: l10n.myCardsTitle,
+      action: DcCircleButton(
+        key: const Key('myCards.link'),
+        icon: HugeIcons.strokeRoundedLink01,
+        label: l10n.linkCard,
+        onPressed: _link,
       ),
     );
-  }
-}
-
-class _CardTile extends StatelessWidget {
-  const _CardTile({required this.card, required this.onTap});
-
-  final MyCard card;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final muted = theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant);
-    return InkWell(
-      key: Key('myCards.card.${card.cardNumber}'),
-      borderRadius: BorderRadius.circular(16),
-      onTap: onTap,
-      child: FlatCard(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const IconDisc(icon: HugeIcons.strokeRoundedTicket01),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: ListenableBuilder(
+          listenable: widget.viewModel,
+          builder: (context, _) {
+            final vm = widget.viewModel;
+            if (vm.cards.isEmpty && ((vm.loading && !vm.loaded) || vm.failure != null)) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(card.eventTitle, style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 2),
-                  Text(formatEventDate(context, card.startsAt), style: muted),
-                  if (card.venueName != null && card.venueName!.isNotEmpty) Text(card.venueName!, style: muted),
-                  const SizedBox(height: 4),
-                  Text('${card.guestName} · ${card.cardNumber}', style: theme.textTheme.bodyMedium),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      CardStatusBadge(status: card.status),
-                      if (card.status == CardStatus.issued) RsvpBadge(answer: card.rsvp),
-                    ],
+                  header,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: DcSpotlightNavBar.reservedHeight),
+                      child: vm.failure == null
+                          ? const DcStateView(kind: DcStateKind.loading)
+                          : DcStateView(
+                              kind: DcStateKind.error,
+                              title: l10n.failure(vm.failure!),
+                              actionLabel: l10n.retry,
+                              onAction: vm.load,
+                            ),
+                    ),
+                  ),
+                ],
+              );
+            }
+            return RefreshIndicator(
+              onRefresh: vm.load,
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: DcSpotlightNavBar.reservedHeight),
+                children: [
+                  header,
+                  if (vm.cards.isEmpty)
+                    DcStateView(
+                      kind: DcStateKind.empty,
+                      icon: HugeIcons.strokeRoundedTicket01,
+                      title: l10n.myCardsEmptyTitle,
+                      message: l10n.myCardsEmptyBody,
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.sm, DcSpace.page, 0),
+                      child: _CardsBento(cards: vm.cards, onOpen: _open),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.gap, DcSpace.page, 0),
+                    child: DcTile(
+                      key: const Key('myCards.emptyLink'),
+                      onTap: _link,
+                      semanticLabel: l10n.linkCard,
+                      child: Row(
+                        children: [
+                          const DcIconDisc(icon: HugeIcons.strokeRoundedLink01),
+                          const SizedBox(width: DcSpace.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(l10n.linkCard, style: DcType.ui(15, weight: FontWeight.w700).copyWith(color: context.dc.ink)),
+                                Text(l10n.linkCardHint, style: DcType.ui(13).copyWith(color: context.dc.muted)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            const HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 20),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 }
 
-class _Empty extends StatelessWidget {
-  const _Empty({required this.onLink});
+/// The next card as the hero tile, then the others as tonal tiles.
+class _CardsBento extends StatelessWidget {
+  const _CardsBento({required this.cards, required this.onOpen});
 
-  final VoidCallback onLink;
+  final List<MyCard> cards;
+  final ValueChanged<MyCard> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final upcoming = cards.where((c) => c.status == CardStatus.issued && daysUntil(c.startsAt) >= 0).toList()
+      ..sort((a, b) => a.startsAt.compareTo(b.startsAt));
+    final next = upcoming.isEmpty ? null : upcoming.first;
+    final rest = [for (final c in cards) if (c != next) c];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (next != null) _CardTile(card: next, variant: DcTileVariant.hero, onTap: () => onOpen(next)),
+        for (var i = 0; i < rest.length; i++) ...[
+          if (next != null || i > 0) const SizedBox(height: DcSpace.gap),
+          _CardTile(
+            card: rest[i],
+            variant: i == 0 ? DcTileVariant.soft : DcTileVariant.tile,
+            onTap: () => onOpen(rest[i]),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _CardTile extends StatelessWidget {
+  const _CardTile({required this.card, required this.variant, required this.onTap});
+
+  final MyCard card;
+  final DcTileVariant variant;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(32),
+    final c = context.dc;
+    final hero = variant == DcTileVariant.hero;
+    final (_, fg) = DcTile.colors(c, variant);
+    final muted = switch (variant) {
+      DcTileVariant.hero => c.heroMuted,
+      DcTileVariant.soft => c.onSoft,
+      _ => c.muted,
+    };
+    final (day, month) = eventDayMonth(context, card.startsAt);
+    final meta = [
+      formatEventDate(context, card.startsAt),
+      if (card.venueName != null && card.venueName!.isNotEmpty) card.venueName!,
+    ].join(' · ');
+    return DcTile(
+      key: Key('myCards.card.${card.cardNumber}'),
+      variant: variant,
+      radius: hero ? DcRadius.hero : DcRadius.tile,
+      padding: EdgeInsets.all(hero ? DcSpace.xl : DcSpace.lg),
+      onTap: onTap,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconDisc(icon: HugeIcons.strokeRoundedTicket01, size: 64),
-          const SizedBox(height: 16),
-          Text(l10n.myCardsEmptyTitle, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
-          const SizedBox(height: 8),
           Text(
-            l10n.myCardsEmptyBody,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            hero ? l10n.myCardsNextIn(daysUntil(card.startsAt)).toUpperCase() : '$day $month'.toUpperCase(),
+            style: DcType.eyebrow().copyWith(color: muted),
           ),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            key: const Key('myCards.emptyLink'),
-            onPressed: onLink,
-            icon: const HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 20),
-            label: Text(l10n.linkCard),
+          const SizedBox(height: 6),
+          Text(card.eventTitle, style: DcType.heading(hero ? 26 : 20).copyWith(color: fg)),
+          const SizedBox(height: DcSpace.xs),
+          Text(meta, style: DcType.ui(13).copyWith(color: muted)),
+          Text('${card.guestName} · ${card.cardNumber}', style: DcType.ui(13, weight: FontWeight.w600).copyWith(color: fg)),
+          const SizedBox(height: DcSpace.md),
+          Wrap(
+            spacing: DcSpace.sm,
+            runSpacing: DcSpace.xs,
+            children: [
+              CardStatusBadge(status: card.status),
+              if (card.status == CardStatus.issued) RsvpBadge(answer: card.rsvp),
+            ],
           ),
         ],
       ),
     );
   }
-}
-
-class _Centered extends StatelessWidget {
-  const _Centered({required this.children});
-
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(32),
-      child: Column(mainAxisSize: MainAxisSize.min, children: children),
-    ),
-  );
 }
 
 /// Paste a card link (or token) to link it to this account.
@@ -245,15 +277,16 @@ class _LinkCardSheetState extends State<LinkCardSheet> {
             LinkRefusal.accountLinked => l10n.linkErrorAccountLinked,
             null => vm.linkFailure == null ? null : l10n.failure(vm.linkFailure ?? AppFailure.unknown),
           };
+          final c = context.dc;
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(l10n.linkCard, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 8),
-              Text(l10n.linkCardHint),
-              const SizedBox(height: 16),
-              TextField(
+              Text(l10n.linkCard, style: DcType.heading(22).copyWith(color: c.ink)),
+              const SizedBox(height: DcSpace.sm),
+              Text(l10n.linkCardHint, style: DcType.ui(14).copyWith(color: c.muted)),
+              const SizedBox(height: DcSpace.lg),
+              DcField(
                 key: const Key('link.input'),
                 controller: _input,
                 autofocus: true,
@@ -261,27 +294,23 @@ class _LinkCardSheetState extends State<LinkCardSheet> {
                 autocorrect: false,
                 onChanged: (_) => vm.clearLinkError(),
                 onSubmitted: (_) => _submit(),
-                decoration: InputDecoration(
-                  labelText: l10n.linkCardField,
-                  hintText: 'https://…/c/…',
-                  suffixIcon: IconButton(
-                    tooltip: l10n.linkCardPaste,
-                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedClipboard, size: 20),
-                    onPressed: _paste,
-                  ),
+                label: l10n.linkCardField,
+                hint: 'https://…/c/…',
+                suffix: Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: DcCircleButton(icon: HugeIcons.strokeRoundedClipboard, label: l10n.linkCardPaste, onPressed: _paste),
                 ),
               ),
               if (error != null) ...[
-                const SizedBox(height: 12),
-                Notice(key: const Key('link.error'), text: error, error: true),
+                const SizedBox(height: DcSpace.md),
+                DcNoticeTile(key: const Key('link.error'), tone: DcTone.danger, message: error),
               ],
-              const SizedBox(height: 16),
-              FilledButton(
+              const SizedBox(height: DcSpace.lg),
+              DcButton(
                 key: const Key('link.submit'),
-                onPressed: vm.linking ? null : _submit,
-                child: vm.linking
-                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                    : Text(l10n.linkCardSubmit),
+                label: l10n.linkCardSubmit,
+                loading: vm.linking,
+                onPressed: _submit,
               ),
             ],
           );

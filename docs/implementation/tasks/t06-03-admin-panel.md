@@ -15,7 +15,7 @@
 - Owner: Claude Code (lead) — core, API, 2FA; admin screens by a subagent
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/auth.md` (AUTH-7), `docs/design/features/admin.md` if present, `docs/design/features/privacy-and-audit.md`
-- Constraints: admin 2FA is app-level TOTP (RFC 6238, authenticator apps) — Firebase TOTP MFA needs the paid Identity Platform upgrade; TOTP secret AES-GCM encrypted; 10 one-time recovery codes stored hashed; every admin API route requires a verified second factor (signed httpOnly cookie, 12 h); commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: admin 2FA is app-level TOTP (RFC 6238, authenticator apps) — Firebase TOTP MFA needs the paid Identity Platform upgrade; TOTP secret AES-GCM encrypted; 10 one-time recovery codes stored hashed; every admin API route requires a verified second factor (signed httpOnly cookie, 12 h); commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

@@ -25,7 +25,7 @@ Future<void> tapKey(WidgetTester tester, String key) async {
 /// Signs in, opens the event and the checkout for an unpaid event.
 Future<void> openBuy(WidgetTester tester) async {
   await signIn(tester);
-  await tester.tap(find.text('Harusi ya Asha'));
+  await tester.tap(find.text('Harusi ya Asha').first);
   await tester.pumpAndSettle();
   await tapKey(tester, 'event.pay');
   await tester.pumpAndSettle();
@@ -54,7 +54,7 @@ void main() {
     final api = FakeApi(events: [fakeEvent()])..billingGuestCount = 20;
     await pumpApp(tester, api: api);
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('event.payBanner')), findsOneWidget);
     await tapKey(tester, 'event.pay');
@@ -242,7 +242,7 @@ void main() {
       ];
     await pumpApp(tester, api: api, locale: 'sw', links: links);
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('event.payBanner')), findsNothing);
     await tapKey(tester, 'event.payment');
@@ -278,7 +278,7 @@ void main() {
       ..launchOfferPercent = 0;
     await pumpApp(tester, api: api);
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     await tapKey(tester, 'event.payment');
     await tester.pumpAndSettle();
@@ -293,6 +293,6 @@ void main() {
     await tapKey(tester, 'checkout.plan.kawaida');
     await tester.pumpAndSettle(const Duration(milliseconds: 500));
     expect(find.textContaining('Nothing to pay'), findsOneWidget);
-    expect(tester.widget<FilledButton>(find.byKey(const Key('checkout.continue'))).onPressed, isNull);
+    expect(tester.widget<FilledButton>(find.descendant(of: find.byKey(const Key('checkout.continue')), matching: find.byType(FilledButton))).onPressed, isNull);
   });
 }

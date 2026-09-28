@@ -66,16 +66,16 @@ export function TwoStepSignIn({ status, onVerified }: { status: Pick<TotpStatus,
   }
 
   return (
-    <section aria-labelledby="two-step-title" className="mx-auto max-w-xl space-y-5 rounded-2xl bg-white p-6 ring-1 ring-gray-200">
+    <section aria-labelledby="two-step-title" className="mx-auto max-w-xl space-y-5 rounded-tile bg-tile p-6">
       <div className="flex items-start gap-3">
-        <span className="rounded-full bg-brand-50 p-3 text-brand-700">
+        <span className="rounded-full bg-soft p-3 text-primary">
           <HugeiconsIcon icon={SecurityCheckIcon} size={22} aria-hidden="true" />
         </span>
         <div>
-          <h1 id="two-step-title" className="text-xl font-semibold">
+          <h1 id="two-step-title" className="font-display text-2xl font-bold">
             {t("title")}
           </h1>
-          <p className="mt-1 text-sm text-gray-600">{t(`intro.${step}`)}</p>
+          <p className="mt-1 text-sm text-muted">{t(`intro.${step}`)}</p>
         </div>
       </div>
 
@@ -127,7 +127,7 @@ function EnrolmentKey({ enrolment }: { enrolment: TotpEnrolment }) {
 
   return (
     <div className="space-y-3">
-      <ol className="list-decimal space-y-1 pl-5 text-sm text-gray-700">
+      <ol className="list-decimal space-y-1 pl-5 text-sm text-ink">
         <li>{t("stepApp")}</li>
         <li>{t("stepScan")}</li>
         <li>{t("stepCode")}</li>
@@ -135,16 +135,16 @@ function EnrolmentKey({ enrolment }: { enrolment: TotpEnrolment }) {
       <div className="flex flex-wrap items-start gap-4">
         {svg ? (
           // A locally generated SVG data URI; next/image adds nothing here.
-          <img src={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`} alt={t("qrAlt")} width={176} height={176} className="rounded-lg ring-1 ring-gray-200" />
+          <img src={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`} alt={t("qrAlt")} width={176} height={176} className="rounded-lg" />
         ) : (
-          <div className="h-44 w-44 animate-pulse rounded-lg bg-gray-100" aria-hidden="true" />
+          <div className="h-44 w-44 animate-pulse rounded-lg bg-tile2" aria-hidden="true" />
         )}
         <div className="min-w-0 flex-1 space-y-2 text-sm">
-          <p className="text-gray-600">{t("manualKey")}</p>
-          <code data-testid="totp-secret" className="block break-all rounded-lg bg-gray-50 p-2 font-mono text-xs ring-1 ring-gray-200">
+          <p className="text-muted">{t("manualKey")}</p>
+          <code data-testid="totp-secret" className="block break-all rounded-lg bg-tile2 p-2 font-mono text-xs">
             {enrolment.secret}
           </code>
-          <a href={enrolment.otpauthUri} className="text-brand-700 underline">
+          <a href={enrolment.otpauthUri} className="text-primary underline">
             {t("openInApp")}
           </a>
         </div>
@@ -181,7 +181,7 @@ function RecoveryCodes({ codes, onDone }: { codes: string[]; onDone: () => void 
   return (
     <div className="space-y-4">
       <Alert tone="info">{t("codesWarning")}</Alert>
-      <ul aria-label={t("codesLabel")} className="grid grid-cols-2 gap-2 rounded-lg bg-gray-50 p-4 font-mono text-sm ring-1 ring-gray-200">
+      <ul aria-label={t("codesLabel")} className="grid grid-cols-2 gap-2 rounded-lg bg-tile2 p-4 font-mono text-sm">
         {codes.map((c) => (
           <li key={c}>{c}</li>
         ))}

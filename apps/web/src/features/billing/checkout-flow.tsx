@@ -26,7 +26,7 @@ type Step = "form" | "review" | "waiting" | "success" | "failure";
 type Notice = { tone: "info" | "error"; text: string };
 
 const selectClass =
-  "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none";
+  "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm text-ink focus:ring-2 focus:ring-primary focus:outline-none";
 const DEFAULT_BLOCK = 10;
 
 /** Plans the host may choose: the current one and those priced above it (upgrades only). */
@@ -219,12 +219,12 @@ export function CheckoutFlow({
     return (
       <Card className="space-y-4" data-testid="checkout-waiting">
         <div className="flex items-start gap-3" role="status" aria-live="polite">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-soft text-primary">
             <HugeiconsIcon icon={mobile ? SmartPhone01Icon : CreditCardIcon} size={20} strokeWidth={1.8} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-semibold">{mobile ? t("waiting.mobileTitle") : t("waiting.sessionTitle")}</h2>
-            <p className="text-sm text-gray-600">
+            <h2 className="font-display text-xl font-bold">{mobile ? t("waiting.mobileTitle") : t("waiting.sessionTitle")}</h2>
+            <p className="text-sm text-muted">
               {mobile
                 ? t("waiting.mobileBody", { amount: formatMoney(attempt.amount), phone: attempt.phone ? localPhone(attempt.phone) : "" })
                 : t("waiting.sessionBody", { amount: formatMoney(attempt.amount) })}
@@ -236,13 +236,13 @@ export function CheckoutFlow({
             href={attempt.checkoutUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
           >
             <HugeiconsIcon icon={Link03Icon} size={16} strokeWidth={1.8} aria-hidden="true" />
             {t("waiting.openPage")}
           </a>
         )}
-        <p className="text-sm text-gray-500">{t("waiting.polling")}</p>
+        <p className="text-sm text-muted">{t("waiting.polling")}</p>
         <Button variant="secondary" onClick={onClose}>
           {t("waiting.later")}
         </Button>
@@ -254,12 +254,12 @@ export function CheckoutFlow({
     return (
       <Card className="space-y-4" data-testid="checkout-success">
         <div className="flex items-start gap-3" role="status">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-700">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success-bg text-success">
             <HugeiconsIcon icon={CheckmarkCircle02Icon} size={20} strokeWidth={1.8} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-semibold">{t("success.title")}</h2>
-            <p className="text-sm text-gray-600">{t("success.next", { count: attempt.guestCards })}</p>
+            <h2 className="font-display text-xl font-bold">{t("success.title")}</h2>
+            <p className="text-sm text-muted">{t("success.next", { count: attempt.guestCards })}</p>
           </div>
         </div>
         <Receipt
@@ -280,13 +280,13 @@ export function CheckoutFlow({
     return (
       <Card className="space-y-4" data-testid="checkout-failure">
         <div className="flex items-start gap-3" role="alert">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-700">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger-bg text-danger">
             <HugeiconsIcon icon={Alert02Icon} size={20} strokeWidth={1.8} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-semibold">{attempt.status === "expired" ? t("failure.expiredTitle") : t("failure.title")}</h2>
-            <p className="text-sm text-gray-600">{t("failure.body")}</p>
-            {attempt.failureReason && <p className="mt-1 text-sm text-gray-500">{attempt.failureReason}</p>}
+            <h2 className="font-display text-xl font-bold">{attempt.status === "expired" ? t("failure.expiredTitle") : t("failure.title")}</h2>
+            <p className="text-sm text-muted">{t("failure.body")}</p>
+            {attempt.failureReason && <p className="mt-1 text-sm text-muted">{attempt.failureReason}</p>}
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -303,27 +303,27 @@ export function CheckoutFlow({
     return (
       <Card className="space-y-5" data-testid="checkout-review">
         <div>
-          <h2 className="font-semibold">{t("review.title")}</h2>
-          <p className="text-sm text-gray-600">{t("review.intro", { plan: quote.planName, count: quote.guestCards })}</p>
+          <h2 className="font-display text-xl font-bold">{t("review.title")}</h2>
+          <p className="text-sm text-muted">{t("review.intro", { plan: quote.planName, count: quote.guestCards })}</p>
         </div>
         <div className={cn(!fresh && "opacity-60")}>
           <QuoteBreakdown quote={quote} />
         </div>
         <fieldset className="space-y-2">
-          <legend className="mb-1 text-sm font-medium text-gray-700">{t("review.method")}</legend>
+          <legend className="mb-1 text-sm font-medium text-ink">{t("review.method")}</legend>
           {(["mobile", "session"] as const).map((m) => (
             <label
               key={m}
               className={cn(
-                "flex cursor-pointer items-start gap-3 rounded-lg p-3 text-sm ring-1",
-                method === m ? "bg-brand-50 ring-brand-600" : "ring-gray-200 hover:bg-gray-50",
+                "flex cursor-pointer items-start gap-3 rounded-2xl p-3 text-sm focus-within:outline-2 focus-within:outline-primary",
+                method === m ? "bg-soft text-on-soft" : "bg-bg hover:bg-tile2",
               )}
             >
               <input type="radio" name="method" value={m} checked={method === m} onChange={() => setMethod(m)} className="mt-1" />
-              <HugeiconsIcon icon={m === "mobile" ? SmartPhone01Icon : CreditCardIcon} size={20} strokeWidth={1.8} aria-hidden="true" className="mt-0.5 text-gray-600" />
+              <HugeiconsIcon icon={m === "mobile" ? SmartPhone01Icon : CreditCardIcon} size={20} strokeWidth={1.8} aria-hidden="true" className="mt-0.5 text-muted" />
               <span>
-                <span className="block font-medium text-gray-900">{t(`review.methods.${m}`)}</span>
-                <span className="block text-gray-500">{t(`review.methods.${m}Hint`)}</span>
+                <span className="block font-medium text-ink">{t(`review.methods.${m}`)}</span>
+                <span className="block text-muted">{t(`review.methods.${m}Hint`)}</span>
               </span>
             </label>
           ))}
@@ -343,7 +343,7 @@ export function CheckoutFlow({
           </Field>
         )}
         {notice && <Alert tone={notice.tone}>{notice.text}</Alert>}
-        <p className="flex items-center gap-1.5 text-xs text-gray-500">
+        <p className="flex items-center gap-1.5 text-xs text-muted">
           <HugeiconsIcon icon={SecurityCheckIcon} size={14} strokeWidth={1.8} aria-hidden="true" />
           {t("review.secure")}
         </p>
@@ -369,12 +369,12 @@ export function CheckoutFlow({
   return (
     <Card className="space-y-5" data-testid="checkout-form">
       <div>
-        <h2 className="font-semibold">{heading}</h2>
-        <p className="text-sm text-gray-600">{t("intro")}</p>
+        <h2 className="font-display text-xl font-bold">{heading}</h2>
+        <p className="text-sm text-muted">{t("intro")}</p>
       </div>
       {options.length > 1 && (
         <label className="block space-y-1 text-sm">
-          <span className="font-medium text-gray-700">{t("plan")}</span>
+          <span className="font-medium text-ink">{t("plan")}</span>
           <select className={selectClass} value={planKey} onChange={(e) => setPlanKey(e.target.value)}>
             {options.map((p) => (
               <option key={p.key} value={p.key}>
@@ -385,7 +385,7 @@ export function CheckoutFlow({
         </label>
       )}
       <div className="space-y-1 text-sm">
-        <label htmlFor="billing-cards" className="block font-medium text-gray-700">
+        <label htmlFor="billing-cards" className="block font-medium text-ink">
           {t("cards")}
         </label>
         <div className="flex items-center gap-2">
@@ -415,19 +415,19 @@ export function CheckoutFlow({
             <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={2} aria-hidden="true" />
           </Button>
         </div>
-        <p className="text-gray-500">
+        <p className="text-muted">
           {summary.paid ? t("blockHint", { size: blockSize, paid: summary.guestLimit }) : t("suggestHint", { count: summary.guestCount })}
         </p>
       </div>
 
-      <div className="rounded-lg p-4 ring-1 ring-gray-200" aria-live="polite">
+      <div className="rounded-lg p-4" aria-live="polite">
         {quoteState === "error" && <Alert tone="error">{t("errors.quote")}</Alert>}
         {quoteState === "invalid" && <Alert tone="error">{t("errors.quoteInvalid", { min: minCards })}</Alert>}
-        {quoteState === "loading" && !quote && <p className="text-sm text-gray-500">{t("calculating")}</p>}
+        {quoteState === "loading" && !quote && <p className="text-sm text-muted">{t("calculating")}</p>}
         {quote && quoteState !== "error" && quoteState !== "invalid" && (
           <div className={cn("space-y-3", !fresh && "opacity-60")}>
             <QuoteBreakdown quote={quote} />
-            <p className="text-xs text-gray-500" data-testid="minimum-note">
+            <p className="text-xs text-muted" data-testid="minimum-note">
               {t("minimumNote", { amount: formatMoney(quote.minimumCharge) })}
             </p>
             {!quote.payable && <Alert>{t("nothingToPay")}</Alert>}

@@ -4,16 +4,18 @@ import { Alert02Icon, ArrowLeft01Icon, ArrowRight01Icon, InboxIcon, RefreshIcon,
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
-import { Button, Dialog } from "../../components/ui";
+import { Button, Dialog, EmptyState } from "../../components/ui";
 
 // Shared pieces of the admin lists: four states (loading, empty, no results, error), pagination, confirm.
 
+/** Filled control for filters and forms on the page background. */
 export const selectClass =
-  "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none";
+  "block h-11 w-full rounded-field border-0 bg-field px-3 text-sm text-ink focus:ring-2 focus:ring-primary focus:outline-none";
 
-export const panelClass = "overflow-x-auto rounded-2xl bg-white ring-1 ring-gray-200";
-export const thClass = "px-4 py-2 font-medium whitespace-nowrap";
-export const tdClass = "px-4 py-2";
+/** List panel: a tonal tile; rows inside are plain with faint `line` dividers. */
+export const panelClass = "overflow-x-auto rounded-tile bg-tile px-2 py-1";
+export const thClass = "px-3 py-3 text-xs font-semibold whitespace-nowrap text-muted";
+export const tdClass = "px-3 py-3";
 
 export type ListState = "loading" | "error" | "empty" | "noResults" | "ready";
 
@@ -24,16 +26,15 @@ export function listState(loading: boolean, error: boolean, count: number, filte
   return "ready";
 }
 
-function StateBlock({ icon, tone = "gray", title, body, action }: { icon: IconSvgElement; tone?: "gray" | "red"; title: string; body?: string; action?: ReactNode }) {
+function StateBlock({ icon, tone = "neutral", title, body, action }: { icon: IconSvgElement; tone?: "neutral" | "error"; title: string; body?: string; action?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-2 px-6 py-10 text-center">
-      <span className={tone === "red" ? "rounded-full bg-red-50 p-3 text-red-600" : "rounded-full bg-gray-100 p-3 text-gray-500"}>
-        <HugeiconsIcon icon={icon} size={22} aria-hidden="true" />
-      </span>
-      <p className="font-medium text-gray-900">{title}</p>
-      {body && <p className="max-w-sm text-sm text-gray-600">{body}</p>}
-      {action}
-    </div>
+    <EmptyState
+      tone={tone}
+      icon={<HugeiconsIcon icon={icon} size={24} aria-hidden="true" />}
+      title={title}
+      {...(body ? { message: body } : {})}
+      {...(action ? { action } : {})}
+    />
   );
 }
 
@@ -55,11 +56,11 @@ export function ListBody({
   if (state === "ready") return <>{children}</>;
   if (state === "loading")
     return (
-      <div role="status" aria-label={t("loading")} className="divide-y divide-gray-100">
+      <div role="status" aria-label={t("loading")} className="divide-y divide-line">
         {Array.from({ length: 4 }, (_, row) => (
           <div key={row} className="flex gap-4 px-4 py-3">
             {Array.from({ length: Math.min(columns, 5) }, (_, col) => (
-              <div key={col} className="h-4 flex-1 animate-pulse rounded bg-gray-100" />
+              <div key={col} className="h-4 flex-1 animate-pulse rounded bg-tile2" />
             ))}
           </div>
         ))}
@@ -69,7 +70,7 @@ export function ListBody({
     return (
       <StateBlock
         icon={Alert02Icon}
-        tone="red"
+        tone="error"
         title={t("errorTitle")}
         body={t("errorBody")}
         action={
@@ -93,7 +94,7 @@ export function Pagination({ page, hasMore, disabled, onPage }: { page: number; 
         <HugeiconsIcon icon={ArrowLeft01Icon} size={16} aria-hidden="true" />
         {t("previous")}
       </Button>
-      <span className="text-sm text-gray-600">{t("page", { page })}</span>
+      <span className="text-sm text-muted">{t("page", { page })}</span>
       <Button variant="secondary" disabled={disabled || !hasMore} onClick={() => onPage(page + 1)}>
         {t("next")}
         <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden="true" />
@@ -123,7 +124,7 @@ export function ConfirmDialog({
   const t = useTranslations("adminPlatform.list");
   return (
     <Dialog title={title} onClose={onClose}>
-      <p className="text-sm text-gray-700">{body}</p>
+      <p className="text-sm text-ink">{body}</p>
       <div className="mt-6 flex justify-end gap-2">
         <Button variant="secondary" onClick={onClose}>
           {t("cancel")}
@@ -139,9 +140,9 @@ export function ConfirmDialog({
 export function PageHeading({ title, intro, actions }: { title: string; intro?: string; actions?: ReactNode }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        {intro && <p className="mt-1 max-w-3xl text-sm text-gray-600">{intro}</p>}
+      <div className="space-y-1">
+        <h1 className="font-display text-3xl font-bold">{title}</h1>
+        {intro && <p className="max-w-3xl text-sm text-muted">{intro}</p>}
       </div>
       {actions}
     </div>

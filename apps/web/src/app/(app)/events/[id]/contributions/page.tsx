@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ContributionsDashboard } from "../../../../../features/contributions/contributions-dashboard";
 import { getDb } from "../../../../../server/db";
 import { loadEventOr404, requireAccount } from "../../../../../server/events-page-data";
+import { PageHeader } from "../../../../../components/ui";
 
 // CON-9, CON-12: host, committee and treasurers only.
 export default async function ContributionsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -15,14 +16,14 @@ export default async function ContributionsPage({ params }: { params: Promise<{ 
   const open = event.status === "draft" || event.status === "published";
   return (
     <section className="space-y-6">
-      <div>
-        <Link href={`/events/${event.id}`} className="text-sm text-brand-600 hover:underline">
-          ← {t("back")}
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold">
-          {t("title")} · {event.title}
-        </h1>
-      </div>
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}`} className="hover:text-primary hover:underline">
+            {event.title}
+          </Link>
+        }
+        title={t("title")}
+      />
       <ContributionsDashboard
         eventId={event.id}
         initial={JSON.parse(JSON.stringify(data))}

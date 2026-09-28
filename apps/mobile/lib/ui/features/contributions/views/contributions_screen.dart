@@ -1,5 +1,7 @@
 import 'package:dcard_core/dcard_core.dart';
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../domain/models/contributor.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -47,79 +49,106 @@ class _ContributionsScreenState extends State<ContributionsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.contributionsTitle)),
+      appBar: DcTopBar(title: l10n.contributionsTitle, backLabel: l10n.back),
       body: ListenableBuilder(
         listenable: widget.viewModel,
         builder: (context, _) {
           final vm = widget.viewModel;
-          if (vm.loading && vm.totals == null) return const Center(child: CircularProgressIndicator());
+          if (vm.loading && vm.totals == null) return const DcStateView(kind: DcStateKind.loading);
           if (vm.failure != null && vm.totals == null) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(l10n.failure(vm.failure!)),
-                  TextButton(onPressed: vm.load, child: Text(l10n.retry)),
-                ],
-              ),
+            return DcStateView(
+              kind: DcStateKind.error,
+              title: l10n.failure(vm.failure!),
+              actionLabel: l10n.retry,
+              onAction: vm.load,
             );
           }
           final t = vm.totals!;
           final list = vm.visible;
+          final c = context.dc;
+          final percent = t.pledged == 0 ? 0 : (t.collected * 100 / t.pledged).round();
           return RefreshIndicator(
             onRefresh: vm.load,
             child: ListView(
+              padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.sm, DcSpace.page, DcSpace.xxxl),
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      _Total(label: l10n.totalPledged, value: t.pledged),
-                      _Total(label: l10n.totalCollected, value: t.collected),
-                      _Total(label: l10n.totalOutstanding, value: t.outstanding),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: TextField(
-                    key: const Key('contributions.search'),
-                    onChanged: vm.search,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: l10n.contributionsSearch,
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: Row(
-                    children: [
-                      for (final f in ContributorFilter.values)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            label: Text(_filterLabel(l10n, f)),
-                            selected: vm.filter == f,
-                            onSelected: (_) => vm.setFilter(f),
-                          ),
+                DcBento(
+                  items: [
+                    DcBentoItem(
+                      DcTile(
+                        variant: DcTileVariant.hero,
+                        radius: DcRadius.hero,
+                        padding: const EdgeInsets.all(DcSpace.xl),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(l10n.totalCollected, style: DcType.ui(13).copyWith(color: c.heroMuted)),
+                            const SizedBox(height: DcSpace.xs),
+                            Text(tsh(t.collected), style: DcType.number(32).copyWith(color: c.onHero)),
+                            const SizedBox(height: DcSpace.md),
+                            DcProgress(
+                              value: t.pledged == 0 ? 0 : t.collected / t.pledged,
+                              height: 6,
+                              color: c.onHero,
+                              trackColor: c.heroMuted.withValues(alpha: 0.3),
+                            ),
+                            const SizedBox(height: DcSpace.sm),
+                            Text(l10n.contributionsCollectedNote(percent), style: DcType.ui(12).copyWith(color: c.heroMuted)),
+                          ],
                         ),
-                    ],
-                  ),
+                      ),
+                      span: 2,
+                    ),
+                    DcBentoItem(DcStatTile(label: l10n.totalPledged, value: tsh(t.pledged), valueSize: 20)),
+                    DcBentoItem(
+                      DcStatTile(
+                        variant: DcTileVariant.soft,
+                        label: l10n.totalOutstanding,
+                        value: tsh(t.outstanding),
+                        valueSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: DcSpace.lg),
+                DcField(
+                  key: const Key('contributions.search'),
+                  label: l10n.contributionsSearch,
+                  prefixIcon: HugeIcons.strokeRoundedSearch01,
+                  onChanged: vm.search,
+                ),
+                const SizedBox(height: DcSpace.md),
+                Wrap(
+                  spacing: DcSpace.sm,
+                  runSpacing: DcSpace.sm,
+                  children: [
+                    for (final f in ContributorFilter.values)
+                      ChoiceChip(
+                        showCheckmark: false,
+                        label: Text(_filterLabel(l10n, f)),
+                        labelStyle: DcType.ui(13, weight: FontWeight.w700)
+                            .copyWith(color: vm.filter == f ? c.onPrimary : c.ink),
+                        selected: vm.filter == f,
+                        onSelected: (_) => vm.setFilter(f),
+                      ),
+                  ],
+                ),
+                DcSectionHeader(title: l10n.contributionsListTitle),
                 if (list.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Center(child: Text(l10n.contributionsEmpty)),
+                  DcStateView(
+                    kind: vm.query.trim().isEmpty && vm.filter == ContributorFilter.all
+                        ? DcStateKind.empty
+                        : DcStateKind.noResults,
+                    message: l10n.contributionsEmpty,
                   )
                 else
-                  for (final c in list)
-                    ListTile(
-                      title: Text(c.name),
-                      subtitle: Text('${formatLocalPhone(c.phone)} · ${l10n.paidOf(tsh(c.paid), tsh(c.pledged))}'),
-                      trailing: _StatusText(contributor: c),
-                      onTap: widget.canRecord && !c.cancelled ? () => _open(c) : null,
+                  for (var i = 0; i < list.length; i++)
+                    DcListRow(
+                      divider: i > 0,
+                      title: list[i].name,
+                      subtitle: '${formatLocalPhone(list[i].phone)} · ${l10n.paidOf(tsh(list[i].paid), tsh(list[i].pledged))}',
+                      trailing: _StatusText(contributor: list[i]),
+                      onTap: widget.canRecord && !list[i].cancelled ? () => _open(list[i]) : null,
                     ),
               ],
             ),
@@ -135,27 +164,6 @@ class _ContributionsScreenState extends State<ContributionsScreen> {
     ContributorFilter.partPaid => l10n.statusPartPaid,
     ContributorFilter.fullyPaid => l10n.statusFullyPaid,
   };
-}
-
-class _Total extends StatelessWidget {
-  const _Total({required this.label, required this.value});
-
-  final String label;
-  final int value;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: text.labelSmall),
-          FittedBox(child: Text(tsh(value), style: text.titleSmall)),
-        ],
-      ),
-    );
-  }
 }
 
 class _StatusText extends StatelessWidget {
@@ -174,13 +182,21 @@ class _StatusText extends StatelessWidget {
             PledgeStatus.partPaid => l10n.statusPartPaid,
             PledgeStatus.notPaid => l10n.statusNotPaid,
           };
+    final tone = c.cancelled
+        ? DcTone.neutral
+        : switch (c.status) {
+            PledgeStatus.fullyPaid => DcTone.success,
+            PledgeStatus.partPaid => DcTone.warning,
+            PledgeStatus.notPaid => DcTone.danger,
+          };
+    final muted = DcType.ui(12).copyWith(color: context.dc.muted);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(label, style: Theme.of(context).textTheme.labelMedium),
-        if (c.balance > 0) Text(l10n.balanceShort(tsh(c.balance)), style: Theme.of(context).textTheme.bodySmall),
-        if (c.cardNumber != null) Text(c.cardNumber!, style: Theme.of(context).textTheme.bodySmall),
+        DcBadge(label: label, tone: tone),
+        if (c.balance > 0) Text(l10n.balanceShort(tsh(c.balance)), style: muted),
+        if (c.cardNumber != null) Text(c.cardNumber!, style: muted),
       ],
     );
   }

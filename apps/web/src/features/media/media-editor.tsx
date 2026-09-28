@@ -127,13 +127,13 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
         title={t(`${kind}.title`)}
         intro={t(`${kind}.intro`)}
         action={
-          <p className="text-sm text-gray-600 tabular-nums" data-testid={`media-counts-${kind}`}>
+          <p className="text-sm text-muted tabular-nums" data-testid={`media-counts-${kind}`}>
             {t("counts", { photos: used("photo"), maxPhotos: limits.photos, videos: used("video"), maxVideos: limits.videos })}
           </p>
         }
       />
 
-      {!settings.connected && canEdit && <p className="text-sm text-gray-500">{t("connectFirst")}</p>}
+      {!settings.connected && canEdit && <p className="text-sm text-muted">{t("connectFirst")}</p>}
       {failed && (
         <Alert tone="error">
           {t("loadError")}{" "}
@@ -147,12 +147,12 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
       {items === null && !failed && (
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-5" aria-hidden="true">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="aspect-square animate-pulse rounded-xl bg-gray-100" />
+            <div key={i} className="aspect-square animate-pulse rounded-xl bg-tile2" />
           ))}
         </div>
       )}
 
-      {items !== null && items.length === 0 && entries.length === 0 && <p className="text-sm text-gray-500">{t("empty")}</p>}
+      {items !== null && items.length === 0 && entries.length === 0 && <p className="text-sm text-muted">{t("empty")}</p>}
 
       {items !== null && items.length > 0 && (
         <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5">
@@ -160,7 +160,7 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
             <li key={item.id} className="relative" data-testid={`media-item-${item.id}`}>
               <MediaThumb item={item} alt={t(item.type === "photo" ? "photoAlt" : "videoAlt")} />
               {(item.status === "hidden" || item.status === "missing") && (
-                <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200">
+                <span className="absolute top-2 left-2 rounded-full bg-bg px-2 py-0.5 text-xs font-bold text-ink">
                   {t(`status.${item.status}`)}
                 </span>
               )}
@@ -169,7 +169,7 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
                   type="button"
                   onClick={() => setConfirmDelete(item)}
                   aria-label={t("delete")}
-                  className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-white/90 text-gray-700 ring-1 ring-gray-200 hover:text-red-600"
+                  className="absolute top-2 right-2 flex size-11 items-center justify-center rounded-full bg-bg text-ink hover:text-danger focus-visible:outline-2 focus-visible:outline-primary"
                 >
                   <Icon icon={Delete02Icon} size={16} />
                 </button>
@@ -180,11 +180,11 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
       )}
 
       {entries.length > 0 && (
-        <ul className="divide-y divide-gray-100 rounded-xl border border-gray-200" data-testid={`media-uploads-${kind}`}>
+        <ul className="divide-y divide-line rounded-2xl bg-bg px-1" data-testid={`media-uploads-${kind}`}>
           {entries.map((e) => (
             <li key={e.key} className="space-y-2 p-3 text-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="min-w-0 truncate font-medium text-gray-800">{e.file.name}</span>
+                <span className="min-w-0 truncate font-medium text-ink">{e.file.name}</span>
                 <div className="flex items-center gap-2">
                   {e.error && e.retryable && (
                     <Button variant="secondary" className="px-3 py-1" onClick={() => void run(e)}>
@@ -197,7 +197,7 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
                       type="button"
                       aria-label={t("dismiss")}
                       onClick={() => setEntries((all) => all.filter((x) => x.key !== e.key))}
-                      className="flex size-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                      className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-tile2"
                     >
                       <Icon icon={Cancel01Icon} size={16} />
                     </button>
@@ -205,21 +205,21 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
                 </div>
               </div>
               {e.error ? (
-                <p role="alert" className="text-red-700">
+                <p role="alert" className="text-danger">
                   {errorText(e)}
                 </p>
               ) : (
                 <>
-                  <p className="text-gray-600">{stageText(e)}</p>
+                  <p className="text-muted">{stageText(e)}</p>
                   <div
-                    className="h-1.5 overflow-hidden rounded-full bg-gray-100"
+                    className="h-1.5 overflow-hidden rounded-full bg-tile2"
                     role="progressbar"
                     aria-label={e.file.name}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-valuenow={Math.round(e.progress * 100)}
                   >
-                    <div className="h-full rounded-full bg-brand-600 transition-[width]" style={{ width: `${Math.round(e.progress * 100)}%` }} />
+                    <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${Math.round(e.progress * 100)}%` }} />
                   </div>
                 </>
               )}
@@ -229,7 +229,7 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
       )}
 
       {canEdit && (
-        <div className="flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4">
+        <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4">
           <Button variant="secondary" onClick={() => photoInput.current?.click()} disabled={!ready || photosFull || limits.photos === 0}>
             <Icon icon={Image01Icon} />
             {t("addPhotos")}
@@ -238,7 +238,7 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
             <Icon icon={Video01Icon} />
             {t("addVideo")}
           </Button>
-          <span className={cn("text-xs text-gray-500", (photosFull || videosFull) && "text-amber-700")}>
+          <span className={cn("text-xs text-muted", (photosFull || videosFull) && "text-warning")}>
             {photosFull && videosFull ? t("limitReached") : t("rules", { seconds: limits.videoSeconds })}
           </span>
           <input
@@ -269,7 +269,7 @@ export function MediaEditor({ eventId, kind, settings, canEdit }: { eventId: str
 
       {confirmDelete && (
         <Dialog title={t("deleteConfirm.title")} onClose={() => setConfirmDelete(null)}>
-          <p className="text-sm text-gray-600">{t("deleteConfirm.body")}</p>
+          <p className="text-sm text-muted">{t("deleteConfirm.body")}</p>
           <div className="mt-6 flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setConfirmDelete(null)}>
               {t("cancel")}

@@ -1,4 +1,6 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../l10n/app_localizations.dart';
 
@@ -9,7 +11,7 @@ const cardNumberDigits = 7;
 String formatCardNumber(String digits) =>
     digits.length <= 3 ? digits : '${digits.substring(0, 3)}-${digits.substring(3)}';
 
-/// Big numeric keypad for typing a card number at the door.
+/// Big numeric keypad in tiles for typing a card number at the door, with "Find card" below.
 class CardNumberPad extends StatefulWidget {
   const CardNumberPad({super.key, required this.enabled, required this.busy, required this.onSubmit});
 
@@ -35,6 +37,8 @@ class _CardNumberPadState extends State<CardNumberPad> {
     setState(() => _digits = _digits.substring(0, _digits.length - 1));
   }
 
+  void _clear() => setState(() => _digits = '');
+
   void _submit() {
     widget.onSubmit(formatCardNumber(_digits));
     setState(() => _digits = '');
@@ -43,65 +47,96 @@ class _CardNumberPadState extends State<CardNumberPad> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
+    final c = context.dc;
     final enabled = widget.enabled && !widget.busy;
-    Widget key(String label, {Key? k, VoidCallback? onPressed, Widget? child}) => Expanded(
+    Widget key(String id, {required VoidCallback onPressed, Widget? child, String? semanticLabel}) => Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(DcSpace.xs),
         child: SizedBox(
-          height: 64,
-          child: FilledButton.tonal(
-            key: k ?? Key('pad.$label'),
-            onPressed: enabled ? onPressed : null,
-            child: child ?? Text(label, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
+          height: 60,
+          child: Semantics(
+            label: semanticLabel,
+            child: FilledButton(
+              key: Key('pad.$id'),
+              onPressed: enabled ? onPressed : null,
+              style: FilledButton.styleFrom(
+                backgroundColor: c.tile,
+                foregroundColor: c.ink,
+                disabledBackgroundColor: c.tile.withValues(alpha: 0.6),
+                disabledForegroundColor: c.muted,
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(44, 60),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(DcRadius.button)),
+                elevation: 0,
+              ),
+              child: child ?? Text(id, style: DcType.number(24, weight: FontWeight.w700)),
+            ),
           ),
         ),
       ),
     );
     Widget row(List<String> digits) => Row(children: [for (final d in digits) key(d, onPressed: () => _press(d))]);
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            key: const Key('pad.display'),
-            alignment: Alignment.center,
-            height: 72,
-            decoration: BoxDecoration(
-              border: Border.all(color: theme.colorScheme.outline),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              _digits.isEmpty ? l10n.cardNumberHint : formatCardNumber(_digits),
-              style: _digits.isEmpty
-                  ? theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)
-                  : theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700, letterSpacing: 4),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DcTile(
+          key: const Key('pad.display'),
+          padding: const EdgeInsets.all(DcSpace.xl),
+          child: Semantics(
+            liveRegion: true,
+            child: Column(
+              children: [
+                Text(l10n.detailCard, style: DcType.ui(12).copyWith(color: c.muted)),
+                const SizedBox(height: DcSpace.xs),
+                if (_digits.isEmpty)
+                  SizedBox(
+                    height: 42,
+                    child: Center(
+                      child: Text(
+                        l10n.cardNumberHint,
+                        textAlign: TextAlign.center,
+                        style: DcType.ui(15).copyWith(color: c.muted),
+                      ),
+                    ),
+                  )
+                else
+                  Text(
+                    formatCardNumber(_digits),
+                    style: DcType.number(40).copyWith(color: c.ink, letterSpacing: 3),
+                  ),
+              ],
             ),
           ),
-          const SizedBox(height: 12),
-          row(['1', '2', '3']),
-          row(['4', '5', '6']),
-          row(['7', '8', '9']),
-          Row(
-            children: [
-              key(
-                'back',
-                onPressed: _backspace,
-                child: Icon(Icons.backspace_outlined, semanticLabel: l10n.clear),
-              ),
-              key('0', onPressed: () => _press('0')),
-              key(
-                'find',
-                onPressed: _digits.length == cardNumberDigits ? _submit : null,
-                child: widget.busy
-                    ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                    : Text(l10n.find, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-              ),
-            ],
+        ),
+        const SizedBox(height: DcSpace.sm),
+        row(['1', '2', '3']),
+        row(['4', '5', '6']),
+        row(['7', '8', '9']),
+        Row(
+          children: [
+            key('clear', onPressed: _clear, child: Text(l10n.clear, style: DcType.ui(16, weight: FontWeight.w700))),
+            key('0', onPressed: () => _press('0')),
+            key(
+              'back',
+              onPressed: _backspace,
+              semanticLabel: l10n.padBackspace,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedDeletePutBack, color: enabled ? c.ink : c.muted, size: 26),
+            ),
+          ],
+        ),
+        const SizedBox(height: DcSpace.sm),
+        SizedBox(
+          height: 60,
+          child: DcButton(
+            key: const Key('pad.find'),
+            label: l10n.findCard,
+            icon: HugeIcons.strokeRoundedSearch01,
+            loading: widget.busy,
+            onPressed: enabled && _digits.length == cardNumberDigits ? _submit : null,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

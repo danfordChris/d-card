@@ -4,7 +4,7 @@ import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Button, Field, Input } from "../../components/ui";
+import { Badge, Button, Field, Input, type Tone } from "../../components/ui";
 import { useAdminCall } from "./admin-gate-context";
 import { ListBody, listState, Pagination, panelClass, tdClass, thClass } from "./admin-ui";
 import { formatTzs } from "./format";
@@ -13,6 +13,7 @@ import type { AdminEvent, Paged } from "./platform-types";
 
 type Filters = { q: string; from: string; to: string };
 const EMPTY: Filters = { q: "", from: "", to: "" };
+const STATUS_TONE: Record<AdminEvent["status"], Tone> = { draft: "neutral", published: "success", completed: "brand", cancelled: "danger" };
 
 /** T06-03: read-only event search with plan, payments, cards and messages. */
 export function EventsAdmin() {
@@ -86,7 +87,7 @@ export function EventsAdmin() {
       <div className={panelClass}>
         <ListBody state={state} columns={8} empty={{ title: t("empty") }} onRetry={load}>
           <table className="w-full min-w-[900px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className={thClass}>{t("columns.event")}</th>
                 <th className={thClass}>{t("columns.date")}</th>
@@ -98,15 +99,17 @@ export function EventsAdmin() {
                 <th className={`${thClass} text-right`}>{t("columns.messages")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {items.map((e) => (
                 <tr key={e.id}>
                   <td className={tdClass}>
-                    <span className="block font-medium text-gray-900">{e.title}</span>
-                    <span className="block text-xs text-gray-500">{e.hostEmail ?? "—"}</span>
+                    <span className="block font-medium text-ink">{e.title}</span>
+                    <span className="block text-xs text-muted">{e.hostEmail ?? "—"}</span>
                   </td>
                   <td className={`${tdClass} whitespace-nowrap`}>{date.format(new Date(e.startsAt))}</td>
-                  <td className={tdClass}>{t(`status.${e.status}`)}</td>
+                  <td className={tdClass}>
+                    <Badge tone={STATUS_TONE[e.status]}>{t(`status.${e.status}`)}</Badge>
+                  </td>
                   <td className={tdClass}>{e.planKey ?? t("noPlan")}</td>
                   <td className={`${tdClass} text-right tabular-nums`}>
                     {e.guests.toLocaleString("en-US")} / {e.guestLimit.toLocaleString("en-US")}

@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'app_test.dart' show fakeScanner, signIn;
+import 'app_test.dart' show fakeScanner, signIn, usePhoneScreen;
 import 'fakes/fakes.dart';
 
 var now = DateTime.utc(2026, 12, 12, 15);
@@ -24,6 +24,7 @@ class Harness {
 }
 
 Future<Harness> pumpOfflineApp(WidgetTester tester, {String locale = 'en'}) async {
+  usePhoneScreen(tester);
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
   final api = FakeDoorApi(
@@ -101,6 +102,15 @@ void main() {
     expect(find.byKey(const Key('checkIn.online')), findsOneWidget);
     expect(find.textContaining('All synced'), findsOneWidget);
     expect(h.api.syncedEntries.values.single['admittedCount'], 2);
+
+    // The sync chip opened the sync panel; try-now works from there and back returns to scanning.
+    expect(find.byKey(const Key('sync.panel')), findsOneWidget);
+    expect(find.text('Waiting to upload'), findsOneWidget);
+    await tapAndSettle(tester, 'sync.tryNow');
+    expect(find.byKey(const Key('checkIn.online')), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel('Back'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('scan.qr-inv-1')), findsOneWidget);
   });
 
   testWidgets('walk-in from a refusal: offline admission needs a reason (Swahili)', (tester) async {
@@ -161,7 +171,7 @@ void main() {
     await tapAndSettle(tester, 'result.next');
     await tapAndSettle(tester, 'checkIn.changeEvent');
 
-    await tester.tap(find.byTooltip('Sign out'));
+    await tester.tap(find.byKey(const Key('events.signOut')));
     await tester.pumpAndSettle();
     expect(find.text('Not synced yet'), findsOneWidget);
     await tapAndSettle(tester, 'signOut.confirm');

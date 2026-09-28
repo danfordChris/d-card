@@ -223,6 +223,7 @@ class _DoorHomeState extends State<DoorHome> {
       onOpened: _opened,
       onSignOut: _signOut,
       onRefused: _openRefused,
+      clock: widget.clock,
     );
   }
 }

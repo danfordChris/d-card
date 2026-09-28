@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
-import { Alert, Button, Card, Field, Input } from "../../components/ui";
+import { Alert, Badge, Button, Card, Field, Input } from "../../components/ui";
 import { apiFetch } from "../../lib/api-fetch";
 import type { AdminWhatsappTemplate } from "./messaging-types";
 
@@ -37,7 +37,7 @@ const emptyDraft: Draft = {
 };
 
 const selectClass =
-  "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none";
+  "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm text-ink focus:ring-2 focus:ring-primary focus:outline-none";
 const splitParams = (value: string) => value.split(",").map((part) => part.trim()).filter(Boolean);
 
 export function WhatsappTemplatesAdmin({ initial }: { initial: AdminWhatsappTemplate[] }) {
@@ -89,21 +89,21 @@ export function WhatsappTemplatesAdmin({ initial }: { initial: AdminWhatsappTemp
       {error && <Alert tone="error">{error}</Alert>}
       <Card className="overflow-x-auto p-0">
         <table className="w-full min-w-[960px] text-left text-sm">
-          <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+          <thead className="border-b border-line text-xs text-muted">
             <tr>
               {(["messageType", "variant", "language", "metaName", "category", "editableParams", "status", "active", "actions"] as const).map((key) => (
                 <th key={key} className="px-3 py-2 font-medium">{t(`templates.${key}`)}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-line">
             {templates.map((template) => <TemplateRow key={template.id} template={template} onPatch={patch} />)}
           </tbody>
         </table>
       </Card>
 
       <Card className="space-y-4">
-        <h2 className="font-semibold">{t("templates.createHeading")}</h2>
+        <h2 className="font-display text-xl font-bold">{t("templates.createHeading")}</h2>
         <form className="grid gap-3 md:grid-cols-2 lg:grid-cols-3" onSubmit={create} noValidate>
           <Field label={t("templates.messageType")}>
             <select className={selectClass} value={draft.messageType} onChange={(e) => setDraft({ ...draft, messageType: e.target.value as Draft["messageType"] })}>
@@ -149,7 +149,7 @@ function TemplateRow({ template, onPatch }: { template: AdminWhatsappTemplate; o
   const [saved, setSaved] = useState(false);
   const dirty = metaTemplateName !== template.metaTemplateName || category !== template.category || status !== template.status || editableParams !== template.editableParams.join(", ");
   return (
-    <tr className={template.active ? "" : "bg-gray-50 text-gray-500"}>
+    <tr className={template.active ? "" : "text-muted"}>
       <td className="px-3 py-2">{t(`messageTypes.${template.messageType}`)}</td>
       <td className="px-3 py-2 font-mono text-xs">{template.variantName}</td>
       <td className="px-3 py-2">{t(`languages.${template.language}`)}</td>
@@ -157,10 +157,10 @@ function TemplateRow({ template, onPatch }: { template: AdminWhatsappTemplate; o
       <td className="px-3 py-2"><select aria-label={`${t("templates.category")} ${template.variantName} ${template.language}`} className={selectClass} value={category} onChange={(e) => (setCategory(e.target.value as AdminWhatsappTemplate["category"]), setSaved(false))}>{CATEGORIES.map((value) => <option key={value} value={value}>{t(`categories.${value}`)}</option>)}</select></td>
       <td className="px-3 py-2"><Input aria-label={`${t("templates.editableParams")} ${template.variantName} ${template.language}`} value={editableParams} onChange={(e) => (setEditableParams(e.target.value), setSaved(false))} /></td>
       <td className="px-3 py-2"><select aria-label={`${t("templates.status")} ${template.variantName} ${template.language}`} className={selectClass} value={status} onChange={(e) => (setStatus(e.target.value as AdminWhatsappTemplate["status"]), setSaved(false))}>{STATUSES.map((value) => <option key={value} value={value}>{t(`statuses.${value}`)}</option>)}</select></td>
-      <td className="px-3 py-2">{template.active ? t("active") : t("inactive")}</td>
+      <td className="px-3 py-2"><Badge tone={template.active ? "success" : "neutral"}>{template.active ? t("active") : t("inactive")}</Badge></td>
       <td className="space-y-1 px-3 py-2 text-right">
         {dirty && <Button variant="secondary" onClick={async () => setSaved(await onPatch(template.id, { metaTemplateName: metaTemplateName.trim(), category, status, editableParams: splitParams(editableParams) }))}>{t("save")}</Button>}
-        {saved && !dirty && <span className="block text-xs text-green-700">{t("saved")}</span>}
+        {saved && !dirty && <span className="block text-xs text-success">{t("saved")}</span>}
         <Button variant="ghost" onClick={() => onPatch(template.id, { active: !template.active })}>{template.active ? t("deactivate") : t("activate")}</Button>
       </td>
     </tr>

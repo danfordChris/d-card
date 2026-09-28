@@ -78,7 +78,7 @@ export function DrivePanel({
           <PanelHeader icon={GoogleDriveIcon} title={t("title")} intro={t("intro")} />
 
           {settings.needsReconnect && (
-            <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-danger-bg p-4 text-sm text-danger">
               <span className="flex items-start gap-2">
                 <Icon icon={Alert02Icon} />
                 {t("needsReconnect")}
@@ -94,7 +94,7 @@ export function DrivePanel({
           {settings.connected ? (
             <div className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-ink">
                   {settings.googleEmail ? t("connectedAs", { email: settings.googleEmail }) : t("connected")}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -111,33 +111,33 @@ export function DrivePanel({
                   )}
                 </div>
               </div>
-              {settings.folderUrl && <p className="text-sm text-gray-500">{t("downloadHint")}</p>}
+              {settings.folderUrl && <p className="text-sm text-muted">{t("downloadHint")}</p>}
 
               {quota && (
                 <div className="space-y-2" data-testid="media-quota">
                   <div className="flex flex-wrap justify-between gap-2 text-sm">
-                    <span className="font-medium text-gray-700">{t("quota.title")}</span>
-                    <span className="text-gray-600 tabular-nums">
+                    <span className="font-medium text-ink">{t("quota.title")}</span>
+                    <span className="text-muted tabular-nums">
                       {quota.limit ? t("quota.used", { used: quota.used, limit: quota.limit }) : t("quota.usedNoLimit", { used: quota.used })}
                     </span>
                   </div>
                   {quota.pct !== null && (
                     <div
-                      className="h-2 overflow-hidden rounded-full bg-gray-100"
+                      className="h-2 overflow-hidden rounded-full bg-tile2"
                       role="progressbar"
                       aria-label={t("quota.title")}
                       aria-valuemin={0}
                       aria-valuemax={100}
                       aria-valuenow={quota.pct}
                     >
-                      <div className={cn("h-full rounded-full", settings.quotaWarning ? "bg-amber-500" : "bg-brand-600")} style={{ width: `${quota.pct}%` }} />
+                      <div className={cn("h-full rounded-full", settings.quotaWarning ? "bg-warning" : "bg-primary")} style={{ width: `${quota.pct}%` }} />
                     </div>
                   )}
-                  {quota.free && <p className="text-sm text-gray-500">{t("quota.free", { free: quota.free })}</p>}
+                  {quota.free && <p className="text-sm text-muted">{t("quota.free", { free: quota.free })}</p>}
                 </div>
               )}
               {settings.quotaWarning && (
-                <div role="status" className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                <div role="status" className="flex items-start gap-2 rounded-xl bg-warning-bg p-3 text-sm text-warning">
                   <Icon icon={Alert02Icon} />
                   {t("quota.warning")}
                 </div>
@@ -146,39 +146,39 @@ export function DrivePanel({
           ) : (
             !settings.needsReconnect && (
               <div className="space-y-3">
-                <p className="text-sm text-gray-700">{t("notConnected")}</p>
+                <p className="text-sm text-ink">{t("notConnected")}</p>
                 {canEdit ? (
                   <a href={connectUrl(eventId)} className={linkButton.primary} data-testid="media-connect">
                     <Icon icon={GoogleDriveIcon} />
                     {t("connect")}
                   </a>
                 ) : (
-                  <p className="text-sm text-gray-500">{t("hostOnly")}</p>
+                  <p className="text-sm text-muted">{t("hostOnly")}</p>
                 )}
-                <p className="text-xs text-gray-500">{t("scopeNote")}</p>
+                <p className="text-xs text-muted">{t("scopeNote")}</p>
               </div>
             )
           )}
 
-          <fieldset className="space-y-3 border-t border-gray-100 pt-4" disabled={!canEdit || busy}>
-            <legend className="text-sm font-semibold text-gray-900">{t("sharing.title")}</legend>
-            <p className="text-sm text-gray-600">{t("sharing.intro")}</p>
+          <fieldset className="space-y-3 border-t border-line pt-4" disabled={!canEdit || busy}>
+            <legend className="text-sm font-semibold text-ink">{t("sharing.title")}</legend>
+            <p className="text-sm text-muted">{t("sharing.intro")}</p>
             <div className="grid gap-3 md:grid-cols-2">
               {(["private", "link"] as const).map((m) => (
                 <label
                   key={m}
                   className={cn(
-                    "flex cursor-pointer gap-3 rounded-xl border p-4 text-sm",
-                    mode === m ? "border-brand-600 bg-brand-50/40" : "border-gray-200 hover:border-gray-300",
+                    "flex cursor-pointer gap-3 rounded-2xl p-4 text-sm focus-within:outline-2 focus-within:outline-primary",
+                    mode === m ? "bg-soft text-on-soft" : "bg-bg hover:bg-tile2",
                   )}
                 >
-                  <input type="radio" name="sharingMode" value={m} checked={mode === m} onChange={() => setMode(m)} className="mt-1 accent-brand-600" />
+                  <input type="radio" name="sharingMode" value={m} checked={mode === m} onChange={() => setMode(m)} className="mt-1 accent-primary" />
                   <span className="space-y-1">
-                    <span className="block font-medium text-gray-900">
+                    <span className="block font-medium text-ink">
                       {t(`sharing.${m}.title`)}
-                      {m === "private" && <span className="ml-2 text-xs font-normal text-gray-500">{t("sharing.default")}</span>}
+                      {m === "private" && <span className="ml-2 text-xs font-normal text-muted">{t("sharing.default")}</span>}
                     </span>
-                    <span className="block text-gray-600">{t(`sharing.${m}.body`)}</span>
+                    <span className="block text-muted">{t(`sharing.${m}.body`)}</span>
                   </span>
                 </label>
               ))}
@@ -188,7 +188,7 @@ export function DrivePanel({
                 <Button onClick={() => void saveMode()} disabled={busy || mode === settings.sharingMode || !settings.connected}>
                   {t("sharing.save")}
                 </Button>
-                {!settings.connected && <span className="text-sm text-gray-500">{t("sharing.connectFirst")}</span>}
+                {!settings.connected && <span className="text-sm text-muted">{t("sharing.connectFirst")}</span>}
               </div>
             )}
           </fieldset>
@@ -201,7 +201,7 @@ export function DrivePanel({
 
       {confirmDisconnect && (
         <Dialog title={t("disconnectConfirm.title")} onClose={() => setConfirmDisconnect(false)}>
-          <p className="text-sm text-gray-600">{t("disconnectConfirm.body")}</p>
+          <p className="text-sm text-muted">{t("disconnectConfirm.body")}</p>
           <div className="mt-6 flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setConfirmDisconnect(false)}>
               {t("cancel")}

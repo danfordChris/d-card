@@ -32,6 +32,7 @@
 | 9 | Photos and Videos | Card media, story page, guest gallery and slideshow stored in the host's Google Drive. | Richer events at zero storage cost to D-Card. | Pending | [`./media/README.md`](./media/README.md) |
 | 10 | Plans and Billing | Msingi/Kawaida/Premium per-guest plans, Snippe payment and plan limits. | Revenue and bounded cost per event. | Pending | [`./plans-and-billing/README.md`](./plans-and-billing/README.md) |
 | 11 | Audit, Privacy and Data Retention | Append-only audit log, post-event anonymisation and guest privacy rights. | Trust and legal compliance across all features. | In Progress | [`./privacy-and-audit/README.md`](./privacy-and-audit/README.md) |
+| 12 | UI Design System | Purple and white, bento grid, Playfair Display, Hugeicons, light and dark themes across the mobile, door and web apps. | A consistent, human-made interface is the product's main marketing. | Done | [`./design-system/README.md`](./design-system/README.md) |
 
 ## Capability Outlook
 

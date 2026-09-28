@@ -39,16 +39,17 @@ function googleCalendarUrl(card: PublicCard, link: string): string {
 }
 
 // Keyboard focus ring for links and buttons on the card page.
-const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600";
+const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 function Shell({ locale, privacyLabel, children }: { locale: string; privacyLabel: string; children: React.ReactNode }) {
   return (
-    <div className="mx-auto min-h-screen max-w-md px-4 py-6">
-      <div className="mb-4 flex justify-end">
+    <div className="mx-auto min-h-screen max-w-md px-4 py-4">
+      <div className="mb-3 flex items-center justify-between gap-3 border-b border-line pb-3">
+        <span className="font-display text-lg font-bold text-primary">D-Card</span>
         <LocaleSwitcher />
       </div>
       <main>{children}</main>
-      <footer className="mt-2 text-center text-xs text-gray-600">
+      <footer className="mt-2 text-center text-xs text-muted">
         {/* Plain link: no route prefetch on slow connections. */}
         <a className={`underline ${focusRing}`} href={`/privacy?lang=${locale === "en" ? "en" : "sw"}`}>
           {privacyLabel}
@@ -65,8 +66,8 @@ export default async function CardPage({ params }: Params) {
   if (!card) {
     return (
       <Shell locale={locale} privacyLabel={tApp("privacy")}>
-        <h1 className="text-xl font-semibold">{t("notFoundTitle")}</h1>
-        <p className="mt-2 text-gray-600">{t("notFoundBody")}</p>
+        <h1 className="font-display text-3xl font-bold">{t("notFoundTitle")}</h1>
+        <p className="mt-2 text-muted">{t("notFoundBody")}</p>
       </Shell>
     );
   }
@@ -84,10 +85,10 @@ export default async function CardPage({ params }: Params) {
   if (card.status === "cancelled") {
     return (
       <Shell locale={locale} privacyLabel={tApp("privacy")}>
-        <div className="space-y-3 rounded-2xl bg-white p-6 ring-1 ring-gray-200">
-          <h1 className="text-xl font-semibold text-red-700">{t("cancelledTitle")}</h1>
-          <p className="text-gray-700">{card.event.title}</p>
-          <p className="text-sm text-gray-600">{t("cancelledBody")}</p>
+        <div className="space-y-3 rounded-tile bg-tile p-6">
+          <h1 className="font-display text-3xl font-bold text-danger">{t("cancelledTitle")}</h1>
+          <p className="text-ink">{card.event.title}</p>
+          <p className="text-sm text-muted">{t("cancelledBody")}</p>
           {contact}
         </div>
       </Shell>
@@ -102,85 +103,87 @@ export default async function CardPage({ params }: Params) {
 
   return (
     <Shell locale={locale} privacyLabel={tApp("privacy")}>
-      <article className="overflow-hidden rounded-2xl ring-1 ring-black/5" style={{ backgroundColor: design.background, color: design.ink }}>
-        <header className="px-6 pt-8 pb-6 text-center text-white" style={{ backgroundColor: design.accent }}>
-          <p className="text-xs tracking-widest uppercase">{locale === "sw" ? card.event.typeNameSw : card.event.typeNameEn}</p>
-          <p className="mt-2 text-sm">{locale === "sw" ? design.greetingSw : design.greetingEn}</p>
-          <h1 className="mt-1 text-2xl leading-tight font-semibold">{card.event.title}</h1>
+      {/* Bento card (prototype CardPage): hero, QR, when/where, RSVP. The event's card colour stays on the
+          strip and the image download, which match the downloadable card. */}
+      <article className="grid grid-cols-2 gap-2.5">
+        <header className="col-span-2 flex flex-col gap-1.5 overflow-hidden rounded-hero bg-hero p-5 text-on-hero">
+          <span aria-hidden className="mb-1 block h-1.5 w-12 rounded-full" style={{ backgroundColor: design.accent }} />
+          <p className="text-xs font-bold tracking-widest text-hero-muted uppercase">{locale === "sw" ? card.event.typeNameSw : card.event.typeNameEn}</p>
+          <p className="text-sm text-hero-muted">{locale === "sw" ? design.greetingSw : design.greetingEn}</p>
+          <h1 className="font-display text-4xl leading-tight font-bold">{card.event.title}</h1>
+          <p className="text-sm text-hero-muted">
+            {t("invitationFor")} <span className="font-bold text-on-hero">{names}</span> · {t("entries", { count: card.cardType === "double" ? 2 : 1 })}
+          </p>
         </header>
-        <div className="space-y-5 px-6 py-6">
-          <div className="text-center">
-            <p className="text-xs tracking-wide uppercase opacity-70">{t("invitationFor")}</p>
-            <p className="text-lg font-semibold">{names}</p>
-            <p className="text-sm opacity-80">{t("entries", { count: card.cardType === "double" ? 2 : 1 })}</p>
+        <div className="col-span-2 flex flex-col items-center gap-2 rounded-tile bg-tile p-5">
+          {/* The QR stays dark-on-white in both themes so door scanners read it. */}
+          <div className="rounded-2xl bg-white p-2">
+            <div className="h-56 w-56" role="img" aria-label={t("qrLabel", { number: card.cardNumber })} dangerouslySetInnerHTML={{ __html: qrSvg }} />
           </div>
-          <dl className="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <dt className="opacity-70">{t("date")}</dt>
-              <dd className="font-medium">{when.date}</dd>
-            </div>
-            <div>
-              <dt className="opacity-70">{t("time")}</dt>
-              <dd className="font-medium">{when.time}</dd>
-            </div>
-            {venue && (
-              <div className="col-span-2">
-                <dt className="opacity-70">{t("venue")}</dt>
-                <dd className="font-medium">
-                  {venue}
-                  {card.event.venueMapUrl && (
-                    <>
-                      {" · "}
-                      <a className={`underline ${focusRing}`} href={card.event.venueMapUrl} target="_blank" rel="noopener noreferrer">
-                        {t("map")}
-                        <span className="sr-only"> {t("newTab")}</span>
-                      </a>
-                    </>
-                  )}
-                </dd>
-              </div>
-            )}
-          </dl>
-          <div className="flex flex-col items-center gap-2 rounded-xl bg-white p-4">
-            <div className="h-60 w-60" role="img" aria-label={t("qrLabel", { number: card.cardNumber })} dangerouslySetInnerHTML={{ __html: qrSvg }} />
-            <p className="text-xs tracking-wide uppercase opacity-70">{t("cardNumber")}</p>
-            <p className="font-mono text-2xl font-bold tracking-widest" data-testid="card-number">
-              {card.cardNumber}
-            </p>
-            <p className="text-center text-xs text-gray-600">{t("showQr")}</p>
-            <ApiDownloadButton
-              className={`mt-2 rounded-lg px-3 py-2 text-sm font-medium text-white ${focusRing}`}
-              style={{ backgroundColor: design.accent }}
-              url={`/api/v1/cards/${token}/image?lang=${locale === "en" ? "en" : "sw"}`}
-              fileName={`dcard-${card.cardNumber}.png`}
-            >
-              {t("download")}
-            </ApiDownloadButton>
-          </div>
+          <p className="text-xs tracking-wide text-muted uppercase">{t("cardNumber")}</p>
+          <p className="font-display text-3xl font-extrabold tracking-widest tabular-nums" data-testid="card-number">
+            {card.cardNumber}
+          </p>
+          <p className="text-center text-xs text-muted">{t("showQr")}</p>
+          <ApiDownloadButton
+            className={`mt-1 inline-flex h-11 items-center rounded-button px-5 text-sm font-bold text-white ${focusRing}`}
+            style={{ backgroundColor: design.accent }}
+            url={`/api/v1/cards/${token}/image?lang=${locale === "en" ? "en" : "sw"}`}
+            fileName={`dcard-${card.cardNumber}.png`}
+          >
+            {t("download")}
+          </ApiDownloadButton>
         </div>
+        <dl className="contents">
+          <div className="flex flex-col gap-0.5 rounded-tile bg-soft p-4 text-on-soft">
+            <dt className="text-xs">{t("date")}</dt>
+            <dd className="font-display text-base font-bold">{when.date}</dd>
+          </div>
+          <div className="flex flex-col gap-0.5 rounded-tile bg-tile p-4">
+            <dt className="text-xs text-muted">{t("time")}</dt>
+            <dd className="font-display text-base font-bold">{when.time}</dd>
+          </div>
+          {venue && (
+            <div className="col-span-2 flex flex-col gap-0.5 rounded-tile bg-tile p-4">
+              <dt className="text-xs text-muted">{t("venue")}</dt>
+              <dd className="font-display text-base font-bold">
+                {venue}
+                {card.event.venueMapUrl && (
+                  <>
+                    {" · "}
+                    <a className={`font-sans text-sm font-bold text-primary underline ${focusRing}`} href={card.event.venueMapUrl} target="_blank" rel="noopener noreferrer">
+                      {t("map")}
+                      <span className="sr-only"> {t("newTab")}</span>
+                    </a>
+                  </>
+                )}
+              </dd>
+            </div>
+          )}
+        </dl>
       </article>
 
-      <section className="mt-6 space-y-3 rounded-2xl bg-white p-6 ring-1 ring-gray-200" aria-labelledby="rsvp-title">
-        <h2 id="rsvp-title" className="font-semibold">
+      <section className="mt-2.5 space-y-3 rounded-tile bg-tile p-5" aria-labelledby="rsvp-title">
+        <h2 id="rsvp-title" className="font-display text-xl font-bold">
           {t("rsvpTitle")}
         </h2>
-        <RsvpForm token={token} initial={{ status: card.rsvp.status, dietaryNotes: card.rsvp.dietaryNotes, open: card.rsvp.open }} accent={design.accent} />
+        <RsvpForm token={token} initial={{ status: card.rsvp.status, dietaryNotes: card.rsvp.dietaryNotes, open: card.rsvp.open }} />
       </section>
 
-      <section className="mt-6 space-y-3 rounded-2xl bg-white p-6 ring-1 ring-gray-200" aria-labelledby="calendar-title">
-        <h2 id="calendar-title" className="font-semibold">
+      <section className="mt-2.5 space-y-3 rounded-tile bg-tile2 p-5" aria-labelledby="calendar-title">
+        <h2 id="calendar-title" className="font-display text-xl font-bold">
           {t("calendar")}
         </h2>
-        <div className="flex flex-wrap gap-3 text-sm">
+        <div className="flex flex-wrap gap-2 text-sm">
           <ApiDownloadButton
-            className={`rounded-lg px-3 py-2 ring-1 ring-gray-300 hover:bg-gray-50 ${focusRing}`}
+            className={`inline-flex h-11 items-center rounded-button bg-bg px-4 font-bold text-ink hover:bg-tile ${focusRing}`}
             url={`/api/v1/cards/${token}/calendar.ics`}
             fileName="dcard-event.ics"
           >
             {t("calendarApple")}
           </ApiDownloadButton>
           <a
-            className={`rounded-lg px-3 py-2 ring-1 ring-gray-300 hover:bg-gray-50 ${focusRing}`}
+            className={`inline-flex h-11 items-center rounded-button bg-bg px-4 font-bold text-ink hover:bg-tile ${focusRing}`}
             href={googleCalendarUrl(card, link)}
             target="_blank"
             rel="noopener noreferrer"
@@ -193,7 +196,7 @@ export default async function CardPage({ params }: Params) {
       </section>
 
       <LazyGuestMedia token={token} />
-      <p className="mt-6 text-center text-xs text-gray-600">{t("poweredBy")}</p>
+      <p className="mt-4 text-center text-xs text-muted">{t("poweredBy")}</p>
     </Shell>
   );
 }

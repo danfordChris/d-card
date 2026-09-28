@@ -10,12 +10,13 @@ import 'package:dcard_door/data/repositories/session_repository.dart';
 import 'package:dcard_door/data/services/door_device_store.dart';
 import 'package:dcard_door/domain/models/app_failure.dart';
 import 'package:dcard_door/domain/models/door_event.dart';
+import 'package:dcard_door/ui/features/check_in/view_models/check_in_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'app_test.dart' show fakeScanner, signIn, typeCardNumber;
+import 'app_test.dart' show fakeScanner, modeTab, signIn, typeCardNumber, usePhoneScreen;
 import 'fakes/fakes.dart';
 
 // T06-08: how the door reacts to revocation, lockouts and edge cases.
@@ -103,6 +104,7 @@ Future<Harness> pumpDoor(
   List<Map<String, dynamic>>? events,
   List<Map<String, dynamic>>? cards,
 }) async {
+  usePhoneScreen(tester);
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
   final api = EdgeDoorApi(events: events, cards: cards ?? defaultCards());
@@ -142,6 +144,12 @@ Future<void> settle(WidgetTester tester) async {
 
 Future<void> tapAndSettle(WidgetTester tester, String key) async {
   await tester.tap(find.byKey(Key(key)));
+  await tester.pump();
+  await settle(tester);
+}
+
+Future<void> tapModeAndSettle(WidgetTester tester, CheckInMode mode) async {
+  await tester.tap(modeTab(mode));
   await tester.pump();
   await settle(tester);
 }
@@ -252,7 +260,7 @@ void main() {
     ) async {
       await pumpDoor(tester);
       await openEvent(tester);
-      await tapAndSettle(tester, 'mode.number');
+      await tapModeAndSettle(tester, CheckInMode.number);
       for (var i = 0; i < 2; i++) {
         await typeCardNumber(tester, '111-1111');
         await tapAndSettle(tester, 'result.next');
@@ -272,7 +280,7 @@ void main() {
       expect(find.byKey(const Key('checkIn.lockBanner')), findsOneWidget, reason: 'restored from the phone');
       expect(find.text('4:00'), findsOneWidget);
 
-      await tapAndSettle(tester, 'mode.number');
+      await tapModeAndSettle(tester, CheckInMode.number);
       await tapAndSettle(tester, 'lockedPad.name');
       expect(find.byKey(const Key('name.query')), findsOneWidget);
     });
@@ -282,7 +290,7 @@ void main() {
       // The phone runs 10 minutes behind the server.
       h.api.serverAhead = const Duration(minutes: 10);
       await openEvent(tester);
-      await tapAndSettle(tester, 'mode.number');
+      await tapModeAndSettle(tester, CheckInMode.number);
       for (var i = 0; i < 3; i++) {
         await typeCardNumber(tester, '111-1111');
         if (i < 2) await tapAndSettle(tester, 'result.next');

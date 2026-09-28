@@ -9,9 +9,11 @@ import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
 import 'package:dcard_mobile/data/repositories/my_cards_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
+import 'package:dcard_mobile/data/repositories/theme_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_ins_repository.dart';
 import 'package:dcard_mobile/domain/models/app_failure.dart';
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,8 +29,9 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
   FakePushMessageSource? push,
   FakeLinkOpener? links,
   FakeFileSaver? files,
+  Map<String, Object> prefsValues = const {},
 }) async {
-  SharedPreferences.setMockInitialValues({});
+  SharedPreferences.setMockInitialValues(prefsValues);
   final prefs = await SharedPreferences.getInstance();
   final a = auth ?? FakeAuthService();
   final p = api ?? FakeApi(events: [fakeEvent()]);
@@ -44,6 +47,7 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
       billing: BillingRepository(p),
       myCards: MyCardsRepository(p),
       account: AccountRepository(p, files ?? FakeFileSaver()),
+      theme: ThemeRepository(prefs),
       links: links ?? FakeLinkOpener(),
       locale: Locale(locale),
     ),
@@ -65,6 +69,11 @@ Future<void> tapSignIn(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(button);
   await tester.pumpAndSettle();
+}
+
+/// Taps the top bar's round back button (labelled for screen readers).
+Future<void> tapBack(WidgetTester tester) async {
+  await tester.tap(find.descendant(of: find.byType(DcTopBar), matching: find.byType(DcCircleButton)).last);
 }
 
 /// Signs out from the Account tab.
@@ -112,7 +121,9 @@ void main() {
       expect(api.provisionCalls, 1);
       expect(api.listCalls, 1);
       expect(find.text('My events'), findsOneWidget);
-      expect(find.text('Harusi ya Asha'), findsOneWidget);
+      // The next event is the hero tile and also a row in the list.
+      expect(find.byKey(const Key('dashboard.next')), findsOneWidget);
+      expect(find.descendant(of: find.byKey(const Key('events.row.e1')), matching: find.text('Harusi ya Asha')), findsOneWidget);
       expect(find.text('Published'), findsOneWidget);
       expect(find.text('Draft'), findsOneWidget);
 
@@ -142,20 +153,21 @@ void main() {
         ..events = [fakeEvent()];
       await tester.tap(find.text('Try again'));
       await tester.pumpAndSettle();
-      expect(find.text('Harusi ya Asha'), findsOneWidget);
+      expect(find.byKey(const Key('events.row.e1')), findsOneWidget);
     });
 
     testWidgets('opens the event summary in Swahili', (tester) async {
       await pumpApp(tester, locale: 'sw');
       await signIn(tester);
-      await tester.tap(find.text('Harusi ya Asha'));
+      await tester.tap(find.text('Harusi ya Asha').first);
       await tester.pumpAndSettle();
+      expect(find.text('Limechapishwa'), findsOneWidget);
+      expect(find.textContaining('15:00'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Asha · 0754 123 456'), 200, scrollable: find.byType(Scrollable).first);
       expect(find.text('Aina ya tukio'), findsOneWidget);
       expect(find.text('Harusi'), findsOneWidget);
-      expect(find.textContaining('15:00'), findsOneWidget);
       expect(find.text('Diamond Jubilee, Upanga, Dar es Salaam'), findsOneWidget);
       expect(find.text('Asha · 0754 123 456'), findsOneWidget);
-      expect(find.text('Limechapishwa'), findsOneWidget);
     });
   });
 }

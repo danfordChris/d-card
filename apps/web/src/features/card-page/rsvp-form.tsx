@@ -8,8 +8,12 @@ import { apiFetch } from "../../lib/api-fetch";
 
 export type RsvpState = { status: "none" | "yes" | "no"; dietaryNotes: string | null; open: boolean };
 
-/** GST-12: Yes/No RSVP with an optional dietary note, no login (ADR 0001 O19). */
-export function RsvpForm({ token, initial, accent }: { token: string; initial: RsvpState; accent: string }) {
+/**
+ * GST-12: Yes/No RSVP with an optional dietary note, no login (ADR 0001 O19).
+ * The chosen answer uses the design system's primary pill; `accent` (the event's card colour) is accepted for
+ * compatibility but not used here, so the answer keeps its contrast in both themes.
+ */
+export function RsvpForm({ token, initial }: { token: string; initial: RsvpState; accent?: string }) {
   const t = useTranslations("cardPage");
   const [rsvp, setRsvp] = useState(initial);
   const [answer, setAnswer] = useState<"yes" | "no" | null>(initial.status === "none" ? null : initial.status);
@@ -23,7 +27,7 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
     return (
       <div className="space-y-2">
         {rsvp.status !== "none" && <p className="font-medium">{t("yourAnswer", { answer: t(rsvp.status === "yes" ? "answerYes" : "answerNo") })}</p>}
-        <p className="text-sm text-gray-600">{t("rsvpClosed")}</p>
+        <p className="text-sm text-muted">{t("rsvpClosed")}</p>
       </div>
     );
   }
@@ -76,11 +80,10 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
             onClick={() => setAnswer(value)}
             onKeyDown={(e) => onRadioKey(e, i)}
             className={cn(
-              "rounded-lg px-4 py-3 text-left text-sm font-medium ring-1 transition",
-              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600",
-              answer === value ? "text-white ring-transparent" : "bg-white text-gray-800 ring-gray-300 hover:bg-gray-50",
+              "min-h-12 rounded-field px-4 py-3 text-left text-sm font-bold transition-colors",
+              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+              answer === value ? "bg-primary text-on-primary" : "bg-bg text-ink hover:bg-tile2",
             )}
-            style={answer === value ? { backgroundColor: accent } : undefined}
           >
             {t(value === "yes" ? "rsvpYes" : "rsvpNo")}
           </button>
@@ -97,16 +100,16 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
           maxLength={300}
           rows={2}
           onChange={(e) => setDietary(e.target.value)}
-          className="block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none"
+          className="block w-full rounded-field border-0 bg-field px-4 py-3 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-primary focus:outline-none"
         />
-        <p id={`${ids}-diet-hint`} className="text-xs text-gray-600">
+        <p id={`${ids}-diet-hint`} className="text-xs text-muted">
           {t("dietaryHint")}
         </p>
       </div>
       {/* Always mounted, so screen readers announce the result when it appears. */}
       <div role="status" aria-live="polite" aria-atomic="true">
         {message && (
-          <p className={cn("rounded-lg p-3 text-sm ring-1", message.tone === "error" ? "bg-red-50 text-red-800 ring-red-200" : "bg-green-50 text-green-800 ring-green-200")}>
+          <p className={cn("rounded-field p-3 text-sm", message.tone === "error" ? "bg-danger-bg text-danger" : "bg-success-bg text-success")}>
             {message.text}
           </p>
         )}
@@ -114,7 +117,7 @@ export function RsvpForm({ token, initial, accent }: { token: string; initial: R
       <Button onClick={submit} disabled={!answer || busy} aria-busy={busy} className="w-full sm:w-auto">
         {t("save")}
       </Button>
-      <p className="text-xs text-gray-600">{t("change")}</p>
+      <p className="text-xs text-muted">{t("change")}</p>
     </div>
   );
 }

@@ -49,37 +49,37 @@ export function SmsEditor({
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={invalid || bad.length > 0 || undefined}
         className={cn(
-          "block w-full rounded-lg border-0 px-3 py-2 font-mono text-sm ring-1 focus:ring-2 focus:ring-brand-600",
-          locked ? "bg-gray-50 text-gray-600 ring-gray-200" : "bg-white ring-gray-300",
-          (invalid || bad.length > 0) && "ring-red-500",
+          "block w-full rounded-field border-0 bg-field px-4 py-3 font-mono text-sm text-ink focus:ring-2 focus:ring-primary focus:outline-none",
+          locked && "text-muted",
+          (invalid || bad.length > 0) && "ring-2 ring-danger",
         )}
       />
-      <p className="text-xs text-gray-600" data-testid={`${id}-counter`}>
+      <p className="text-xs text-muted" data-testid={`${id}-counter`}>
         {t("counter", { chars: length.units, segments: length.segments })}
       </p>
       {bad.length > 0 && (
-        <p className="text-xs text-red-600" role="alert">
+        <p className="text-xs text-danger" role="alert">
           {t("gsmWarning", { chars: bad.join(" ") })}
         </p>
       )}
       {!locked && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs text-gray-500">{t("insert")}:</span>
+          <span className="text-xs text-muted">{t("insert")}:</span>
           {PLACEHOLDERS.filter((p) => p !== "note").map((p) => (
             <button
               key={p}
               type="button"
               onClick={() => insert(p)}
-              className="rounded-full bg-brand-50 px-2 py-0.5 font-mono text-xs text-brand-700 ring-1 ring-brand-100 hover:bg-brand-100"
+              className="min-h-8 rounded-full bg-soft px-2.5 py-0.5 font-mono text-xs text-on-soft hover:bg-tile2"
             >
               {`{${p}}`}
             </button>
           ))}
         </div>
       )}
-      <p className="text-xs text-gray-500">{t("contactRequired")}</p>
-      <div className="rounded-lg bg-gray-50 p-3 text-sm">
-        <p className="mb-1 text-xs font-medium text-gray-500">{t("preview")}</p>
+      <p className="text-xs text-muted">{t("contactRequired")}</p>
+      <div className="rounded-lg bg-tile2 p-3 text-sm">
+        <p className="mb-1 text-xs font-medium text-muted">{t("preview")}</p>
         <p className="whitespace-pre-wrap" data-testid={`${id}-preview`}>
           {preview}
         </p>

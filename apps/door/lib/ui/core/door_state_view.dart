@@ -1,11 +1,19 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 /// Tone of a full-screen door state: a problem that stops check-in, or a warning staff may pass.
 enum DoorStateTone { blocked, warning, neutral }
 
-/// A full-screen state at the door (revoked phone, no network, event not started…): a large
-/// icon, a title, the explanation and the actions. Flat colours, no shadows or gradients.
+extension on DoorStateTone {
+  DcTone get dc => switch (this) {
+    DoorStateTone.blocked => DcTone.danger,
+    DoorStateTone.warning => DcTone.warning,
+    DoorStateTone.neutral => DcTone.neutral,
+  };
+}
+
+/// A full-screen state at the door (revoked phone, no network, event not started…): one large
+/// status tile with the icon, title and explanation, then the actions (56 px or taller).
 class DoorStateView extends StatelessWidget {
   const DoorStateView({
     super.key,
@@ -34,51 +42,33 @@ class DoorStateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final (Color background, Color foreground) = switch (tone) {
-      DoorStateTone.blocked => (scheme.errorContainer, scheme.onErrorContainer),
-      DoorStateTone.warning => (scheme.tertiaryContainer, scheme.onTertiaryContainer),
-      DoorStateTone.neutral => (scheme.surfaceContainerHighest, scheme.onSurface),
-    };
     return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          const SizedBox(height: 24),
-          Center(
-            child: Container(
-              width: 112,
-              height: 112,
-              decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-              alignment: Alignment.center,
-              child: HugeIcon(icon: icon, color: foreground, size: 56),
+      top: false,
+      child: LayoutBuilder(
+        builder: (context, constraints) => ListView(
+          padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.md, DcSpace.page, DcSpace.xl),
+          children: [
+            DcStatusTile(
+              tone: tone.dc,
+              icon: icon,
+              title: title,
+              titleSize: 30,
+              message: body,
+              titleKey: const Key('state.title'),
+              messageKey: const Key('state.body'),
+              minHeight: (constraints.maxHeight * 0.5).clamp(0, 460),
+              children: details,
             ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            title,
-            key: const Key('state.title'),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            body,
-            key: const Key('state.body'),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(color: scheme.onSurfaceVariant, height: 1.4),
-          ),
-          for (final d in details) ...[const SizedBox(height: 12), d],
-          const SizedBox(height: 32),
-          if (busy)
-            const Center(child: CircularProgressIndicator())
-          else
-            for (final (i, a) in actions.indexed) ...[
-              if (i > 0) const SizedBox(height: 12),
-              SizedBox(height: 56, child: a),
-            ],
-        ],
+            const SizedBox(height: DcSpace.md),
+            if (busy)
+              Padding(
+                padding: const EdgeInsets.all(DcSpace.lg),
+                child: Center(child: CircularProgressIndicator(color: context.dc.primary)),
+              )
+            else
+              for (final (i, a) in actions.indexed) ...[if (i > 0) const SizedBox(height: DcSpace.gap), a],
+          ],
+        ),
       ),
     );
   }

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { ApiDownloadButton } from "../../components/api-download-button";
-import { Button, Card, cn, Input } from "../../components/ui";
+import { Button, buttonClasses, Card, cn, Input, Tile } from "../../components/ui";
 import { localPhone } from "../events/format";
 import { AddContributorDialog } from "./add-contributor-dialog";
 import { ContributorDialog } from "./contributor-dialog";
@@ -13,10 +13,10 @@ import { apiFetch } from "../../lib/api-fetch";
 const FILTERS: (StatusFilter | "all")[] = ["all", "not_paid", "part_paid", "fully_paid", "cancelled"];
 
 const BADGE: Record<StatusFilter, string> = {
-  not_paid: "bg-gray-100 text-gray-700",
-  part_paid: "bg-amber-100 text-amber-800",
-  fully_paid: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-700",
+  not_paid: "bg-tile2 text-ink",
+  part_paid: "bg-warning-bg text-warning",
+  fully_paid: "bg-success-bg text-success",
+  cancelled: "bg-danger-bg text-danger",
 };
 
 /** Recomputes totals client-side after a change, using the same rules as the server (CON-9). */
@@ -90,26 +90,26 @@ export function ContributionsDashboard({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         {tiles.map(([k, value]) => (
-          <Card key={k} className="p-4">
-            <p className="text-xs text-gray-500">{t(`totals.${k}`)}</p>
-            <p className="mt-1 text-lg font-semibold" data-testid={`total-${k}`}>
+          <Tile key={k} variant={k === "collected" ? "hero" : "tile"} className={cn("gap-2", k === "collected" && "col-span-2 rounded-hero lg:col-span-1")}>
+            <p className={cn("text-xs", k === "collected" ? "text-hero-muted" : "text-muted")}>{t(`totals.${k}`)}</p>
+            <p className="font-display text-2xl leading-tight font-extrabold tabular-nums" data-testid={`total-${k}`}>
               {tsh(value)}
             </p>
-          </Card>
+          </Tile>
         ))}
       </div>
       {progress !== null && (
-        <Card className="space-y-2 p-4">
+        <Tile className="gap-2">
           <div className="flex justify-between text-sm">
-            <span>{t("budget", { budget: tsh(summary.budget!) })}</span>
-            <span className="font-semibold">{progress}%</span>
+            <span className="text-muted">{t("budget", { budget: tsh(summary.budget!) })}</span>
+            <span className="font-bold text-primary">{progress}%</span>
           </div>
-          <div className="h-2 rounded-full bg-gray-100" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-            <div className="h-2 rounded-full bg-brand-600" style={{ width: `${progress}%` }} />
+          <div className="h-2.5 overflow-hidden rounded-full bg-tile2" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+            <div className="h-2.5 rounded-full bg-primary" style={{ width: `${progress}%` }} />
           </div>
-        </Card>
+        </Tile>
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -120,7 +120,7 @@ export function ContributionsDashboard({
               role="tab"
               aria-selected={filter === f}
               onClick={() => setFilter(f)}
-              className={cn("rounded-full px-3 py-1 text-sm ring-1", filter === f ? "bg-brand-600 text-white ring-brand-600" : "bg-white ring-gray-300 hover:bg-gray-50")}
+              className={cn("min-h-9 rounded-full px-3 py-1 text-sm font-semibold", filter === f ? "bg-primary text-on-primary" : "bg-tile text-ink hover:bg-tile2")}
             >
               {t(`filters.${f}`)}
               {f !== "all" && ` (${summary.counts[f]})`}
@@ -130,14 +130,14 @@ export function ContributionsDashboard({
         <div className="flex flex-wrap gap-2">
           <Input className="w-56" placeholder={t("search")} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t("search")} />
           <ApiDownloadButton
-            className="whitespace-nowrap rounded-lg bg-white px-3 py-2 text-sm font-medium ring-1 ring-gray-300 hover:bg-gray-50"
+            className={buttonClasses("tonal")}
             url={`/api/v1/events/${eventId}/contributions/export?format=xlsx`}
             fileName="michango.xlsx"
           >
             {t("exportXlsx")}
           </ApiDownloadButton>
           <ApiDownloadButton
-            className="whitespace-nowrap rounded-lg bg-white px-3 py-2 text-sm font-medium ring-1 ring-gray-300 hover:bg-gray-50"
+            className={buttonClasses("tonal")}
             url={`/api/v1/events/${eventId}/contributions/export?format=csv`}
             fileName="michango.csv"
           >
@@ -153,10 +153,10 @@ export function ContributionsDashboard({
 
       <Card className="overflow-x-auto p-0">
         {visible.length === 0 ? (
-          <p className="p-6 text-sm text-gray-500">{t("empty")}</p>
+          <p className="p-6 text-sm text-muted">{t("empty")}</p>
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className="px-4 py-2 font-medium">{t("fields.name")}</th>
                 <th className="px-4 py-2 text-right font-medium">{t("fields.amountPledged")}</th>
@@ -166,21 +166,21 @@ export function ContributionsDashboard({
                 <th className="px-4 py-2 font-medium">{t("cardNumber")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {visible.map((p) => (
-                <tr key={p.id} className="cursor-pointer hover:bg-gray-50" onClick={() => setOpen(p)}>
+                <tr key={p.id} className="cursor-pointer hover:bg-tile2" onClick={() => setOpen(p)}>
                   <td className="px-4 py-2">
-                    <button className="text-left font-medium text-brand-700 hover:underline" onClick={() => setOpen(p)}>
+                    <button className="text-left font-medium text-primary hover:underline" onClick={() => setOpen(p)}>
                       {p.name}
                     </button>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted">
                       {localPhone(p.phone)} · {t(`cardTypes.${p.cardType}`)}
                     </div>
                   </td>
                   <td className="px-4 py-2 text-right">{tsh(p.amountPledged)}</td>
                   <td className="px-4 py-2 text-right">
                     {tsh(p.amountPaid)}
-                    {p.amountExtra > 0 && <div className="text-xs text-green-700">+{tsh(p.amountExtra)}</div>}
+                    {p.amountExtra > 0 && <div className="text-xs text-success">+{tsh(p.amountExtra)}</div>}
                   </td>
                   <td className="px-4 py-2 text-right">{tsh(p.balance)}</td>
                   <td className="px-4 py-2">

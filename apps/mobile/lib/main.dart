@@ -15,6 +15,7 @@ import 'data/repositories/guests_repository.dart';
 import 'data/repositories/my_cards_repository.dart';
 import 'data/repositories/push_registration_repository.dart';
 import 'data/repositories/session_repository.dart';
+import 'data/repositories/theme_repository.dart';
 import 'data/repositories/walk_in_alerts_repository.dart';
 import 'data/repositories/walk_ins_repository.dart';
 import 'data/services/api_factory.dart';
@@ -83,6 +84,7 @@ Future<void> _run() async {
       billing: BillingRepository(api),
       myCards: MyCardsRepository(api),
       account: AccountRepository(api, const DocumentsFileSaver()),
+      theme: ThemeRepository(prefs),
     ),
   );
 }

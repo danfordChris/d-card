@@ -18,13 +18,13 @@ const WITH_NOTE: MessageType[] = ["invitation_card", "post_event_thanks"];
 
 function Lock({ label }: { label: string }) {
   return (
-    <span title={label} aria-label={label} className="ml-1 text-xs text-gray-400">
+    <span title={label} aria-label={label} className="ml-1 text-xs text-muted">
       🔒
     </span>
   );
 }
 
-const inputClass = "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 disabled:bg-gray-50 disabled:text-gray-500";
+const inputClass = "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary disabled:opacity-60";
 
 export function MessageSettings({ eventId, planName, initial, canEdit }: { eventId: string; planName: string; initial: SettingsView; canEdit: boolean }) {
   const t = useTranslations("messageSettings");
@@ -70,7 +70,7 @@ export function MessageSettings({ eventId, planName, initial, canEdit }: { event
 
   return (
     <div className="space-y-6">
-      <p className="max-w-3xl text-sm text-gray-600">{t("intro")}</p>
+      <p className="max-w-3xl text-sm text-muted">{t("intro")}</p>
       {anyLocked && <Alert>{t("planNote", { plan: planName })}</Alert>}
       <div className="flex gap-2" role="tablist" aria-label={t("sms")}>
         {(["sw", "en"] as const).map((l) => (
@@ -79,7 +79,7 @@ export function MessageSettings({ eventId, planName, initial, canEdit }: { event
             role="tab"
             aria-selected={lang === l}
             onClick={() => setLang(l)}
-            className={cn("rounded-full px-3 py-1 text-sm ring-1", lang === l ? "bg-brand-600 text-white ring-brand-600" : "bg-white ring-gray-300")}
+            className={cn("min-h-9 rounded-full px-3 py-1 text-sm font-semibold", lang === l ? "bg-primary text-on-primary" : "bg-bg text-ink hover:bg-tile2")}
           >
             {t(`languages.${l}`)}
           </button>
@@ -100,11 +100,11 @@ export function MessageSettings({ eventId, planName, initial, canEdit }: { event
           <Card key={type} className={cn("space-y-4", !s.enabled && !isCard && "opacity-75")} data-testid={`message-${type}`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="font-semibold">{t(`types.${type}.name`)}</h2>
-                <p className="text-sm text-gray-500">{t(`types.${type}.when`)}</p>
+                <h2 className="font-display text-xl font-bold">{t(`types.${type}.name`)}</h2>
+                <p className="text-sm text-muted">{t(`types.${type}.when`)}</p>
               </div>
               {isCard ? (
-                <span className="text-sm text-gray-600">{t("alwaysOn")}</span>
+                <span className="text-sm text-muted">{t("alwaysOn")}</span>
               ) : (
                 <label className="flex items-center gap-2 text-sm">
                   <input
@@ -137,7 +137,7 @@ export function MessageSettings({ eventId, planName, initial, canEdit }: { event
                     </option>
                   ))}
                 </select>
-                {s.channels === "whatsapp" && <span className="block text-xs text-amber-700">{t("whatsappOnlyWarning")}</span>}
+                {s.channels === "whatsapp" && <span className="block text-xs text-warning">{t("whatsappOnlyWarning")}</span>}
               </label>
               <label className="block space-y-1 text-sm">
                 <span className="font-medium">
@@ -178,7 +178,7 @@ export function MessageSettings({ eventId, planName, initial, canEdit }: { event
                   {!limits.smsWordingEdit && <Lock label={t("locked")} />}
                 </label>
                 {canEdit && limits.smsWordingEdit && text !== DEFAULT_SMS[type][lang] && (
-                  <button type="button" className="text-xs text-brand-600 hover:underline" onClick={() => update(type, { [smsField]: DEFAULT_SMS[type][lang] })}>
+                  <button type="button" className="text-xs text-primary hover:underline" onClick={() => update(type, { [smsField]: DEFAULT_SMS[type][lang] })}>
                     {t("reset")}
                   </button>
                 )}
@@ -245,7 +245,7 @@ export function MessageSettings({ eventId, planName, initial, canEdit }: { event
       {notice && <Alert tone={notice.tone}>{notice.text}</Alert>}
       {canEdit && (
         <div className="sticky bottom-4 flex justify-end">
-          <Button onClick={save} disabled={busy} className="shadow-lg">
+          <Button onClick={save} disabled={busy} className="">
             {busy ? t("saving") : t("save")}
           </Button>
         </div>

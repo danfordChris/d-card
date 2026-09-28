@@ -1,6 +1,7 @@
 import { DomainError, getEvent, listEventTypes, listPlans, type EventView } from "@dcard/core";
 import type { PlanEntitlements } from "@dcard/db";
 import { notFound, redirect } from "next/navigation";
+import { cache } from "react";
 import type { EventTypeOption, PlanOption } from "../features/events/types";
 import { getDb } from "./db";
 import { getSessionAccount } from "./session";
@@ -25,8 +26,11 @@ export async function loadCatalogue(): Promise<{ plans: PlanOption[]; eventTypes
   };
 }
 
-/** Loads an event the account may see; unknown/forbidden events render the 404 page. */
-export async function loadEventOr404(accountId: string, id: string): Promise<EventView> {
+/**
+ * Loads an event the account may see; unknown/forbidden events render the 404 page.
+ * Cached per request so the event layout and the page share one query.
+ */
+export const loadEventOr404 = cache(async function loadEventOr404(accountId: string, id: string): Promise<EventView> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   try {
     return await getEvent(getDb(), accountId, id);
@@ -34,4 +38,4 @@ export async function loadEventOr404(accountId: string, id: string): Promise<Eve
     if (err instanceof DomainError && (err.code === "not_found" || err.code === "forbidden")) notFound();
     throw err;
   }
-}
+});

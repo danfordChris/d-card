@@ -15,7 +15,7 @@
 - Owner: Subagent (web)
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/media.md` (MED-1…MED-5, MED-7…MED-11, MED-14), plan limits in `plans-and-billing.md`
-- Constraints: uploads go browser → Drive through the session URL (never through D-Card); images resized in the browser before upload; video length checked before upload; slideshow preloads/caches thumbnails and polls for new items; Msingi shows only the Google Photos link option; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon (`docs/changes/proposed/ui-design-system.md` principles: no decorative gradients/shadows); money as whole TZS integers; phone numbers `255` + 9 digits
+- Constraints: uploads go browser → Drive through the session URL (never through D-Card); images resized in the browser before upload; video length checked before upload; slideshow preloads/caches thumbnails and polls for new items; Msingi shows only the Google Photos link option; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon (`docs/design/ui/design-system.md` principles: no decorative gradients/shadows); money as whole TZS integers; phone numbers `255` + 9 digits
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

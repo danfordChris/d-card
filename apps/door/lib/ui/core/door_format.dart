@@ -22,3 +22,7 @@ String formatCountdown(Duration d) {
   final seconds = d.inSeconds + (d.inMilliseconds % 1000 > 0 ? 1 : 0);
   return '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
 }
+
+/// "18:05" in Tanzania time.
+String formatTime(BuildContext context, DateTime t) =>
+    DateFormat.Hm(Localizations.localeOf(context).toLanguageTag()).format(tanzaniaTime(t));

@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { Alert, Button, Card, cn } from "../../components/ui";
+import { Alert, Badge, Button, cn, Tile, TILE_MUTED, type TileVariant } from "../../components/ui";
 import { apiFetch } from "../../lib/api-fetch";
 import { parseSse } from "./sse";
 import type { Dashboard, DashboardDevice } from "./types";
@@ -109,13 +109,14 @@ export function useLiveDashboard(eventId: string, initial: Dashboard | null) {
   return { data, setData, state };
 }
 
-function Stat({ label, value, hint, testId }: { label: string; value: ReactNode; hint?: ReactNode; testId?: string }) {
+function Stat({ label, value, hint, testId, variant = "tile" }: { label: string; value: ReactNode; hint?: ReactNode; testId?: string; variant?: TileVariant }) {
+  const muted = TILE_MUTED[variant];
   return (
-    <Card className="p-4" data-testid={testId}>
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="mt-1 text-3xl font-semibold tabular-nums">{value}</p>
-      {hint && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
-    </Card>
+    <Tile variant={variant} data-testid={testId} className={cn("min-h-36 justify-between gap-2", variant === "hero" && "rounded-hero")}>
+      <p className={cn("text-sm", muted)}>{label}</p>
+      <p className="font-display text-4xl leading-none font-extrabold tabular-nums">{value}</p>
+      {hint && <p className={cn("text-xs", muted)}>{hint}</p>}
+    </Tile>
   );
 }
 
@@ -134,7 +135,7 @@ export function LiveDashboard({ eventId, initial }: { eventId: string; initial: 
       : t("devices.never");
 
   if (!data) {
-    return <p className="text-sm text-gray-500">{state === "reconnecting" ? t("loadFailed") : t("loading")}</p>;
+    return <p className="text-sm text-muted">{state === "reconnecting" ? t("loadFailed") : t("loading")}</p>;
   }
 
   const expected = data.confirmations.expectedHeadcount;
@@ -160,101 +161,98 @@ export function LiveDashboard({ eventId, initial }: { eventId: string; initial: 
         <span
           className={cn(
             "inline-block size-2.5 rounded-full",
-            state === "live" ? "bg-green-500" : state === "reconnecting" ? "bg-amber-500" : "bg-gray-400",
+            state === "live" ? "bg-success" : state === "reconnecting" ? "bg-warning" : "bg-muted",
           )}
         />
-        <span className="text-gray-600">{state === "live" ? t("live") : state === "reconnecting" ? t("reconnecting") : t("connecting")}</span>
+        <span className="text-muted">{state === "live" ? t("live") : state === "reconnecting" ? t("reconnecting") : t("connecting")}</span>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
+          variant="hero"
           testId="stat-admitted"
           label={t("admitted.title")}
           value={
             <>
               {data.admitted.total}
-              <span className="text-lg font-normal text-gray-500"> / {expectedRounded}</span>
+              <span className="font-sans text-lg font-normal text-hero-muted"> / {expectedRounded}</span>
             </>
           }
           hint={t("admitted.split", { cards: data.admitted.cards, walkIns: data.admitted.walkIns, online: data.admitted.online, offline: data.admitted.offline })}
         />
-        <Stat testId="stat-arrived" label={t("admitted.arrived")} value={`${pct}%`} hint={t("admitted.expected", { expected: expectedRounded, pct: data.confirmations.headcountPct })} />
+        <Stat variant="soft" testId="stat-arrived" label={t("admitted.arrived")} value={`${pct}%`} hint={t("admitted.expected", { expected: expectedRounded, pct: data.confirmations.headcountPct })} />
         <Stat
           testId="stat-cards"
           label={t("cards.title")}
           value={
             <>
               {data.cards.checkedIn}
-              <span className="text-lg font-normal text-gray-500"> / {data.cards.issued}</span>
+              <span className="font-sans text-lg font-normal text-muted"> / {data.cards.issued}</span>
             </>
           }
           hint={t("cards.notArrived", { count: data.cards.notArrived })}
         />
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="p-4" data-testid="confirmations">
-          <h2 className="font-semibold">{t("confirmations.title")}</h2>
+        <Tile className="min-h-36 gap-2" data-testid="confirmations">
+          <h2 className="font-display text-xl font-bold">{t("confirmations.title")}</h2>
           <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
             {(["yes", "none", "no"] as const).map((k) => (
-              <div key={k} className="rounded-lg bg-gray-50 p-2">
-                <dt className="text-xs text-gray-500">{t(`confirmations.${k}`)}</dt>
-                <dd className="text-xl font-semibold tabular-nums">{data.confirmations.counts[k]}</dd>
+              <div key={k} className="rounded-2xl bg-bg p-2">
+                <dt className="text-xs text-muted">{t(`confirmations.${k}`)}</dt>
+                <dd className="font-display text-xl font-bold tabular-nums">{data.confirmations.counts[k]}</dd>
               </div>
             ))}
           </dl>
-        </Card>
-        <Card className="p-4" data-testid="walk-ins">
-          <h2 className="font-semibold">{t("walkIns.title")}</h2>
+        </Tile>
+        <Tile variant="tile2" span={2} className="gap-1" data-testid="walk-ins">
+          <h2 className="font-display text-xl font-bold">{t("walkIns.title")}</h2>
           <p className="mt-3 text-sm">{t("walkIns.pending", { count: data.walkIns.pending })}</p>
           <p className="text-sm">{t("walkIns.review", { count: data.walkIns.needsReview })}</p>
-          <Link href={`/events/${eventId}/walk-ins`} className="mt-3 inline-block text-sm font-semibold text-brand-600 hover:underline">
+          <Link href={`/events/${eventId}/walk-ins`} className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
             {t("walkIns.open")} →
           </Link>
-        </Card>
-      </div>
+        </Tile>
 
-      <Card className="p-4" data-testid="alerts">
-        <h2 className="font-semibold">
+        <Tile span={2} className="gap-1" data-testid="alerts">
+        <h2 className="font-display text-xl font-bold">
           {t("alerts.title")}
-          {alerts > 0 && <span className="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700">{alerts}</span>}
+          {alerts > 0 && <Badge tone="danger" className="ml-2 align-middle">{alerts}</Badge>}
         </h2>
         {alerts === 0 ? (
-          <p className="mt-2 text-sm text-gray-500">{t("alerts.empty")}</p>
+          <p className="mt-2 text-sm text-muted">{t("alerts.empty")}</p>
         ) : (
-          <ul className="mt-2 divide-y divide-gray-100 text-sm">
+          <ul className="mt-2 divide-y divide-line text-sm">
             {data.alerts.overUsed.map((a) => (
               <li key={a.invitationId} className="py-2" data-testid={`over-used-${a.invitationId}`}>
-                <span className="font-medium text-red-700">{t("alerts.overUsedLabel")}</span>{" "}
+                <span className="font-medium text-danger">{t("alerts.overUsedLabel")}</span>{" "}
                 {t("alerts.overUsed", { name: a.guestName, card: a.cardNumber ?? "—", used: a.entriesUsed, total: a.totalEntries })}
-                <span className="ml-2 text-xs text-gray-500">{time(a.at)}</span>
+                <span className="ml-2 text-xs text-muted">{time(a.at)}</span>
               </li>
             ))}
             {data.alerts.lockouts.map((l) => (
               <li key={l.id} className="py-2" data-testid={`lockout-${l.id}`}>
-                <span className="font-medium text-amber-700">{t("alerts.lockoutLabel")}</span>{" "}
+                <span className="font-medium text-warning">{t("alerts.lockoutLabel")}</span>{" "}
                 {t("alerts.lockout", { device: l.deviceName ?? t("devices.unnamed"), staff: l.staffName ?? "—" })}
-                {l.source === "offline" && <span className="ml-1 text-gray-500">({t("alerts.offline")})</span>}
-                <span className="ml-2 text-xs text-gray-500">{time(l.at)}</span>
+                {l.source === "offline" && <span className="ml-1 text-muted">({t("alerts.offline")})</span>}
+                <span className="ml-2 text-xs text-muted">{time(l.at)}</span>
               </li>
             ))}
           </ul>
         )}
-      </Card>
+        </Tile>
 
-      <Card className="p-4" data-testid="devices">
-        <h2 className="font-semibold">{t("devices.title")}</h2>
+        <Tile span={4} className="gap-1" data-testid="devices">
+        <h2 className="font-display text-xl font-bold">{t("devices.title")}</h2>
         {revokeFailed && (
           <div className="mt-2">
             <Alert tone="error">{t("devices.revokeFailed")}</Alert>
           </div>
         )}
         {data.devices.length === 0 ? (
-          <p className="mt-2 text-sm text-gray-500">{t("devices.empty")}</p>
+          <p className="mt-2 text-sm text-muted">{t("devices.empty")}</p>
         ) : (
           <div className="mt-2 overflow-x-auto">
             <table className="w-full min-w-[36rem] text-left text-sm">
-              <thead className="text-xs text-gray-500">
+              <thead className="text-xs text-muted">
                 <tr>
                   <th className="py-2 pr-3 font-medium">{t("devices.device")}</th>
                   <th className="py-2 pr-3 font-medium">{t("devices.staff")}</th>
@@ -265,7 +263,7 @@ export function LiveDashboard({ eventId, initial }: { eventId: string; initial: 
                   {isHost && <th className="py-2" />}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-line">
                 {data.devices.map((d) => (
                   <tr key={d.id} data-testid={`device-${d.id}`}>
                     <td className="py-2 pr-3 font-medium">{d.name ?? t("devices.unnamed")}</td>
@@ -274,20 +272,9 @@ export function LiveDashboard({ eventId, initial }: { eventId: string; initial: 
                     <td className="py-2 pr-3 whitespace-nowrap">{time(d.lastSyncAt)}</td>
                     <td className="py-2 pr-3 tabular-nums">{d.pendingCount}</td>
                     <td className="py-2 pr-3">
-                      <span
-                        className={cn(
-                          "inline-flex rounded-full px-2 py-0.5 text-xs font-medium ring-1",
-                          d.revoked
-                            ? "bg-gray-100 text-gray-600 ring-gray-200"
-                            : d.stale
-                              ? "bg-red-50 text-red-700 ring-red-200"
-                              : d.pendingCount > 0
-                                ? "bg-amber-50 text-amber-800 ring-amber-200"
-                                : "bg-green-50 text-green-700 ring-green-200",
-                        )}
-                      >
+                      <Badge tone={d.revoked ? "neutral" : d.stale ? "danger" : d.pendingCount > 0 ? "warning" : "success"}>
                         {d.revoked ? t("devices.revoked") : d.stale ? t("devices.stale") : d.pendingCount > 0 ? t("devices.waiting") : t("devices.synced")}
-                      </span>
+                      </Badge>
                     </td>
                     {isHost && (
                       <td className="py-2 text-right">
@@ -314,7 +301,8 @@ export function LiveDashboard({ eventId, initial }: { eventId: string; initial: 
             </table>
           </div>
         )}
-      </Card>
+        </Tile>
+      </div>
     </div>
   );
 }
