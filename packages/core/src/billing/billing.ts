@@ -383,15 +383,19 @@ async function issueWaitingCards(tx: DbExecutor, eventId: string, actorId: strin
 export async function handleSnippeWebhook(db: DbExecutor, body: unknown): Promise<{ duplicate: boolean; result: string }> {
   const evt = body as { id?: string; type?: string; data?: { reference?: string; status?: string; metadata?: Record<string, unknown>; failure_reason?: string } };
   if (!evt?.id || !evt.type) return { duplicate: false, result: "ignored" };
-  const inserted = await db.insert(webhookEvent).values({ id: evt.id, provider: "snippe", type: evt.type }).onConflictDoNothing().returning();
-  if (!inserted.length) return { duplicate: true, result: "duplicate" };
-  const kind = evt.type.split(".").pop() ?? "";
-  const status: ProviderStatus | null =
-    kind === "completed" ? "completed" : ["failed", "voided", "cancelled"].includes(kind) ? "failed" : kind === "expired" ? "expired" : null;
-  if (!status) return { duplicate: false, result: "ignored" };
-  const attemptId = typeof evt.data?.metadata?.attempt_id === "string" ? (evt.data.metadata.attempt_id as string) : null;
-  const result = await applyPaymentResult(db, { attemptId, reference: attemptId ? null : evt.data?.reference }, status, evt.data?.failure_reason ?? null);
-  return { duplicate: false, result };
+  // SEC-09: the dedupe row and the payment update commit together, so a delivery that fails
+  // half-way is processed again when Snippe retries instead of being skipped as a duplicate.
+  return inTransaction(db, async (tx) => {
+    const inserted = await tx.insert(webhookEvent).values({ id: evt.id!, provider: "snippe", type: evt.type! }).onConflictDoNothing().returning();
+    if (!inserted.length) return { duplicate: true, result: "duplicate" };
+    const kind = evt.type!.split(".").pop() ?? "";
+    const status: ProviderStatus | null =
+      kind === "completed" ? "completed" : ["failed", "voided", "cancelled"].includes(kind) ? "failed" : kind === "expired" ? "expired" : null;
+    if (!status) return { duplicate: false, result: "ignored" };
+    const attemptId = typeof evt.data?.metadata?.attempt_id === "string" ? (evt.data.metadata.attempt_id as string) : null;
+    const result = await applyPaymentResult(tx, { attemptId, reference: attemptId ? null : evt.data?.reference }, status, evt.data?.failure_reason ?? null);
+    return { duplicate: false, result };
+  });
 }
 
 /** Fallback when webhooks are late: poll pending attempts; expire those past Snippe's window. */

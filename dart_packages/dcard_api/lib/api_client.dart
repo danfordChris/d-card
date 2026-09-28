@@ -184,10 +184,18 @@ class ApiClient {
           return value is DateTime ? value : DateTime.tryParse(value);
         case 'Account':
           return Account.fromJson(value);
+        case 'AdminAuditEntry':
+          return AdminAuditEntry.fromJson(value);
+        case 'AdminAuditPage':
+          return AdminAuditPage.fromJson(value);
         case 'AdminCreateProviderRateRequest':
           return AdminCreateProviderRateRequest.fromJson(value);
         case 'AdminCreateWhatsappTemplateRequest':
           return AdminCreateWhatsappTemplateRequest.fromJson(value);
+        case 'AdminEvent':
+          return AdminEvent.fromJson(value);
+        case 'AdminEventPage':
+          return AdminEventPage.fromJson(value);
         case 'AdminEventType':
           return AdminEventType.fromJson(value);
         case 'AdminEventTypeCreateInput':
@@ -206,6 +214,14 @@ class ApiClient {
           return AdminListWhatsappTemplates200ResponseTemplatesInner.fromJson(value);
         case 'AdminUpdateWhatsappTemplateRequest':
           return AdminUpdateWhatsappTemplateRequest.fromJson(value);
+        case 'AdminUser':
+          return AdminUser.fromJson(value);
+        case 'AdminUserPage':
+          return AdminUserPage.fromJson(value);
+        case 'AdminUserUpdateInput':
+          return AdminUserUpdateInput.fromJson(value);
+        case 'AuditChange':
+          return AuditChange.fromJson(value);
         case 'AuthProvider':
           return AuthProviderTypeTransformer().decode(value);
         case 'BillingQuote':
@@ -238,6 +254,16 @@ class ApiClient {
           return ContributorCreateInput.fromJson(value);
         case 'ContributorCreateResponse':
           return ContributorCreateResponse.fromJson(value);
+        case 'CostLine':
+          return CostLine.fromJson(value);
+        case 'CostReport':
+          return CostReport.fromJson(value);
+        case 'CostReportEvent':
+          return CostReportEvent.fromJson(value);
+        case 'CostReportMonth':
+          return CostReportMonth.fromJson(value);
+        case 'CostReportPlan':
+          return CostReportPlan.fromJson(value);
         case 'Device':
           return Device.fromJson(value);
         case 'DeviceApp':
@@ -292,6 +318,10 @@ class ApiClient {
           return ErrorResponseErrorIssuesInner.fromJson(value);
         case 'Event':
           return Event.fromJson(value);
+        case 'EventAuditEntry':
+          return EventAuditEntry.fromJson(value);
+        case 'EventAuditPage':
+          return EventAuditPage.fromJson(value);
         case 'EventCreateInput':
           return EventCreateInput.fromJson(value);
         case 'EventList':
@@ -304,6 +334,8 @@ class ApiClient {
           return EventTypeList.fromJson(value);
         case 'EventUpdateInput':
           return EventUpdateInput.fromJson(value);
+        case 'ExportKind':
+          return ExportKindTypeTransformer().decode(value);
         case 'Guest':
           return Guest.fromJson(value);
         case 'GuestBulkInput':
@@ -356,6 +388,10 @@ class ApiClient {
           return InviteCreateResponse.fromJson(value);
         case 'InviteInfo':
           return InviteInfo.fromJson(value);
+        case 'LinkCardInput':
+          return LinkCardInput.fromJson(value);
+        case 'LinkCardResult':
+          return LinkCardResult.fromJson(value);
         case 'ListConfirmations200Response':
           return ListConfirmations200Response.fromJson(value);
         case 'ListConfirmations200ResponseCounts':
@@ -398,12 +434,14 @@ class ApiClient {
           return MessagePlanLimits.fromJson(value);
         case 'MessageSettings':
           return MessageSettings.fromJson(value);
-        case 'MessageSettingsSettingsInner':
-          return MessageSettingsSettingsInner.fromJson(value);
         case 'MessageSettingsTemplatesInner':
           return MessageSettingsTemplatesInner.fromJson(value);
         case 'MessageSettingsUsage':
           return MessageSettingsUsage.fromJson(value);
+        case 'MyCard':
+          return MyCard.fromJson(value);
+        case 'MyCardList':
+          return MyCardList.fromJson(value);
         case 'OfflineWalkInInput':
           return OfflineWalkInInput.fromJson(value);
         case 'Payment':
@@ -438,6 +476,12 @@ class ApiClient {
           return PublicCard.fromJson(value);
         case 'PublicCardEvent':
           return PublicCardEvent.fromJson(value);
+        case 'QueueStats':
+          return QueueStats.fromJson(value);
+        case 'QueueStatsList':
+          return QueueStatsList.fromJson(value);
+        case 'RetryAdminQueue200Response':
+          return RetryAdminQueue200Response.fromJson(value);
         case 'Rsvp':
           return Rsvp.fromJson(value);
         case 'RsvpInput':
@@ -462,6 +506,14 @@ class ApiClient {
           return TeamMembersInner.fromJson(value);
         case 'TeamRole':
           return TeamRoleTypeTransformer().decode(value);
+        case 'TotpCodeInput':
+          return TotpCodeInput.fromJson(value);
+        case 'TotpEnrolment':
+          return TotpEnrolment.fromJson(value);
+        case 'TotpRecoveryCodes':
+          return TotpRecoveryCodes.fromJson(value);
+        case 'TotpStatus':
+          return TotpStatus.fromJson(value);
         case 'UpdateMessageSettingsRequest':
           return UpdateMessageSettingsRequest.fromJson(value);
         case 'UpdateMessageSettingsRequestSettingsInner':

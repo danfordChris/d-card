@@ -16,8 +16,10 @@ export async function enforceRateLimit(key: string, limit: number, windowSeconds
   try {
     const redis = connection();
     const k = `${process.env.QUEUE_PREFIX ?? "dcard"}:rl:${key}`;
-    count = await redis.incr(k);
-    if (count === 1) await redis.expire(k, windowSeconds);
+    // SEC-23: one atomic round trip; the window is set only when the key is new (NX), so a crash
+    // between INCR and EXPIRE can no longer leave a counter that never expires.
+    const res = await redis.multi().incr(k).expire(k, windowSeconds, "NX").exec();
+    count = Number(res?.[0]?.[1] ?? 0);
   } catch (err) {
     console.error("rate limit unavailable", err);
     return;

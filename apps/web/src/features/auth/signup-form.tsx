@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { safeNext } from "./safe-next";
 import { useState, type FormEvent } from "react";
 import { Alert, Button, Field, Input } from "../../components/ui";
 import { firebaseAuth, startServerSession } from "../../lib/firebase-client";
@@ -12,7 +13,7 @@ import { mapFirebaseError, validateEmail, validatePassword, type AuthErrorKey } 
 export function SignupForm() {
   const t = useTranslations("auth");
   const nextParam = useSearchParams().get("next");
-  const next = nextParam?.startsWith("/") ? nextParam : "/dashboard";
+  const next = safeNext(nextParam);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: AuthErrorKey; password?: AuthErrorKey; form?: AuthErrorKey }>({});

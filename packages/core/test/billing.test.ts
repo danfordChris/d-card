@@ -196,6 +196,8 @@ describe("Snippe webhook", () => {
     expect(verifySnippeSignature(body + " ", { timestamp: String(ts), signature: sign(body, ts) }, secret, now)).toBe(false);
     expect(verifySnippeSignature(body, { timestamp: String(ts - 400), signature: sign(body, ts - 400) }, secret, now)).toBe(false);
     expect(verifySnippeSignature(body, { timestamp: String(ts), signature: "00" }, secret, now)).toBe(false);
+    // SEC-12: right length, not hex → false, not an exception.
+    expect(verifySnippeSignature(body, { timestamp: String(ts), signature: "z".repeat(64) }, secret, now)).toBe(false);
     expect(verifySnippeSignature(body, { timestamp: String(ts), signature: sign(body, ts) }, undefined, now)).toBe(false);
   });
 

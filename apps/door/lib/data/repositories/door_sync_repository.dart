@@ -21,7 +21,7 @@ import 'door_repository.dart';
 /// - Each cycle uploads first (entries, attempts, walk-ins; idempotent by ID), applies the
 ///   returned `overUsed` flags, then downloads.
 /// - The cache is wiped after the event window (`wipeAfter`), when the device is revoked
-///   (403) and on sign-out.
+///   (403, after one last upload try: [deviceRevoked]) and on sign-out.
 ///
 /// [online] is the last known reachability of the API: false after a network failure,
 /// true after any successful call. Check-in decides locally while it is false.
@@ -63,6 +63,13 @@ class DoorSyncRepository extends ChangeNotifier {
   /// The event window has passed and the cache was wiped.
   bool expired = false;
 
+  /// The server refused this device (403: revoked by the host, or door access removed).
+  /// Syncing stopped, what was waiting got one upload try and the cache was wiped.
+  bool revoked = false;
+
+  /// Entries and walk-ins that could not be uploaded before the revoke wipe (lost on this phone).
+  int lostOnRevoke = 0;
+
   /// Entries and walk-ins waiting to upload.
   int pendingCount = 0;
   DateTime? lastSyncAt;
@@ -72,6 +79,7 @@ class DoorSyncRepository extends ChangeNotifier {
   Timer? _timer;
   StreamSubscription<bool>? _connectivitySub;
   Future<bool>? _running;
+  Future<int>? _revoking;
   bool _disposed = false;
 
   DoorSession? get session => _session;
@@ -100,6 +108,9 @@ class DoorSyncRepository extends ChangeNotifier {
     _stopTimers();
     _session = session;
     expired = false;
+    revoked = false;
+    lostOnRevoke = 0;
+    _revoking = null;
     _failures = 0;
     final cache = await _store.open();
     await cache.bindSession(session);
@@ -186,6 +197,57 @@ class DoorSyncRepository extends ChangeNotifier {
     _notify();
   }
 
+  /// The server refused this device (403 from any door call; AUTH-9): stop syncing, try once
+  /// to upload what is waiting (the server decides whether it still accepts it), then wipe the
+  /// cache and its key. Returns how many waiting items could not be sent. Safe to call twice.
+  Future<int> deviceRevoked() async {
+    if (_revoking case final running?) return running;
+    _stopTimers();
+    _session = null;
+    await _running?.catchError((_) => false);
+    return _revoking ??= _afterRevoked();
+  }
+
+  Future<int> _afterRevoked({Duration timeout = const Duration(seconds: 10)}) async {
+    revoked = true;
+    var lost = 0;
+    try {
+      final cache = await _store.open();
+      if (await cache.hasPending()) {
+        try {
+          await _uploadEachQuietly(cache).timeout(timeout);
+        } catch (_) {}
+      }
+      lost = await cache.pendingCount();
+    } catch (_) {
+      lost = pendingCount;
+    }
+    await _wipeNow();
+    lostOnRevoke = lost;
+    _notify();
+    return lost;
+  }
+
+  /// One upload try per device queue; a refused queue is left in place (and counted as lost).
+  Future<void> _uploadEachQuietly(DoorCache cache) async {
+    for (final deviceId in await cache.pendingDevices()) {
+      try {
+        while (true) {
+          final batch = await cache.pendingFor(deviceId, limit: batchSize);
+          if (batch.isEmpty) break;
+          final left = await cache.pendingCount(deviceId: deviceId) - batch.entries.length - batch.walkIns.length;
+          final result = await _door.syncUpload(batch, pending: max(0, left));
+          await cache.removeSent(batch);
+          await cache.markOverUsed(result.overUsed);
+          final full = batch.entries.length >= batchSize || batch.attempts.length >= batchSize || batch.walkIns.length >= 100;
+          if (!full) break;
+        }
+      } catch (_) {
+        // Refused (revoked) or unreachable: move on to the next device's queue.
+      }
+    }
+  }
+
   /// On sign-out: try to upload what is waiting (unless the server refused us), then wipe.
   Future<void> signOut({bool upload = true, Duration timeout = const Duration(seconds: 10)}) async {
     _stopTimers();
@@ -200,7 +262,7 @@ class DoorSyncRepository extends ChangeNotifier {
 
   Future<bool> _cycle(bool full) async {
     final session = _session;
-    if (session == null || expired) return false;
+    if (session == null || expired || revoked) return false;
     _timer?.cancel();
     syncing = true;
     _notify();
@@ -286,7 +348,8 @@ class DoorSyncRepository extends ChangeNotifier {
   Future<void> _denied(AppFailure because) async {
     _stopTimers();
     _session = null;
-    if (because == AppFailure.doorAccessDenied) await _wipeNow();
+    // Runs inside the sync cycle, so it must not wait for the cycle (see [deviceRevoked]).
+    if (because == AppFailure.doorAccessDenied && _revoking == null) await (_revoking = _afterRevoked());
     // Not awaited: signing out waits for this sync run to finish.
     unawaited(onAccessDenied?.call(because));
   }
@@ -321,7 +384,7 @@ class DoorSyncRepository extends ChangeNotifier {
   void _schedule() {
     _timer?.cancel();
     _timer = null;
-    if (!autoSchedule || _session == null || expired || _disposed) return;
+    if (!autoSchedule || _session == null || expired || revoked || _disposed) return;
     final delay = _failures == 0 ? interval : _backoff(_failures);
     _timer = Timer(delay, () => unawaited(syncNow()));
   }

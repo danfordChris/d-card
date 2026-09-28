@@ -86,6 +86,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("WHATSAPP_BUSINESS_ACCOUNT_ID", "WhatsApp Business Account ID", /^\d+$/),
       req("WHATSAPP_APP_SECRET", "App secret used to verify X-Hub-Signature-256 on webhooks"),
       req("WHATSAPP_WEBHOOK_VERIFY_TOKEN", "Token you choose; entered in the Meta webhook setup"),
+      opt("WHATSAPP_MAX_PER_SECOND", "Outbound WhatsApp cap per second (default 60; Meta allows 80 per number, inbound included)", /^\d+$/),
       opt("WHATSAPP_LIVE", "true = send real WhatsApp messages; anything else holds them without calling Meta. Set true in production only.", /^(true|false)$/),
       req("WHATSAPP_API_VERSION", "Graph API version, e.g. v23.0", /^v\d+\.\d+$/),
     ],
@@ -98,6 +99,7 @@ export const ENV_GROUPS: ProviderGroup[] = [
       req("NEXTSMS_BASE_URL", "API base URL", URL_PATTERN),
       req("NEXTSMS_API_TOKEN", "Basic auth token: Base64 of username:password (sent as Authorization: Basic …)"),
       req("NEXTSMS_SENDER_ID", "Registered sender ID (e.g. DCARD)"),
+      opt("SMS_MAX_PER_SECOND", "Outbound SMS cap per second (default 20)", /^\d+$/),
       opt("NEXTSMS_LIVE", "true = deliver real SMS; anything else uses the NextSMS test endpoint (no delivery). Set true in production only.", /^(true|false)$/),
       req("NEXTSMS_WEBHOOK_VERIFY_TOKEN", "Verify token for an optional delivery callback (not in the public API docs; delivery status is polled from /api/sms/v1/logs)"),
     ],
@@ -130,6 +132,15 @@ export const ENV_GROUPS: ProviderGroup[] = [
     keys: [
       req("RESEND_API_KEY", "Resend API key", /^re_\S+$/),
       req("EMAIL_FROM", "Sender, e.g. D-Card <noreply@your-domain>", /^.+<\S+@\S+>$|^\S+@\S+$/),
+    ],
+  },
+  {
+    id: "observability",
+    name: "Observability (Sentry, alerts)",
+    source: "sentry.io → free Developer plan → create a Node project → Client Keys (DSN). Alerts go by email through Resend.",
+    keys: [
+      opt("SENTRY_DSN", "Sentry DSN for the web API and worker; unset = no error reporting", /^https:\/\/\S+$/),
+      opt("ALERT_EMAIL", "Where the worker emails queue/payment alerts; unset = alerts only logged", /^\S+@\S+$/),
     ],
   },
   {

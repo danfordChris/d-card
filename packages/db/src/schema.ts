@@ -63,7 +63,30 @@ export const userAccount = pgTable("user_account", {
   personId: uuid("person_id").references(() => person.id, { onDelete: "set null" }),
   isAdmin: boolean("is_admin").notNull().default(false),
   emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true }),
+  /** "Delete my account": the row stays as a tombstone (audit history points at it), personal data is cleared. */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  /** Set by an admin: the account can no longer use D-Card. */
+  disabledAt: timestamp("disabled_at", { withTimezone: true }),
   createdAt: createdAt(),
+});
+
+/** AUTH-7: an admin's authenticator-app (TOTP) second factor. */
+export const adminTotp = pgTable("admin_totp", {
+  userId: uuid("user_id")
+    .primaryKey()
+    .references(() => userAccount.id, { onDelete: "cascade" }),
+  /** Base32 secret, AES-GCM encrypted. */
+  secretEnc: text("secret_enc").notNull(),
+  /** Null until the admin proves the app works with a first code. */
+  confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+  /** HMAC hashes of the unused one-time recovery codes. */
+  recoveryHashes: jsonb("recovery_hashes").$type<string[]>().notNull().default([]),
+  /** Last accepted 30-second step; a code is never accepted twice. */
+  lastUsedStep: bigint("last_used_step", { mode: "number" }),
+  failedCount: integer("failed_count").notNull().default(0),
+  lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
 });
 
 /** Admin-managed event types (wedding, send-off, kitchen party, ...). */

@@ -48,7 +48,7 @@ A host pays for an event's guest cards through Snippe (mobile money push or host
 - [x] `POST /api/v1/events/{id}/checkout` starts a mobile-money push or a hosted session with an idempotency key and records a pending payment; `GET` returns its status.
 - [x] `POST /api/webhooks/snippe` verifies the signature and timestamp, records `host_payment`, raises `guest_limit`/`amount_paid` and audits — once, even when delivered twice; a worker job polls pending payments as a fallback.
 - [x] Guest messages are held and card issue is refused while the event is unpaid or over its guest limit (clear 409 `payment_required` / `guest_limit`).
-- [x] Fake gateway in tests and local dev; `SNIPPE_LIVE=true` required for real calls. (The one real Tsh 500 production payment is tracked in the phase acceptance, owner step.)
+- [x] Fake gateway in tests and local dev; `SNIPPE_LIVE=true` required for real calls. (The first real production payment — the first pilot's plan checkout — is tracked in the phase acceptance, owner step.)
 
 ## Dependencies
 

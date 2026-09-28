@@ -124,6 +124,20 @@ describe("door sync upload", () => {
     expect(detail.entries.map((e) => e.deviceName).sort()).toEqual(["Gate A", "Gate B"]);
   });
 
+  it("flags over-use when two gates upload the same card at the same moment", async () => {
+    // Regression (T07-02 load test): without row locks each transaction saw only its own entry.
+    for (let i = 0; i < 5; i++) {
+      const single = await card("single");
+      const [a, b] = await Promise.all([
+        upload(staffA, gateA, { entries: [offlineEntry(single, 1, "2026-12-12T15:01:00+03:00")] }),
+        upload(staffB, gateB, { entries: [offlineEntry(single, 1, "2026-12-12T15:01:05+03:00")] }),
+      ]);
+      expect([...a.overUsed, ...b.overUsed]).toEqual([single]);
+      const [row] = await handle.db.select().from(invitation).where(eq(invitation.id, single));
+      expect(row!.overUsedAt).not.toBeNull();
+    }
+  });
+
   it("rejects entries for other events and reports offline lockouts", async () => {
     const res = await upload(staffA, gateA, {
       entries: [offlineEntry(otherEventCard)],

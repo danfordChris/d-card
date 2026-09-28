@@ -55,11 +55,27 @@ class NameQuery extends CardQuery {
 /// Failures surface as [DoorRefusedException] (the card was refused) or [AppException]
 /// ([AppFailure.doorAccessDenied] on 403: device revoked or no door access).
 class DoorRepository {
-  DoorRepository(this._api, this._devices, {String Function()? newEntryId}) : _newEntryId = newEntryId ?? uuidV4;
+  DoorRepository(this._api, this._devices, {String Function()? newEntryId, DateTime Function()? clock})
+    : _newEntryId = newEntryId ?? uuidV4,
+      _now = clock ?? DateTime.now;
 
   final api.DefaultApi _api;
   final DoorDeviceStore _devices;
   final String Function() _newEntryId;
+  final DateTime Function() _now;
+
+  /// Server time minus this phone's time, from the `Date` header of the last API response;
+  /// null until a response carried one. Offline entry times and the lockout rely on the
+  /// phone's clock, so the door warns when this drifts (see [clockSkewed]).
+  Duration? clockSkew;
+
+  /// Beyond this the phone's clock is treated as wrong (the header has 1 s resolution).
+  static const clockSkewTolerance = Duration(minutes: 5);
+
+  bool get clockSkewed => clockSkew != null && clockSkew!.abs() > clockSkewTolerance;
+
+  /// A server timestamp (e.g. `lockedUntil`) on this phone's clock.
+  DateTime toLocalClock(DateTime serverTime) => clockSkew == null ? serverTime : serverTime.subtract(clockSkew!);
 
   String? get deviceName => _devices.deviceName;
 
@@ -180,6 +196,7 @@ class DoorRepository {
     } on HttpException {
       throw const AppException(AppFailure.network);
     }
+    _recordServerTime(response.headers['date']);
     final Object? decoded;
     try {
       decoded = response.bodyBytes.isEmpty ? null : jsonDecode(utf8.decode(response.bodyBytes));
@@ -210,6 +227,17 @@ class DoorRepository {
       card: card is Map ? cardFromJson(card.cast<String, dynamic>()) : null,
       lockedUntil: lockedUntil is String ? DateTime.tryParse(lockedUntil) : null,
     );
+  }
+
+  void _recordServerTime(String? header) {
+    if (header == null || header.isEmpty) return;
+    try {
+      clockSkew = HttpDate.parse(header).difference(_now());
+    } on FormatException {
+      // Not an HTTP date: keep the last known skew.
+    } on HttpException {
+      // Same.
+    }
   }
 
   static DoorEvent _toEvent(Map<String, dynamic> e) => DoorEvent(

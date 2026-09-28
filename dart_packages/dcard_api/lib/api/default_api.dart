@@ -857,6 +857,58 @@ class DefaultApi {
     return null;
   }
 
+  /// Confirm setup with a first code; returns 10 one-time recovery codes and sets the admin session cookie
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [TotpCodeInput] totpCodeInput:
+  Future<Response> confirmAdminTotpWithHttpInfo({ TotpCodeInput? totpCodeInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/2fa/confirm';
+
+    // ignore: prefer_final_locals
+    Object? postBody = totpCodeInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Confirm setup with a first code; returns 10 one-time recovery codes and sets the admin session cookie
+  ///
+  /// Parameters:
+  ///
+  /// * [TotpCodeInput] totpCodeInput:
+  Future<TotpRecoveryCodes?> confirmAdminTotp({ TotpCodeInput? totpCodeInput, }) async {
+    final response = await confirmAdminTotpWithHttpInfo( totpCodeInput: totpCodeInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'TotpRecoveryCodes',) as TotpRecoveryCodes;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/v1/events/{id}/imports/{jobId}/confirm' operation and returns the [Response].
   /// Parameters:
   ///
@@ -1345,6 +1397,86 @@ class DefaultApi {
     }
   }
 
+  /// Delete my account (registered guests; hosts must delete their events first)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> deleteMeWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/me';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Delete my account (registered guests; hosts must delete their events first)
+  Future<void> deleteMe() async {
+    final response = await deleteMeWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Turn two-step sign-in off (needs a code)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [TotpCodeInput] totpCodeInput:
+  Future<Response> disableAdminTotpWithHttpInfo({ TotpCodeInput? totpCodeInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/2fa/disable';
+
+    // ignore: prefer_final_locals
+    Object? postBody = totpCodeInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Turn two-step sign-in off (needs a code)
+  ///
+  /// Parameters:
+  ///
+  /// * [TotpCodeInput] totpCodeInput:
+  Future<void> disableAdminTotp({ TotpCodeInput? totpCodeInput, }) async {
+    final response = await disableAdminTotpWithHttpInfo( totpCodeInput: totpCodeInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
   /// Disconnect Google Drive (files stay in the host's Drive)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -1716,6 +1848,295 @@ class DefaultApi {
     return null;
   }
 
+  /// CSV export (UTF-8 with BOM): guests and attendance for the host, contributions for host or treasurer; audited
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [ExportKind] kind (required):
+  ///
+  /// * [String] lang:
+  Future<Response> downloadEventExportWithHttpInfo(String id, ExportKind kind, { String? lang, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/exports/{kind}'
+      .replaceAll('{id}', id)
+      .replaceAll('{kind}', kind.toString());
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (lang != null) {
+      queryParams.addAll(_queryParams('', 'lang', lang));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// CSV export (UTF-8 with BOM): guests and attendance for the host, contributions for host or treasurer; audited
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [ExportKind] kind (required):
+  ///
+  /// * [String] lang:
+  Future<String?> downloadEventExport(String id, ExportKind kind, { String? lang, }) async {
+    final response = await downloadEventExportWithHttpInfo(id, kind,  lang: lang, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'String',) as String;
+    
+    }
+    return null;
+  }
+
+  /// Audit search as CSV (up to 10,000 rows)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] eventId:
+  ///
+  /// * [String] actorUserId:
+  ///
+  /// * [String] action:
+  ///
+  /// * [DateTime] from:
+  ///
+  /// * [DateTime] to:
+  ///
+  /// * [int] page:
+  Future<Response> exportAdminAuditWithHttpInfo({ String? eventId, String? actorUserId, String? action, DateTime? from, DateTime? to, int? page, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/audit/export';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (eventId != null) {
+      queryParams.addAll(_queryParams('', 'eventId', eventId));
+    }
+    if (actorUserId != null) {
+      queryParams.addAll(_queryParams('', 'actorUserId', actorUserId));
+    }
+    if (action != null) {
+      queryParams.addAll(_queryParams('', 'action', action));
+    }
+    if (from != null) {
+      queryParams.addAll(_queryParams('', 'from', from));
+    }
+    if (to != null) {
+      queryParams.addAll(_queryParams('', 'to', to));
+    }
+    if (page != null) {
+      queryParams.addAll(_queryParams('', 'page', page));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Audit search as CSV (up to 10,000 rows)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] eventId:
+  ///
+  /// * [String] actorUserId:
+  ///
+  /// * [String] action:
+  ///
+  /// * [DateTime] from:
+  ///
+  /// * [DateTime] to:
+  ///
+  /// * [int] page:
+  Future<String?> exportAdminAudit({ String? eventId, String? actorUserId, String? action, DateTime? from, DateTime? to, int? page, }) async {
+    final response = await exportAdminAuditWithHttpInfo( eventId: eventId, actorUserId: actorUserId, action: action, from: from, to: to, page: page, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'String',) as String;
+    
+    }
+    return null;
+  }
+
+  /// Download my data (JSON file)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> exportMyDataWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/me/export';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Download my data (JSON file)
+  Future<Map<String, Object>?> exportMyData() async {
+    final response = await exportMyDataWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return Map<String, Object>.from(await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Map<String, Object>'),);
+
+    }
+    return null;
+  }
+
+  /// Job counts per queue
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> getAdminQueuesWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/queues';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Job counts per queue
+  Future<QueueStatsList?> getAdminQueues() async {
+    final response = await getAdminQueuesWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'QueueStatsList',) as QueueStatsList;
+    
+    }
+    return null;
+  }
+
+  /// Two-step sign-in status for this admin
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> getAdminTotpWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/2fa';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Two-step sign-in status for this admin
+  Future<TotpStatus?> getAdminTotp() async {
+    final response = await getAdminTotpWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'TotpStatus',) as TotpStatus;
+    
+    }
+    return null;
+  }
+
   /// Plan, paid guest cards, payments and any pending payment (host)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -2045,6 +2466,72 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Contributions',) as Contributions;
+    
+    }
+    return null;
+  }
+
+  /// Revenue, message cost, payment fee and margin per event, plan and month
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DateTime] from (required):
+  ///
+  /// * [DateTime] to (required):
+  ///
+  /// * [num] feePercent:
+  Future<Response> getCostReportWithHttpInfo(DateTime from, DateTime to, { num? feePercent, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/cost-report';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'from', from));
+      queryParams.addAll(_queryParams('', 'to', to));
+    if (feePercent != null) {
+      queryParams.addAll(_queryParams('', 'feePercent', feePercent));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Revenue, message cost, payment fee and margin per event, plan and month
+  ///
+  /// Parameters:
+  ///
+  /// * [DateTime] from (required):
+  ///
+  /// * [DateTime] to (required):
+  ///
+  /// * [num] feePercent:
+  Future<CostReport?> getCostReport(DateTime from, DateTime to, { num? feePercent, }) async {
+    final response = await getCostReportWithHttpInfo(from, to,  feePercent: feePercent, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'CostReport',) as CostReport;
     
     }
     return null;
@@ -2731,6 +3218,58 @@ class DefaultApi {
     return null;
   }
 
+  /// Link a card (by its link token) to the signed-in guest account
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [LinkCardInput] linkCardInput:
+  Future<Response> linkMyCardWithHttpInfo({ LinkCardInput? linkCardInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/me/cards/link';
+
+    // ignore: prefer_final_locals
+    Object? postBody = linkCardInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Link a card (by its link token) to the signed-in guest account
+  ///
+  /// Parameters:
+  ///
+  /// * [LinkCardInput] linkCardInput:
+  Future<LinkCardResult?> linkMyCard({ LinkCardInput? linkCardInput, }) async {
+    final response = await linkMyCardWithHttpInfo( linkCardInput: linkCardInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'LinkCardResult',) as LinkCardResult;
+    
+    }
+    return null;
+  }
+
   /// Confirmation states and expected headcount (host or committee)
   ///
   /// Note: This method returns the HTTP [Response].
@@ -2876,6 +3415,83 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ListDoorEvents200Response',) as ListDoorEvents200Response;
+    
+    }
+    return null;
+  }
+
+  /// Event audit trail, newest first (host or treasurer)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] action:
+  ///   Dotted prefix: \"payment\" matches payment.*; \"card.issued\" matches exactly.
+  ///
+  /// * [int] limit:
+  ///
+  /// * [String] cursor:
+  Future<Response> listEventAuditWithHttpInfo(String id, { String? action, int? limit, String? cursor, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/events/{id}/audit'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (action != null) {
+      queryParams.addAll(_queryParams('', 'action', action));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+    if (cursor != null) {
+      queryParams.addAll(_queryParams('', 'cursor', cursor));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Event audit trail, newest first (host or treasurer)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  ///
+  /// * [String] action:
+  ///   Dotted prefix: \"payment\" matches payment.*; \"card.issued\" matches exactly.
+  ///
+  /// * [int] limit:
+  ///
+  /// * [String] cursor:
+  Future<EventAuditPage?> listEventAudit(String id, { String? action, int? limit, String? cursor, }) async {
+    final response = await listEventAuditWithHttpInfo(id,  action: action, limit: limit, cursor: cursor, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'EventAuditPage',) as EventAuditPage;
     
     }
     return null;
@@ -3196,6 +3812,50 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MessageLog',) as MessageLog;
+    
+    }
+    return null;
+  }
+
+  /// The signed-in guest's cards across events
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> listMyCardsWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/me/cards';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// The signed-in guest's cards across events
+  Future<MyCardList?> listMyCards() async {
+    final response = await listMyCardsWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MyCardList',) as MyCardList;
     
     }
     return null;
@@ -3901,6 +4561,59 @@ class DefaultApi {
     }
   }
 
+  /// Retry the failed jobs of a queue
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] name (required):
+  Future<Response> retryAdminQueueWithHttpInfo(String name,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/queues/{name}/retry'
+      .replaceAll('{name}', name);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Retry the failed jobs of a queue
+  ///
+  /// Parameters:
+  ///
+  /// * [String] name (required):
+  Future<RetryAdminQueue200Response?> retryAdminQueue(String name,) async {
+    final response = await retryAdminQueueWithHttpInfo(name,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RetryAdminQueue200Response',) as RetryAdminQueue200Response;
+    
+    }
+    return null;
+  }
+
   /// Revoke a door device (host); its next door call gets 403
   ///
   /// Note: This method returns the HTTP [Response].
@@ -3994,6 +4707,237 @@ class DefaultApi {
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+  }
+
+  /// Search the audit log
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] eventId:
+  ///
+  /// * [String] actorUserId:
+  ///
+  /// * [String] action:
+  ///
+  /// * [DateTime] from:
+  ///
+  /// * [DateTime] to:
+  ///
+  /// * [int] page:
+  Future<Response> searchAdminAuditWithHttpInfo({ String? eventId, String? actorUserId, String? action, DateTime? from, DateTime? to, int? page, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/audit';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (eventId != null) {
+      queryParams.addAll(_queryParams('', 'eventId', eventId));
+    }
+    if (actorUserId != null) {
+      queryParams.addAll(_queryParams('', 'actorUserId', actorUserId));
+    }
+    if (action != null) {
+      queryParams.addAll(_queryParams('', 'action', action));
+    }
+    if (from != null) {
+      queryParams.addAll(_queryParams('', 'from', from));
+    }
+    if (to != null) {
+      queryParams.addAll(_queryParams('', 'to', to));
+    }
+    if (page != null) {
+      queryParams.addAll(_queryParams('', 'page', page));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Search the audit log
+  ///
+  /// Parameters:
+  ///
+  /// * [String] eventId:
+  ///
+  /// * [String] actorUserId:
+  ///
+  /// * [String] action:
+  ///
+  /// * [DateTime] from:
+  ///
+  /// * [DateTime] to:
+  ///
+  /// * [int] page:
+  Future<AdminAuditPage?> searchAdminAudit({ String? eventId, String? actorUserId, String? action, DateTime? from, DateTime? to, int? page, }) async {
+    final response = await searchAdminAuditWithHttpInfo( eventId: eventId, actorUserId: actorUserId, action: action, from: from, to: to, page: page, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminAuditPage',) as AdminAuditPage;
+    
+    }
+    return null;
+  }
+
+  /// Search events by title or host email and date
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] q:
+  ///
+  /// * [DateTime] from:
+  ///
+  /// * [DateTime] to:
+  ///
+  /// * [int] page:
+  Future<Response> searchAdminEventsWithHttpInfo({ String? q, DateTime? from, DateTime? to, int? page, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/events';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (q != null) {
+      queryParams.addAll(_queryParams('', 'q', q));
+    }
+    if (from != null) {
+      queryParams.addAll(_queryParams('', 'from', from));
+    }
+    if (to != null) {
+      queryParams.addAll(_queryParams('', 'to', to));
+    }
+    if (page != null) {
+      queryParams.addAll(_queryParams('', 'page', page));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Search events by title or host email and date
+  ///
+  /// Parameters:
+  ///
+  /// * [String] q:
+  ///
+  /// * [DateTime] from:
+  ///
+  /// * [DateTime] to:
+  ///
+  /// * [int] page:
+  Future<AdminEventPage?> searchAdminEvents({ String? q, DateTime? from, DateTime? to, int? page, }) async {
+    final response = await searchAdminEventsWithHttpInfo( q: q, from: from, to: to, page: page, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminEventPage',) as AdminEventPage;
+    
+    }
+    return null;
+  }
+
+  /// Search accounts by email, name or phone
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] q:
+  ///
+  /// * [int] page:
+  Future<Response> searchAdminUsersWithHttpInfo({ String? q, int? page, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/users';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (q != null) {
+      queryParams.addAll(_queryParams('', 'q', q));
+    }
+    if (page != null) {
+      queryParams.addAll(_queryParams('', 'page', page));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Search accounts by email, name or phone
+  ///
+  /// Parameters:
+  ///
+  /// * [String] q:
+  ///
+  /// * [int] page:
+  Future<AdminUserPage?> searchAdminUsers({ String? q, int? page, }) async {
+    final response = await searchAdminUsersWithHttpInfo( q: q, page: page, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AdminUserPage',) as AdminUserPage;
+    
+    }
+    return null;
   }
 
   /// Send a message now to a guest group, or preview the recipient count (host)
@@ -4239,6 +5183,50 @@ class DefaultApi {
     return null;
   }
 
+  /// Start authenticator-app setup (secret + otpauth URI for a QR code)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  Future<Response> startAdminTotpWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/2fa/enrol';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Start authenticator-app setup (secret + otpauth URI for a QR code)
+  Future<TotpEnrolment?> startAdminTotp() async {
+    final response = await startAdminTotpWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'TotpEnrolment',) as TotpEnrolment;
+    
+    }
+    return null;
+  }
+
   /// Start a Snippe payment: mobile-money push or hosted checkout session
   ///
   /// Note: This method returns the HTTP [Response].
@@ -4393,6 +5381,55 @@ class DefaultApi {
   /// * [String] token (required):
   Future<void> unregisterDevice(String token,) async {
     final response = await unregisterDeviceWithHttpInfo(token,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Grant/revoke admin, disable/enable an account (not yourself)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///
+  /// * [AdminUserUpdateInput] adminUserUpdateInput:
+  Future<Response> updateAdminUserWithHttpInfo(String userId, { AdminUserUpdateInput? adminUserUpdateInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/users/{userId}'
+      .replaceAll('{userId}', userId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = adminUserUpdateInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PATCH',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Grant/revoke admin, disable/enable an account (not yourself)
+  ///
+  /// Parameters:
+  ///
+  /// * [String] userId (required):
+  ///
+  /// * [AdminUserUpdateInput] adminUserUpdateInput:
+  Future<void> updateAdminUser(String userId, { AdminUserUpdateInput? adminUserUpdateInput, }) async {
+    final response = await updateAdminUserWithHttpInfo(userId,  adminUserUpdateInput: adminUserUpdateInput, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -4800,5 +5837,49 @@ class DefaultApi {
     
     }
     return null;
+  }
+
+  /// Verify a code or recovery code; sets the admin session cookie (12 h)
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [TotpCodeInput] totpCodeInput:
+  Future<Response> verifyAdminTotpWithHttpInfo({ TotpCodeInput? totpCodeInput, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/2fa/verify';
+
+    // ignore: prefer_final_locals
+    Object? postBody = totpCodeInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Verify a code or recovery code; sets the admin session cookie (12 h)
+  ///
+  /// Parameters:
+  ///
+  /// * [TotpCodeInput] totpCodeInput:
+  Future<void> verifyAdminTotp({ TotpCodeInput? totpCodeInput, }) async {
+    final response = await verifyAdminTotpWithHttpInfo( totpCodeInput: totpCodeInput, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
   }
 }

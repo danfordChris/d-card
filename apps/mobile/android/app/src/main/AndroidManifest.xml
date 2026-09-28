@@ -3,7 +3,9 @@
     <!-- GST-6: pick guests from phone contacts (requested only when the picker opens). -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <application
-        android:label="dcard_mobile"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:label="D-Card"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

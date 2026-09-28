@@ -15,7 +15,7 @@ export type Content = {
   pricing: { title: string; intro: string; perCard: string; plans: Plan[]; rules: string[]; cta: string };
   faq: { title: string; items: { q: string; a: string }[] };
   contact: { title: string; body: string; whatsapp: string; call: string; email: string; start: string };
-  footer: { tagline: string; rights: string };
+  footer: { tagline: string; rights: string; privacy: string };
 };
 
 const sw: Content = {
@@ -131,7 +131,7 @@ const sw: Content = {
     email: "Barua pepe",
     start: "Tengeneza tukio",
   },
-  footer: { tagline: "Kadi za mwaliko za kidigitali, Tanzania.", rights: "Haki zote zimehifadhiwa." },
+  footer: { tagline: "Kadi za mwaliko za kidigitali, Tanzania.", rights: "Haki zote zimehifadhiwa.", privacy: "Taarifa ya faragha" },
 };
 
 const en: Content = {
@@ -241,7 +241,7 @@ const en: Content = {
     email: "Email",
     start: "Create an event",
   },
-  footer: { tagline: "Digital invitation cards, Tanzania.", rights: "All rights reserved." },
+  footer: { tagline: "Digital invitation cards, Tanzania.", rights: "All rights reserved.", privacy: "Privacy notice" },
 };
 
 export const content: Record<Lang, Content> = { sw, en };

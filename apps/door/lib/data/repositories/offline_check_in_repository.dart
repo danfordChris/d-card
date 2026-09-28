@@ -78,6 +78,23 @@ class OfflineCheckInRepository {
     }
   }
 
+  /// When card-number entry opens again on this phone (online or offline lock), or null.
+  Future<DateTime?> lockedUntil() async {
+    try {
+      final (_, until) = await (await _store.open()).readLockout();
+      return until != null && _now().isBefore(until) ? until : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Keeps a lock the server reported (423), so it holds after reopening the event and offline.
+  Future<void> rememberLock(DateTime until) async {
+    try {
+      await (await _store.open()).writeLockout(0, until);
+    } catch (_) {}
+  }
+
   /// Admits [count] on a cached card and queues the entry under [entryId].
   Future<CheckInCard> admit(
     DoorSession session, {

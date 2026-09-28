@@ -87,3 +87,36 @@ export async function closeQueues(): Promise<void> {
   delete g.__dcardEmailQueue;
   delete g.__dcardRedis;
 }
+
+const allQueueNames = Object.values(QUEUES) as string[];
+
+async function withQueue<T>(name: string, fn: (q: Queue) => Promise<T>): Promise<T> {
+  const q = new Queue(name, { connection: connection(), prefix: process.env.QUEUE_PREFIX ?? "dcard" });
+  try {
+    return await fn(q);
+  } finally {
+    await q.close();
+  }
+}
+
+/** Job counts per queue for the admin queue page. */
+export async function queueStats(): Promise<{ name: string; waiting: number; active: number; delayed: number; failed: number; completed: number }[]> {
+  return Promise.all(
+    allQueueNames.map((name) =>
+      withQueue(name, async (q) => {
+        const c = await q.getJobCounts("waiting", "active", "delayed", "failed", "completed");
+        return { name, waiting: c.waiting ?? 0, active: c.active ?? 0, delayed: c.delayed ?? 0, failed: c.failed ?? 0, completed: c.completed ?? 0 };
+      }),
+    ),
+  );
+}
+
+/** Retries a queue's failed jobs; null for an unknown queue. */
+export async function retryFailedJobs(name: string): Promise<number | null> {
+  if (!allQueueNames.includes(name)) return null;
+  return withQueue(name, async (q) => {
+    const failed = await q.getJobCounts("failed");
+    await q.retryJobs({ state: "failed", count: 1000 });
+    return failed.failed ?? 0;
+  });
+}

@@ -1,4 +1,5 @@
-import { auditLog, userAccount } from "@dcard/db";
+import { adminProofHeader, makeVerifiedAdmin } from "./admin-proof";
+import { auditLog } from "@dcard/db";
 import { createTestDatabase } from "@dcard/db/testing";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -17,7 +18,7 @@ const API_KEY = "test_web_key_0123456789abcdefghijklmnop";
 function req(method: string, token: string, body?: unknown): Request {
   return new Request("http://localhost/x", {
     method,
-    headers: { authorization: `Bearer ${token}`, "content-type": "application/json", "x-api-key": API_KEY },
+    headers: { ...adminProofHeader(token), authorization: `Bearer ${token}`, "content-type": "application/json", "x-api-key": API_KEY },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   });
 }
@@ -31,7 +32,7 @@ beforeAll(async () => {
   rates = await import("../src/app/api/v1/admin/provider-rates/route");
   ({ resetDb } = await import("../src/server/db"));
   for (const token of [ADMIN, HOST]) await me.POST(req("POST", token));
-  await handle.db.update(userAccount).set({ isAdmin: true }).where(eq(userAccount.firebaseUid, "t-msg-admin"));
+  await makeVerifiedAdmin(handle.db, ADMIN);
 });
 
 afterAll(async () => {

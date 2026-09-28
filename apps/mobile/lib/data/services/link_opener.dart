@@ -11,6 +11,8 @@ class ExternalLinkOpener implements LinkOpener {
 
   @override
   Future<bool> open(Uri url) async {
+    // SEC-08: only web links; a host-entered map link must not open other schemes.
+    if (url.scheme != 'https' && url.scheme != 'http') return false;
     try {
       return await launchUrl(url, mode: LaunchMode.externalApplication);
     } catch (_) {

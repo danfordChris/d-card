@@ -19,7 +19,7 @@ class MessageSettings {
     required this.usage,
   });
 
-  List<MessageSettingsSettingsInner> settings;
+  List<UpdateMessageSettingsRequestSettingsInner> settings;
 
   MessagePlanLimits limits;
 
@@ -72,7 +72,7 @@ class MessageSettings {
       }());
 
       return MessageSettings(
-        settings: MessageSettingsSettingsInner.listFromJson(json[r'settings']),
+        settings: UpdateMessageSettingsRequestSettingsInner.listFromJson(json[r'settings']),
         limits: MessagePlanLimits.fromJson(json[r'limits'])!,
         templates: MessageSettingsTemplatesInner.listFromJson(json[r'templates']),
         usage: MessageSettingsUsage.fromJson(json[r'usage'])!,

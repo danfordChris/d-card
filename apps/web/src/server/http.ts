@@ -1,4 +1,4 @@
-import { DomainError, ValidationError } from "@dcard/core";
+import { createLogger, DomainError, ValidationError } from "@dcard/core";
 import type { z } from "zod";
 import type { ErrorResponse } from "@dcard/api-contract";
 
@@ -10,6 +10,13 @@ const STATUS_BY_CODE: Record<string, number> = {
   validation_error: 422,
   consent_required: 422,
   conflict: 409,
+  person_linked: 409,
+  account_disabled: 403,
+  second_factor_required: 403,
+  second_factor_not_enrolled: 403,
+  second_factor_invalid: 422,
+  second_factor_locked: 429,
+  account_linked: 409,
   plan_limit: 409,
   account_not_provisioned: 403,
   invite_gone: 410,
@@ -45,8 +52,24 @@ export function toErrorResponse(err: unknown): Response {
   if (err instanceof DomainError) {
     return jsonError(STATUS_BY_CODE[err.code] ?? 400, err.code, err.message);
   }
-  console.error(err);
+  reportUnexpected(err);
   return jsonError(500, "internal", "Something went wrong.");
+}
+
+const log = createLogger({ service: "web" });
+
+/** Logs an unexpected error as JSON with the request id (set in proxy.ts) and sends it to Sentry. */
+function reportUnexpected(err: unknown): void {
+  void (async () => {
+    let requestId: string | null = null;
+    try {
+      requestId = (await (await import("next/headers")).headers()).get("x-request-id");
+    } catch {
+      // Outside a request (tests, scripts).
+    }
+    log.error("request failed", { requestId, err: err instanceof Error ? err : new Error(String(err)) });
+    if (process.env.SENTRY_DSN) (await import("./sentry")).captureError(err, requestId ? { requestId } : {});
+  })();
 }
 
 /** Parses a JSON body with a zod schema; invalid input becomes a 422 ValidationError. */
@@ -70,4 +93,16 @@ export async function parseBody<T extends z.ZodType>(request: Request, schema: T
 /** JSON-safe copy: Date values become ISO strings. */
 export function toJson<T>(value: T): unknown {
   return JSON.parse(JSON.stringify(value));
+}
+
+/** Parses URL query parameters with a zod schema; invalid input becomes a 422 ValidationError. */
+export function parseQuery<T extends z.ZodType>(request: Request, schema: T): z.infer<T> {
+  const result = schema.safeParse(Object.fromEntries(new URL(request.url).searchParams));
+  if (!result.success) {
+    throw new ValidationError(
+      "Some fields are invalid.",
+      result.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+    );
+  }
+  return result.data;
 }
