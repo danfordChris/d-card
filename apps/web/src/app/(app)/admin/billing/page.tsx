@@ -10,8 +10,8 @@ export default async function AdminBillingPage() {
   return (
     <section className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        <p className="mt-1 max-w-3xl text-sm text-gray-600">{t("pageIntro")}</p>
+        <h1 className="font-display text-3xl font-bold">{t("title")}</h1>
+        <p className="mt-1 max-w-3xl text-sm text-muted">{t("pageIntro")}</p>
       </div>
       <BillingSettingsAdmin />
     </section>

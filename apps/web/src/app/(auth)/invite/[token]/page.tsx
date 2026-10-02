@@ -1,7 +1,7 @@
 import { DomainError, getInviteInfo } from "@dcard/core";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { Alert } from "../../../../components/ui";
+import { Alert, buttonClasses } from "../../../../components/ui";
 import { AcceptInviteButton } from "../../../../features/team/accept-invite-button";
 import { getDb } from "../../../../server/db";
 import { getSessionAccount } from "../../../../server/session";
@@ -24,16 +24,16 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
   const next = encodeURIComponent(`/invite/${token}`);
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">{t("title")}</h1>
-      <p className="text-gray-700">{t("body", { event: info.eventTitle, role: roles(info.role) })}</p>
+      <h1 className="font-display text-3xl font-bold">{t("title")}</h1>
+      <p className="text-ink">{t("body", { event: info.eventTitle, role: roles(info.role) })}</p>
       {account ? (
         <AcceptInviteButton token={token} />
       ) : (
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Link href={`/login?next=${next}`} className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-brand-700">
+          <Link href={`/login?next=${next}`} className={buttonClasses("primary")}>
             {t("signIn")}
           </Link>
-          <Link href={`/signup?next=${next}`} className="rounded-lg bg-white px-4 py-2 text-center text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50">
+          <Link href={`/signup?next=${next}`} className={buttonClasses("tonal")}>
             {t("signUp")}
           </Link>
         </div>

@@ -72,17 +72,17 @@ export function GuestMediaSections({ token }: { token: string }) {
   if (state.status === "loading" || state.status === "none") return null;
   if (state.status === "closed") {
     return (
-      <section className="mt-6 space-y-2 rounded-2xl bg-white p-6 ring-1 ring-gray-200">
-        <h2 className="font-semibold">{t("title")}</h2>
-        <p className="text-sm text-gray-600">{t("pageClosed")}</p>
+      <section className="mt-2.5 space-y-2 rounded-tile bg-tile p-5">
+        <h2 className="font-display text-xl font-bold">{t("title")}</h2>
+        <p className="text-sm text-muted">{t("pageClosed")}</p>
       </section>
     );
   }
   if (state.status === "error") {
     return (
-      <section className="mt-6 space-y-3 rounded-2xl bg-white p-6 ring-1 ring-gray-200">
-        <h2 className="font-semibold">{t("title")}</h2>
-        <p className="text-sm text-gray-600">{t("loadError")}</p>
+      <section className="mt-2.5 space-y-3 rounded-tile bg-tile p-5">
+        <h2 className="font-display text-xl font-bold">{t("title")}</h2>
+        <p className="text-sm text-muted">{t("loadError")}</p>
         <Button variant="secondary" onClick={load}>
           <HugeiconsIcon icon={RefreshIcon} size={18} aria-hidden="true" />
           {t("retryLoad")}
@@ -107,8 +107,8 @@ function StorySection({ items }: { items: GuestMediaItem[] }) {
   const t = useTranslations("cardPage");
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="mt-6 space-y-3 rounded-2xl bg-white p-6 ring-1 ring-gray-200" aria-labelledby="story-title">
-      <h2 id="story-title" className="font-semibold">
+    <section className="mt-2.5 space-y-3 rounded-tile bg-tile p-5" aria-labelledby="story-title">
+      <h2 id="story-title" className="font-display text-xl font-bold">
         {t("story.title")}
       </h2>
       <MediaGrid items={items} onOpen={setOpen} />
@@ -293,8 +293,8 @@ function GallerySection({ token, media, update }: { token: string; media: GuestM
     : null;
 
   return (
-    <section className="mt-6 space-y-4 rounded-2xl bg-white p-6 ring-1 ring-gray-200" aria-labelledby="gallery-title">
-      <h2 id="gallery-title" className="font-semibold">
+    <section className="mt-2.5 space-y-4 rounded-tile bg-tile p-5" aria-labelledby="gallery-title">
+      <h2 id="gallery-title" className="font-display text-xl font-bold">
         {t("title")}
       </h2>
 
@@ -306,7 +306,7 @@ function GallerySection({ token, media, update }: { token: string; media: GuestM
               <HugeiconsIcon icon={ImageAdd01Icon} size={18} aria-hidden="true" />
               {t("add")}
             </Button>
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-muted">
               {t("left", { count: slotsLeft })} {t("hint", { seconds: limits.galleryVideoSeconds })}
               {closesAt && <> {t("closesAt", { date: closesAt })}</>}
             </p>
@@ -323,7 +323,7 @@ function GallerySection({ token, media, update }: { token: string; media: GuestM
       {media.gallery.length > 0 ? (
         <MediaGrid items={media.gallery} onOpen={setOpen} />
       ) : (
-        <p className="text-sm text-gray-600">{media.uploadsOpen ? t("empty") : t("emptyClosed")}</p>
+        <p className="text-sm text-muted">{media.uploadsOpen ? t("empty") : t("emptyClosed")}</p>
       )}
 
       {open !== null && media.gallery[open] && (
@@ -348,35 +348,35 @@ function UploadQueue({ queue, onRetry, onClear }: { queue: QueueItem[]; onRetry:
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">{t("queueTitle")}</h3>
         {finished && (
-          <button type="button" onClick={onClear} className="text-xs text-gray-600 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
+          <button type="button" onClick={onClear} className="text-xs text-muted underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
             {t("clearDone")}
           </button>
         )}
       </div>
-      <ul className="divide-y divide-gray-100 rounded-lg ring-1 ring-gray-200">
+      <ul className="divide-y divide-line rounded-2xl bg-bg">
         {queue.map((q) => (
           <li key={q.key} className="space-y-1 px-3 py-2 text-sm" data-testid="upload-row">
             <div className="flex items-center gap-2">
               {q.status === "done" ? (
-                <HugeiconsIcon icon={Tick02Icon} size={18} className="shrink-0 text-green-700" aria-hidden="true" />
+                <HugeiconsIcon icon={Tick02Icon} size={18} className="shrink-0 text-success" aria-hidden="true" />
               ) : q.status === "failed" ? (
-                <HugeiconsIcon icon={Alert02Icon} size={18} className="shrink-0 text-red-700" aria-hidden="true" />
+                <HugeiconsIcon icon={Alert02Icon} size={18} className="shrink-0 text-danger" aria-hidden="true" />
               ) : null}
               <span className="min-w-0 flex-1 truncate">{q.file.name}</span>
-              <span className="shrink-0 text-xs text-gray-600">
+              <span className="shrink-0 text-xs text-muted">
                 {q.status === "uploading" ? t("status.uploading", { percent: Math.round(q.progress * 100) }) : t(`status.${q.status}`)}
               </span>
             </div>
             {(q.status === "uploading" || q.status === "finishing") && (
-              <div className="h-1.5 overflow-hidden rounded-full bg-gray-100" role="progressbar" aria-label={q.file.name} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(q.progress * 100)}>
-                <div className="h-full bg-brand-600 transition-[width]" style={{ width: `${Math.round(q.progress * 100)}%` }} />
+              <div className="h-1.5 overflow-hidden rounded-full bg-tile2" role="progressbar" aria-label={q.file.name} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(q.progress * 100)}>
+                <div className="h-full bg-primary transition-[width]" style={{ width: `${Math.round(q.progress * 100)}%` }} />
               </div>
             )}
             {q.status === "failed" && q.error && (
               <div className="flex items-center gap-3">
-                <p className="flex-1 text-xs text-red-700">{t(`errors.${q.error.key}`, q.error.values ?? {})}</p>
+                <p className="flex-1 text-xs text-danger">{t(`errors.${q.error.key}`, q.error.values ?? {})}</p>
                 {q.error.retryable && (
-                  <button type="button" onClick={() => onRetry(q.key)} className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
+                  <button type="button" onClick={() => onRetry(q.key)} className="inline-flex items-center gap-1 text-xs font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                     <HugeiconsIcon icon={RefreshIcon} size={14} aria-hidden="true" />
                     {t("retry")}
                   </button>
@@ -392,7 +392,7 @@ function UploadQueue({ queue, onRetry, onClear }: { queue: QueueItem[]; onRetry:
 
 function MediaGrid({ items, onOpen }: { items: GuestMediaItem[]; onOpen: (index: number) => void }) {
   return (
-    <ul className="grid grid-cols-3 gap-1">
+    <ul className="grid grid-cols-3 gap-1.5">
       {items.map((item, i) => (
         <li key={item.id}>
           <Thumb item={item} onOpen={() => onOpen(i)} />
@@ -408,7 +408,7 @@ function Thumb({ item, onOpen }: { item: GuestMediaItem; onOpen: () => void }) {
   const { src } = useMediaSrc(item.thumbnailUrl, near);
   const label = item.type === "video" ? t("video") : t("photo");
   return (
-    <button ref={ref} type="button" onClick={onOpen} aria-label={label} className="relative block aspect-square w-full overflow-hidden rounded-md bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
+    <button ref={ref} type="button" onClick={onOpen} aria-label={label} className="relative block aspect-square w-full overflow-hidden rounded-2xl bg-tile2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
       {src && <img src={src} alt="" width={160} height={160} loading="lazy" decoding="async" className="h-full w-full object-cover" />}
       {item.type === "video" && (
         <span className="absolute inset-0 flex items-center justify-center">

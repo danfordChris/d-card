@@ -50,14 +50,14 @@ export function BillingSettingsAdmin({ initial }: { initial?: BillingSettings | 
     setNotice({ tone: "success", text: t("saved") });
   }
 
-  if (!settings) return loadError ? <Alert tone="error">{t("loadError")}</Alert> : <p className="text-sm text-gray-500">{t("loading")}</p>;
+  if (!settings) return loadError ? <Alert tone="error">{t("loadError")}</Alert> : <p className="text-sm text-muted">{t("loading")}</p>;
 
   return (
     <Card className="max-w-xl">
       <form className="space-y-4" onSubmit={save} noValidate>
         <div>
-          <h2 className="font-semibold">{t("launchOffer")}</h2>
-          <p className="text-sm text-gray-600">{t("intro")}</p>
+          <h2 className="font-display text-xl font-bold">{t("launchOffer")}</h2>
+          <p className="text-sm text-muted">{t("intro")}</p>
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
@@ -66,7 +66,7 @@ export function BillingSettingsAdmin({ initial }: { initial?: BillingSettings | 
         <Field label={t("percent")} error={percentError} hint={t("percentHint")}>
           <Input type="number" min={0} max={90} step={1} className="w-32" value={percent} onChange={(e) => setPercent(e.target.value)} />
         </Field>
-        <p className="text-sm text-gray-600" data-testid="launch-offer-status">
+        <p className="text-sm text-muted" data-testid="launch-offer-status">
           {settings.launchOfferEnabled && settings.launchOfferPercent > 0 ? t("statusOn", { percent: settings.launchOfferPercent }) : t("statusOff")}
         </p>
         {notice && <Alert tone={notice.tone}>{notice.text}</Alert>}

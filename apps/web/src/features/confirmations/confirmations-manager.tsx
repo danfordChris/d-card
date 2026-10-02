@@ -2,14 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { Alert, Button, Card } from "../../components/ui";
+import { Alert, Button, Card, Tile } from "../../components/ui";
 import { localPhone } from "../events/format";
 import { apiFetch } from "../../lib/api-fetch";
 import type { ConfirmationGuest, ConfirmationList, ConfirmationStatus } from "./types";
 
 const STATUSES: ConfirmationStatus[] = ["none", "yes", "no"];
 const selectClass =
-  "rounded-lg border-0 bg-white px-3 py-2 text-sm text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none";
+  "rounded-field border-0 bg-field px-3 py-2 text-sm text-ink focus:ring-2 focus:ring-primary focus:outline-none";
 
 export function summaryFor(guests: ConfirmationGuest[], headcountPct: number): Omit<ConfirmationList, "guests"> {
   const counts = { total: guests.length, yes: 0, no: 0, none: 0 };
@@ -76,10 +76,10 @@ export function ConfirmationsManager({
       </div>
       <Card className="overflow-x-auto p-0">
         {shown.length === 0 ? (
-          <p className="p-6 text-center text-sm text-gray-600">{t("empty")}</p>
+          <p className="p-6 text-center text-sm text-muted">{t("empty")}</p>
         ) : (
           <table className="w-full min-w-[760px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className="px-4 py-3 font-medium">{t("columns.guest")}</th>
                 <th className="px-4 py-3 font-medium">{t("columns.phone")}</th>
@@ -89,7 +89,7 @@ export function ConfirmationsManager({
                 <th className="px-4 py-3 font-medium">{t("columns.action")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {shown.map((guest) => (
                 <ConfirmationRow key={guest.id} guest={guest} locale={locale} onSave={save} />
               ))}
@@ -103,11 +103,11 @@ export function ConfirmationsManager({
 
 function SummaryCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <Card className="p-4">
-      <p className="text-xs font-medium text-gray-500">{label}</p>
-      <p className="mt-1 text-2xl font-semibold tabular-nums">{value}</p>
-      {hint && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
-    </Card>
+    <Tile className="gap-2">
+      <p className="text-xs font-medium text-muted">{label}</p>
+      <p className="font-display text-3xl leading-none font-extrabold tabular-nums">{value}</p>
+      {hint && <p className="text-xs text-muted">{hint}</p>}
+    </Tile>
   );
 }
 
@@ -135,12 +135,12 @@ function ConfirmationRow({
     <tr>
       <td className="px-4 py-3">
         <span className="font-medium">{guest.name}</span>
-        {guest.partnerName && <span className="block text-xs text-gray-500">+ {guest.partnerName}</span>}
+        {guest.partnerName && <span className="block text-xs text-muted">+ {guest.partnerName}</span>}
       </td>
       <td className="px-4 py-3 whitespace-nowrap">{localPhone(guest.phone)}</td>
       <td className="px-4 py-3">{t(`card.${guest.cardType}`)}</td>
       <td className="px-4 py-3"><StatusBadge status={guest.confirmationStatus} /></td>
-      <td className="px-4 py-3 text-xs text-gray-600">
+      <td className="px-4 py-3 text-xs text-muted">
         {guest.confirmationAt ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(guest.confirmationAt)) : t("notRecorded")}
       </td>
       <td className="px-4 py-3 whitespace-nowrap">
@@ -148,7 +148,7 @@ function ConfirmationRow({
           {STATUSES.map((value) => <option key={value} value={value}>{t(`status.${value}`)}</option>)}
         </select>
         {dirty && <Button className="ml-2" variant="secondary" disabled={busy} onClick={submit}>{t("save")}</Button>}
-        {saved && !dirty && <span className="ml-2 text-xs text-green-700">{t("saved")}</span>}
+        {saved && !dirty && <span className="ml-2 text-xs text-success">{t("saved")}</span>}
       </td>
     </tr>
   );
@@ -156,6 +156,6 @@ function ConfirmationRow({
 
 function StatusBadge({ status }: { status: ConfirmationStatus }) {
   const t = useTranslations("confirmations");
-  const tone = status === "yes" ? "bg-green-100 text-green-800" : status === "no" ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-700";
+  const tone = status === "yes" ? "bg-success-bg text-success" : status === "no" ? "bg-danger-bg text-danger" : "bg-tile2 text-ink";
   return <span className={`rounded-full px-2 py-1 text-xs font-medium ${tone}`}>{t(`status.${status}`)}</span>;
 }

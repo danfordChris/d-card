@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
+
+import 'tokens.dart';
+import 'typography.dart';
 
 /// Title + subtitle block used on placeholder and landing screens.
 class BrandHeader extends StatelessWidget {
@@ -9,15 +13,20 @@ class BrandHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
+    final c = context.dc;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.card_giftcard, size: 64, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(height: 16),
-        Text(title, style: text.headlineSmall, textAlign: TextAlign.center),
-        const SizedBox(height: 8),
-        Text(subtitle, style: text.bodyMedium, textAlign: TextAlign.center),
+        Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(color: c.tile, borderRadius: BorderRadius.circular(DcRadius.action)),
+          child: Center(child: HugeIcon(icon: HugeIcons.strokeRoundedTicket01, size: 30, color: c.primary)),
+        ),
+        const SizedBox(height: DcSpace.lg),
+        Text(title, style: DcType.heading(28).copyWith(color: c.ink), textAlign: TextAlign.center),
+        const SizedBox(height: DcSpace.sm),
+        Text(subtitle, style: DcType.ui(14).copyWith(color: c.muted), textAlign: TextAlign.center),
       ],
     );
   }

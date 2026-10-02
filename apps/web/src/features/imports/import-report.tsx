@@ -14,8 +14,8 @@ export type ImportReport = {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
-      <ul className="mt-1 max-h-48 space-y-1 overflow-y-auto text-sm text-gray-600">{children}</ul>
+      <h3 className="text-sm font-semibold text-ink">{title}</h3>
+      <ul className="mt-1 max-h-48 space-y-1 overflow-y-auto text-sm text-muted">{children}</ul>
     </div>
   );
 }
@@ -26,7 +26,7 @@ export function ImportReportView({ report, showRows = true }: { report: ImportRe
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4 text-sm">
         <span>{t("total", { count: report.total })}</span>
-        <span className="font-semibold text-green-700">{t("valid", { count: report.valid })}</span>
+        <span className="font-semibold text-success">{t("valid", { count: report.valid })}</span>
       </div>
       {report.invalid.length > 0 && (
         <Section title={`${t("invalid")} (${report.invalid.length})`}>

@@ -66,7 +66,7 @@ export function QueuesAdmin() {
       <div className={panelClass}>
         <ListBody state={state} columns={7} empty={{ title: t("empty") }} onRetry={load}>
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className={thClass}>{t("columns.name")}</th>
                 {COUNTS.map((c) => (
@@ -77,12 +77,12 @@ export function QueuesAdmin() {
                 <th className={thClass} />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {queues.map((q) => (
                 <tr key={q.name}>
                   <td className={`${tdClass} font-mono text-xs`}>{q.name}</td>
                   {COUNTS.map((c) => (
-                    <td key={c} className={`${tdClass} text-right tabular-nums ${c === "failed" && q.failed > 0 ? "font-semibold text-red-700" : ""}`}>
+                    <td key={c} className={`${tdClass} text-right tabular-nums ${c === "failed" && q.failed > 0 ? "font-semibold text-danger" : ""}`}>
                       {formatCount(q[c])}
                     </td>
                   ))}

@@ -32,9 +32,22 @@
 - Production: web app on Vercel (`api.dcard.danfordchris.dev`, functions fra1) with Neon Postgres and Upstash Redis (Frankfurt, free); marketing site on `dcard.danfordchris.dev`; WhatsApp keys and webhook live (signed POSTs verified). Worker host still to do. `WHATSAPP_LIVE` added: only production sends WhatsApp.
 - Phase 04 planned and started: T04-01…T04-07 (check-in core, offline sync API, confirmations + headcount, door app online, door app offline, walk-ins, live dashboard + backup list). Split: lead T04-01/02/06 backend, JetBrains assistant T04-03, subagents for the door app, approver screens and dashboard.
 - Phase 04 done and reviewed (`docs/implementation/reviews/2026-09-26-phase-04-review.md`): online and offline door check-in with CRDT sync and over-use alerts, lockout, walk-ins with push approvals, WhatsApp first-answer confirmations with replies, manual confirmations and expected headcount, live dashboard and printable backup list, D-Card Door app (online + encrypted offline cache).
-- UI direction recorded: reference projects analysed (`docs/research/ui-reference-projects.md`), design-system proposal (`docs/changes/proposed/ui-design-system.md`) and backlog items; owner decisions pending (colours, starter pack, dark mode, prototype).
+- UI direction recorded: reference projects analysed (`docs/research/ui-reference-projects.md`), design-system proposal (`docs/design/ui/design-system.md`) and backlog items; owner decisions pending (colours, starter pack, dark mode, prototype).
 
 ## 2026-09-27
 
 - Phase 05 tasks T05-01…T05-06 done and reviewed (`docs/implementation/reviews/2026-09-27-phase-05-review.md`): Snippe checkout (mobile money + hosted) with exactly-once unlock, pricing rules and launch offer, payment gate on cards and guest messages; Google Drive connect, folders, sharing modes, direct uploads, private streaming, quota and missing files; web checkout, host media and slideshow, guest gallery; mobile checkout. Phase stays `in-progress` until one real Snippe payment and a live Drive check (owner setup).
 - Worker and Redis moved to Railway (europe-west4, pinned TLS for Vercel); `WHATSAPP_LIVE` / `SNIPPE_LIVE` switches.
+- Phase 06 tasks T06-01…T06-09 done and reviewed (`docs/implementation/reviews/2026-09-27-phase-06-review.md`): retention and privacy (export/delete), guest sign-in in the D-Card app, admin panel with 2FA, host audit and exports, cost and margin report, observability, card page accessibility and performance, door app states, store listings and release builds. Phase stays `in-progress` until a staging deploy with migrations 0013–0017 and owner setup (Firebase Google/Apple, Sentry and `ALERT_EMAIL`, store accounts and signing keys, privacy notice wording).
+- Phase 07 tasks T07-01…T07-04 done and reviewed (`docs/implementation/reviews/2026-09-27-phase-07-review.md`): load tests (three problems found and fixed: concurrent offline over-use, dispatch batch size, send rate caps), security review (0 critical, 0 high, all 6 medium fixed), launch checklist and pilot runbook (`docs/launch/`). T07-05 pilot events `pending`; phase stays `in-progress` until the pilots run.
+
+## 2026-09-28
+
+- Phase 08 planned, done and reviewed (`docs/implementation/reviews/2026-09-28-phase-08-review.md`): design foundations (Flutter and web tokens, bundled fonts, light/dark themes, shared components) rolled out across the D-Card app, D-Card Door and the web app. Screens use token roles only, Hugeicons only, loading/empty/error states everywhere, accessibility fixes.
+- PRs #2–#8 (phases 01–07) merged into `main`. Phase 08 is PR #9, in review.
+
+## 2026-10-02
+
+- Local run guide added (`docs/running-locally.md`): apps on a simulator or phone, fake sign-in, local end-to-end run. READMEs point to it.
+- `docs/implementation/project.md` brought in line with the phase files. All build tasks are done; remaining work is live verification (T00-10, a real Snippe payment, a live Drive check), the phase 06 staging deploy and owner setup, and the T07-05 pilots.
+- Meta's new WhatsApp rate card took effect on 1 Oct 2026; `docs/changes/proposed/whatsapp-cost-verification.md` can now be checked against real billing.

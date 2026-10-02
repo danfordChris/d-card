@@ -7,6 +7,7 @@ import type { Dashboard } from "../../../../../features/dashboard/types";
 import { getDb } from "../../../../../server/db";
 import { loadEventOr404, requireAccount } from "../../../../../server/events-page-data";
 import { toJson } from "../../../../../server/http";
+import { PageHeader, buttonClasses } from "../../../../../components/ui";
 
 // Event-day dashboard (CHK-10, CHK-7; offline-sync 9.4). Host and committee.
 export default async function EventDashboardPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,22 +17,19 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
   const [t, initial] = await Promise.all([getTranslations("dashboard"), getEventDashboard(getDb(), account.id, event.id)]);
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <Link href={`/events/${event.id}`} className="text-sm text-brand-600 hover:underline">
-            ← {t("back")}
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}`} className="hover:text-primary hover:underline">
+            {event.title}
           </Link>
-          <h1 className="mt-1 text-2xl font-semibold">
-            {t("title")} · {event.title}
-          </h1>
-        </div>
-        <Link
-          href={`/events/${event.id}/backup-list`}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
-        >
-          {t("backup.link")}
-        </Link>
-      </div>
+        }
+        title={t("title")}
+        actions={
+          <Link href={`/events/${event.id}/backup-list`} className={buttonClasses("tonal")}>
+            {t("backup.link")}
+          </Link>
+        }
+      />
       <LiveDashboard eventId={event.id} initial={toJson(initial) as Dashboard} />
     </section>
   );

@@ -15,7 +15,7 @@
 - Owner: Subagent (web) with lead review
 - Skills: `vercel:nextjs`, `vercel:performance-optimizer`
 - Design docs: `docs/design/features/guests-and-cards.md`, `docs/design/ux/` if present
-- Constraints: no new features; the page must work without JavaScript for viewing the card; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: no new features; the page must work without JavaScript for viewing the card; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

@@ -18,12 +18,12 @@ export function Receipt({ receipt }: { receipt: ReceiptData }) {
   const locale = useLocale();
   const row = (label: string, value: string) => (
     <div className="flex items-baseline justify-between gap-4 py-1.5">
-      <dt className="text-gray-500">{label}</dt>
-      <dd className="text-right tabular-nums text-gray-900">{value}</dd>
+      <dt className="text-muted">{label}</dt>
+      <dd className="text-right tabular-nums text-ink">{value}</dd>
     </div>
   );
   return (
-    <dl className="divide-y divide-gray-100 text-sm" data-testid="receipt">
+    <dl className="divide-y divide-line text-sm" data-testid="receipt">
       {row(t("reference"), receipt.reference ?? "—")}
       {row(t("amount"), formatMoney(receipt.amount))}
       {receipt.discountAmount ? row(t("discount"), formatMoney(-receipt.discountAmount)) : null}

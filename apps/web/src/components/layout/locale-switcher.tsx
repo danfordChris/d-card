@@ -9,10 +9,10 @@ export function LocaleSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   return (
-    <label className="inline-flex items-center gap-2 text-sm text-gray-600">
+    <label className="flex items-center justify-between gap-2 text-sm text-muted">
       <span>{t("language")}</span>
       <select
-        className="rounded-md border-0 bg-white py-1 pr-7 pl-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600"
+        className="h-10 rounded-xl border-0 bg-bg py-1 pr-8 pl-3 text-sm font-semibold text-ink focus:ring-2 focus:ring-primary focus:outline-none"
         value={locale}
         onChange={(e) => {
           document.cookie = `${LOCALE_COOKIE}=${e.target.value}; path=/; max-age=31536000; samesite=lax`;

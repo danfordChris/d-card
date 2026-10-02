@@ -85,14 +85,14 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
       )}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="space-y-4">
-          <h2 className="font-semibold">{t("file.heading")}</h2>
-          <p className="text-sm text-gray-600">{t("file.intro")}</p>
-          <p className="text-xs text-gray-500">{t("file.example")}</p>
+          <h2 className="font-display text-xl font-bold">{t("file.heading")}</h2>
+          <p className="text-sm text-muted">{t("file.intro")}</p>
+          <p className="text-xs text-muted">{t("file.example")}</p>
           <div className="flex flex-wrap gap-3 text-sm">
-            <a className="text-brand-600 underline" href="/templates/guests-template.xlsx" download>
+            <a className="text-primary underline" href="/templates/guests-template.xlsx" download>
               {t("file.templateXlsx")}
             </a>
-            <a className="text-brand-600 underline" href="/templates/guests-template.csv" download>
+            <a className="text-primary underline" href="/templates/guests-template.csv" download>
               {t("file.templateCsv")}
             </a>
           </div>
@@ -106,15 +106,15 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
           </form>
         </Card>
         <Card className="space-y-4">
-          <h2 className="font-semibold">{t("copy.heading")}</h2>
-          <p className="text-sm text-gray-600">{t("copy.intro")}</p>
+          <h2 className="font-display text-xl font-bold">{t("copy.heading")}</h2>
+          <p className="text-sm text-muted">{t("copy.intro")}</p>
           {pastEvents.length === 0 ? (
-            <p className="text-sm text-gray-500">{t("copy.none")}</p>
+            <p className="text-sm text-muted">{t("copy.none")}</p>
           ) : (
             <form onSubmit={previewCopy} className="space-y-3">
               <Field label={t("copy.choose")}>
                 <select
-                  className="block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600"
+                  className="block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary"
                   value={fromEventId}
                   onChange={(e) => setFromEventId(e.target.value)}
                 >
@@ -134,12 +134,12 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
       </div>
       {preview && (
         <Card className="space-y-4">
-          <h2 className="font-semibold">{t("report.heading")}</h2>
+          <h2 className="font-display text-xl font-bold">{t("report.heading")}</h2>
           <ImportReportView report={preview.report} showRows={preview.kind === "file"} />
           {preview.report.valid > 0 ? (
             <>
               <label className="flex items-start gap-2 text-sm">
-                <input type="checkbox" className="mt-0.5 size-4 accent-brand-600" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+                <input type="checkbox" className="mt-0.5 size-4 accent-primary" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
                 {t("report.consent")}
               </label>
               <Button onClick={confirm} disabled={busy}>
@@ -147,7 +147,7 @@ export function ImportPanel({ eventId, pastEvents }: { eventId: string; pastEven
               </Button>
             </>
           ) : (
-            <p className="text-sm text-gray-500">{t("report.nothing")}</p>
+            <p className="text-sm text-muted">{t("report.nothing")}</p>
           )}
         </Card>
       )}

@@ -7,7 +7,7 @@ import 'package:dcard_mobile/ui/features/my_cards/view_models/my_cards_view_mode
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'app_test.dart' show pumpApp;
+import 'app_test.dart' show pumpApp, tapBack;
 import 'fakes/fakes.dart';
 
 const tokenA = 'tokAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
@@ -180,7 +180,7 @@ void main() {
 
       api.myCards = [fakeMyCard(token: tokenA, rsvp: 'yes')];
       final calls = api.myCardsCalls;
-      await tester.pageBack();
+      await tapBack(tester);
       await tester.pumpAndSettle();
       expect(api.myCardsCalls, calls + 1, reason: 'list refreshes after an RSVP change');
       expect(find.text('Attending'), findsOneWidget);
@@ -202,7 +202,7 @@ void main() {
       await tester.tap(find.byKey(const Key('rsvp.no')), warnIfMissed: false);
       await tester.pumpAndSettle();
       expect(api.rsvps, isEmpty);
-      await tester.pageBack();
+      await tapBack(tester);
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('myCards.card.007-9999')));

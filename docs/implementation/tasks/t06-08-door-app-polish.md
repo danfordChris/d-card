@@ -15,7 +15,7 @@
 - Owner: Subagent (Flutter) with lead review
 - Skills: `flutter-apply-architecture-best-practices`, `flutter-setup-localization`
 - Design docs: `docs/design/features/check-in.md`, `docs/design/architecture/offline-sync.md`, `docs/design/features/auth.md` (AUTH-9)
-- Constraints: server behaviour from P04 is fixed; the app only reacts; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: server behaviour from P04 is fixed; the app only reacts; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

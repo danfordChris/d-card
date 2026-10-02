@@ -28,7 +28,7 @@ export function AdminGate({ status, children }: { status: TotpStatus; children?:
   if (locked) return <TwoStepSignIn status={{ enrolled: status.enrolled || status.verified }} onVerified={verified} />;
   if (children === undefined || children === null)
     return (
-      <p className="text-sm text-gray-500" role="status">
+      <p className="text-sm text-muted" role="status">
         {t("loading")}
       </p>
     );

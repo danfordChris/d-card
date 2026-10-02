@@ -72,12 +72,12 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <Card className="space-y-4">
-        <h2 className="font-semibold">{t("invite.heading")}</h2>
+        <h2 className="font-display text-xl font-bold">{t("invite.heading")}</h2>
         {error && <Alert tone="error">{error}</Alert>}
         <form onSubmit={invite} noValidate className="space-y-3">
           <Field label={t("invite.role")}>
             <select
-              className="block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600"
+              className="block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary"
               value={role}
               onChange={(e) => setRole(e.target.value as Role)}
             >
@@ -96,7 +96,7 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
           </Button>
         </form>
         {created && (
-          <div className="space-y-2 rounded-lg bg-brand-50 p-3">
+          <div className="space-y-2 rounded-lg bg-soft p-3">
             <p className="text-sm font-medium">{t("invite.link")}</p>
             <div className="flex gap-2">
               <Input readOnly value={created.link} aria-label={t("invite.link")} onFocus={(e) => e.target.select()} />
@@ -110,23 +110,23 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
                 {copied ? t("invite.copied") : t("invite.copy")}
               </Button>
             </div>
-            {created.emailQueued && created.email && <p className="text-sm text-gray-600">{t("invite.emailQueued", { email: created.email })}</p>}
+            {created.emailQueued && created.email && <p className="text-sm text-muted">{t("invite.emailQueued", { email: created.email })}</p>}
           </div>
         )}
       </Card>
       <div className="space-y-6">
         <Card className="space-y-3">
-          <h2 className="font-semibold">{t("members.heading")}</h2>
+          <h2 className="font-display text-xl font-bold">{t("members.heading")}</h2>
           {team.members.length === 0 ? (
-            <p className="text-sm text-gray-500">{t("members.empty")}</p>
+            <p className="text-sm text-muted">{t("members.empty")}</p>
           ) : (
-            <ul className="divide-y divide-gray-100 text-sm">
+            <ul className="divide-y divide-line text-sm">
               {team.members.map((m) => (
                 <li key={`${m.userId}-${m.role}`} className="flex items-center justify-between py-2">
                   <span>
-                    {m.email ?? "—"} <span className="text-gray-500">· {t(`roles.${m.role}`)}</span>
+                    {m.email ?? "—"} <span className="text-muted">· {t(`roles.${m.role}`)}</span>
                   </span>
-                  <Button variant="ghost" className="text-red-600 hover:bg-red-50" onClick={() => remove(m)}>
+                  <Button variant="ghost" className="text-danger hover:bg-danger-bg" onClick={() => remove(m)}>
                     {t("members.remove")}
                   </Button>
                 </li>
@@ -135,15 +135,15 @@ export function TeamManager({ eventId, initial }: { eventId: string; initial: Te
           )}
         </Card>
         <Card className="space-y-3">
-          <h2 className="font-semibold">{t("pending.heading")}</h2>
+          <h2 className="font-display text-xl font-bold">{t("pending.heading")}</h2>
           {team.invites.length === 0 ? (
-            <p className="text-sm text-gray-500">{t("pending.empty")}</p>
+            <p className="text-sm text-muted">{t("pending.empty")}</p>
           ) : (
-            <ul className="divide-y divide-gray-100 text-sm">
+            <ul className="divide-y divide-line text-sm">
               {team.invites.map((i) => (
                 <li key={i.id} className="flex items-center justify-between py-2">
                   <span>
-                    {i.email ?? t("pending.anyone")} <span className="text-gray-500">· {t(`roles.${i.role}`)} · {t("pending.expires", { date: date(i.expiresAt) })}</span>
+                    {i.email ?? t("pending.anyone")} <span className="text-muted">· {t(`roles.${i.role}`)} · {t("pending.expires", { date: date(i.expiresAt) })}</span>
                   </span>
                   <Button variant="ghost" onClick={() => revoke(i.id)}>
                     {t("pending.revoke")}

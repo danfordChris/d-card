@@ -15,7 +15,7 @@
 - Owner: Subagent (web)
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/plans-and-billing.md`, `docs/research/ui-reference-projects.md` (Solomon money flow: form with live breakdown → review → confirm → receipt)
-- Constraints: quote shown from the server (never computed only on the client); review before paying; the phone number defaults to the host's; waiting state while the USSD push is pending with status polling; receipt with reference; unpaid events show a clear banner and the checkout entry point; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon (`docs/changes/proposed/ui-design-system.md` principles: no decorative gradients/shadows); money as whole TZS integers; phone numbers `255` + 9 digits
+- Constraints: quote shown from the server (never computed only on the client); review before paying; the phone number defaults to the host's; waiting state while the USSD push is pending with status polling; receipt with reference; unpaid events show a clear banner and the checkout entry point; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon (`docs/design/ui/design-system.md` principles: no decorative gradients/shadows); money as whole TZS integers; phone numbers `255` + 9 digits
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

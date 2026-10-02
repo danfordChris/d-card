@@ -6,6 +6,7 @@ import { AuditLog } from "../../../../../features/audit/audit-log";
 import type { AuditPage, ExportKind } from "../../../../../features/audit/types";
 import { getDb } from "../../../../../server/db";
 import { loadEventOr404, requireAccount } from "../../../../../server/events-page-data";
+import { PageHeader } from "../../../../../components/ui";
 
 export default async function AuditPageRoute({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
@@ -19,11 +20,15 @@ export default async function AuditPageRoute({ params }: { params: Promise<{ id:
   const exports: ExportKind[] = event.access === "host" ? ["guests", "contributions", "attendance"] : ["contributions"];
   return (
     <section className="space-y-6">
-      <div>
-        <Link href={`/events/${event.id}`} className="text-sm text-brand-600 hover:underline">← {t("back")}</Link>
-        <h1 className="mt-1 text-2xl font-semibold">{t("title")} · {event.title}</h1>
-        <p className="mt-1 max-w-2xl text-sm text-gray-600">{t("intro")}</p>
-      </div>
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}`} className="hover:text-primary hover:underline">
+            {event.title}
+          </Link>
+        }
+        title={t("title")}
+        description={t("intro")}
+      />
       <AuditLog eventId={event.id} initial={JSON.parse(JSON.stringify(page)) as AuditPage} exports={exports} locale={locale} />
     </section>
   );

@@ -4,7 +4,7 @@ import { ArrowUp01Icon, Clock01Icon, Invoice01Icon, PlusSignIcon, Ticket01Icon }
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Card } from "../../components/ui";
+import { Alert, Badge, Button, Card } from "../../components/ui";
 import { billingApi } from "./api";
 import { CheckoutFlow, upwardPlans } from "./checkout-flow";
 import { formatMoney, formatPaymentDate } from "./format";
@@ -58,7 +58,7 @@ export function BillingView({
         </Button>
       </div>
     ) : (
-      <p className="text-sm text-gray-500">{t("loading")}</p>
+      <p className="text-sm text-muted">{t("loading")}</p>
     );
   }
 
@@ -66,9 +66,9 @@ export function BillingView({
   const pending = summary.pendingAttempt?.status === "pending" ? summary.pendingAttempt : null;
   const planNameOf = (key: string) => plans.find((p) => p.key === key)?.name ?? (key === summary.planKey ? summary.planName : key);
   const stat = (label: string, value: string, testId: string) => (
-    <div className="rounded-lg p-4 ring-1 ring-gray-200" data-testid={testId}>
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="mt-1 text-xl font-semibold tabular-nums">{value}</p>
+    <div className="rounded-2xl bg-bg p-4" data-testid={testId}>
+      <p className="text-sm text-muted">{label}</p>
+      <p className="mt-1 font-display text-2xl font-extrabold tabular-nums">{value}</p>
     </div>
   );
 
@@ -77,23 +77,15 @@ export function BillingView({
       <Card className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-soft text-primary">
               <HugeiconsIcon icon={Ticket01Icon} size={20} strokeWidth={1.8} aria-hidden="true" />
             </span>
             <div>
-              <h2 className="font-semibold">{t("summary.plan", { name: summary.planName })}</h2>
-              <p className="text-sm text-gray-600">{t("summary.pricePerGuest", { amount: formatMoney(summary.pricePerGuest) })}</p>
+              <h2 className="font-display text-xl font-bold">{t("summary.plan", { name: summary.planName })}</h2>
+              <p className="text-sm text-muted">{t("summary.pricePerGuest", { amount: formatMoney(summary.pricePerGuest) })}</p>
             </div>
           </div>
-          <span
-            className={
-              summary.paid
-                ? "rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-200"
-                : "rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-800 ring-1 ring-amber-200"
-            }
-          >
-            {summary.paid ? t("summary.paid") : t("summary.unpaidBadge")}
-          </span>
+          <Badge tone={summary.paid ? "success" : "warning"}>{summary.paid ? t("summary.paid") : t("summary.unpaidBadge")}</Badge>
         </div>
         <div className="grid gap-3 sm:grid-cols-4">
           {stat(t("summary.cardsPaid"), String(summary.guestLimit), "stat-paid")}
@@ -106,7 +98,7 @@ export function BillingView({
           <Alert>{t("summary.overLimit", { guests: summary.guestCount, paid: summary.guestLimit })}</Alert>
         )}
         {summary.launchOfferEligible && summary.launchOfferPercent > 0 && (
-          <p className="text-sm text-green-700">{t("summary.launchOffer", { percent: summary.launchOfferPercent })}</p>
+          <p className="text-sm text-success">{t("summary.launchOffer", { percent: summary.launchOfferPercent })}</p>
         )}
         {!open && (
           <div className="flex flex-wrap gap-2">
@@ -134,12 +126,12 @@ export function BillingView({
       {pending && !open && (
         <Card className="flex flex-wrap items-center justify-between gap-3" data-testid="pending-attempt">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-50 text-amber-700">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-warning-bg text-warning">
               <HugeiconsIcon icon={Clock01Icon} size={20} strokeWidth={1.8} aria-hidden="true" />
             </span>
             <div>
-              <h2 className="font-semibold">{t("pending.title")}</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="font-display text-xl font-bold">{t("pending.title")}</h2>
+              <p className="text-sm text-muted">
                 {t("pending.body", { amount: formatMoney(pending.amount), date: formatPaymentDate(pending.createdAt, locale) })}
               </p>
             </div>
@@ -169,12 +161,12 @@ export function BillingView({
       )}
 
       <section className="space-y-3">
-        <h2 className="flex items-center gap-2 font-semibold">
+        <h2 className="font-display flex items-center gap-2 font-bold">
           <HugeiconsIcon icon={Invoice01Icon} size={18} strokeWidth={1.8} aria-hidden="true" />
           {t("history.title")}
         </h2>
         {summary.payments.length === 0 ? (
-          <p className="text-sm text-gray-500">{t("history.empty")}</p>
+          <p className="text-sm text-muted">{t("history.empty")}</p>
         ) : (
           <div className="grid gap-3 md:grid-cols-2">
             {summary.payments.map((p) => (

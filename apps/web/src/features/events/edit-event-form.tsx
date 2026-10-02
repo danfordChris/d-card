@@ -52,7 +52,7 @@ export function EditEventForm({
   return (
     <form onSubmit={onSubmit} noValidate>
       <Card className="space-y-6">
-        <h1 className="text-xl font-semibold">{t("summary.editTitle")}</h1>
+        <h1 className="font-display text-3xl font-bold">{t("summary.editTitle")}</h1>
         {formError && <Alert tone="error">{formError}</Alert>}
         <DetailsFields values={values} errors={errors} onChange={onChange} eventTypes={eventTypes} />
         <ContactFields values={values} errors={errors} onChange={onChange} />

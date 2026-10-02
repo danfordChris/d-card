@@ -1,3 +1,4 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -5,16 +6,22 @@ import '../../../data/repositories/account_repository.dart';
 import '../../../data/repositories/events_repository.dart';
 import '../../../data/repositories/my_cards_repository.dart';
 import '../../../data/repositories/session_repository.dart';
+import '../../../data/repositories/theme_repository.dart';
 import '../../../l10n/app_localizations.dart';
 import '../account/view_models/account_view_model.dart';
 import '../account/views/account_screen.dart';
 import '../events/view_models/events_view_model.dart';
 import '../events/views/events_screen.dart';
+import '../events/views/new_event_screen.dart';
 import '../my_cards/view_models/my_cards_view_model.dart';
 import '../my_cards/views/my_cards_screen.dart';
+import 'notifications_screen.dart';
 
-/// Signed-in home: Events (hosts, committee), My cards (guests) and Account.
-/// Guests who signed in with Google/Apple start on My cards.
+/// The shell's tabs, in bar order.
+enum HomeTab { home, myCards, newEvent, notifications, account }
+
+/// Signed-in home with the floating spotlight bar: Home (events), My cards, New event,
+/// Notifications and Account. Guests who signed in with Google/Apple start on My cards.
 class HomeShell extends StatefulWidget {
   const HomeShell({
     super.key,
@@ -22,62 +29,81 @@ class HomeShell extends StatefulWidget {
     required this.events,
     required this.myCards,
     required this.account,
+    required this.theme,
   });
 
   final SessionRepository session;
   final EventsRepository events;
   final MyCardsRepository myCards;
   final AccountRepository account;
+  final ThemeRepository theme;
 
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
 
 class _HomeShellState extends State<HomeShell> {
-  late int _index = (widget.session.user?.isSocial ?? false) ? 1 : 0;
+  late HomeTab _tab = (widget.session.user?.isSocial ?? false) ? HomeTab.myCards : HomeTab.home;
 
   /// Tabs are built on first visit so each loads only when opened.
-  late final Set<int> _visited = {_index};
+  late final Set<HomeTab> _visited = {_tab};
 
   late final _eventsVm = EventsViewModel(widget.events);
   late final _myCardsVm = MyCardsViewModel(widget.myCards);
   late final _accountVm = AccountViewModel(session: widget.session, account: widget.account);
 
-  Widget _tab(int i) => switch (i) {
-    0 => EventsScreen(viewModel: _eventsVm),
-    1 => MyCardsScreen(viewModel: _myCardsVm),
-    _ => AccountScreen(viewModel: _accountVm),
+  void _select(HomeTab tab) => setState(() {
+    _tab = tab;
+    _visited.add(tab);
+  });
+
+  Widget _build(HomeTab tab) => switch (tab) {
+    HomeTab.home => EventsScreen(viewModel: _eventsVm, onNewEvent: () => _select(HomeTab.newEvent)),
+    HomeTab.myCards => MyCardsScreen(viewModel: _myCardsVm),
+    HomeTab.newEvent => const NewEventScreen(),
+    HomeTab.notifications => const NotificationsScreen(),
+    HomeTab.account => AccountScreen(viewModel: _accountVm, theme: widget.theme),
   };
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final items = {
+      HomeTab.home: DcNavItem(icon: HugeIcons.strokeRoundedHome01, label: l10n.navHome),
+      HomeTab.myCards: DcNavItem(icon: HugeIcons.strokeRoundedTicket01, label: l10n.navMyCards),
+      HomeTab.newEvent: DcNavItem(icon: HugeIcons.strokeRoundedAddCircle, label: l10n.navNewEvent),
+      HomeTab.notifications: DcNavItem(icon: HugeIcons.strokeRoundedNotification01, label: l10n.navNotifications),
+      HomeTab.account: DcNavItem(icon: HugeIcons.strokeRoundedUser, label: l10n.navAccount),
+    };
     return Scaffold(
+      // The bar floats over the content; each tab pads its scroll view by reservedHeight.
+      extendBody: true,
       body: IndexedStack(
-        index: _index,
-        children: [for (var i = 0; i < 3; i++) _visited.contains(i) ? _tab(i) : const SizedBox.shrink()],
+        index: _tab.index,
+        children: [
+          for (final tab in HomeTab.values) _visited.contains(tab) ? _build(tab) : const SizedBox.shrink(),
+        ],
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() {
-          _index = i;
-          _visited.add(i);
-        }),
-        destinations: [
-          NavigationDestination(
-            key: const Key('nav.events'),
-            icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03),
-            label: l10n.navEvents,
+      bottomNavigationBar: Stack(
+        children: [
+          DcSpotlightNavBar(
+            items: [for (final tab in HomeTab.values) items[tab]!],
+            currentIndex: _tab.index,
+            onTap: (i) => _select(HomeTab.values[i]),
           ),
-          NavigationDestination(
-            key: const Key('nav.myCards'),
-            icon: const HugeIcon(icon: HugeIcons.strokeRoundedTicket01),
-            label: l10n.navMyCards,
-          ),
-          NavigationDestination(
-            key: const Key('nav.account'),
-            icon: const HugeIcon(icon: HugeIcons.strokeRoundedUserCircle),
-            label: l10n.navAccount,
+          // Test and automation handles over each tab (the bar itself is icon-only).
+          Positioned.fill(
+            child: IgnorePointer(
+              child: SafeArea(
+                top: false,
+                minimum: const EdgeInsets.fromLTRB(16, 0, 16, 18),
+                child: Row(
+                  children: [
+                    for (final tab in HomeTab.values) Expanded(child: SizedBox.expand(key: Key('nav.${tab.name}'))),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

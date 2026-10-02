@@ -6,6 +6,7 @@ import { MessageSettings } from "../../../../../features/messages/message-settin
 import type { SettingsView } from "../../../../../features/messages/types";
 import { getDb } from "../../../../../server/db";
 import { loadEventOr404, requireAccount } from "../../../../../server/events-page-data";
+import { PageHeader, buttonClasses } from "../../../../../components/ui";
 
 // MSG-1…MSG-12: the host edits, committee reads.
 export default async function MessagesPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,19 +17,19 @@ export default async function MessagesPage({ params }: { params: Promise<{ id: s
   const canEdit = event.access === "host" && (event.status === "draft" || event.status === "published");
   return (
     <section className="space-y-6">
-      <div>
-        <Link href={`/events/${event.id}`} className="text-sm text-brand-600 hover:underline">
-          ← {t("back")}
-        </Link>
-        <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-2xl font-semibold">
-            {t("title")} · {event.title}
-          </h1>
-          <Link href={`/events/${event.id}/messages/log`} className="text-sm font-medium text-brand-600 hover:underline">
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}`} className="hover:text-primary hover:underline">
+            {event.title}
+          </Link>
+        }
+        title={t("title")}
+        actions={
+          <Link href={`/events/${event.id}/messages/log`} className={buttonClasses("tonal")}>
             {tLog("openLog")}
           </Link>
-        </div>
-      </div>
+        }
+      />
       <MessageSettings eventId={event.id} planName={event.plan.name} initial={JSON.parse(JSON.stringify(view)) as SettingsView} canEdit={canEdit} />
     </section>
   );

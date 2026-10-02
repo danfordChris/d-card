@@ -204,6 +204,28 @@
       "walkIns": "Walk-ins",
       "dashboard": "Dashboard",
       "backupList": "Backup list"
+    },
+    "overview": {
+      "daysToGo": "{count, plural, one {day to go} other {days to go}}",
+      "today": "Today",
+      "guests": "Guests",
+      "cardsIssued": "{count, plural, =0 {No cards issued yet} one {# card issued} other {# cards issued}}",
+      "confirmed": "Confirmed",
+      "confirmedNote": "{pct}% of issued cards",
+      "contributions": "Contributions",
+      "ofTarget": "{pct}% of Tsh {target}",
+      "messagesSent": "Messages sent",
+      "delivered": "{pct}% delivered",
+      "door": "Door check-in",
+      "doorDevices": "{count, plural, =0 {No door devices yet} one {# device ready} other {# devices ready}}",
+      "recent": "Recent contributions",
+      "viewAll": "View all",
+      "noContributions": "No contributors yet.",
+      "nextMessages": "Next messages",
+      "noMessages": "No scheduled messages.",
+      "every": "Every {days} days · {time}",
+      "details": "Event details",
+      "sections": "Manage"
     }
   },
   "guests": {
@@ -1712,5 +1734,29 @@
       "codeLabel": "Code or recovery code",
       "disable": "Turn off"
     }
+  },
+  "shell": {
+    "nav": "Main navigation",
+    "menu": "Menu",
+    "events": "Events",
+    "newEvent": "New event",
+    "admin": "Admin",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "account": "Account",
+    "roleAdmin": "Administrator",
+    "roleHost": "Signed in",
+    "theme": {
+      "legend": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "skip": "Skip to content"
+  },
+  "eventNav": {
+    "label": "Event sections",
+    "overview": "Overview",
+    "events": "Events"
   }
 }

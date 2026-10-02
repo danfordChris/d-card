@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Button, Card, cn, Input } from "../../components/ui";
+import { Alert, Badge, Button, buttonClasses, Card, Input } from "../../components/ui";
 import { localPhone } from "../events/format";
 import { GuestFormDialog } from "./guest-form";
 import { toGuestPayload, type GuestFormValues } from "./guest-form-logic";
@@ -164,7 +164,7 @@ export function GuestList({
           <div className="flex gap-2">
             <Link
               href={`/events/${eventId}/guests/import`}
-              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 hover:bg-gray-50"
+              className={buttonClasses("tonal")}
             >
               {t("import")}
             </Link>
@@ -184,10 +184,10 @@ export function GuestList({
       {cardError && <Alert tone="error">{cardError}</Alert>}
       <Card className="overflow-x-auto p-0">
         {guests.length === 0 ? (
-          <p className="p-6 text-center text-gray-600">{q ? t("noResults") : t("empty")}</p>
+          <p className="p-6 text-center text-muted">{q ? t("noResults") : t("empty")}</p>
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-gray-200 text-gray-500">
+            <thead className="border-b border-line text-muted">
               <tr>
                 <th className="px-4 py-3 font-medium">{t("columns.name")}</th>
                 <th className="px-4 py-3 font-medium">{t("columns.phone")}</th>
@@ -197,24 +197,17 @@ export function GuestList({
                 {(canManage || canViewCards) && <th className="px-4 py-3 font-medium">{t("columns.actions")}</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {guests.map((g) => (
                 <tr key={g.id}>
                   <td className="px-4 py-3">
                     {g.name}
-                    {g.partnerName && <span className="block text-xs text-gray-500">+ {g.partnerName}</span>}
+                    {g.partnerName && <span className="block text-xs text-muted">+ {g.partnerName}</span>}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">{localPhone(g.phone)}</td>
                   <td className="px-4 py-3">{t(`card.${g.cardType}`)}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={cn(
-                        "rounded-full px-2 py-0.5 text-xs",
-                        g.status === "pending" ? "bg-gray-100" : g.status === "cancelled" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-800",
-                      )}
-                    >
-                      {t(`status.${g.status}`)}
-                    </span>
+                    <Badge tone={g.status === "pending" ? "neutral" : g.status === "cancelled" ? "danger" : "success"}>{t(`status.${g.status}`)}</Badge>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs whitespace-nowrap">{g.cardNumber ?? "—"}</td>
                   {(canManage || canViewCards) && (
@@ -235,7 +228,7 @@ export function GuestList({
                         </>
                       )}
                       {canManageCards && g.status !== "cancelled" && (
-                        <Button variant="ghost" className="text-red-600 hover:bg-red-50" onClick={() => cardAction(g, "cancel")}>
+                        <Button variant="ghost" className="text-danger hover:bg-danger-bg" onClick={() => cardAction(g, "cancel")}>
                           {t("cardActions.cancel")}
                         </Button>
                       )}
@@ -255,7 +248,7 @@ export function GuestList({
                           >
                             {t("edit")}
                           </Button>
-                          <Button variant="ghost" className="text-red-600 hover:bg-red-50" onClick={() => remove(g)}>
+                          <Button variant="ghost" className="text-danger hover:bg-danger-bg" onClick={() => remove(g)}>
                             {t("remove")}
                           </Button>
                         </>

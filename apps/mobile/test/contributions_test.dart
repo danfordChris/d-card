@@ -2,18 +2,26 @@ import 'package:dcard_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'app_test.dart' show pumpApp, signIn;
+import 'app_test.dart' show pumpApp, signIn, tapBack;
 import 'fakes/fakes.dart';
 
 Future<void> openContributions(WidgetTester tester, String label) async {
   await signIn(tester);
-  await tester.tap(find.text('Harusi ya Asha'));
+  await tester.tap(find.text('Harusi ya Asha').first);
   await tester.pumpAndSettle();
   // The host's unpaid-event banner pushes the actions down.
   await tester.scrollUntilVisible(find.text(label), 200, scrollable: find.byType(Scrollable).first);
   await tester.pumpAndSettle();
   await tester.tap(find.text(label));
   await tester.pumpAndSettle();
+}
+
+/// The Record payment button sits under the form: scroll to it first.
+Future<void> tapRecord(WidgetTester tester) async {
+  final button = find.widgetWithText(FilledButton, 'Record payment');
+  await tester.ensureVisible(button);
+  await tester.pumpAndSettle();
+  await tester.tap(button);
 }
 
 FakeApi apiWith({EventAccessEnum? access}) => FakeApi(events: [fakeEvent(access: access)])
@@ -50,11 +58,11 @@ void main() {
     await openContributions(tester, 'Contributions');
     await tester.tap(find.text('Mzee Salum'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
+    await tapRecord(tester);
     await tester.pumpAndSettle();
     expect(find.text('Enter the amount.'), findsOneWidget);
     await tester.enterText(find.byKey(const Key('payment.amount')), '12.5');
-    await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
+    await tapRecord(tester);
     await tester.pumpAndSettle();
     expect(find.text('Enter a whole amount in TSh.'), findsOneWidget);
     expect(api.payments, isEmpty);
@@ -65,14 +73,14 @@ void main() {
     await tester.tap(find.text('Cash').last);
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('payment.reference')), 'R-9');
-    await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
+    await tapRecord(tester);
     await tester.pumpAndSettle();
     expect(find.text('Fully paid. Card 007-1234 has been issued.'), findsOneWidget);
     expect(find.text('Balance TSh 0'), findsOneWidget);
     final sent = api.payments.single;
     expect([sent.amount, sent.method, sent.reference], [30000, PaymentMethod.cash, 'R-9']);
 
-    await tester.pageBack();
+    await tapBack(tester);
     await tester.pumpAndSettle();
     expect(find.text('007-1234'), findsOneWidget);
     expect(find.textContaining('Paid TSh 50,000 of TSh 50,000'), findsOneWidget);
@@ -85,7 +93,7 @@ void main() {
     await tester.tap(find.text('Rehema'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('payment.amount')), '10000');
-    await tester.tap(find.widgetWithText(FilledButton, 'Record payment'));
+    await tapRecord(tester);
     await tester.pumpAndSettle();
     expect(find.text('Payment saved.'), findsOneWidget);
     expect(find.text('Balance TSh 40,000'), findsOneWidget);
@@ -105,7 +113,7 @@ void main() {
       api: FakeApi(events: [fakeEvent(access: EventAccessEnum.doorStaff)]),
     );
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     expect(find.text('Contributions'), findsNothing);
   });

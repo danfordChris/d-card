@@ -1,4 +1,5 @@
 import 'package:dcard_core/dcard_core.dart';
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -7,12 +8,11 @@ import '../../../../domain/models/guest_card.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/app_scope.dart';
 import '../../../core/failure_text.dart';
-import '../../billing/views/billing_widgets.dart';
 import '../../events/views/event_format.dart';
 import '../view_models/card_view_model.dart';
 import 'card_badges.dart';
 
-/// One card (AUTH-5): QR for the door, card number, event details and RSVP.
+/// One card (AUTH-5): hero with the event, QR for the door, card number, details and RSVP.
 class CardScreen extends StatefulWidget {
   const CardScreen({super.key, required this.viewModel});
 
@@ -38,22 +38,16 @@ class _CardScreenState extends State<CardScreen> {
         final vm = widget.viewModel;
         final card = vm.card;
         return Scaffold(
-          appBar: AppBar(title: Text(card?.eventTitle ?? '')),
+          appBar: DcTopBar(title: l10n.cardScreenTitle, backLabel: l10n.back),
           body: card == null
               ? (vm.failure != null
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(32),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(l10n.failure(vm.failure!), textAlign: TextAlign.center),
-                              TextButton(onPressed: vm.load, child: Text(l10n.retry)),
-                            ],
-                          ),
-                        ),
+                    ? DcStateView(
+                        kind: DcStateKind.error,
+                        title: l10n.failure(vm.failure!),
+                        actionLabel: l10n.retry,
+                        onAction: vm.load,
                       )
-                    : const Center(child: CircularProgressIndicator()))
+                    : const DcStateView(kind: DcStateKind.loading))
               : RefreshIndicator(onRefresh: vm.load, child: _Body(viewModel: vm, card: card)),
         );
       },
@@ -70,90 +64,130 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
+    final c = context.dc;
     final lang = Localizations.localeOf(context).languageCode;
     final venue = [card.venueName, card.venueAddress].whereType<String>().where((v) => v.isNotEmpty).join(', ');
     final guest = card.partnerName == null || card.partnerName!.isEmpty
         ? card.guestName
         : '${card.guestName} & ${card.partnerName}';
     final qr = card.status == CardStatus.issued ? card.qrToken : null;
+    final hasMap = card.venueMapUrl != null && card.venueMapUrl!.isNotEmpty;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.sm, DcSpace.page, DcSpace.xxxl),
       children: [
         if (card.eventCancelled) ...[
-          Notice(key: const Key('card.eventCancelled'), text: l10n.cardEventCancelledNotice, error: true),
-          const SizedBox(height: 12),
+          DcNoticeTile(key: const Key('card.eventCancelled'), tone: DcTone.danger, message: l10n.cardEventCancelledNotice),
+          const SizedBox(height: DcSpace.gap),
         ] else if (card.status == CardStatus.cancelled) ...[
-          Notice(key: const Key('card.cancelled'), text: l10n.cardCancelledNotice, error: true),
-          const SizedBox(height: 12),
+          DcNoticeTile(key: const Key('card.cancelled'), tone: DcTone.danger, message: l10n.cardCancelledNotice),
+          const SizedBox(height: DcSpace.gap),
         ],
-        FlatCard(
+        DcTile(
+          variant: DcTileVariant.hero,
+          radius: DcRadius.hero,
+          padding: const EdgeInsets.all(DcSpace.xl),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (qr != null) ...[
+              Text(card.eventType(lang).toUpperCase(), style: DcType.eyebrow().copyWith(color: c.heroMuted)),
+              const SizedBox(height: 6),
+              Text(card.eventTitle, style: DcType.heading(28).copyWith(color: c.onHero)),
+              const SizedBox(height: 6),
+              Text(formatEventDate(context, card.startsAt), style: DcType.ui(14).copyWith(color: c.heroMuted)),
+            ],
+          ),
+        ),
+        const SizedBox(height: DcSpace.gap),
+        if (qr != null) ...[
+          DcTile(
+            child: Column(
+              children: [
                 Semantics(
                   label: l10n.cardQrLabel(card.cardNumber),
                   image: true,
                   child: Container(
                     key: const Key('card.qr'),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-                    child: QrImageView(data: qr, size: 220, backgroundColor: Colors.white, padding: EdgeInsets.zero),
+                    padding: const EdgeInsets.all(DcSpace.md),
+                    // Scanners need dark modules on white, in both themes.
+                    decoration: BoxDecoration(
+                      color: DcColors.light.bg,
+                      borderRadius: BorderRadius.circular(DcRadius.input),
+                    ),
+                    child: QrImageView(
+                      data: qr,
+                      size: 220,
+                      backgroundColor: DcColors.light.bg,
+                      eyeStyle: QrEyeStyle(eyeShape: QrEyeShape.square, color: DcColors.light.ink),
+                      dataModuleStyle: QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: DcColors.light.ink),
+                      padding: EdgeInsets.zero,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.cardShowQr,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: DcSpace.sm),
+                Text(l10n.cardShowQr, textAlign: TextAlign.center, style: DcType.ui(13).copyWith(color: c.muted)),
               ],
-              Text(l10n.cardNumberLabel, style: theme.textTheme.labelMedium),
-              Text(card.cardNumber, key: const Key('card.number'), style: theme.textTheme.headlineSmall),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                alignment: WrapAlignment.center,
-                children: [
-                  CardStatusBadge(status: card.status),
-                  Pill(
-                    text: cardTypeLabel(l10n, isDouble: card.isDouble),
-                    background: scheme.surfaceContainerHighest,
-                    foreground: scheme.onSurfaceVariant,
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
+          const SizedBox(height: DcSpace.gap),
+        ],
+        DcBento(
+          items: [
+            DcBentoItem(
+              DcTile(
+                variant: DcTileVariant.soft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.cardNumberLabel, style: DcType.ui(13).copyWith(color: c.onSoft)),
+                    const SizedBox(height: DcSpace.xs),
+                    Text(card.cardNumber, key: const Key('card.number'), style: DcType.number(26).copyWith(color: c.onSoft)),
+                  ],
+                ),
+              ),
+            ),
+            DcBentoItem(
+              DcTile(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.cardTypeTitle, style: DcType.ui(13).copyWith(color: c.muted)),
+                    const SizedBox(height: DcSpace.xs),
+                    Text(cardTypeLabel(l10n, isDouble: card.isDouble), style: DcType.heading(20).copyWith(color: c.ink)),
+                    const SizedBox(height: DcSpace.sm),
+                    CardStatusBadge(status: card.status),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        _Row(icon: HugeIcons.strokeRoundedUser, label: l10n.cardGuestLabel, value: guest),
-        _Row(icon: HugeIcons.strokeRoundedTicket01, label: l10n.eventType, value: card.eventType(lang)),
-        _Row(icon: HugeIcons.strokeRoundedCalendar03, label: l10n.eventDate, value: formatEventDate(context, card.startsAt)),
-        _Row(
+        const SizedBox(height: DcSpace.gap),
+        _InfoTile(icon: HugeIcons.strokeRoundedUser, label: l10n.cardGuestLabel, value: guest),
+        const SizedBox(height: DcSpace.gap),
+        _InfoTile(
           icon: HugeIcons.strokeRoundedLocation01,
           label: l10n.eventVenue,
           value: venue.isEmpty ? l10n.notSet : venue,
-          trailing: card.venueMapUrl == null || card.venueMapUrl!.isEmpty
-              ? null
-              : IconButton(
-                  tooltip: l10n.openMap,
-                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedLinkSquare02, size: 20),
+          trailing: hasMap
+              ? DcCircleButton(
+                  icon: HugeIcons.strokeRoundedMaps,
+                  label: l10n.openMap,
+                  filled: true,
                   onPressed: () {
                     final uri = Uri.tryParse(card.venueMapUrl!);
                     if (uri != null) AppScope.of(context).links.open(uri);
                   },
-                ),
+                )
+              : null,
         ),
-        _Row(
+        const SizedBox(height: DcSpace.gap),
+        _InfoTile(
           icon: HugeIcons.strokeRoundedCall,
           label: l10n.eventContact,
           value: '${card.contactName} · ${formatLocalPhone(card.contactPhone)}',
         ),
         if (card.status == CardStatus.issued && !card.eventCancelled) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: DcSpace.gap),
           _Rsvp(viewModel: viewModel, card: card),
         ],
       ],
@@ -170,49 +204,47 @@ class _Rsvp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final c = context.dc;
     final vm = viewModel;
     final answer = card.rsvp.answer;
-    Widget button(RsvpAnswer value, String label, List<List<dynamic>> icon) {
-      final selected = answer == value;
-      final busy = vm.answering == value;
-      final child = busy
-          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-          : Text(label);
-      final onPressed = vm.canAnswer ? () => vm.answer(value) : null;
-      final key = Key('rsvp.${value.name}');
-      return selected
-          ? FilledButton.icon(key: key, onPressed: onPressed, icon: HugeIcon(icon: icon, size: 20), label: child)
-          : OutlinedButton.icon(key: key, onPressed: onPressed, icon: HugeIcon(icon: icon, size: 20), label: child);
-    }
+    Widget choice(RsvpAnswer value, String label, List<List<dynamic>> icon) => DcChoice(
+      key: Key('rsvp.${value.name}'),
+      label: label,
+      icon: icon,
+      onTile: true,
+      selected: answer == value,
+      busy: vm.answering == value,
+      onTap: vm.canAnswer ? () => vm.answer(value) : null,
+    );
 
     final error = switch (vm.rsvpRefusal) {
       RsvpRefusal.closed => null, // shown as the closed notice below
       RsvpRefusal.tooMany => l10n.errorTooManyRequests,
       null => vm.rsvpFailure == null ? null : l10n.failure(vm.rsvpFailure!),
     };
-    return FlatCard(
+    return DcTile(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Expanded(child: Text(l10n.rsvpTitle, style: Theme.of(context).textTheme.titleMedium)),
+              Expanded(child: Text(l10n.rsvpTitle, style: DcType.heading(20).copyWith(color: c.ink))),
               RsvpBadge(answer: answer),
             ],
           ),
-          const SizedBox(height: 12),
-          button(RsvpAnswer.yes, l10n.rsvpYes, HugeIcons.strokeRoundedCheckmarkCircle02),
-          const SizedBox(height: 8),
-          button(RsvpAnswer.no, l10n.rsvpNo, HugeIcons.strokeRoundedCancelCircle),
+          const SizedBox(height: DcSpace.md),
+          choice(RsvpAnswer.yes, l10n.rsvpYes, HugeIcons.strokeRoundedCheckmarkCircle02),
+          const SizedBox(height: DcSpace.sm),
+          choice(RsvpAnswer.no, l10n.rsvpNo, HugeIcons.strokeRoundedCancelCircle),
           if (!card.rsvp.open) ...[
-            const SizedBox(height: 12),
-            Notice(key: const Key('rsvp.closed'), text: l10n.rsvpClosed),
+            const SizedBox(height: DcSpace.md),
+            DcNoticeTile(key: const Key('rsvp.closed'), tone: DcTone.warning, message: l10n.rsvpClosed),
           ] else if (error != null) ...[
-            const SizedBox(height: 12),
-            Notice(key: const Key('rsvp.error'), text: error, error: true),
+            const SizedBox(height: DcSpace.md),
+            DcNoticeTile(key: const Key('rsvp.error'), tone: DcTone.danger, message: error),
           ] else if (vm.changed) ...[
-            const SizedBox(height: 12),
-            Notice(key: const Key('rsvp.saved'), text: l10n.rsvpSaved),
+            const SizedBox(height: DcSpace.md),
+            DcNoticeTile(key: const Key('rsvp.saved'), tone: DcTone.success, message: l10n.rsvpSaved),
           ],
         ],
       ),
@@ -220,8 +252,9 @@ class _Rsvp extends StatelessWidget {
   }
 }
 
-class _Row extends StatelessWidget {
-  const _Row({required this.icon, required this.label, required this.value, this.trailing});
+/// A detail tile: icon disc, muted label, value and an optional trailing button.
+class _InfoTile extends StatelessWidget {
+  const _InfoTile({required this.icon, required this.label, required this.value, this.trailing});
 
   final List<List<dynamic>> icon;
   final String label;
@@ -229,11 +262,25 @@ class _Row extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-    leading: HugeIcon(icon: icon, size: 22),
-    title: Text(label),
-    subtitle: Text(value),
-    trailing: trailing,
-  );
+  Widget build(BuildContext context) {
+    final c = context.dc;
+    return DcTile(
+      child: Row(
+        children: [
+          DcIconDisc(icon: icon, background: c.bg),
+          const SizedBox(width: DcSpace.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: DcType.ui(13).copyWith(color: c.muted)),
+                Text(value, style: DcType.ui(15, weight: FontWeight.w600).copyWith(color: c.ink)),
+              ],
+            ),
+          ),
+          if (trailing != null) ...[const SizedBox(width: DcSpace.md), trailing!],
+        ],
+      ),
+    );
+  }
 }

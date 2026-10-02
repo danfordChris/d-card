@@ -15,7 +15,7 @@
 - Owner: Subagent (web) with lead review
 - Skills: `vercel:nextjs`
 - Design docs: `docs/design/features/privacy-and-audit.md` (Audited Actions), `docs/design/features/contributions.md`, `docs/design/features/check-in.md`
-- Constraints: host and treasurer see only their event's entries; personal data already masked by retention stays masked; CSV is UTF-8 with BOM for Excel; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: host and treasurer see only their event's entries; personal data already masked by retention stays masked; CSV is UTF-8 with BOM for Excel; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

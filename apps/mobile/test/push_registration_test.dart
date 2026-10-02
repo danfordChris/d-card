@@ -10,6 +10,7 @@ import 'package:dcard_mobile/data/repositories/guests_repository.dart';
 import 'package:dcard_mobile/data/repositories/my_cards_repository.dart';
 import 'package:dcard_mobile/data/repositories/push_registration_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
+import 'package:dcard_mobile/data/repositories/theme_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_ins_repository.dart';
 import 'package:dcard_mobile/data/services/push_token_source.dart';
@@ -128,6 +129,7 @@ void main() {
           walkInAlerts: WalkInAlertsRepository(FakePushMessageSource()),
           billing: BillingRepository(api),
           myCards: MyCardsRepository(api),
+          theme: ThemeRepository(prefs),
           account: AccountRepository(api, FakeFileSaver()),
           links: FakeLinkOpener(),
           locale: const Locale('en'),

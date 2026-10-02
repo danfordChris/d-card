@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { BillingView } from "../../../../../features/billing/billing-view";
 import type { CheckoutMode } from "../../../../../features/billing/types";
 import { loadCatalogue, loadEventOr404, requireAccount } from "../../../../../server/events-page-data";
+import { PageHeader } from "../../../../../components/ui";
 
 const MODES: CheckoutMode[] = ["buy", "add", "upgrade"];
 
@@ -23,14 +24,14 @@ export default async function BillingPage({
   const initialMode = MODES.find((m) => m === requested);
   return (
     <section className="space-y-6">
-      <div>
-        <Link href={`/events/${event.id}`} className="text-sm text-brand-600 hover:underline">
-          ← {t("back")}
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold">
-          {t("title")} · {event.title}
-        </h1>
-      </div>
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}`} className="hover:text-primary hover:underline">
+            {event.title}
+          </Link>
+        }
+        title={t("title")}
+      />
       <BillingView
         eventId={event.id}
         plans={plans.map((p) => ({ key: p.key, name: p.name, pricePerGuest: p.pricePerGuest }))}

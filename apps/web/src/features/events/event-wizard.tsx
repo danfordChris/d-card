@@ -61,14 +61,14 @@ export function EventWizard({ plans, eventTypes }: { plans: PlanOption[]; eventT
   return (
     <Card className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">{t("wizard.title")}</h1>
-        <p className="text-sm text-gray-500">{t("wizard.step", { current: stepIndex + 1, total: WIZARD_STEPS.length })}</p>
+        <h1 className="font-display text-3xl font-bold">{t("wizard.title")}</h1>
+        <p className="text-sm text-muted">{t("wizard.step", { current: stepIndex + 1, total: WIZARD_STEPS.length })}</p>
         <ol className="mt-3 flex gap-2 text-xs">
           {WIZARD_STEPS.map((s, i) => (
             <li
               key={s}
               aria-current={i === stepIndex ? "step" : undefined}
-              className={cn("rounded-full px-3 py-1", i === stepIndex ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-600")}
+              className={cn("rounded-full px-3 py-1", i === stepIndex ? "bg-primary text-on-primary" : "text-muted")}
             >
               {t(`wizard.steps.${s}`)}
             </li>
@@ -88,12 +88,12 @@ export function EventWizard({ plans, eventTypes }: { plans: PlanOption[]; eventT
               aria-checked={values.planKey === p.key}
               onClick={() => onChange({ planKey: p.key, autoUpgradeEnabled: p.autoUpgrade })}
               className={cn(
-                "rounded-xl p-4 text-left ring-1 transition focus-visible:outline-2 focus-visible:outline-brand-600",
-                values.planKey === p.key ? "bg-brand-50 ring-2 ring-brand-600" : "bg-white ring-gray-200 hover:ring-gray-300",
+                "rounded-tile p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                values.planKey === p.key ? "bg-soft text-on-soft" : "bg-tile hover:bg-tile2",
               )}
             >
               <span className="block font-semibold">{p.name}</span>
-              <span className="text-sm text-gray-600">{t("wizard.perGuest", { price: p.pricePerGuest.toLocaleString("en-US") })}</span>
+              <span className="text-sm text-muted">{t("wizard.perGuest", { price: p.pricePerGuest.toLocaleString("en-US") })}</span>
             </button>
           ))}
         </div>

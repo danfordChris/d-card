@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState, type FormEvent } from "react";
-import { Alert, Button, Card, cn } from "../../components/ui";
+import { Alert, Badge, Button, Card, cn, type Tone } from "../../components/ui";
 import { apiFetch } from "../../lib/api-fetch";
 import { localPhone } from "../events/format";
 import {
@@ -19,15 +19,15 @@ import {
 const PAGE_SIZE = 50;
 const EAT = "Africa/Dar_es_Salaam";
 const LOG_TYPES = ["contribution_request", "thank_you", "card_upgraded", ...MANUAL_MESSAGE_TYPES] as const;
-const inputClass = "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600";
+const inputClass = "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary";
 
-const BADGE: Record<LogStatus, string> = {
-  queued: "bg-gray-100 text-gray-700 ring-gray-200",
-  sent: "bg-blue-50 text-blue-700 ring-blue-200",
-  delivered: "bg-green-50 text-green-700 ring-green-200",
-  read: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  failed: "bg-red-50 text-red-700 ring-red-200",
-  held: "bg-amber-50 text-amber-800 ring-amber-200",
+const BADGE: Record<LogStatus, Tone> = {
+  queued: "neutral",
+  sent: "brand",
+  delivered: "success",
+  read: "success",
+  failed: "danger",
+  held: "warning",
 };
 
 export function buildLogUrl(eventId: string, filters: MessageLogFilters, before?: string): string {
@@ -54,7 +54,7 @@ function displayPhone(phone: string | null): string {
 }
 
 function StatusBadge({ status, label }: { status: LogStatus; label: string }) {
-  return <span className={cn("inline-flex rounded-full px-2 py-0.5 text-xs font-medium ring-1", BADGE[status])}>{label}</span>;
+  return <Badge tone={BADGE[status]}>{label}</Badge>;
 }
 
 type Loaded = { key: string; page: MessageLogPage | null };
@@ -121,7 +121,7 @@ export function MessageLog({ eventId }: { eventId: string }) {
     <div className="space-y-6">
       <Card className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-semibold">{t("heading")}</h2>
+          <h2 className="font-display text-xl font-bold">{t("heading")}</h2>
           <Button variant="ghost" onClick={() => setReload((n) => n + 1)} disabled={loading}>
             {t("refresh")}
           </Button>
@@ -136,8 +136,8 @@ export function MessageLog({ eventId }: { eventId: string }) {
               data-testid={`count-${s}`}
               onClick={() => setFilter({ status: filters.status === s ? undefined : s })}
               className={cn(
-                "rounded-full px-3 py-1 text-xs font-medium ring-1",
-                filters.status === s ? "bg-brand-600 text-white ring-brand-600" : "bg-white text-gray-700 ring-gray-300",
+                "min-h-9 rounded-full px-3 py-1 text-xs font-semibold",
+                filters.status === s ? "bg-primary text-on-primary" : "bg-tile text-ink hover:bg-tile2",
               )}
             >
               {t(`statuses.${s}`)} · {counts[s] ?? 0}
@@ -193,33 +193,33 @@ export function MessageLog({ eventId }: { eventId: string }) {
         </div>
 
         {!loading && page === null && <Alert tone="error">{t("error")}</Alert>}
-        {loading && items.length === 0 && <p className="text-sm text-gray-500">{t("loading")}</p>}
-        {!loading && page && items.length === 0 && <p className="text-sm text-gray-500">{t("empty")}</p>}
+        {loading && items.length === 0 && <p className="text-sm text-muted">{t("loading")}</p>}
+        {!loading && page && items.length === 0 && <p className="text-sm text-muted">{t("empty")}</p>}
 
         {items.length > 0 && (
           <>
             {/* Phones: stacked cards. */}
-            <ul className="divide-y divide-gray-100 md:hidden" data-testid="message-log-list">
+            <ul className="divide-y divide-line md:hidden" data-testid="message-log-list">
               {items.map((m) => (
                 <li key={m.id} className="space-y-1 py-3 text-sm">
                   <div className="flex items-start justify-between gap-2">
                     <span className="font-medium">{m.guestName ?? t("unknownGuest")}</span>
                     <StatusBadge status={m.status} label={t(`statuses.${m.status}`)} />
                   </div>
-                  <div className="text-gray-600">
+                  <div className="text-muted">
                     {displayPhone(m.toPhone)} · {t(`channels.${m.channel}`)}
                   </div>
-                  <div className="text-gray-600">
+                  <div className="text-muted">
                     {typeName(m.messageType)} · {time(m.createdAt)}
                   </div>
-                  {(m.status === "failed" || m.status === "held") && m.error && <div className="text-xs text-red-700">{m.error}</div>}
+                  {(m.status === "failed" || m.status === "held") && m.error && <div className="text-xs text-danger">{m.error}</div>}
                 </li>
               ))}
             </ul>
             {/* Wider screens: table. */}
             <div className="hidden overflow-x-auto md:block">
               <table className="min-w-full text-left text-sm" data-testid="message-log-table">
-                <thead className="text-xs uppercase text-gray-500">
+                <thead className="text-xs uppercase text-muted">
                   <tr>
                     <th className="py-2 pr-3 font-medium">{t("columns.guest")}</th>
                     <th className="py-2 pr-3 font-medium">{t("columns.phone")}</th>
@@ -229,7 +229,7 @@ export function MessageLog({ eventId }: { eventId: string }) {
                     <th className="py-2 font-medium">{t("columns.time")}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-line">
                   {items.map((m) => (
                     <tr key={m.id} data-testid={`log-row-${m.id}`}>
                       <td className="py-2 pr-3">{m.guestName ?? t("unknownGuest")}</td>
@@ -238,7 +238,7 @@ export function MessageLog({ eventId }: { eventId: string }) {
                       <td className="py-2 pr-3">{t(`channels.${m.channel}`)}</td>
                       <td className="py-2 pr-3">
                         <StatusBadge status={m.status} label={t(`statuses.${m.status}`)} />
-                        {(m.status === "failed" || m.status === "held") && m.error && <div className="mt-1 text-xs text-red-700">{m.error}</div>}
+                        {(m.status === "failed" || m.status === "held") && m.error && <div className="mt-1 text-xs text-danger">{m.error}</div>}
                       </td>
                       <td className="py-2 whitespace-nowrap">{time(m.createdAt)}</td>
                     </tr>
@@ -259,19 +259,19 @@ export function MessageLog({ eventId }: { eventId: string }) {
 
       <Card className="space-y-3" data-testid="opt-outs">
         <div>
-          <h2 className="font-semibold">{t("optOuts.title")}</h2>
-          <p className="text-sm text-gray-600">{t("optOuts.intro")}</p>
+          <h2 className="font-display text-xl font-bold">{t("optOuts.title")}</h2>
+          <p className="text-sm text-muted">{t("optOuts.intro")}</p>
         </div>
         {optOuts.length === 0 ? (
-          <p className="text-sm text-gray-500">{t("optOuts.empty")}</p>
+          <p className="text-sm text-muted">{t("optOuts.empty")}</p>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-line">
             {optOuts.map((o, i) => (
               <li key={`${o.phone ?? o.name}-${i}`} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
                 <span>
-                  <span className="font-medium">{o.name}</span> <span className="text-gray-600">{displayPhone(o.phone)}</span>
+                  <span className="font-medium">{o.name}</span> <span className="text-muted">{displayPhone(o.phone)}</span>
                 </span>
-                <span className="text-xs text-gray-500">{t("optOuts.since", { date: time(o.createdAt) })}</span>
+                <span className="text-xs text-muted">{t("optOuts.since", { date: time(o.createdAt) })}</span>
               </li>
             ))}
           </ul>

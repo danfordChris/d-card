@@ -29,7 +29,7 @@ export function ResetForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-4">
-      <h1 className="text-xl font-semibold">{t("resetTitle")}</h1>
+      <h1 className="font-display text-3xl font-bold">{t("resetTitle")}</h1>
       {sent && <Alert tone="success">{t("resetSent")}</Alert>}
       <Field label={t("email")} error={error && t(`errors.${error}`)}>
         <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -37,7 +37,7 @@ export function ResetForm() {
       <Button type="submit" className="w-full">
         {t("resetSubmit")}
       </Button>
-      <Link className="block text-sm text-brand-600 hover:underline" href="/login">
+      <Link className="block text-sm text-primary hover:underline" href="/login">
         {t("backToLogin")}
       </Link>
     </form>

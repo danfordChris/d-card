@@ -8,7 +8,7 @@ import { parseAmount, todayInTanzania, validatePayment, type FieldError, type Pa
 import { PAYMENT_METHODS, tsh, type Payment, type Pledge } from "./types";
 import { apiFetch } from "../../lib/api-fetch";
 
-const selectClass = "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600";
+const selectClass = "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary";
 
 /** Contributor detail: pledge, balance, payment history; record payment/refund and edit pledge (host, treasurer). */
 export function ContributorDialog({
@@ -96,14 +96,14 @@ export function ContributorDialog({
   return (
     <Dialog title={pledge.name} onClose={onClose}>
       <div className="max-h-[75vh] space-y-4 overflow-y-auto pr-1">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted">
           {localPhone(pledge.phone)} · {t(`cardTypes.${pledge.cardType}`)}
           {pledge.cardNumber && ` · ${t("cardNumber")} ${pledge.cardNumber}`}
         </p>
         <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
           {(["amountPledged", "amountPaid", "balance", "amountExtra"] as const).map((k) => (
-            <div key={k} className="rounded-lg bg-gray-50 p-2">
-              <dt className="text-xs text-gray-500">{t(`fields.${k}`)}</dt>
+            <div key={k} className="rounded-lg bg-tile2 p-2">
+              <dt className="text-xs text-muted">{t(`fields.${k}`)}</dt>
               <dd className="font-semibold" data-testid={`detail-${k}`}>
                 {tsh(pledge[k])}
               </dd>
@@ -115,7 +115,7 @@ export function ContributorDialog({
 
         {canEditPledge &&
           (editing ? (
-            <form onSubmit={savePledge} className="grid gap-3 rounded-lg p-3 ring-1 ring-gray-200 sm:grid-cols-3">
+            <form onSubmit={savePledge} className="grid gap-3 rounded-lg p-3 sm:grid-cols-3">
               <Field label={t("fields.amountPledged")}>
                 <Input inputMode="numeric" value={edit.amount} onChange={(e) => setEdit({ ...edit, amount: e.target.value })} />
               </Field>
@@ -143,18 +143,18 @@ export function ContributorDialog({
         <section>
           <h3 className="mb-2 text-sm font-semibold">{t("history")}</h3>
           {payments === null ? (
-            <p className="text-sm text-gray-500">…</p>
+            <p className="text-sm text-muted">…</p>
           ) : payments.length === 0 ? (
-            <p className="text-sm text-gray-500">{t("noPayments")}</p>
+            <p className="text-sm text-muted">{t("noPayments")}</p>
           ) : (
-            <ul className="divide-y divide-gray-100 text-sm">
+            <ul className="divide-y divide-line text-sm">
               {payments.map((p) => (
                 <li key={p.id} className="flex justify-between py-1.5">
                   <span>
                     {p.paidOn} · {t(`methods.${p.method}`)}
                     {p.reference && ` · ${p.reference}`}
                   </span>
-                  <span className={p.kind === "refund" ? "text-red-700" : ""}>{p.kind === "refund" ? `− ${tsh(-p.amount)}` : tsh(p.amount)}</span>
+                  <span className={p.kind === "refund" ? "text-danger" : ""}>{p.kind === "refund" ? `− ${tsh(-p.amount)}` : tsh(p.amount)}</span>
                 </li>
               ))}
             </ul>
@@ -162,7 +162,7 @@ export function ContributorDialog({
         </section>
 
         {canRecord && (
-          <form onSubmit={record} noValidate className="grid gap-3 rounded-lg p-3 ring-1 ring-gray-200 sm:grid-cols-2">
+          <form onSubmit={record} noValidate className="grid gap-3 rounded-lg p-3 sm:grid-cols-2">
             <h3 className="text-sm font-semibold sm:col-span-2">{t("recordHeading")}</h3>
             <Field label={t("fields.kind")}>
               <select className={selectClass} value={values.kind} onChange={(e) => setValues({ ...values, kind: e.target.value as "payment" | "refund" })}>

@@ -7,7 +7,7 @@ import 'package:dcard_mobile/ui/features/walk_ins/view_models/walk_ins_view_mode
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'app_test.dart' show pumpApp, signIn;
+import 'app_test.dart' show pumpApp, signIn, tapBack;
 import 'fakes/fakes.dart';
 
 FakeApi walkInApi({EventAccessEnum? access, List<WalkIn>? walkIns}) => FakeApi(events: [fakeEvent(access: access)])
@@ -29,7 +29,7 @@ void tallScreen(WidgetTester tester) {
 
 Future<void> openWalkInsFromEvent(WidgetTester tester, {String label = 'Walk-ins'}) async {
   await signIn(tester);
-  await tester.tap(find.text('Harusi ya Asha'));
+  await tester.tap(find.text('Harusi ya Asha').first);
   await tester.pumpAndSettle();
   await tester.ensureVisible(find.text(label));
   await tester.tap(find.text(label));
@@ -237,7 +237,7 @@ void main() {
       tallScreen(tester);
       await pumpApp(tester, api: walkInApi(access: EventAccessEnum.walkinApprover));
       await signIn(tester);
-      await tester.tap(find.text('Harusi ya Asha'));
+      await tester.tap(find.text('Harusi ya Asha').first);
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('event.walkIns')), findsOneWidget);
     });
@@ -246,7 +246,7 @@ void main() {
       tallScreen(tester);
       await pumpApp(tester, api: walkInApi(access: EventAccessEnum.treasurer));
       await signIn(tester);
-      await tester.tap(find.text('Harusi ya Asha'));
+      await tester.tap(find.text('Harusi ya Asha').first);
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('event.walkIns')), findsNothing);
     });
@@ -264,7 +264,7 @@ void main() {
       expect(find.text('Shangazi'), findsOneWidget);
       expect(find.text('Waiting for approval (2)'), findsOneWidget);
 
-      await tester.pageBack();
+      await tapBack(tester);
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 30));
       expect(api.walkInListCalls, 2);
@@ -346,7 +346,7 @@ void main() {
       // A tapped notification for the same event does not stack another screen.
       push.openedController.add(walkInPush());
       await tester.pumpAndSettle();
-      await tester.pageBack();
+      await tapBack(tester);
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('event.walkIns')), findsOneWidget);
     });

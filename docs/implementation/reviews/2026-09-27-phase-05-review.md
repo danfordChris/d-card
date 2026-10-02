@@ -33,4 +33,4 @@
 - Owner: Snippe webhook URL in the dashboard; `SNIPPE_LIVE=true` on Vercel production and the Railway worker; one real Tsh 500 payment. Google Cloud OAuth consent screen (test users) and redirect URIs for localhost and `api.dcard.danfordchris.dev`; then a live Drive connect and uploads in both sharing modes. Confirm the MED-6 upload window.
 - Deploy migrations `0014_billing` and `0015_media` with the next production deploy.
 - Dart client: nullable nested object refs (e.g. `BillingSummary.pendingAttempt`) generate non-nullable models; the apps read raw JSON meanwhile.
-- UI refinement per `docs/changes/proposed/ui-design-system.md` (backlog).
+- UI refinement per `docs/design/ui/design-system.md` (backlog).

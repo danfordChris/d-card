@@ -4,7 +4,7 @@ import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Alert, Button, Input } from "../../components/ui";
+import { Alert, Badge, Button, Input } from "../../components/ui";
 import { useAdminCall } from "./admin-gate-context";
 import { ConfirmDialog, ListBody, listState, Pagination, panelClass, tdClass, thClass } from "./admin-ui";
 import { jsonInit, queryString } from "./platform-api";
@@ -84,7 +84,7 @@ export function UsersAdmin({ currentUserId }: { currentUserId?: string }) {
       <div className={panelClass}>
         <ListBody state={state} columns={6} empty={{ title: t("empty") }} onRetry={load}>
           <table className="w-full min-w-[820px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className={thClass}>{t("columns.user")}</th>
                 <th className={thClass}>{t("columns.phone")}</th>
@@ -95,28 +95,36 @@ export function UsersAdmin({ currentUserId }: { currentUserId?: string }) {
                 <th className={thClass} />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {items.map((u) => {
                 const self = u.id === currentUserId;
                 const deleted = u.deletedAt !== null;
                 return (
-                  <tr key={u.id} className={u.disabledAt || deleted ? "bg-gray-50 text-gray-500" : ""}>
+                  <tr key={u.id} className={u.disabledAt || deleted ? "text-muted" : ""}>
                     <td className={tdClass}>
-                      <span className="block font-medium text-gray-900">{u.name ?? u.email ?? "—"}</span>
-                      {u.name && u.email && <span className="block text-xs text-gray-500">{u.email}</span>}
-                      <span className="block text-xs text-gray-500">{t(`provider.${u.authProvider}`)}</span>
+                      <span className="block font-medium text-ink">{u.name ?? u.email ?? "—"}</span>
+                      {u.name && u.email && <span className="block text-xs text-muted">{u.email}</span>}
+                      <span className="block text-xs text-muted">{t(`provider.${u.authProvider}`)}</span>
                     </td>
                     <td className={`${tdClass} whitespace-nowrap tabular-nums`}>{u.phone ?? "—"}</td>
                     <td className={tdClass}>
-                      {u.isAdmin ? <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700">{t("admin")}</span> : null}{" "}
-                      <span className="text-xs text-gray-600">{t("teamRoles", { count: u.teamRoles })}</span>
+                      {u.isAdmin ? <Badge tone="brand">{t("admin")}</Badge> : null}{" "}
+                      <span className="text-xs text-muted">{t("teamRoles", { count: u.teamRoles })}</span>
                     </td>
                     <td className={`${tdClass} tabular-nums`}>{u.eventsHosted}</td>
-                    <td className={tdClass}>{deleted ? t("status.deleted") : u.disabledAt ? t("status.disabled") : t("status.active")}</td>
+                    <td className={tdClass}>
+                      {deleted ? (
+                        <Badge tone="neutral">{t("status.deleted")}</Badge>
+                      ) : u.disabledAt ? (
+                        <Badge tone="danger">{t("status.disabled")}</Badge>
+                      ) : (
+                        <Badge tone="success">{t("status.active")}</Badge>
+                      )}
+                    </td>
                     <td className={`${tdClass} whitespace-nowrap`}>{date.format(new Date(u.createdAt))}</td>
                     <td className={`${tdClass} space-x-1 whitespace-nowrap text-right`}>
                       {self ? (
-                        <span className="text-xs text-gray-500">{t("you")}</span>
+                        <span className="text-xs text-muted">{t("you")}</span>
                       ) : (
                         !deleted && (
                           <>

@@ -132,7 +132,7 @@ export function AuditAdmin() {
       <div className={panelClass}>
         <ListBody state={state} columns={5} empty={{ title: t("empty") }} onRetry={load}>
           <table className="w-full min-w-[900px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className={thClass}>{t("columns.time")}</th>
                 <th className={thClass}>{t("columns.actor")}</th>
@@ -141,25 +141,25 @@ export function AuditAdmin() {
                 <th className={thClass}>{t("columns.change")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 align-top">
+            <tbody className="divide-y divide-line align-top">
               {items.map((a) => (
                 <tr key={a.id}>
-                  <td className={`${tdClass} whitespace-nowrap text-gray-600`}>
+                  <td className={`${tdClass} whitespace-nowrap text-muted`}>
                     <time dateTime={a.createdAt}>{time.format(new Date(a.createdAt))}</time>
                   </td>
                   <td className={tdClass}>
                     {a.actorType === "system" ? t("system") : (a.actorEmail ?? a.actorUserId ?? t("unknownActor"))}
-                    {a.ip && <span className="block text-xs text-gray-500">{a.ip}</span>}
+                    {a.ip && <span className="block text-xs text-muted">{a.ip}</span>}
                   </td>
                   <td className={`${tdClass} font-mono text-xs`}>{a.action}</td>
                   <td className={`${tdClass} text-xs`}>
                     <span className="block">{a.targetType}</span>
-                    {a.targetId && <span className="block break-all font-mono text-gray-500">{a.targetId}</span>}
-                    {a.eventId && <span className="block break-all font-mono text-gray-500">{t("eventRef", { id: a.eventId })}</span>}
+                    {a.targetId && <span className="block break-all font-mono text-muted">{a.targetId}</span>}
+                    {a.eventId && <span className="block break-all font-mono text-muted">{t("eventRef", { id: a.eventId })}</span>}
                   </td>
                   <td className={`${tdClass} max-w-xs text-xs`}>
-                    {short(a.oldValue) && <span className="block break-words text-gray-500 line-through">{short(a.oldValue)}</span>}
-                    {short(a.newValue) && <span className="block break-words text-gray-900">{short(a.newValue)}</span>}
+                    {short(a.oldValue) && <span className="block break-words text-muted line-through">{short(a.oldValue)}</span>}
+                    {short(a.newValue) && <span className="block break-words text-ink">{short(a.newValue)}</span>}
                   </td>
                 </tr>
               ))}

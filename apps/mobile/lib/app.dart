@@ -8,6 +8,7 @@ import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
 import 'data/repositories/my_cards_repository.dart';
 import 'data/repositories/session_repository.dart';
+import 'data/repositories/theme_repository.dart';
 import 'data/repositories/walk_in_alerts_repository.dart';
 import 'data/repositories/walk_ins_repository.dart';
 import 'data/services/contacts_source.dart';
@@ -33,6 +34,7 @@ class DCardApp extends StatelessWidget {
     required this.billing,
     required this.myCards,
     required this.account,
+    required this.theme,
     this.links = const ExternalLinkOpener(),
     this.locale,
   });
@@ -56,6 +58,9 @@ class DCardApp extends StatelessWidget {
   /// "Download my data".
   final AccountRepository account;
 
+  /// Light / Dark / System choice from Account.
+  final ThemeRepository theme;
+
   /// Opens the hosted payment page outside the app.
   final LinkOpener links;
 
@@ -72,10 +77,13 @@ class DCardApp extends StatelessWidget {
       walkInAlerts: walkInAlerts,
       billing: billing,
       links: links,
-      child: MaterialApp(
+      child: ListenableBuilder(
+        listenable: theme,
+        builder: (context, _) => MaterialApp(
         onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-        theme: DCardTheme.light(),
-        darkTheme: DCardTheme.dark(),
+        theme: DcTheme.light(),
+        darkTheme: DcTheme.dark(),
+        themeMode: theme.mode,
         locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -86,9 +94,10 @@ class DCardApp extends StatelessWidget {
                   key: ValueKey(session.user!.uid),
                   alerts: walkInAlerts,
                   events: events,
-                  child: HomeShell(session: session, events: events, myCards: myCards, account: account),
+                  child: HomeShell(session: session, events: events, myCards: myCards, account: account, theme: theme),
                 )
               : LoginScreen(viewModel: LoginViewModel(session)),
+        ),
         ),
       ),
     );

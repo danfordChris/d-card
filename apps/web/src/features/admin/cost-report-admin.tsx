@@ -91,7 +91,7 @@ export function CostReportAdmin({ initialRange }: { initialRange?: Range }) {
         </div>
       ) : (
         <>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted">
             {t("summary", { count: report.events.length, fee: formatPercent(report.feePercent) })}
           </p>
           <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label={t("totals")}>
@@ -111,7 +111,7 @@ export function CostReportAdmin({ initialRange }: { initialRange?: Range }) {
           </dl>
 
           {report.total.uncostedMessages > 0 && (
-            <div role="status" className="flex items-start gap-2 rounded-lg p-3 text-sm text-amber-900 ring-1 ring-amber-200">
+            <div role="status" className="flex items-start gap-2 rounded-field bg-warning-bg p-4 text-sm text-warning">
               <HugeiconsIcon icon={Alert02Icon} size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
               <span>{t("uncosted", { count: report.total.uncostedMessages })}</span>
             </div>
@@ -161,10 +161,10 @@ export function CostReportAdmin({ initialRange }: { initialRange?: Range }) {
 
 function Stat({ label, value, note, tone = "gray" }: { label: string; value: string; note?: string; tone?: "gray" | "red" }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4">
-      <dt className="text-sm text-gray-600">{label}</dt>
-      <dd className={`mt-1 text-xl font-semibold tabular-nums ${tone === "red" ? "text-red-700" : "text-gray-900"}`}>{value}</dd>
-      {note && <dd className="mt-0.5 text-xs text-gray-500">{note}</dd>}
+    <div className="rounded-tile bg-tile p-5">
+      <dt className="text-sm text-muted">{label}</dt>
+      <dd className={`mt-1 font-display text-2xl font-extrabold tabular-nums ${tone === "red" ? "text-danger" : "text-ink"}`}>{value}</dd>
+      {note && <dd className="mt-0.5 text-xs text-muted">{note}</dd>}
     </div>
   );
 }
@@ -172,7 +172,7 @@ function Stat({ label, value, note, tone = "gray" }: { label: string; value: str
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-2">
-      <h2 className="font-semibold">{title}</h2>
+      <h2 className="font-display text-xl font-bold">{title}</h2>
       {children}
     </section>
   );
@@ -201,7 +201,7 @@ function LineTable({
     <div className={panelClass}>
       <ListBody state={state} columns={9} empty={{ title: emptyTitle }} onRetry={onRetry}>
         <table className="w-full min-w-[980px] text-left text-sm">
-          <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+          <thead className="border-b border-line text-xs text-muted">
             <tr>
               <th className={thClass}>{first}</th>
               {extra && <th className={`${thClass} text-right`}>{extra.header}</th>}
@@ -213,25 +213,25 @@ function LineTable({
               <th className={`${thClass} text-right`}>{t("marginPct")}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-line">
             {rows.map((r) => (
               <tr key={r.key}>
                 <td className={tdClass}>
-                  <span className="block font-medium text-gray-900">{r.label}</span>
-                  {r.sub && <span className="block text-xs text-gray-500">{r.sub}</span>}
+                  <span className="block font-medium text-ink">{r.label}</span>
+                  {r.sub && <span className="block text-xs text-muted">{r.sub}</span>}
                 </td>
                 {extra && <td className={num}>{extra.value(r)}</td>}
                 <td className={num}>{formatTzs(r.line.revenue)}</td>
                 <td className={num}>
                   {formatTzs(r.line.whatsappCost)}
-                  <span className="block text-xs text-gray-500">{t("count", { count: r.line.whatsappMessages })}</span>
+                  <span className="block text-xs text-muted">{t("count", { count: r.line.whatsappMessages })}</span>
                 </td>
                 <td className={num}>
                   {formatTzs(r.line.smsCost)}
-                  <span className="block text-xs text-gray-500">{t("count", { count: r.line.smsMessages })}</span>
+                  <span className="block text-xs text-muted">{t("count", { count: r.line.smsMessages })}</span>
                 </td>
                 <td className={num}>{formatTzs(r.line.paymentFee)}</td>
-                <td className={`${num} ${r.line.margin < 0 ? "text-red-700" : ""}`}>{formatTzs(r.line.margin)}</td>
+                <td className={`${num} ${r.line.margin < 0 ? "text-danger" : ""}`}>{formatTzs(r.line.margin)}</td>
                 <td className={num}>{formatPercent(r.line.marginPct)}</td>
               </tr>
             ))}

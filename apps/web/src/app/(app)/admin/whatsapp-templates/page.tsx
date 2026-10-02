@@ -14,8 +14,8 @@ export default async function AdminWhatsappTemplatesPage() {
   return (
     <section className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">{t("templates.title")}</h1>
-        <p className="mt-1 max-w-3xl text-sm text-gray-600">{t("templates.intro")}</p>
+        <h1 className="font-display text-3xl font-bold">{t("templates.title")}</h1>
+        <p className="mt-1 max-w-3xl text-sm text-muted">{t("templates.intro")}</p>
       </div>
       <WhatsappTemplatesAdmin initial={templates} />
     </section>

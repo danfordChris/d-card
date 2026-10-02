@@ -135,20 +135,20 @@ export function MediaViewer({ items, index, onIndex, onClose, onDelete, onReport
         {confirming ? (
           <div className="flex flex-wrap items-center gap-3">
             <p className="flex-1">{confirming === "delete" ? t("deleteConfirm") : t("reportConfirm")}</p>
-            <button type="button" disabled={busy} onClick={act} className={`rounded-lg bg-white px-4 py-2 font-semibold text-gray-900 disabled:opacity-60 ${focusRing}`}>
+            <button type="button" disabled={busy} onClick={act} className={`rounded-button bg-white px-4 py-2 font-bold text-black disabled:opacity-60 ${focusRing}`}>
               {confirming === "delete" ? t("delete") : t("report")}
             </button>
-            <button type="button" disabled={busy} onClick={() => setConfirming(null)} className={`rounded-lg px-4 py-2 ring-1 ring-white/40 ${focusRing}`}>
+            <button type="button" disabled={busy} onClick={() => setConfirming(null)} className={`rounded-button bg-white/10 px-4 py-2 hover:bg-white/20 ${focusRing}`}>
               {t("cancel")}
             </button>
           </div>
         ) : item.mine && onDelete ? (
-          <button type="button" onClick={() => setConfirming("delete")} className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-white/40 ${focusRing}`}>
+          <button type="button" onClick={() => setConfirming("delete")} className={`inline-flex items-center gap-2 rounded-button bg-white/10 px-3 py-2 hover:bg-white/20 ${focusRing}`}>
             <HugeiconsIcon icon={Delete02Icon} size={18} aria-hidden="true" />
             {t("delete")}
           </button>
         ) : !item.mine && onReport ? (
-          <button type="button" onClick={() => setConfirming("report")} className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-white/40 ${focusRing}`}>
+          <button type="button" onClick={() => setConfirming("report")} className={`inline-flex items-center gap-2 rounded-button bg-white/10 px-3 py-2 hover:bg-white/20 ${focusRing}`}>
             <HugeiconsIcon icon={Flag01Icon} size={18} aria-hidden="true" />
             {t("report")}
           </button>

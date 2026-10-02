@@ -34,5 +34,5 @@
 - Live checks wait for owner setup: Firebase (Email/Password, authorized domain `api.dcard.danfordchris.dev`, door app registration, FCM/APNs), WhatsApp templates approved, worker host.
 - Door app: real-device camera and offline run; iOS pod install (SQLCipher). Sign-out currently wipes unsynced entries after a warning — consider blocking sign-out until they upload.
 - Seating table on cards and the backup list waits for GST-15 (P2).
-- UI refinement per `docs/changes/proposed/ui-design-system.md` (backlog, 2026-09-26).
+- UI refinement per `docs/design/ui/design-system.md` (backlog, 2026-09-26).
 - Local `node_modules` had been removed outside the session and was reinstalled from the lockfile; Docker/Postgres had hung and recovered.

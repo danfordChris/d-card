@@ -3,25 +3,25 @@
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { PlayIcon } from "@hugeicons/core-free-icons";
 import type { HTMLAttributes, ReactNode } from "react";
-import { cn } from "../../components/ui";
+import { buttonClasses, cn } from "../../components/ui";
 import { useMediaSrc } from "./media-src";
 import type { MediaItem } from "./types";
 
-/** Flat section: hairline border, no shadow (docs/changes/proposed/ui-design-system.md). */
+/** Flat section: a tonal tile, no border or shadow (docs/design/ui/design-system.md). */
 export function Panel({ className, ...props }: HTMLAttributes<HTMLElement>) {
-  return <section className={cn("space-y-4 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6", className)} {...props} />;
+  return <section className={cn("space-y-4 rounded-tile bg-tile p-5 sm:p-6", className)} {...props} />;
 }
 
 export function PanelHeader({ icon, title, intro, action }: { icon: IconSvgElement; title: string; intro?: ReactNode; action?: ReactNode }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="flex items-start gap-3">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600" aria-hidden="true">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-soft text-primary" aria-hidden="true">
           <HugeiconsIcon icon={icon} size={20} strokeWidth={1.8} />
         </span>
         <div>
-          <h2 className="font-semibold text-gray-900">{title}</h2>
-          {intro && <p className="mt-0.5 max-w-2xl text-sm text-gray-600">{intro}</p>}
+          <h2 className="font-display text-xl font-bold text-ink">{title}</h2>
+          {intro && <p className="mt-0.5 max-w-2xl text-sm text-muted">{intro}</p>}
         </div>
       </div>
       {action}
@@ -37,7 +37,7 @@ export function Icon({ icon, size = 18 }: { icon: IconSvgElement; size?: number 
 export function MediaThumb({ item, alt }: { item: MediaItem; alt: string }) {
   const src = useMediaSrc(item.thumbnailUrl);
   return (
-    <div className="relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-100">
+    <div className="relative aspect-square overflow-hidden rounded-2xl bg-tile2">
       {src ? (
         <img src={src} alt={alt} className="size-full object-cover" loading="lazy" />
       ) : (
@@ -65,8 +65,6 @@ export function formatBytes(bytes: number, locale: string): string {
 }
 
 export const linkButton = {
-  primary:
-    "inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600",
-  secondary:
-    "inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600",
+  primary: buttonClasses("primary"),
+  secondary: buttonClasses("tonal"),
 };

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { WalkInApprovals } from "../../../../../features/walk-ins/walk-in-approvals";
 import { getDb } from "../../../../../server/db";
 import { loadEventOr404, requireAccount } from "../../../../../server/events-page-data";
+import { PageHeader } from "../../../../../components/ui";
 
 // CHK-8 / CHK-8a: the host and walk-in approvers decide; committee members follow along read-only.
 export default async function WalkInsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,14 +17,14 @@ export default async function WalkInsPage({ params }: { params: Promise<{ id: st
   const t = await getTranslations("walkIns");
   return (
     <section className="space-y-6">
-      <div>
-        <Link href={`/events/${event.id}`} className="text-sm text-brand-600 hover:underline">
-          ← {t("back")}
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold">
-          {t("title")} · {event.title}
-        </h1>
-      </div>
+      <PageHeader
+        eyebrow={
+          <Link href={`/events/${event.id}`} className="hover:text-primary hover:underline">
+            {event.title}
+          </Link>
+        }
+        title={t("title")}
+      />
       <WalkInApprovals eventId={event.id} canDecide={canDecide} />
     </section>
   );

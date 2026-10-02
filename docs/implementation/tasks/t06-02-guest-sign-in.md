@@ -15,7 +15,7 @@
 - Owner: Claude Code (lead) — core and API; Flutter guest screens by a subagent
 - Skills: `flutter-apply-architecture-best-practices`, `flutter-setup-localization`
 - Design docs: `docs/design/features/auth.md` (AUTH-3, AUTH-4, AUTH-5), `docs/design/features/guests-and-cards.md`, `docs/design/integrations/firebase.md`
-- Constraints: guests sign in with Google or Apple only (no OTP, P4); an account links to one Person; linking needs a valid card link token; a Person already linked to another account is refused; the card stays viewable without login; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/changes/proposed/ui-design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
+- Constraints: guests sign in with Google or Apple only (no OTP, P4); an account links to one Person; linking needs a valid card link token; a Person already linked to another account is refused; the card stays viewable without login; commits follow `.agents/skills/git-commit/SKILL.md` (no AI attribution); sw/en for every user-facing string; web UI Tailwind only, Hugeicons for any new icon, no decorative gradients/shadows (`docs/design/ui/design-system.md`); phone numbers `255` + 9 digits; lowest-cost services only (`docs/deployment.md`)
 - Do not touch: `docs/design/` (except recording adopted decisions), `.agents/workflows/`, other tasks' in-scope paths, task statuses (the lead records them)
 
 ## Session Budget

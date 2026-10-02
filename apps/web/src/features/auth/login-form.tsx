@@ -39,7 +39,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-4">
-      <h1 className="text-xl font-semibold">{t("loginTitle")}</h1>
+      <h1 className="font-display text-3xl font-bold">{t("loginTitle")}</h1>
       {errors.form && <Alert tone="error">{t(`errors.${errors.form}`)}</Alert>}
       <Field label={t("email")} error={errors.email && t(`errors.${errors.email}`)}>
         <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -47,16 +47,16 @@ export function LoginForm() {
       <Field label={t("password")} error={errors.password && t(`errors.${errors.password}`)}>
         <Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
-      <Button type="submit" className="w-full" disabled={busy}>
+      <Button type="submit" size="lg" className="w-full" disabled={busy}>
         {t("loginSubmit")}
       </Button>
       <div className="flex justify-between text-sm">
-        <Link className="text-brand-600 hover:underline" href="/reset-password">
+        <Link className="text-primary hover:underline" href="/reset-password">
           {t("forgotPassword")}
         </Link>
         <span>
           {t("noAccount")}{" "}
-          <Link className="text-brand-600 hover:underline" href="/signup">
+          <Link className="text-primary hover:underline" href="/signup">
             {t("signupSubmit")}
           </Link>
         </span>

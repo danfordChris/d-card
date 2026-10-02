@@ -302,5 +302,120 @@
   "overUsedTitle": "Card over-used",
   "overUsedDetail": "More people entered on this card than it allows (gates admitted it while offline). The host has been alerted. Do not admit again.",
   "lockedPadTitle": "Card-number entry is locked",
-  "lockedPadBody": "Scan the QR code or search by name while you wait."
+  "lockedPadBody": "Scan the QR code or search by name while you wait.",
+  "back": "Back",
+  "loginHint": "Use the account the host invited as door staff.",
+  "@loginHint": {
+    "description": "Short note in the sign-in hero tile."
+  },
+  "eventsToday": "Today · starts {time}",
+  "@eventsToday": {
+    "description": "Badge on the hero tile for the event happening today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsWifiTip": "Tip: open the event once on Wi-Fi before the day so the guest list is on this phone.",
+  "@eventsWifiTip": {
+    "description": "Tip tile on the choose-event screen."
+  },
+  "detailGuest": "Guest",
+  "@detailGuest": {
+    "description": "Label of the guest-name tile on the result screen."
+  },
+  "detailCard": "Card",
+  "@detailCard": {
+    "description": "Label of the card-number tile on the result screen."
+  },
+  "detailEntries": "Entries",
+  "@detailEntries": {
+    "description": "Label of the entries-left tile on the result screen."
+  },
+  "detailTable": "Table",
+  "@detailTable": {
+    "description": "Label of the table tile on the result screen."
+  },
+  "matchCanEnter": "Can enter",
+  "@matchCanEnter": {
+    "description": "Badge on a name-search row for a card that can be admitted."
+  },
+  "matchUsed": "Used",
+  "@matchUsed": {
+    "description": "Badge on a name-search row for a fully used card."
+  },
+  "nameOffline": "Names are searched on this phone, so it works offline.",
+  "@nameOffline": {
+    "description": "Hint under name search results that came from the phone's cache."
+  },
+  "walkInNoCard": "No card?",
+  "@walkInNoCard": {
+    "description": "Small label on the walk-in tile of the check-in screen."
+  },
+  "walkInHeading": "Guest without a card",
+  "@walkInHeading": {
+    "description": "Heading of the walk-in form."
+  },
+  "walkInIntro": "The host or a walk-in approver gets a notification and answers from their phone.",
+  "@walkInIntro": {
+    "description": "Explanation under the walk-in heading."
+  },
+  "walkInUnlinkCard": "Remove card",
+  "@walkInUnlinkCard": {
+    "description": "Screen-reader label of the button that unlinks the card from a walk-in."
+  },
+  "syncTitle": "Sync",
+  "@syncTitle": {
+    "description": "Title of the sync status panel."
+  },
+  "syncOnlineBody": "Entries upload as soon as they are made.",
+  "@syncOnlineBody": {
+    "description": "Sync panel body when online."
+  },
+  "syncOfflineBody": "Check-in keeps working on this phone.",
+  "@syncOfflineBody": {
+    "description": "Sync panel body when offline."
+  },
+  "syncPendingLabel": "Waiting to upload",
+  "@syncPendingLabel": {
+    "description": "Label of the pending-entries tile on the sync panel."
+  },
+  "syncLastLabel": "Last sync",
+  "@syncLastLabel": {
+    "description": "Label of the last-sync tile on the sync panel."
+  },
+  "syncNever": "Never",
+  "@syncNever": {
+    "description": "Last-sync tile value when the phone never synced."
+  },
+  "syncOtherGatesTitle": "Other gates",
+  "@syncOtherGatesTitle": {
+    "description": "Title of the info tile on the sync panel."
+  },
+  "syncOtherGatesBody": "Other gates see these entries as soon as this phone is back online. A card used at two gates while offline is flagged to the host.",
+  "@syncOtherGatesBody": {
+    "description": "Explanation on the sync panel."
+  },
+  "syncTryNow": "Try to sync now",
+  "@syncTryNow": {
+    "description": "Main button on the sync panel."
+  },
+  "syncChipLabel": "Sync status: {count} waiting",
+  "@syncChipLabel": {
+    "description": "Screen-reader label of the sync chip in the check-in header.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "padBackspace": "Delete last digit",
+  "@padBackspace": {
+    "description": "Screen-reader label of the keypad backspace key."
+  },
+  "findCard": "Find card",
+  "@findCard": {
+    "description": "Button under the card-number keypad."
+  }
 }

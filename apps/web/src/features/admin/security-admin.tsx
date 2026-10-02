@@ -50,7 +50,7 @@ export function SecurityAdmin({ onDisabled }: { onDisabled?: () => void }) {
 
   if (!status)
     return (
-      <div className="rounded-2xl bg-white ring-1 ring-gray-200">
+      <div className="rounded-tile bg-tile">
         <ListBody state={loadError ? "error" : "loading"} columns={2} empty={{ title: "" }} onRetry={load}>
           {null}
         </ListBody>
@@ -58,25 +58,25 @@ export function SecurityAdmin({ onDisabled }: { onDisabled?: () => void }) {
     );
 
   return (
-    <div className="max-w-xl space-y-4 rounded-2xl bg-white p-6 ring-1 ring-gray-200">
+    <div className="max-w-xl space-y-4 rounded-tile bg-tile p-6">
       <div className="flex items-start gap-3">
-        <span className="rounded-full bg-brand-50 p-3 text-brand-700">
+        <span className="rounded-full bg-soft p-3 text-primary">
           <HugeiconsIcon icon={Shield01Icon} size={22} aria-hidden="true" />
         </span>
         <div>
-          <h2 className="font-semibold">{t("statusTitle")}</h2>
-          <p className="mt-1 text-sm text-gray-600">{status.enrolled ? t("on") : t("off")}</p>
+          <h2 className="font-display text-xl font-bold">{t("statusTitle")}</h2>
+          <p className="mt-1 text-sm text-muted">{status.enrolled ? t("on") : t("off")}</p>
           {status.enrolled && (
-            <p className="mt-1 text-sm text-gray-600" data-testid="recovery-left">
+            <p className="mt-1 text-sm text-muted" data-testid="recovery-left">
               {t("recoveryLeft", { count: status.recoveryCodesLeft })}
             </p>
           )}
         </div>
       </div>
       {status.enrolled && (
-        <form onSubmit={disable} noValidate className="space-y-3 border-t border-gray-200 pt-4">
+        <form onSubmit={disable} noValidate className="space-y-3 border-t border-line pt-4">
           <h3 className="text-sm font-semibold">{t("disableTitle")}</h3>
-          <p className="text-sm text-gray-600">{t("disableBody")}</p>
+          <p className="text-sm text-muted">{t("disableBody")}</p>
           <Field label={t("codeLabel")}>
             <Input value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" maxLength={20} className="max-w-xs font-mono tracking-widest" />
           </Field>

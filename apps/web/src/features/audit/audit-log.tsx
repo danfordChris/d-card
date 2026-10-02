@@ -9,7 +9,7 @@ import { apiFetch, downloadFromApi } from "../../lib/api-fetch";
 import { AUDIT_GROUPS, type AuditChange, type AuditEntry, type AuditPage, type ExportKind } from "./types";
 
 const selectClass =
-  "rounded-lg border-0 bg-white px-3 py-2 text-sm text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 focus:outline-none";
+  "rounded-field border-0 bg-field px-3 py-2 text-sm text-ink focus:ring-2 focus:ring-primary focus:outline-none";
 const PAGE_SIZE = 50;
 
 export function AuditLog({
@@ -75,8 +75,8 @@ export function AuditLog({
   return (
     <div className="space-y-6">
       {exports.length > 0 && (
-        <div className="rounded-2xl bg-white p-4 ring-1 ring-gray-200">
-          <h2 className="text-sm font-semibold text-gray-900">{t("exports.title")}</h2>
+        <div className="rounded-tile bg-tile p-4">
+          <h2 className="font-display text-sm font-bold text-ink">{t("exports.title")}</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {exports.map((kind) => (
               <Button key={kind} variant="secondary" disabled={downloading !== undefined} onClick={() => download(kind)}>
@@ -89,7 +89,7 @@ export function AuditLog({
       )}
 
       <div className="flex flex-wrap items-center gap-2">
-        <label htmlFor="audit-filter" className="text-sm text-gray-600">{t("filter.label")}</label>
+        <label htmlFor="audit-filter" className="text-sm text-muted">{t("filter.label")}</label>
         <select id="audit-filter" className={selectClass} value={group} onChange={(event) => changeGroup(event.target.value)}>
           <option value="">{t("filter.all")}</option>
           {AUDIT_GROUPS.map((value) => (
@@ -100,12 +100,12 @@ export function AuditLog({
 
       {error && <Alert tone="error">{error}</Alert>}
 
-      <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-gray-200">
+      <div className="overflow-x-auto rounded-tile bg-tile">
         {entries.length === 0 ? (
-          <p className="p-6 text-center text-sm text-gray-600">{loading ? t("loading") : t("empty")}</p>
+          <p className="p-6 text-center text-sm text-muted">{loading ? t("loading") : t("empty")}</p>
         ) : (
           <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-line text-xs text-muted">
               <tr>
                 <th className="px-4 py-3 font-medium">{t("columns.time")}</th>
                 <th className="px-4 py-3 font-medium">{t("columns.actor")}</th>
@@ -113,16 +113,16 @@ export function AuditLog({
                 <th className="px-4 py-3 font-medium">{t("columns.changes")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {entries.map((entry) => (
                 <tr key={entry.id} className="align-top">
-                  <td className="px-4 py-3 whitespace-nowrap text-gray-600">
+                  <td className="px-4 py-3 whitespace-nowrap text-muted">
                     <time dateTime={entry.createdAt}>{time.format(new Date(entry.createdAt))}</time>
                   </td>
                   <td className="px-4 py-3">{actor(entry)}</td>
                   <td className="px-4 py-3">
                     <span className="font-medium">{label(entry.action)}</span>
-                    <span className="block font-mono text-xs text-gray-500">{entry.action}</span>
+                    <span className="block font-mono text-xs text-muted">{entry.action}</span>
                   </td>
                   <td className="px-4 py-3"><Changes changes={entry.changes} empty={t("noChanges")} /></td>
                 </tr>
@@ -144,15 +144,15 @@ export function AuditLog({
 }
 
 function Changes({ changes, empty }: { changes: AuditChange[]; empty: string }) {
-  if (changes.length === 0) return <span className="text-gray-400">{empty}</span>;
+  if (changes.length === 0) return <span className="text-muted">{empty}</span>;
   return (
     <ul className="space-y-1 text-xs">
       {changes.map((change) => (
         <li key={change.field} className="break-words">
-          <span className="font-medium text-gray-700">{change.field}:</span>{" "}
-          {change.from !== null && <span className="text-gray-500 line-through">{change.from}</span>}
-          {change.from !== null && change.to !== null && <span className="text-gray-400"> → </span>}
-          {change.to !== null && <span className="text-gray-900">{change.to}</span>}
+          <span className="font-medium text-ink">{change.field}:</span>{" "}
+          {change.from !== null && <span className="text-muted line-through">{change.from}</span>}
+          {change.from !== null && change.to !== null && <span className="text-muted"> → </span>}
+          {change.to !== null && <span className="text-ink">{change.to}</span>}
         </li>
       ))}
     </ul>

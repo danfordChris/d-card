@@ -14,7 +14,7 @@ import {
   type ManualSendResult,
 } from "./log-types";
 
-const selectClass = "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600 disabled:bg-gray-50 disabled:text-gray-500";
+const selectClass = "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary disabled:opacity-60";
 
 type Notice = { tone: "success" | "error"; text: string };
 
@@ -88,8 +88,8 @@ export function ManualSend({ eventId, planName, sendsAllowed: initialAllowed, on
   return (
     <Card className="space-y-4" data-testid="manual-send">
       <div>
-        <h2 className="font-semibold">{t("title")}</h2>
-        <p className="text-sm text-gray-600">{t("intro")}</p>
+        <h2 className="font-display text-xl font-bold">{t("title")}</h2>
+        <p className="text-sm text-muted">{t("intro")}</p>
       </div>
       {locked && <Alert>{t("locked", { plan: planName })}</Alert>}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -132,13 +132,13 @@ export function ManualSend({ eventId, planName, sendsAllowed: initialAllowed, on
       </div>
 
       {usage.used !== null && !locked && (
-        <p className="text-sm text-gray-600" data-testid="manual-send-usage">
+        <p className="text-sm text-muted" data-testid="manual-send-usage">
           {t("usage", { used: usage.used, allowed: usage.allowed })}
         </p>
       )}
 
       {preview && (
-        <div className="rounded-lg bg-gray-50 p-3 text-sm ring-1 ring-gray-200" data-testid="manual-send-preview">
+        <div className="rounded-lg bg-tile2 p-3 text-sm" data-testid="manual-send-preview">
           {t("recipients", { count: preview.recipients })}
         </div>
       )}

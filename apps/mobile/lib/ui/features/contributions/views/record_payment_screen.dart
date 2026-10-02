@@ -1,4 +1,6 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../domain/models/contributor.dart';
@@ -46,66 +48,76 @@ class _RecordPaymentScreenState extends State<RecordPaymentScreen> {
         if (!didPop) Navigator.of(context).pop(_saved ? widget.viewModel.contributor : null);
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(l10n.recordPaymentTitle)),
+        appBar: DcTopBar(title: l10n.recordPaymentTitle, backLabel: l10n.back),
         body: ListenableBuilder(
           listenable: widget.viewModel,
           builder: (context, _) {
             final vm = widget.viewModel;
             final c = vm.contributor;
+            final colors = context.dc;
             return ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.sm, DcSpace.page, DcSpace.xxxl),
               children: [
-                Text(c.name, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 8),
-                Text(l10n.paidOf(tsh(c.paid), tsh(c.pledged))),
-                Text(l10n.balanceShort(tsh(c.balance)), key: const Key('payment.balance')),
-                if (c.extra > 0) Text(l10n.extraShort(tsh(c.extra))),
-                const SizedBox(height: 16),
+                DcTile(
+                  variant: DcTileVariant.hero,
+                  radius: DcRadius.hero,
+                  padding: const EdgeInsets.all(DcSpace.xl),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(c.name, style: DcType.heading(26).copyWith(color: colors.onHero)),
+                      const SizedBox(height: DcSpace.sm),
+                      Text(l10n.paidOf(tsh(c.paid), tsh(c.pledged)), style: DcType.ui(14).copyWith(color: colors.heroMuted)),
+                      const SizedBox(height: DcSpace.xs),
+                      Text(
+                        l10n.balanceShort(tsh(c.balance)),
+                        key: const Key('payment.balance'),
+                        style: DcType.number(22).copyWith(color: colors.onHero),
+                      ),
+                      if (c.extra > 0)
+                        Text(l10n.extraShort(tsh(c.extra)), style: DcType.ui(13).copyWith(color: colors.heroMuted)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: DcSpace.lg),
                 if (_saved && vm.issuedNow == true)
-                  _Banner(
-                    text: l10n.cardIssuedNow(c.cardNumber ?? ''),
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                  )
+                  _Banner(child: DcNoticeTile(tone: DcTone.success, message: l10n.cardIssuedNow(c.cardNumber ?? '')))
                 else if (_saved)
-                  _Banner(text: l10n.paymentSaved, color: Theme.of(context).colorScheme.secondaryContainer),
-                if (vm.failure != null)
-                  _Banner(text: l10n.failure(vm.failure!), color: Theme.of(context).colorScheme.errorContainer),
-                TextField(
+                  _Banner(child: DcNoticeTile(tone: DcTone.success, message: l10n.paymentSaved)),
+                if (vm.failure != null) _Banner(child: DcNoticeTile(tone: DcTone.danger, message: l10n.failure(vm.failure!))),
+                DcField(
                   key: const Key('payment.amount'),
                   controller: _amount,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: l10n.amountLabel,
-                    errorText: switch (vm.amountError) {
-                      AmountError.required => l10n.errorAmountRequired,
-                      AmountError.invalid => l10n.errorAmountInvalid,
-                      null => null,
-                    },
-                  ),
+                  label: l10n.amountLabel,
+                  errorText: switch (vm.amountError) {
+                    AmountError.required => l10n.errorAmountRequired,
+                    AmountError.invalid => l10n.errorAmountInvalid,
+                    null => null,
+                  },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: DcSpace.lg),
+                Text(l10n.methodLabel, style: DcType.ui(13, weight: FontWeight.w600).copyWith(color: colors.ink)),
+                const SizedBox(height: 6),
                 DropdownButtonFormField<PaymentMethod>(
                   key: const Key('payment.method'),
                   initialValue: vm.method,
-                  decoration: InputDecoration(labelText: l10n.methodLabel),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedArrowDown01, size: 20, color: colors.muted),
+                  borderRadius: BorderRadius.circular(DcRadius.input),
+                  dropdownColor: colors.bg,
                   items: [
                     for (final m in PaymentMethod.values)
                       DropdownMenuItem(value: m, child: Text(_methodLabel(l10n, m))),
                   ],
                   onChanged: (m) => vm.setMethod(m ?? PaymentMethod.mpesa),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  key: const Key('payment.reference'),
-                  controller: _reference,
-                  decoration: InputDecoration(labelText: l10n.referenceLabel),
-                ),
-                const SizedBox(height: 12),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.paidOnLabel),
-                  subtitle: Text(DateFormat.yMMMd(locale).format(vm.paidOn)),
-                  trailing: const Icon(Icons.calendar_today),
+                const SizedBox(height: DcSpace.lg),
+                DcField(key: const Key('payment.reference'), controller: _reference, label: l10n.referenceLabel),
+                const SizedBox(height: DcSpace.lg),
+                DcTile(
+                  padding: const EdgeInsets.symmetric(horizontal: DcSpace.lg, vertical: DcSpace.md),
+                  radius: DcRadius.input,
+                  semanticLabel: l10n.paidOnLabel,
                   onTap: () async {
                     final picked = await showDatePicker(
                       context: context,
@@ -115,9 +127,26 @@ class _RecordPaymentScreenState extends State<RecordPaymentScreen> {
                     );
                     if (picked != null) vm.setDate(picked);
                   },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(l10n.paidOnLabel, style: DcType.ui(13).copyWith(color: colors.muted)),
+                            Text(
+                              DateFormat.yMMMd(locale).format(vm.paidOn),
+                              style: DcType.ui(15, weight: FontWeight.w600).copyWith(color: colors.ink),
+                            ),
+                          ],
+                        ),
+                      ),
+                      HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 22, color: colors.primary),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 24),
-                FilledButton(onPressed: vm.busy ? null : _submit, child: Text(l10n.recordPaymentButton)),
+                const SizedBox(height: DcSpace.xxl),
+                DcButton(label: l10n.recordPaymentButton, loading: vm.busy, onPressed: _submit),
               ],
             );
           },
@@ -138,18 +167,10 @@ class _RecordPaymentScreenState extends State<RecordPaymentScreen> {
 }
 
 class _Banner extends StatelessWidget {
-  const _Banner({required this.text, required this.color});
+  const _Banner({required this.child});
 
-  final String text;
-  final Color color;
+  final Widget child;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
-      child: Text(text),
-    ),
-  );
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: DcSpace.md), child: child);
 }

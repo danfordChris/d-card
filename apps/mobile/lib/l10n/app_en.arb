@@ -1225,5 +1225,171 @@
   "cancel": "Cancel",
   "@cancel": {
     "description": "Generic cancel."
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Label of the back button in the top bar."
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom navigation: dashboard tab (screen-reader label)."
+  },
+  "navNewEvent": "New event",
+  "@navNewEvent": {
+    "description": "Bottom navigation: new event tab (screen-reader label)."
+  },
+  "navNotifications": "Notifications",
+  "@navNotifications": {
+    "description": "Bottom navigation: notifications tab (screen-reader label)."
+  },
+  "notificationsTitle": "Notifications",
+  "@notificationsTitle": {
+    "description": "Notifications screen title."
+  },
+  "notificationsEmptyTitle": "No notifications yet",
+  "@notificationsEmptyTitle": {
+    "description": "Notifications empty state title."
+  },
+  "notificationsEmptyBody": "Alerts such as walk-in requests at the door pop up here while the app is open.",
+  "@notificationsEmptyBody": {
+    "description": "Notifications empty state body."
+  },
+  "newEventTitle": "New event",
+  "@newEventTitle": {
+    "description": "New event screen title and dashboard tile."
+  },
+  "newEventWebTitle": "Create your event on the website",
+  "@newEventWebTitle": {
+    "description": "New event screen: events are created on the web for now."
+  },
+  "newEventWebBody": "Creating events in the app is coming soon. For now, create it on the D-Card website and it shows here straight away.",
+  "@newEventWebBody": {
+    "description": "New event screen body."
+  },
+  "dashboardHello": "Welcome back,",
+  "@dashboardHello": {
+    "description": "Greeting above the dashboard title."
+  },
+  "dashboardNextEvent": "Next event",
+  "@dashboardNextEvent": {
+    "description": "Eyebrow on the dashboard hero tile."
+  },
+  "daysToGo": "{count, plural, =0{today} =1{day to go} other{days to go}}",
+  "@daysToGo": {
+    "description": "Caption under the days-to-go number.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statUpcoming": "Upcoming",
+  "@statUpcoming": {
+    "description": "Dashboard stat: upcoming events."
+  },
+  "statUpcomingNote": "{count, plural, =1{of 1 event} other{of {count} events}}",
+  "@statUpcomingNote": {
+    "description": "Dashboard stat note: total events.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statHosting": "You host",
+  "@statHosting": {
+    "description": "Dashboard stat: events the user hosts."
+  },
+  "statHostingNote": "{count, plural, =0{none as team} =1{1 as team} other{{count} as team}}",
+  "@statHostingNote": {
+    "description": "Dashboard stat note: events where the user is on the team.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statPaid": "Cards paid",
+  "@statPaid": {
+    "description": "Dashboard stat: hosted events with paid cards."
+  },
+  "statPaidNote": "{count, plural, =1{of 1 you host} other{of {count} you host}}",
+  "@statPaidNote": {
+    "description": "Dashboard stat note.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardYourEvents": "Your events",
+  "@dashboardYourEvents": {
+    "description": "Dashboard list heading."
+  },
+  "eventScreenTitle": "Event",
+  "@eventScreenTitle": {
+    "description": "Event screen title."
+  },
+  "eventManage": "Manage",
+  "@eventManage": {
+    "description": "Event screen: heading of the action tiles."
+  },
+  "eventDetails": "Details",
+  "@eventDetails": {
+    "description": "Event screen: heading of the detail rows."
+  },
+  "themeTitle": "Appearance",
+  "@themeTitle": {
+    "description": "Account: theme setting heading."
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Theme option."
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Theme option."
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "Theme option: follow the phone setting."
+  },
+  "cardScreenTitle": "My card",
+  "@cardScreenTitle": {
+    "description": "Card screen title."
+  },
+  "cardTypeTitle": "Card type",
+  "@cardTypeTitle": {
+    "description": "Card screen: card type tile label."
+  },
+  "myCardsNextIn": "{count, plural, =0{Today} =1{Tomorrow} other{In {count} days}}",
+  "@myCardsNextIn": {
+    "description": "My cards hero eyebrow: time until the next event.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loginEyebrow": "Digital invitations",
+  "@loginEyebrow": {
+    "description": "Sign-in screen eyebrow."
+  },
+  "loginTagline": "Every guest invited. Every shilling counted.",
+  "@loginTagline": {
+    "description": "Sign-in screen hero line."
+  },
+  "contributionsListTitle": "Contributors",
+  "@contributionsListTitle": {
+    "description": "Contributions list heading."
+  },
+  "contributionsCollectedNote": "{percent}% of pledges",
+  "@contributionsCollectedNote": {
+    "description": "Contributions hero note: share of pledges collected.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
   }
 }

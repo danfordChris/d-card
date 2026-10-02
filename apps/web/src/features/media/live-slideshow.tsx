@@ -145,7 +145,7 @@ export function LiveSlideshow({ eventId }: { eventId: string }) {
       {allowed === false && (
         <div className="max-w-md space-y-4 p-6 text-center">
           <p className="text-lg">{t("notAvailable")}</p>
-          <Link href={exitHref} className="inline-block rounded-lg px-4 py-2 text-sm font-semibold ring-1 ring-white/40 hover:bg-white/10">
+          <Link href={exitHref} className="inline-block rounded-button bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/20">
             {t("back")}
           </Link>
         </div>
@@ -181,7 +181,7 @@ export function LiveSlideshow({ eventId }: { eventId: string }) {
         <button
           type="button"
           onClick={() => void toggleFullscreen()}
-          className="flex items-center gap-2 rounded-full px-3 py-2 text-sm ring-1 ring-white/40 hover:bg-white/10"
+          className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-sm hover:bg-white/20"
         >
           <Icon icon={FullScreenIcon} size={16} />
           {t("fullscreen")}
@@ -191,7 +191,7 @@ export function LiveSlideshow({ eventId }: { eventId: string }) {
           onClick={() => {
             if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
           }}
-          className="flex items-center gap-2 rounded-full px-3 py-2 text-sm ring-1 ring-white/40 hover:bg-white/10"
+          className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-sm hover:bg-white/20"
         >
           <Icon icon={Cancel01Icon} size={16} />
           {t("exit")}

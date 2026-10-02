@@ -1,33 +1,16 @@
+import 'package:dcard_ui/dcard_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../domain/models/check_in.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/door_format.dart';
+import '../../../core/door_tones.dart';
 import '../../../core/failure_text.dart';
+import '../../../core/message_card.dart';
 import '../view_models/check_in_view_model.dart';
 
-/// Colour + icon so a verdict reads at a glance at a noisy door.
-class Verdict {
-  const Verdict(this.color, this.icon);
-
-  final Color color;
-  final IconData icon;
-
-  static const ok = Verdict(Color(0xFF1B7F3B), Icons.check_circle);
-  static const refused = Verdict(Color(0xFFB3261E), Icons.cancel);
-  static const warning = Verdict(Color(0xFF9A5B00), Icons.help);
-}
-
-Verdict verdictOf(CheckInCard card) => switch (card.refusal) {
-  null => Verdict.ok,
-  RefusalReason.notIssued || RefusalReason.notFound => Verdict.warning,
-  _ => Verdict.refused,
-};
-
-Verdict verdictOfRefusal(RefusalReason reason) => switch (reason) {
-  RefusalReason.notFound || RefusalReason.notIssued || RefusalReason.locked => Verdict.warning,
-  _ => Verdict.refused,
-};
+export '../../../core/door_tones.dart';
 
 String cardNames(CheckInCard card) =>
     card.partnerName == null ? card.guestName : '${card.guestName} & ${card.partnerName}';
@@ -50,7 +33,15 @@ String statusLabel(AppLocalizations l10n, CardStatus status) => switch (status) 
   CardStatus.cancelled => l10n.statusCancelled,
 };
 
-/// Full-screen verdict for the card on screen: valid (Admit 1 / Admit 2), admitted, or refused.
+DcTone statusTone(CardStatus status) => switch (status) {
+  CardStatus.issued => DcTone.success,
+  CardStatus.pending => DcTone.warning,
+  CardStatus.cancelled => DcTone.danger,
+};
+
+/// The verdict for the card on screen as one large status tile (valid / admitted in the
+/// success tone, refusals in danger, not found / not issued / locked in warning), with the
+/// card's details as 2×2 tiles and the actions below.
 class ResultView extends StatelessWidget {
   const ResultView({super.key, required this.viewModel, this.onWalkIn});
 
@@ -62,6 +53,7 @@ class ResultView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final c = context.dc;
     final vm = viewModel;
     final result = vm.result!;
     final (Verdict verdict, String headline, CheckInCard? card) = switch (result) {
@@ -98,164 +90,173 @@ class ResultView extends StatelessWidget {
       CardFound(:final offline) || Admitted(:final offline) || Refused(:final offline) => offline,
     };
     final refused = result is Refused || (result is CardFound && result.card.refusal != null);
-    const onVerdict = Colors.white;
+    final (_, toneFg) = c.tone(verdict.tone);
+    Widget fact(String label, String value, {Key? key}) => DcTile(
+      padding: const EdgeInsets.all(DcSpace.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: DcType.ui(12).copyWith(color: c.muted)),
+          const SizedBox(height: 2),
+          Text(value, key: key, style: DcType.heading(19).copyWith(color: c.ink)),
+        ],
+      ),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
-          child: Container(
-            key: const Key('result.panel'),
-            color: verdict.color,
-            child: SafeArea(
-              bottom: false,
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-                children: [
-                  Icon(verdict.icon, size: 96, color: onVerdict),
-                  const SizedBox(height: 8),
-                  Text(
-                    headline,
-                    key: const Key('result.headline'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: onVerdict, fontSize: 32, fontWeight: FontWeight.w800),
-                  ),
-                  if (detail != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      detail,
-                      key: const Key('result.detail'),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: onVerdict, fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                  if (offline) ...[
-                    const SizedBox(height: 8),
-                    Row(
-                      key: const Key('result.offline'),
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.cloud_off, color: onVerdict, size: 20),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            l10n.offlineDecision,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(color: onVerdict, fontSize: 16),
+          child: LayoutBuilder(
+            builder: (context, constraints) => ListView(
+              padding: const EdgeInsets.fromLTRB(DcSpace.page, 0, DcSpace.page, DcSpace.md),
+              children: [
+                DcStatusTile(
+                  key: const Key('result.panel'),
+                  tone: verdict.tone,
+                  icon: verdict.icon,
+                  title: headline,
+                  titleSize: 36,
+                  message: detail,
+                  titleKey: const Key('result.headline'),
+                  messageKey: const Key('result.detail'),
+                  minHeight: card == null ? constraints.maxHeight * 0.6 : (constraints.maxHeight * 0.4).clamp(0, 320),
+                  children: [
+                    if (offline)
+                      Row(
+                        key: const Key('result.offline'),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          HugeIcon(icon: HugeIcons.strokeRoundedCloudOff, color: toneFg, size: 20),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              l10n.offlineDecision,
+                              textAlign: TextAlign.center,
+                              style: DcType.ui(14, weight: FontWeight.w600).copyWith(color: toneFg),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  if (card != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      cardNames(card),
-                      key: const Key('result.names'),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: onVerdict, fontSize: 36, fontWeight: FontWeight.w700, height: 1.15),
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        _Fact(cardTypeLabel(l10n, card.cardType).toUpperCase(), strong: true),
-                        _Fact(l10n.entriesLeft(card.entriesLeft, card.totalEntries), strong: true),
-                        _Fact(card.table == null ? l10n.noTable : l10n.tableLabel(card.table!)),
-                        _Fact(statusLabel(l10n, card.status)),
-                        if (card.cardNumber != null) _Fact(l10n.cardNumberLabel(card.cardNumber!)),
-                      ],
-                    ),
-                    if (card.overUsed) ...[
-                      const SizedBox(height: 12),
-                      _Fact(l10n.overUsedWarning, strong: true),
-                    ],
-                    if (showEntries) ...[
-                      const SizedBox(height: 20),
-                      Text(
-                        l10n.previousEntries,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: onVerdict, fontSize: 18, fontWeight: FontWeight.w700),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      for (final e in card.entries)
-                        Text(
-                          [
-                            l10n.entryLine(formatEntryTime(context, e.occurredAt), e.admittedCount),
-                            ?e.deviceName,
-                            ?e.staffName,
-                          ].join(' · '),
-                          key: const Key('result.entry'),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: onVerdict, fontSize: 18),
-                        ),
+                  ],
+                ),
+                if (card != null) ...[
+                  const SizedBox(height: DcSpace.gap),
+                  DcBento(
+                    items: [
+                      DcBentoItem(fact(l10n.detailGuest, cardNames(card), key: const Key('result.names'))),
+                      DcBentoItem(fact(l10n.detailCard, card.cardNumber ?? '—')),
+                      DcBentoItem(fact(l10n.detailEntries, l10n.entriesLeft(card.entriesLeft, card.totalEntries))),
+                      DcBentoItem(fact(l10n.detailTable, card.table ?? l10n.noTable)),
                     ],
+                  ),
+                  const SizedBox(height: DcSpace.gap),
+                  Wrap(
+                    spacing: DcSpace.sm,
+                    runSpacing: DcSpace.sm,
+                    children: [
+                      DcBadge(label: cardTypeLabel(l10n, card.cardType).toUpperCase()),
+                      DcBadge(label: statusLabel(l10n, card.status), tone: statusTone(card.status)),
+                      if (card.overUsed) DcBadge(label: l10n.overUsedWarning, tone: DcTone.danger),
+                    ],
+                  ),
+                  if (showEntries) ...[
+                    const SizedBox(height: DcSpace.gap),
+                    DcTile(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.previousEntries, style: DcType.ui(14, weight: FontWeight.w700).copyWith(color: c.ink)),
+                          for (final (i, e) in card.entries.indexed) ...[
+                            const SizedBox(height: DcSpace.xs),
+                            Text(
+                              [
+                                l10n.entryLine(formatEntryTime(context, e.occurredAt), e.admittedCount),
+                                ?e.deviceName,
+                                ?e.staffName,
+                              ].join(' · '),
+                              key: Key('result.entry.$i'),
+                              style: DcType.ui(15).copyWith(color: c.ink),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                   ],
                 ],
-              ),
+              ],
             ),
           ),
         ),
         if (vm.failure != null)
-          Container(
-            color: Theme.of(context).colorScheme.errorContainer,
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              l10n.failure(vm.failure!),
-              key: const Key('result.failure'),
-              style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer, fontSize: 16),
-            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(DcSpace.page, 0, DcSpace.page, DcSpace.sm),
+            child: MessageCard(key: const Key('result.failure'), text: l10n.failure(vm.failure!)),
           ),
         SafeArea(
           top: false,
+          minimum: const EdgeInsets.only(bottom: DcSpace.md),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(DcSpace.page, DcSpace.xs, DcSpace.page, DcSpace.sm),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (admitCard != null)
+                if (admitCard != null) ...[
                   Row(
                     children: [
                       Expanded(
-                        child: _BigButton(
-                          key: const Key('result.admit1'),
-                          label: l10n.admitOne,
-                          onPressed: vm.busy ? null : () => vm.admit(1),
+                        child: SizedBox(
+                          height: 64,
+                          child: DcButton(
+                            key: const Key('result.admit1'),
+                            label: l10n.admitOne,
+                            icon: HugeIcons.strokeRoundedTick02,
+                            loading: vm.busy,
+                            onPressed: () => vm.admit(1),
+                          ),
                         ),
                       ),
                       if (admitCard.entriesLeft >= 2) ...[
-                        const SizedBox(width: 12),
+                        const SizedBox(width: DcSpace.gap),
                         Expanded(
-                          child: _BigButton(
-                            key: const Key('result.admit2'),
-                            label: l10n.admitTwo,
-                            onPressed: vm.busy ? null : () => vm.admit(2),
+                          child: SizedBox(
+                            height: 64,
+                            child: DcButton(
+                              key: const Key('result.admit2'),
+                              label: l10n.admitTwo,
+                              icon: HugeIcons.strokeRoundedTick02,
+                              loading: vm.busy,
+                              onPressed: () => vm.admit(2),
+                            ),
                           ),
                         ),
                       ],
                     ],
                   ),
-                if (admitCard != null) const SizedBox(height: 8),
-                if (refused && onWalkIn != null) ...[
-                  SizedBox(
-                    height: 56,
-                    child: OutlinedButton.icon(
-                      key: const Key('result.walkIn'),
-                      icon: const Icon(Icons.person_add_alt),
-                      onPressed: vm.busy ? null : () => onWalkIn!(card),
-                      label: Text(l10n.walkInAction, style: const TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: DcSpace.gap),
                 ],
-                SizedBox(
-                  height: 56,
-                  child: OutlinedButton(
-                    key: const Key('result.next'),
-                    onPressed: vm.busy ? null : vm.next,
-                    child: Text(l10n.nextGuest, style: const TextStyle(fontSize: 18)),
-                  ),
+                Row(
+                  children: [
+                    if (refused && onWalkIn != null) ...[
+                      Expanded(
+                        child: DcButton(
+                          key: const Key('result.walkIn'),
+                          label: l10n.walkInAction,
+                          icon: HugeIcons.strokeRoundedUserAdd01,
+                          variant: DcButtonVariant.tonal,
+                          onPressed: vm.busy ? null : () => onWalkIn!(card),
+                        ),
+                      ),
+                      const SizedBox(width: DcSpace.gap),
+                    ],
+                    Expanded(
+                      child: DcButton(
+                        key: const Key('result.next'),
+                        label: l10n.nextGuest,
+                        variant: admitCard != null ? DcButtonVariant.tonal : DcButtonVariant.primary,
+                        onPressed: vm.busy ? null : vm.next,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -264,42 +265,4 @@ class ResultView extends StatelessWidget {
       ],
     );
   }
-}
-
-class _Fact extends StatelessWidget {
-  const _Fact(this.text, {this.strong = false});
-
-  final String text;
-  final bool strong;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-    decoration: BoxDecoration(
-      color: Colors.white.withValues(alpha: strong ? 0.28 : 0.16),
-      borderRadius: BorderRadius.circular(24),
-    ),
-    child: Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.white, fontSize: strong ? 22 : 18, fontWeight: strong ? FontWeight.w800 : FontWeight.w500),
-    ),
-  );
-}
-
-class _BigButton extends StatelessWidget {
-  const _BigButton({super.key, required this.label, required this.onPressed});
-
-  final String label;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 72,
-    child: FilledButton(
-      style: FilledButton.styleFrom(backgroundColor: Verdict.ok.color, foregroundColor: Colors.white),
-      onPressed: onPressed,
-      child: Text(label, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
-    ),
-  );
 }

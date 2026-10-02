@@ -14,7 +14,7 @@ const _contacts = [
 
 Future<void> openPicker(WidgetTester tester) async {
   await signIn(tester);
-  await tester.tap(find.text('Harusi ya Asha'));
+  await tester.tap(find.text('Harusi ya Asha').first);
   await tester.pumpAndSettle();
   // The host's unpaid-event banner pushes the actions down.
   await tester.scrollUntilVisible(find.text('Add from contacts'), 200, scrollable: find.byType(Scrollable).first);
@@ -28,7 +28,7 @@ void main() {
     final contacts = FakeContactsSource(permission: ContactsPermission.permanentlyDenied);
     await pumpApp(tester, contacts: contacts);
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     expect(contacts.permissionRequests, 0);
 
@@ -49,7 +49,7 @@ void main() {
       api: FakeApi(events: [fakeEvent(status: EventStatusEnum.cancelled)]),
     );
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     expect(find.text('Add from contacts'), findsNothing);
   });
@@ -107,7 +107,7 @@ void main() {
       contacts: FakeContactsSource(contacts: _contacts),
     );
     await signIn(tester);
-    await tester.tap(find.text('Harusi ya Asha'));
+    await tester.tap(find.text('Harusi ya Asha').first);
     await tester.pumpAndSettle();
     // The host's unpaid-event banner pushes the actions down.
     await tester.scrollUntilVisible(find.text('Ongeza kutoka simu'), 200, scrollable: find.byType(Scrollable).first);

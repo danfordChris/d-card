@@ -1,20 +1,138 @@
 @import "tailwindcss";
 
-/* D-Card design tokens (plum + gold, matching dcard_ui in the Flutter apps). */
-@theme {
-  --color-brand-50: #fbf2f7;
-  --color-brand-100: #f5e0ec;
-  --color-brand-500: #9b2d75;
-  --color-brand-600: #7a1f5c;
-  --color-brand-700: #62184a;
-  --color-gold-500: #c9a227;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
+/* D-Card design tokens (docs/design/ui/design-system.md), shared with dcard_ui in the Flutter apps.
+   Light by default; dark follows the system unless <html data-theme="light|dark"> overrides it. */
 
-html {
+:root {
+  --dc-bg: #ffffff;
+  --dc-tile: #f5f1fa;
+  --dc-tile2: #ede5f6;
+  --dc-soft: #e4d7f2;
+  --dc-on-soft: #3e1c5e;
+  --dc-hero: #5a2d82;
+  --dc-on-hero: #ffffff;
+  --dc-hero-muted: #e4d7f2;
+  --dc-primary: #5a2d82;
+  --dc-primary-strong: #47226a;
+  --dc-on-primary: #ffffff;
+  --dc-ink: #1a1523;
+  --dc-muted: #625a72;
+  --dc-line: #eee9f4;
+  --dc-success-bg: #e3f2e9;
+  --dc-success-fg: #1b6b43;
+  --dc-warning-bg: #fbf0d9;
+  --dc-warning-fg: #7a5000;
+  --dc-danger-bg: #fce7e5;
+  --dc-danger-fg: #a11f15;
   color-scheme: light;
 }
 
+:root[data-theme="dark"] {
+  --dc-bg: #110d16;
+  --dc-tile: #1b1522;
+  --dc-tile2: #241c2e;
+  --dc-soft: #3a2456;
+  --dc-on-soft: #eadcfb;
+  --dc-hero: #3a2456;
+  --dc-on-hero: #f3eff8;
+  --dc-hero-muted: #d9c8f0;
+  --dc-primary: #c8adee;
+  --dc-primary-strong: #d9c5f4;
+  --dc-on-primary: #2a1142;
+  --dc-ink: #f3eff8;
+  --dc-muted: #b6aec4;
+  --dc-line: #2a2233;
+  --dc-success-bg: #16301f;
+  --dc-success-fg: #8bddb0;
+  --dc-warning-bg: #33280f;
+  --dc-warning-fg: #f0c674;
+  --dc-danger-bg: #3a1714;
+  --dc-danger-fg: #f4a097;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --dc-bg: #110d16;
+    --dc-tile: #1b1522;
+    --dc-tile2: #241c2e;
+    --dc-soft: #3a2456;
+    --dc-on-soft: #eadcfb;
+    --dc-hero: #3a2456;
+    --dc-on-hero: #f3eff8;
+    --dc-hero-muted: #d9c8f0;
+    --dc-primary: #c8adee;
+    --dc-primary-strong: #d9c5f4;
+    --dc-on-primary: #2a1142;
+    --dc-ink: #f3eff8;
+    --dc-muted: #b6aec4;
+    --dc-line: #2a2233;
+    --dc-success-bg: #16301f;
+    --dc-success-fg: #8bddb0;
+    --dc-warning-bg: #33280f;
+    --dc-warning-fg: #f0c674;
+    --dc-danger-bg: #3a1714;
+    --dc-danger-fg: #f4a097;
+    color-scheme: dark;
+  }
+}
+
+/* `dark:` utilities follow the same rule as the tokens (system, or data-theme override). */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:not([data-theme="light"], [data-theme="light"] *)) {
+      @slot;
+    }
+  }
+}
+
+@theme inline {
+  --color-bg: var(--dc-bg);
+  --color-tile: var(--dc-tile);
+  --color-tile2: var(--dc-tile2);
+  --color-soft: var(--dc-soft);
+  --color-on-soft: var(--dc-on-soft);
+  --color-hero: var(--dc-hero);
+  --color-on-hero: var(--dc-on-hero);
+  --color-hero-muted: var(--dc-hero-muted);
+  --color-primary: var(--dc-primary);
+  --color-primary-strong: var(--dc-primary-strong);
+  --color-on-primary: var(--dc-on-primary);
+  --color-ink: var(--dc-ink);
+  --color-muted: var(--dc-muted);
+  --color-line: var(--dc-line);
+  --color-field: var(--dc-field);
+  --color-success: var(--dc-success-fg);
+  --color-success-bg: var(--dc-success-bg);
+  --color-warning: var(--dc-warning-fg);
+  --color-warning-bg: var(--dc-warning-bg);
+  --color-danger: var(--dc-danger-fg);
+  --color-danger-bg: var(--dc-danger-bg);
+
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+
+  --radius-tile: 24px;
+  --radius-hero: 28px;
+  --radius-field: 16px;
+  --radius-button: 18px;
+}
+
 body {
-  @apply bg-gray-50 text-gray-900 antialiased;
+  @apply bg-bg text-ink antialiased;
+}
+
+/* Filled inputs contrast with the surface they sit on: tile fill on the page, page fill inside a tile. */
+:root,
+.bg-bg {
+  --dc-field: var(--dc-tile);
+}
+.bg-tile,
+.bg-tile2,
+.bg-soft {
+  --dc-field: var(--dc-bg);
 }

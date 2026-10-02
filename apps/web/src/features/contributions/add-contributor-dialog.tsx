@@ -7,7 +7,7 @@ import { parseAmount, validateContributor, type ContributorValues, type FieldErr
 import type { Pledge } from "./types";
 import { apiFetch } from "../../lib/api-fetch";
 
-const selectClass = "block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-brand-600";
+const selectClass = "block w-full rounded-field border-0 bg-field px-3 py-2 text-sm focus:ring-2 focus:ring-primary";
 
 /** CON-1: add a contributor with a pledge (host, committee). Amount defaults to the event's card amounts. */
 export function AddContributorDialog({
@@ -87,7 +87,7 @@ export function AddContributorDialog({
           <input type="checkbox" className="mt-1" checked={v.consent} onChange={(e) => setV({ ...v, consent: e.target.checked })} />
           <span>{t("consent")}</span>
         </label>
-        {errors.consent && <p className="text-sm text-red-600">{t("errors.consent")}</p>}
+        {errors.consent && <p className="text-sm text-danger">{t("errors.consent")}</p>}
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={onClose}>
             {t("cancel")}

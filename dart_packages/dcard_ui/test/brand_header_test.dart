@@ -6,7 +6,7 @@ void main() {
   testWidgets('BrandHeader shows title and subtitle', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: DCardTheme.light(),
+        theme: DcTheme.light(),
         home: const Scaffold(body: BrandHeader(title: 'D-Card', subtitle: 'Karibu')),
       ),
     );

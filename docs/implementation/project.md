@@ -23,28 +23,34 @@ A host can run a real event end-to-end on D-Card:
 
 ## Current Priorities
 
-- Phase 01: events, guests, team (T01-01 → T01-10), branch `feat/phase-01-events-guests` stacked on PR #1.
-- Phase 00: T00-10 live spikes once real keys are in `.env`.
-- Start external approvals in week 1 (table below).
+- All build tasks (T00-01 → T08-04) are done. Phase 08 (design system) is in review, branch `feat/phase-08-design-system`, PR #9.
+- Remaining work is live verification and owner setup, not new code:
+  - T00-10 live spikes with real provider keys (also closes phase 03: a live WhatsApp send).
+  - Phase 05: one real Snippe payment and a live Google Drive check.
+  - Phase 06: staging deploy with migrations 0013–0017; Firebase Google/Apple providers, Sentry DSN and `ALERT_EMAIL`, store accounts and signing keys, privacy notice wording (O3).
+  - T07-05 pilot events: friendly hosts, dates, and the launch checklist (`docs/launch/`) completed for production.
+- Open proposals: `docs/changes/proposed/whatsapp-cost-verification.md` (Meta rate card from 1 Oct 2026), `docs/changes/proposed/pdpa-compliance.md`.
 
 ## Active Phases
 
 - [ ] `docs/implementation/phases/phase-00-foundations.md` (in-progress: only T00-10 open, blocked on keys)
+- [ ] `docs/implementation/phases/phase-03-messaging.md` (in-progress: tasks done; waits for a live WhatsApp send)
+- [ ] `docs/implementation/phases/phase-05-payments-media.md` (in-progress: tasks done; waits for a real Snippe payment and a live Drive check)
+- [ ] `docs/implementation/phases/phase-06-completion.md` (in-progress: tasks done; waits for the staging deploy and owner setup)
+- [ ] `docs/implementation/phases/phase-07-hardening-pilot.md` (in-progress: only T07-05 pilot events open)
+
+## Completed Phases
+
 - [x] `docs/implementation/phases/phase-01-events-guests.md` (done)
-
-## Deferred Phases
-
 - [x] `docs/implementation/phases/phase-02-contributions-cards.md` (done)
-- [ ] `docs/implementation/phases/phase-03-messaging.md`
-- [ ] `docs/implementation/phases/phase-04-confirmation-check-in.md`
-- [ ] `docs/implementation/phases/phase-05-payments-media.md`
-- [ ] `docs/implementation/phases/phase-06-completion.md`
-- [ ] `docs/implementation/phases/phase-07-hardening-pilot.md`
+- [x] `docs/implementation/phases/phase-04-confirmation-check-in.md` (done)
+- [x] `docs/implementation/phases/phase-08-design-system.md` (done; PR #9 in review)
 
 ## Dependencies
 
-- Flutter SDK on build machines (blocks T00-07).
-- Provider accounts and credentials: Meta, NextSMS, Google Cloud/Firebase, Snippe (block T00-08 and later phases).
+- Provider accounts and credentials: Meta (business verification, messaging tier), Snippe (live keys), Google Cloud/Firebase (Google/Apple sign-in, Drive), Sentry. They block T00-10 and the close of phases 03, 05 and 06.
+- Store accounts (Apple Developer, Google Play Console) and signing keys for release builds.
+- Friendly hosts and event dates for T07-05.
 
 ### Workstreams
 
