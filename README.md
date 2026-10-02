@@ -103,6 +103,8 @@ Details: [`docs/design/domain/overview.md`](docs/design/domain/overview.md) and 
 
 ## 5. Local setup
 
+Full guide, with the apps on a simulator or phone, fake sign-in, and a local end-to-end run: **[docs/running-locally.md](docs/running-locally.md)**. Short version:
+
 ```bash
 git clone --recurse-submodules <repo-url> d-card && cd d-card
 cp .env.example .env            # then see section 6
@@ -112,8 +114,9 @@ pnpm env:check                  # core must be "ready"
 pnpm --filter @dcard/db build
 pnpm --filter @dcard/db db:migrate
 pnpm --filter @dcard/db db:seed # event types + plans
-pnpm --filter @dcard/web dev    # http://localhost:3000/api/v1/health
+pnpm --filter @dcard/web dev    # http://localhost:3000 (API health: /api/v1/health with X-API-Key)
 pnpm --filter @dcard/worker start
+pnpm --filter @dcard/site dev   # marketing site, http://localhost:4321
 ```
 
 Generate local secrets for `.env`:
@@ -167,17 +170,18 @@ Every `/api/v1` request must send `X-API-Key` with a key from `API_KEYS` (per cl
 
 ## 9. Mobile apps
 
+Both Flutter apps share one Dart workspace and the `dcard_ui` design system (`docs/design/ui/design-system.md`). How to run them on the iOS Simulator, Android emulator or a phone, and the `--dart-define` settings: [docs/running-locally.md](docs/running-locally.md#5-mobile-app-and-door-app).
+
 ```bash
 export PATH="$HOME/fvm/default/bin:$PATH"   # if using FVM
 flutter pub get                              # from the repo root (pub workspace)
-cd apps/mobile && flutter run                # or apps/door
-flutter build apk --debug                    # Android debug build
+cd apps/mobile && flutter run -d ios --dart-define=API_BASE_URL=http://localhost:3000 --dart-define=API_KEY=<mobile key> --dart-define=AUTH_MODE=fake
 ```
 
-- Localisation: `lib/l10n/app_en.arb` and `app_sw.arb` (Swahili + English); generated on `flutter pub get`.
+- `apps/mobile`: hosts and guests ([README](apps/mobile/README.md)). `apps/door`: check-in staff ([README](apps/door/README.md)).
+- Localisation: `lib/l10n/app_en.arb` and `app_sw.arb` (Swahili + English), generated on `flutter pub get`.
 - Structure per app: `lib/data` (services, repositories), `lib/domain`, `lib/ui/core`, `lib/ui/features/<feature>`.
-- API base URL and Firebase config for the apps are added in phase 01.
-- **Releases are manual** (Play Console / App Store Connect) by the owner.
+- Store builds and releases are manual (Play Console / App Store Connect); see `docs/store-listings.md`.
 
 ## 10. Integration spikes
 
@@ -216,9 +220,9 @@ Run `pnpm workflow:validate` before merging doc changes. Research notes (market,
 
 ## 13. Current status
 
-- Phase 00 (foundations): see [`docs/implementation/phases/phase-00-foundations.md`](docs/implementation/phases/phase-00-foundations.md).
+- Phases 00–08 are merged or in review; phase 07 (pilots) waits for the owner. Phase files: [`docs/implementation/phases/`](docs/implementation/phases/).
 - Feature-by-feature status: [`docs/implementation/feature-inventory/README.md`](docs/implementation/feature-inventory/README.md).
-- Dated log: [`docs/implementation/status/weekly-status.md`](docs/implementation/status/weekly-status.md).
+- Reviews per phase: [`docs/implementation/reviews/`](docs/implementation/reviews/). Launch: [`docs/launch/`](docs/launch/).
 - Open questions: [`docs/changes/proposed/`](docs/changes/proposed/).
 
 ## 14. Handover checklist
