@@ -120,7 +120,7 @@ Free tiers only.
 
 A separate Vercel project (static, no functions):
 
-- Root directory `apps/site`; framework preset Astro; build command `pnpm --filter @dcard/site build`; output `dist`.
+- Root directory `apps/site` (set in the project settings); framework, install and build commands and output `dist` in `apps/site/vercel.ts`. Git pushes deploy it: previews on pull requests, production on `main`.
 - Environment variables: `SITE_URL` (the site's own domain, used for canonical/hreflang/sitemap), `SITE_APP_URL` (the web app, for the sign-up button), and optionally `SITE_WHATSAPP`, `SITE_PHONE` (any Tanzanian format), `SITE_EMAIL` — contact buttons stay hidden until set.
 - Check locally: `pnpm --filter @dcard/site build && pnpm --filter @dcard/site preview`.
 
