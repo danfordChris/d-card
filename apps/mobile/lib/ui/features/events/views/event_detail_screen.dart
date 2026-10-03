@@ -11,6 +11,8 @@ import '../../contacts/view_models/contacts_picker_view_model.dart';
 import '../../contacts/views/contacts_picker_screen.dart';
 import '../../contributions/view_models/contributions_view_model.dart';
 import '../../contributions/views/contributions_screen.dart';
+import '../../guests/view_models/guests_view_model.dart';
+import '../../guests/views/guests_screen.dart';
 import '../../walk_ins/views/walk_ins_screen.dart';
 import 'event_format.dart';
 
@@ -46,6 +48,19 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     );
   }
 
+  void _openGuests() {
+    final scope = AppScope.of(context);
+    final event = widget.event;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => GuestsScreen(
+          viewModel: GuestsViewModel(eventId: event.id, repository: scope.guests),
+          canManage: event.canManageGuests,
+        ),
+      ),
+    );
+  }
+
   void _openContacts() {
     final scope = AppScope.of(context);
     Navigator.of(context).push(
@@ -67,6 +82,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     String contact(String name, String phone) => '$name · ${formatLocalPhone(phone)}';
     final days = daysUntil(event.startsAt);
     final actions = <Widget>[
+      if (event.canManageGuests)
+        DcActionTile(
+          key: const Key('event.guests'),
+          icon: HugeIcons.strokeRoundedUserMultiple,
+          label: l10n.guestsTitle,
+          onTap: _openGuests,
+        ),
       if (event.canViewContributions)
         DcActionTile(
           key: const Key('event.contributions'),

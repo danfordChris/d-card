@@ -1391,5 +1391,113 @@
         "type": "int"
       }
     }
+  },
+  "guestsTitle": "Guests",
+  "@guestsTitle": {
+    "description": "Guest list screen title."
+  },
+  "guestsTotal": "Total guests",
+  "@guestsTotal": {
+    "description": "Guest hero tile label."
+  },
+  "guestsCardsSent": "Cards sent",
+  "@guestsCardsSent": {
+    "description": "Guest stat: cards issued."
+  },
+  "guestsPending": "Pending",
+  "@guestsPending": {
+    "description": "Guest stat: awaiting card."
+  },
+  "guestsSearch": "Search name or number",
+  "@guestsSearch": {
+    "description": "Guest list search field."
+  },
+  "guestsListTitle": "Guest list",
+  "@guestsListTitle": {
+    "description": "Guest list section heading."
+  },
+  "guestsEmpty": "No guests yet.",
+  "@guestsEmpty": {
+    "description": "Guest list empty state."
+  },
+  "guestStatusPending": "Pending",
+  "@guestStatusPending": {
+    "description": "Guest card status: not yet issued."
+  },
+  "guestStatusIssued": "Issued",
+  "@guestStatusIssued": {
+    "description": "Guest card status: card sent."
+  },
+  "guestDetailTitle": "Guest",
+  "@guestDetailTitle": {
+    "description": "Guest detail screen title."
+  },
+  "guestCardStatusLabel": "Card status",
+  "@guestCardStatusLabel": {
+    "description": "Guest detail: card status label."
+  },
+  "guestCardTypeLabel": "Card type",
+  "@guestCardTypeLabel": {
+    "description": "Guest detail: card type label."
+  },
+  "guestActions": "Actions",
+  "@guestActions": {
+    "description": "Guest detail: actions section header."
+  },
+  "guestIssueCard": "Issue card",
+  "@guestIssueCard": {
+    "description": "Guest detail: issue card action."
+  },
+  "guestCopyLink": "Copy card link",
+  "@guestCopyLink": {
+    "description": "Guest detail: copy card link action."
+  },
+  "guestCancelCard": "Cancel card",
+  "@guestCancelCard": {
+    "description": "Guest detail: cancel card action."
+  },
+  "guestReinstateCard": "Reinstate card",
+  "@guestReinstateCard": {
+    "description": "Guest detail: reinstate cancelled card."
+  },
+  "guestRemoveAction": "Remove guest",
+  "@guestRemoveAction": {
+    "description": "Guest detail: remove guest action."
+  },
+  "guestCardIssued": "Card issued.",
+  "@guestCardIssued": {
+    "description": "Snackbar: card issued."
+  },
+  "guestCardCancelled": "Card cancelled.",
+  "@guestCardCancelled": {
+    "description": "Snackbar: card cancelled."
+  },
+  "guestCardReinstated": "Card reinstated.",
+  "@guestCardReinstated": {
+    "description": "Snackbar: card reinstated."
+  },
+  "guestLinkCopied": "Card link copied.",
+  "@guestLinkCopied": {
+    "description": "Snackbar: card link copied to clipboard."
+  },
+  "guestCancelCardTitle": "Cancel this card?",
+  "@guestCancelCardTitle": {
+    "description": "Confirm sheet: cancel card title."
+  },
+  "guestCancelCardBody": "The guest will no longer be able to use this card for entry.",
+  "@guestCancelCardBody": {
+    "description": "Confirm sheet: cancel card explanation."
+  },
+  "guestCancelCardAction": "Cancel card",
+  "@guestCancelCardAction": {
+    "description": "Confirm sheet: cancel card button."
+  },
+  "guestRemoveTitle": "Remove this guest?",
+  "@guestRemoveTitle": {
+    "description": "Confirm sheet: remove guest title."
+  },
+  "guestRemoveBody": "The guest and their card will be permanently removed from this event.",
+  "@guestRemoveBody": {
+    "description": "Confirm sheet: remove guest explanation."
   }
 }
