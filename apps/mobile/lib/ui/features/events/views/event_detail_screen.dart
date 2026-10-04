@@ -13,6 +13,10 @@ import '../../contributions/view_models/contributions_view_model.dart';
 import '../../contributions/views/contributions_screen.dart';
 import '../../guests/view_models/guests_view_model.dart';
 import '../../guests/views/guests_screen.dart';
+import '../../messages/view_models/messages_view_model.dart';
+import '../../messages/views/messages_screen.dart';
+import '../../team/view_models/team_view_model.dart';
+import '../../team/views/team_screen.dart';
 import '../../walk_ins/views/walk_ins_screen.dart';
 import 'event_format.dart';
 
@@ -56,6 +60,31 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         builder: (_) => GuestsScreen(
           viewModel: GuestsViewModel(eventId: event.id, repository: scope.guests),
           canManage: event.canManageGuests,
+        ),
+      ),
+    );
+  }
+
+  void _openMessages() {
+    final scope = AppScope.of(context);
+    final event = widget.event;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MessagesScreen(
+          viewModel: MessagesViewModel(eventId: event.id, repository: scope.messages),
+          isHost: event.isHost,
+        ),
+      ),
+    );
+  }
+
+  void _openTeam() {
+    final scope = AppScope.of(context);
+    final event = widget.event;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => TeamScreen(
+          viewModel: TeamViewModel(eventId: event.id, repository: scope.team),
         ),
       ),
     );
@@ -110,6 +139,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           label: l10n.walkInsTitle,
           onTap: () =>
               openWalkIns(context, eventId: event.id, eventTitle: event.title, canDecide: event.canDecideWalkIns),
+        ),
+      if (event.isHost)
+        DcActionTile(
+          key: const Key('event.messages'),
+          icon: HugeIcons.strokeRoundedMessage01,
+          label: l10n.messagesTitle,
+          onTap: _openMessages,
+        ),
+      if (event.isHost)
+        DcActionTile(
+          key: const Key('event.team'),
+          icon: HugeIcons.strokeRoundedUserGroup,
+          label: l10n.teamTitle,
+          onTap: _openTeam,
         ),
       if (event.isHost && _paid)
         DcActionTile(

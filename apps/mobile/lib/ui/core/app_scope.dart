@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import '../../data/repositories/billing_repository.dart';
 import '../../data/repositories/contributions_repository.dart';
 import '../../data/repositories/guests_repository.dart';
+import '../../data/repositories/messages_repository.dart';
+import '../../data/repositories/team_repository.dart';
 import '../../data/repositories/walk_in_alerts_repository.dart';
 import '../../data/repositories/walk_ins_repository.dart';
 import '../../data/services/contacts_source.dart';
@@ -15,6 +17,8 @@ class AppScope extends InheritedWidget {
     required this.guests,
     required this.contacts,
     required this.contributions,
+    required this.messages,
+    required this.team,
     required this.walkIns,
     required this.walkInAlerts,
     required this.billing,
@@ -25,6 +29,8 @@ class AppScope extends InheritedWidget {
   final GuestsRepository guests;
   final ContactsSource contacts;
   final ContributionsRepository contributions;
+  final MessagesRepository messages;
+  final TeamRepository team;
   final WalkInsRepository walkIns;
   final WalkInAlertsRepository walkInAlerts;
   final BillingRepository billing;
@@ -37,6 +43,8 @@ class AppScope extends InheritedWidget {
       guests != oldWidget.guests ||
       contacts != oldWidget.contacts ||
       contributions != oldWidget.contributions ||
+      messages != oldWidget.messages ||
+      team != oldWidget.team ||
       walkIns != oldWidget.walkIns ||
       walkInAlerts != oldWidget.walkInAlerts ||
       billing != oldWidget.billing ||

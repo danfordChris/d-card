@@ -12,6 +12,7 @@ import '../account/view_models/account_view_model.dart';
 import '../account/views/account_screen.dart';
 import '../events/view_models/events_view_model.dart';
 import '../events/views/events_screen.dart';
+import '../events/view_models/create_event_view_model.dart';
 import '../events/views/new_event_screen.dart';
 import '../my_cards/view_models/my_cards_view_model.dart';
 import '../my_cards/views/my_cards_screen.dart';
@@ -49,6 +50,7 @@ class _HomeShellState extends State<HomeShell> {
   late final Set<HomeTab> _visited = {_tab};
 
   late final _eventsVm = EventsViewModel(widget.events);
+  late final _createEventVm = CreateEventViewModel(widget.events);
   late final _myCardsVm = MyCardsViewModel(widget.myCards);
   late final _accountVm = AccountViewModel(session: widget.session, account: widget.account);
 
@@ -60,7 +62,13 @@ class _HomeShellState extends State<HomeShell> {
   Widget _build(HomeTab tab) => switch (tab) {
     HomeTab.home => EventsScreen(viewModel: _eventsVm, onNewEvent: () => _select(HomeTab.newEvent)),
     HomeTab.myCards => MyCardsScreen(viewModel: _myCardsVm),
-    HomeTab.newEvent => const NewEventScreen(),
+    HomeTab.newEvent => NewEventScreen(
+      viewModel: _createEventVm,
+      onCreated: () {
+        _eventsVm.load();
+        _select(HomeTab.home);
+      },
+    ),
     HomeTab.notifications => const NotificationsScreen(),
     HomeTab.account => AccountScreen(viewModel: _accountVm, theme: widget.theme),
   };
