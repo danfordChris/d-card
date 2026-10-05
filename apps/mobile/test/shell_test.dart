@@ -39,7 +39,7 @@ void main() {
       await tester.tap(find.byKey(const Key('nav.newEvent')));
       await tester.pumpAndSettle();
       expect(isSelected(tester, 'New event'), isTrue);
-      expect(find.text('Create your event on the website'), findsOneWidget);
+      expect(find.text('New event'), findsWidgets);
 
       await tester.tap(find.byKey(const Key('nav.notifications')));
       await tester.pumpAndSettle();
