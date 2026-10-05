@@ -1,5 +1,5 @@
-import { event, eventPlan, eventRole, eventType, plan, type PlanEntitlements } from "@dcard/db";
-import { and, desc, eq, inArray, or } from "drizzle-orm";
+import { event, eventPlan, eventRole, eventType, invitation, plan, pledge, type PlanEntitlements } from "@dcard/db";
+import { and, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { recordAudit } from "../audit/audit.js";
 import { requireEventRole, type EventAccess } from "../auth/roles.js";
 import { inTransaction, type DbExecutor } from "../db-types.js";
@@ -70,6 +70,7 @@ export type EventView = {
   access: EventAccess;
   /** Every role the user holds here (a person can be committee and walk-in approver at once). */
   roles: EventAccess[];
+  stats?: { guestCount: number; cardsSent: number; collected: number; confirmed: number };
   createdAt: Date;
   updatedAt: Date;
 };
@@ -183,7 +184,14 @@ async function loadEvent(db: DbExecutor, eventId: string) {
   return row;
 }
 
-function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access: EventAccess, roles: EventAccess[] = [access]): EventView {
+type EventStats = EventView["stats"];
+
+function toView(
+  row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>,
+  access: EventAccess,
+  roles: EventAccess[] = [access],
+  stats?: EventStats,
+): EventView {
   const e = row.event;
   return {
     id: e.id,
@@ -219,6 +227,7 @@ function toView(row: NonNullable<Awaited<ReturnType<typeof loadEvent>>>, access:
     photoAlbumUrl: e.photoAlbumUrl,
     access,
     roles,
+    stats,
     createdAt: e.createdAt,
     updatedAt: e.updatedAt,
   };
@@ -248,11 +257,52 @@ export async function listEvents(db: DbExecutor, userId: string): Promise<EventV
     .innerJoin(plan, eq(plan.id, eventPlan.planId))
     .where(memberIds.length ? or(eq(event.hostUserId, userId), inArray(event.id, memberIds)) : eq(event.hostUserId, userId))
     .orderBy(desc(event.startsAt));
+
+  const eventIds = rows.map((r) => r.event.id);
+  const statsMap = eventIds.length > 0 ? await loadEventStats(db, eventIds) : new Map<string, NonNullable<EventStats>>();
+
   return rows.map((row) => {
     const held = memberships.filter((m) => m.eventId === row.event.id).map((m) => m.role);
     const access: EventAccess = row.event.hostUserId === userId ? "host" : held[0]!;
-    return toView(row, access, [...new Set<EventAccess>([...(access === "host" ? (["host"] as const) : []), ...held])]);
+    return toView(
+      row,
+      access,
+      [...new Set<EventAccess>([...(access === "host" ? (["host"] as const) : []), ...held])],
+      statsMap.get(row.event.id),
+    );
   });
+}
+
+async function loadEventStats(db: DbExecutor, eventIds: string[]): Promise<Map<string, NonNullable<EventStats>>> {
+  const [invRows, pledgeRows] = await Promise.all([
+    db
+      .select({
+        eventId: invitation.eventId,
+        guestCount: sql<number>`count(*) filter (where ${invitation.status} != 'cancelled')::int`,
+        cardsSent: sql<number>`count(*) filter (where ${invitation.status} = 'issued')::int`,
+        confirmed: sql<number>`count(*) filter (where ${invitation.confirmationStatus} = 'yes')::int`,
+      })
+      .from(invitation)
+      .where(inArray(invitation.eventId, eventIds))
+      .groupBy(invitation.eventId),
+    db
+      .select({
+        eventId: pledge.eventId,
+        collected: sql<number>`coalesce(sum(${pledge.amountPaid}), 0)::int`,
+      })
+      .from(pledge)
+      .where(inArray(pledge.eventId, eventIds))
+      .groupBy(pledge.eventId),
+  ]);
+  const collectedMap = new Map(pledgeRows.map((r) => [r.eventId, r.collected]));
+  const map = new Map<string, NonNullable<EventStats>>();
+  for (const r of invRows) {
+    map.set(r.eventId, { guestCount: r.guestCount, cardsSent: r.cardsSent, confirmed: r.confirmed, collected: collectedMap.get(r.eventId) ?? 0 });
+  }
+  for (const id of eventIds) {
+    if (!map.has(id)) map.set(id, { guestCount: 0, cardsSent: 0, confirmed: 0, collected: 0 });
+  }
+  return map;
 }
 
 const DETAIL_FIELDS = [

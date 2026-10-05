@@ -98,6 +98,7 @@ part 'model/error_response.dart';
 part 'model/error_response_error.dart';
 part 'model/error_response_error_issues_inner.dart';
 part 'model/event.dart';
+part 'model/event_stats.dart';
 part 'model/event_audit_entry.dart';
 part 'model/event_audit_page.dart';
 part 'model/event_create_input.dart';

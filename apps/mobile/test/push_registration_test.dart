@@ -7,9 +7,11 @@ import 'package:dcard_mobile/data/repositories/billing_repository.dart';
 import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
+import 'package:dcard_mobile/data/repositories/messages_repository.dart';
 import 'package:dcard_mobile/data/repositories/my_cards_repository.dart';
 import 'package:dcard_mobile/data/repositories/push_registration_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
+import 'package:dcard_mobile/data/repositories/team_repository.dart';
 import 'package:dcard_mobile/data/repositories/theme_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_ins_repository.dart';
@@ -125,6 +127,8 @@ void main() {
           guests: GuestsRepository(api),
           contacts: FakeContactsSource(),
           contributions: ContributionsRepository(api),
+          messages: MessagesRepository(api),
+          team: TeamRepository(api),
           walkIns: WalkInsRepository(api),
           walkInAlerts: WalkInAlertsRepository(FakePushMessageSource()),
           billing: BillingRepository(api),

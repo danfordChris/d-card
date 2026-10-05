@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../domain/models/event_summary.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/failure_text.dart';
+import '../../../core/money.dart';
 import '../view_models/events_view_model.dart';
 import 'event_detail_screen.dart';
 import 'event_format.dart';
@@ -113,6 +114,13 @@ class _Dashboard extends StatelessWidget {
     final hosted = events.where((e) => e.isHost).length;
     final paid = events.where((e) => e.isHost && e.planPaid).length;
     final lang = Localizations.localeOf(context).languageCode;
+
+    final totalGuests = events.fold(0, (sum, e) => sum + e.guestCount);
+    final totalCardsSent = events.fold(0, (sum, e) => sum + e.cardsSent);
+    final totalCollected = events.fold(0, (sum, e) => sum + e.collected);
+    final totalConfirmed = events.fold(0, (sum, e) => sum + e.confirmed);
+    final hasStats = totalGuests > 0 || totalCollected > 0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -164,18 +172,57 @@ class _Dashboard extends StatelessWidget {
               ),
           ],
         ),
+        if (hasStats) ...[
+          const SizedBox(height: DcSpace.gap),
+          DcBento(
+            items: [
+              DcBentoItem(
+                DcStatTile(
+                  key: const Key('dashboard.collected'),
+                  variant: DcTileVariant.hero,
+                  label: l10n.statCollected,
+                  value: tsh(totalCollected),
+                  valueSize: 22,
+                  note: l10n.statCollectedNote,
+                ),
+                span: 2,
+              ),
+              DcBentoItem(
+                DcStatTile(
+                  key: const Key('dashboard.cardsSent'),
+                  label: l10n.statCardsSent,
+                  value: '$totalCardsSent',
+                  note: l10n.statCardsSentNote(totalGuests),
+                ),
+              ),
+              DcBentoItem(
+                DcStatTile(
+                  key: const Key('dashboard.confirmed'),
+                  variant: DcTileVariant.soft,
+                  label: l10n.statConfirmed,
+                  value: '$totalConfirmed',
+                  note: l10n.statConfirmedNote(totalGuests),
+                ),
+              ),
+            ],
+          ),
+        ],
         DcSectionHeader(title: l10n.dashboardYourEvents),
         for (var i = 0; i < events.length; i++)
           Builder(
             builder: (context) {
               final e = events[i];
               final (day, month) = eventDayMonth(context, e.startsAt);
+              final stats = <String>[
+                '${e.typeName(lang)} · ${e.planName}',
+                if (e.guestCount > 0) '${e.cardsSent}/${e.guestCount} cards · ${tsh(e.collected)}',
+              ];
               return DcListRow(
                 key: Key('events.row.${e.id}'),
                 divider: i > 0,
                 leading: DcDateBlock(day: day, month: month),
                 title: e.title,
-                subtitle: '${e.typeName(lang)} · ${e.planName}',
+                subtitle: stats.join('\n'),
                 trailing: EventStatusChip(status: e.status),
                 onTap: () => onOpen(e),
               );

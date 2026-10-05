@@ -17,6 +17,20 @@ class EventsRepository {
   /// One event (`GET /api/v1/events/{id}`), e.g. when a push opens it.
   Future<EventSummary> getEvent(String id) async => _toSummary(await guardApi(() => _api.getEvent(id)));
 
+  Future<List<EventType>> listEventTypes() async {
+    final list = await guardApi(_api.listEventTypes);
+    return list.eventTypes;
+  }
+
+  Future<List<Plan>> listPlans() async {
+    final list = await guardApi(_api.listPlans);
+    return list.plans;
+  }
+
+  Future<Event> createEvent(EventCreateInput input) async {
+    return guardApi(() => _api.createEvent(eventCreateInput: input));
+  }
+
   static EventSummary _toSummary(Event e) => EventSummary(
     id: e.id,
     title: e.title,
@@ -53,5 +67,9 @@ class EventsRepository {
         e.roles.contains(EventRolesEnum.walkinApprover) ||
         e.access == EventAccessEnum.host ||
         e.access == EventAccessEnum.walkinApprover,
+    guestCount: e.stats?.guestCount ?? 0,
+    cardsSent: e.stats?.cardsSent ?? 0,
+    collected: e.stats?.collected ?? 0,
+    confirmed: e.stats?.confirmed ?? 0,
   );
 }

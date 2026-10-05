@@ -11,6 +11,12 @@ import '../../contacts/view_models/contacts_picker_view_model.dart';
 import '../../contacts/views/contacts_picker_screen.dart';
 import '../../contributions/view_models/contributions_view_model.dart';
 import '../../contributions/views/contributions_screen.dart';
+import '../../guests/view_models/guests_view_model.dart';
+import '../../guests/views/guests_screen.dart';
+import '../../messages/view_models/messages_view_model.dart';
+import '../../messages/views/messages_screen.dart';
+import '../../team/view_models/team_view_model.dart';
+import '../../team/views/team_screen.dart';
 import '../../walk_ins/views/walk_ins_screen.dart';
 import 'event_format.dart';
 
@@ -46,6 +52,44 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     );
   }
 
+  void _openGuests() {
+    final scope = AppScope.of(context);
+    final event = widget.event;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => GuestsScreen(
+          viewModel: GuestsViewModel(eventId: event.id, repository: scope.guests),
+          canManage: event.canManageGuests,
+        ),
+      ),
+    );
+  }
+
+  void _openMessages() {
+    final scope = AppScope.of(context);
+    final event = widget.event;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MessagesScreen(
+          viewModel: MessagesViewModel(eventId: event.id, repository: scope.messages),
+          isHost: event.isHost,
+        ),
+      ),
+    );
+  }
+
+  void _openTeam() {
+    final scope = AppScope.of(context);
+    final event = widget.event;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => TeamScreen(
+          viewModel: TeamViewModel(eventId: event.id, repository: scope.team),
+        ),
+      ),
+    );
+  }
+
   void _openContacts() {
     final scope = AppScope.of(context);
     Navigator.of(context).push(
@@ -67,6 +111,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     String contact(String name, String phone) => '$name · ${formatLocalPhone(phone)}';
     final days = daysUntil(event.startsAt);
     final actions = <Widget>[
+      if (event.canManageGuests)
+        DcActionTile(
+          key: const Key('event.guests'),
+          icon: HugeIcons.strokeRoundedUserMultiple,
+          label: l10n.guestsTitle,
+          onTap: _openGuests,
+        ),
       if (event.canViewContributions)
         DcActionTile(
           key: const Key('event.contributions'),
@@ -88,6 +139,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           label: l10n.walkInsTitle,
           onTap: () =>
               openWalkIns(context, eventId: event.id, eventTitle: event.title, canDecide: event.canDecideWalkIns),
+        ),
+      if (event.isHost)
+        DcActionTile(
+          key: const Key('event.messages'),
+          icon: HugeIcons.strokeRoundedMessage01,
+          label: l10n.messagesTitle,
+          onTap: _openMessages,
+        ),
+      if (event.isHost)
+        DcActionTile(
+          key: const Key('event.team'),
+          icon: HugeIcons.strokeRoundedUserGroup,
+          label: l10n.teamTitle,
+          onTap: _openTeam,
         ),
       if (event.isHost && _paid)
         DcActionTile(

@@ -7,6 +7,8 @@ import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
 import 'data/repositories/my_cards_repository.dart';
+import 'data/repositories/messages_repository.dart';
+import 'data/repositories/team_repository.dart';
 import 'data/repositories/session_repository.dart';
 import 'data/repositories/theme_repository.dart';
 import 'data/repositories/walk_in_alerts_repository.dart';
@@ -29,6 +31,8 @@ class DCardApp extends StatelessWidget {
     required this.guests,
     required this.contacts,
     required this.contributions,
+    required this.messages,
+    required this.team,
     required this.walkIns,
     required this.walkInAlerts,
     required this.billing,
@@ -44,6 +48,8 @@ class DCardApp extends StatelessWidget {
   final GuestsRepository guests;
   final ContactsSource contacts;
   final ContributionsRepository contributions;
+  final MessagesRepository messages;
+  final TeamRepository team;
   final WalkInsRepository walkIns;
 
   /// Walk-in pushes (foreground banners, tapped notifications).
@@ -73,6 +79,8 @@ class DCardApp extends StatelessWidget {
       guests: guests,
       contacts: contacts,
       contributions: contributions,
+      messages: messages,
+      team: team,
       walkIns: walkIns,
       walkInAlerts: walkInAlerts,
       billing: billing,

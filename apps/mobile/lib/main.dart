@@ -13,6 +13,8 @@ import 'data/repositories/contributions_repository.dart';
 import 'data/repositories/events_repository.dart';
 import 'data/repositories/guests_repository.dart';
 import 'data/repositories/my_cards_repository.dart';
+import 'data/repositories/messages_repository.dart';
+import 'data/repositories/team_repository.dart';
 import 'data/repositories/push_registration_repository.dart';
 import 'data/repositories/session_repository.dart';
 import 'data/repositories/theme_repository.dart';
@@ -79,6 +81,8 @@ Future<void> _run() async {
       guests: GuestsRepository(api),
       contacts: DeviceContactsSource(),
       contributions: ContributionsRepository(api),
+      messages: MessagesRepository(api),
+      team: TeamRepository(api),
       walkIns: WalkInsRepository(api),
       walkInAlerts: WalkInAlertsRepository(pushMessages),
       billing: BillingRepository(api),
