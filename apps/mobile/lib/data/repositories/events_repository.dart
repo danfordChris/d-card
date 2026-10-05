@@ -67,5 +67,9 @@ class EventsRepository {
         e.roles.contains(EventRolesEnum.walkinApprover) ||
         e.access == EventAccessEnum.host ||
         e.access == EventAccessEnum.walkinApprover,
+    guestCount: e.stats?.guestCount ?? 0,
+    cardsSent: e.stats?.cardsSent ?? 0,
+    collected: e.stats?.collected ?? 0,
+    confirmed: e.stats?.confirmed ?? 0,
   );
 }

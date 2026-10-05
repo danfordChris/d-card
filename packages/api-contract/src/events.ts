@@ -55,6 +55,15 @@ export const EventUpdateInput = z
   .partial()
   .openapi("EventUpdateInput");
 
+export const EventStatsSchema = z
+  .object({
+    guestCount: z.number().int(),
+    cardsSent: z.number().int(),
+    collected: z.number().int(),
+    confirmed: z.number().int(),
+  })
+  .openapi("EventStats");
+
 export const EventSchema = z
   .object({
     id: z.uuid(),
@@ -91,6 +100,7 @@ export const EventSchema = z
     access: z.enum(["host", "treasurer", "committee", "door_staff", "walkin_approver"]),
     /** All roles the caller holds for this event (use for permissions; `access` is only the first). */
     roles: z.array(z.enum(["host", "treasurer", "committee", "door_staff", "walkin_approver"])),
+    stats: EventStatsSchema.optional(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
   })

@@ -7,7 +7,9 @@ import 'package:dcard_mobile/data/repositories/billing_repository.dart';
 import 'package:dcard_mobile/data/repositories/contributions_repository.dart';
 import 'package:dcard_mobile/data/repositories/events_repository.dart';
 import 'package:dcard_mobile/data/repositories/guests_repository.dart';
+import 'package:dcard_mobile/data/repositories/messages_repository.dart';
 import 'package:dcard_mobile/data/repositories/my_cards_repository.dart';
+import 'package:dcard_mobile/data/repositories/team_repository.dart';
 import 'package:dcard_mobile/data/repositories/session_repository.dart';
 import 'package:dcard_mobile/data/repositories/theme_repository.dart';
 import 'package:dcard_mobile/data/repositories/walk_in_alerts_repository.dart';
@@ -42,6 +44,8 @@ Future<(FakeAuthService, FakeApi)> pumpApp(
       guests: GuestsRepository(p),
       contacts: contacts ?? FakeContactsSource(),
       contributions: ContributionsRepository(p),
+      messages: MessagesRepository(p),
+      team: TeamRepository(p),
       walkIns: WalkInsRepository(p),
       walkInAlerts: WalkInAlertsRepository(push ?? FakePushMessageSource()),
       billing: BillingRepository(p),

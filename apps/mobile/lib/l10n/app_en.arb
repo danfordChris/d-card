@@ -1354,6 +1354,40 @@
       }
     }
   },
+  "statCollected": "Collected",
+  "@statCollected": {
+    "description": "Dashboard stat: total money collected across events."
+  },
+  "statCollectedNote": "across all events",
+  "@statCollectedNote": {
+    "description": "Dashboard stat note for collected."
+  },
+  "statCardsSent": "Cards sent",
+  "@statCardsSent": {
+    "description": "Dashboard stat: total cards issued across events."
+  },
+  "statCardsSentNote": "{count, plural, =1{of 1 guest} other{of {count} guests}}",
+  "@statCardsSentNote": {
+    "description": "Dashboard stat note for cards sent.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statConfirmed": "Confirmed",
+  "@statConfirmed": {
+    "description": "Dashboard stat: total confirmed guests across events."
+  },
+  "statConfirmedNote": "{count, plural, =1{of 1 guest} other{of {count} guests}}",
+  "@statConfirmedNote": {
+    "description": "Dashboard stat note for confirmed.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "dashboardYourEvents": "Your events",
   "@dashboardYourEvents": {
     "description": "Dashboard list heading."

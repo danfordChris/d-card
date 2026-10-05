@@ -20,6 +20,10 @@ class EventSummary {
     this.canDecideWalkIns = false,
     this.isHost = false,
     this.planPaid = false,
+    this.guestCount = 0,
+    this.cardsSent = 0,
+    this.collected = 0,
+    this.confirmed = 0,
     this.venueName,
     this.venueAddress,
     this.contact2Name,
@@ -60,6 +64,11 @@ class EventSummary {
 
   /// Guest cards have been paid for at least once.
   final bool planPaid;
+
+  final int guestCount;
+  final int cardsSent;
+  final int collected;
+  final int confirmed;
 
   String typeName(String languageCode) => languageCode == 'sw' ? typeNameSw : typeNameEn;
 }

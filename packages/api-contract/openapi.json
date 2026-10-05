@@ -397,6 +397,9 @@
               ]
             }
           },
+          "stats": {
+            "$ref": "#/components/schemas/EventStats"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -436,6 +439,29 @@
           "roles",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "EventStats": {
+        "type": "object",
+        "properties": {
+          "guestCount": {
+            "type": "integer"
+          },
+          "cardsSent": {
+            "type": "integer"
+          },
+          "collected": {
+            "type": "integer"
+          },
+          "confirmed": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "guestCount",
+          "cardsSent",
+          "collected",
+          "confirmed"
         ]
       },
       "EventCreateInput": {

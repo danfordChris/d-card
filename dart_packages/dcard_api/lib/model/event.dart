@@ -40,6 +40,7 @@ class Event {
     required this.photoAlbumUrl,
     required this.access,
     this.roles = const [],
+    this.stats,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -98,6 +99,8 @@ class Event {
 
   List<EventRolesEnum> roles;
 
+  EventStats? stats;
+
   DateTime createdAt;
 
   DateTime updatedAt;
@@ -131,6 +134,7 @@ class Event {
     other.photoAlbumUrl == photoAlbumUrl &&
     other.access == access &&
     _deepEquality.equals(other.roles, roles) &&
+    other.stats == stats &&
     other.createdAt == createdAt &&
     other.updatedAt == updatedAt;
 
@@ -164,11 +168,12 @@ class Event {
     (photoAlbumUrl == null ? 0 : photoAlbumUrl!.hashCode) +
     (access.hashCode) +
     (roles.hashCode) +
+    (stats == null ? 0 : stats!.hashCode) +
     (createdAt.hashCode) +
     (updatedAt.hashCode);
 
   @override
-  String toString() => 'Event[id=$id, title=$title, status=$status, eventType=$eventType, plan=$plan, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, budgetAmount=$budgetAmount, paymentDetails=$paymentDetails, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl, access=$access, roles=$roles, createdAt=$createdAt, updatedAt=$updatedAt]';
+  String toString() => 'Event[id=$id, title=$title, status=$status, eventType=$eventType, plan=$plan, startsAt=$startsAt, endsAt=$endsAt, timeZone=$timeZone, venueName=$venueName, venueAddress=$venueAddress, venueMapUrl=$venueMapUrl, contactName=$contactName, contactPhone=$contactPhone, contact2Name=$contact2Name, contact2Phone=$contact2Phone, confirmationEnabled=$confirmationEnabled, confirmationOffsetDays=$confirmationOffsetDays, headcountPct=$headcountPct, autoUpgradeEnabled=$autoUpgradeEnabled, singleAmount=$singleAmount, doubleAmount=$doubleAmount, budgetAmount=$budgetAmount, paymentDetails=$paymentDetails, reminderFrequencyDays=$reminderFrequencyDays, photoAlbumUrl=$photoAlbumUrl, access=$access, roles=$roles, stats=$stats, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -247,6 +252,9 @@ class Event {
     }
       json[r'access'] = this.access;
       json[r'roles'] = this.roles;
+    if (this.stats != null) {
+      json[r'stats'] = this.stats;
+    }
       json[r'createdAt'] = this.createdAt.toUtc().toIso8601String();
       json[r'updatedAt'] = this.updatedAt.toUtc().toIso8601String();
     return json;
@@ -297,6 +305,7 @@ class Event {
         photoAlbumUrl: mapValueOfType<String>(json, r'photoAlbumUrl'),
         access: EventAccessEnum.fromJson(json[r'access'])!,
         roles: EventRolesEnum.listFromJson(json[r'roles']),
+        stats: EventStats.fromJson(json[r'stats']),
         createdAt: mapDateTime(json, r'createdAt', r'')!,
         updatedAt: mapDateTime(json, r'updatedAt', r'')!,
       );
